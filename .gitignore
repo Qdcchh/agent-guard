@@ -1,0 +1,41 @@
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+secrets/
+keys/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Python and tooling
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Runtime data and generated evidence
+data/
+logs/
+artifacts/
+*.log
+*.sqlite*
+
+# Frontend / editor / OS
+node_modules/
+.DS_Store
+.idea/
+.vscode/
+
+# Internal documents must remain outside the repository
+01-协作规范与分工.md
+02-自命题填写说明.md
