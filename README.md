@@ -1,6 +1,6 @@
-# 权链卫士 · Agent Guard
+# Agent Guard
 
-**面向企业多智能体协作的可验证授权与受控执行系统。**
+**面向企业多智能体协同的可验证授权与可信执行系统。**
 
 目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
 
@@ -39,10 +39,10 @@
 ## 3. 架构与技术路线
 
 ```text
-用户确认 / 可信业务策略 → 授权签发
+用户登录并确认任务 → OAuth/OIDC AS统一签发（SM2）
                               ↓
-统筹代理 → 选品代理 → 执行代理
-                              ↓ 授权链 + 持有者签名请求
+统筹代理 → AS交换子令牌 → 选品代理 → AS交换 → 执行代理
+                              ↓ Access Token + AGPoP（DID/登记密钥绑定）
                          统一执行网关
                     验权 / 抗重放 / 动态状态检查
                               ↓
@@ -53,7 +53,7 @@
                  结算 / 签名回执 / 独立审计锚定
 ```
 
-规划采用 Python 3.11、FastAPI、PostgreSQL、成熟 SM2/SM3 实现及 Docker Compose。当前只安装基础开发工具，不提前选定尚未验证的密码库。密码库选型须先完成测试向量、签名格式、SM2 用户标识和互操作验证。
+当前设计统一采用 GM-MVP-1：OAuth/OIDC流程、AS统一签发、SM2/SM3、DID绑定及私有AGPoP请求证明。规划采用 Python 3.11、FastAPI网关、PostgreSQL、成熟密码/OAuth库及 Docker Compose；AS框架适配须先做可行性验证。当前只安装基础开发工具，密码库选型须先完成测试向量、签名格式、SM2 用户标识和互操作验证。该国密profile不是完整标准OIDC/DPoP互通声明。
 
 代理不得持有下游管理凭据或可信状态库访问凭据。单仓库不意味着共享密钥、数据库权限或信任域。网关与下游之间不假定存在分布式事务。
 
@@ -63,17 +63,17 @@
 AGENT.md                    AI 开发约束（详细）
 AGENTS.md                   自动发现入口，指向 AGENT.md
 docs/
-  protocol-v1.md            授权、请求、工具和接口契约草案
-  architecture.md           组件与信任边界
-  execution-state.md        预算、幂等、撤销及恢复状态机
-  threat-model.md           威胁模型与安全边界
-  acceptance.md             验收与测试矩阵
+  oauth-oidc-sm2-mvp.md      当前路线：术语、架构、A/B分工与HTTP/SDK接口
+  security-model.md         威胁模型、事务、撤销、恢复及审计边界
+  acceptance.md             初版/成熟版验收、性能实验及交付清单
 src/agent_guard/            当前仅包元信息
-tests/                      当前仅骨架测试
-.github/workflows/ci.yml    lint + 骨架测试
+tests/                      包骨架、文档链接及JSON示例检查（非安全验收）
+.github/workflows/ci.yml    lint + pytest
 ```
 
 后续按需增加 `contracts/`、`crypto/`、`authorization/`、`gateway/`、`ledger/`、`tools/`、`agents/`、`audit/`、`migrations/`、`benchmarks/`。不以空目录或占位接口充当实现。
+
+文档按上述顺序阅读。旧通用凭证协议与重复架构文档已移除，可通过Git历史查看；威胁模型和执行状态机已合并。Markdown是唯一文档源，PDF仅作本地导出，不入库且需自行重新生成。
 
 ## 5. 开发环境与验证
 
@@ -121,6 +121,8 @@ A 负责可信执行与集成；B 负责密码授权及审计核心；C 在后�
 
 ## 8. 协作入口
 
-从最新 `main` 创建短期任务分支，提交 PR，至少一名非作者审核，CI 通过后 Squash merge。初始化首次上传为例外。分支保护是否强制生效以 GitHub 实际设置为准。
+OAuth/OIDC、SM2/SM3、Agent间委托与DID的唯一当前设计见 [实施及接口契约](docs/oauth-oidc-sm2-mvp.md)。不再并行维护父holder直接签发子凭证的旧路线。老师是否要求实改liboauth2本体仍需确认，该问题影响实现选型，不允许绕开既定安全契约。
 
-修改前先阅读 [AGENT.md](AGENT.md)、[协议](docs/protocol-v1.md)和[执行状态机](docs/execution-state.md)。协议草案中的未决参数必须先冻结并添加测试，再进入真实密码和执行实现。
+从最新 `main` 创建短期任务分支，提交 PR，至少一名非作者审核，CI通过后Squash merge。初始化首次上传为例外。公开仓库已启用main保护，管理员同样受限；需保持分支最新、解决讨论，禁止强推或删除main。
+
+修改前先阅读 [AGENT.md](AGENT.md)、[实施与接口](docs/oauth-oidc-sm2-mvp.md)、[安全模型](docs/security-model.md)和[验收矩阵](docs/acceptance.md)。设计文档不代表实现完成；选型和契约变更需先明确边界、更新测试与文档，再进入真实实现。

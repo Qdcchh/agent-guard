@@ -27,6 +27,8 @@ htmlcov/
 data/
 logs/
 artifacts/
+# Locally exported documentation; Markdown is the source of truth
+docs/*.pdf
 *.log
 *.sqlite*
 
