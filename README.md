@@ -4,7 +4,7 @@
 
 目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
 
-> 当前状态：工程初始化。仓库包含设计草案、Python 包骨架、基础测试及 CI 配置；尚未实现密码机制、API 服务、预算账本、代理流程或前端。骨架测试通过不代表任何安全目标已实现。
+> 当前状态：密码与基础编码配置已实现第一版，并通过标准向量、篡改拒绝和严格编码测试。独立第二实现互验尚未完成；授权链、API 服务、预算账本、代理流程和前端仍未实现。现有测试通过不代表全部安全目标已实现。
 
 ## 1. 项目目标
 
@@ -53,7 +53,7 @@
                  结算 / 签名回执 / 独立审计锚定
 ```
 
-规划采用 Python 3.11、FastAPI、PostgreSQL、成熟 SM2/SM3 实现及 Docker Compose。当前只安装基础开发工具，不提前选定尚未验证的密码库。密码库选型须先完成测试向量、签名格式、SM2 用户标识和互操作验证。
+规划采用 Python 3.11、FastAPI、PostgreSQL、成熟 SM2/SM3 实现及 Docker Compose。密码基线采用铜锁 Python SDK；签名格式、SM2 用户标识和编码规则见 [密码与编码配置 v1](docs/crypto-profile-v1.md)。标准向量已验证，独立第二实现互验仍须在正式签发前完成。
 
 代理不得持有下游管理凭据或可信状态库访问凭据。单仓库不意味着共享密钥、数据库权限或信任域。网关与下游之间不假定存在分布式事务。
 
@@ -64,33 +64,36 @@ AGENT.md                    AI 开发约束（详细）
 AGENTS.md                   自动发现入口，指向 AGENT.md
 docs/
   protocol-v1.md            授权、请求、工具和接口契约草案
+  crypto-profile-v1.md      已冻结的 SM2/SM3 与线格式配置
   architecture.md           组件与信任边界
   execution-state.md        预算、幂等、撤销及恢复状态机
   threat-model.md           威胁模型与安全边界
   acceptance.md             验收与测试矩阵
-src/agent_guard/            当前仅包元信息
-tests/                      当前仅骨架测试
-.github/workflows/ci.yml    lint + 骨架测试
+src/agent_guard/contracts/  严格 JSON、RFC 8785、base64url 与域分离
+src/agent_guard/crypto/     SM2/SM3、签名信封及链摘要
+tests/                      包、编码与密码配置测试
+.github/workflows/ci.yml    lint + 安全基线测试
 ```
 
-后续按需增加 `contracts/`、`crypto/`、`authorization/`、`gateway/`、`ledger/`、`tools/`、`agents/`、`audit/`、`migrations/`、`benchmarks/`。不以空目录或占位接口充当实现。
+后续按需增加 `authorization/`、`gateway/`、`ledger/`、`tools/`、`agents/`、`audit/`、`migrations/`、`benchmarks/`。不以空目录或占位接口充当实现。
 
 ## 5. 开发环境与验证
 
-要求 Python 3.11、Git。以下在仓库根目录执行（macOS/Linux）：
+要求 Python 3.11、Git。以下在仓库根目录执行（Windows PowerShell）：
 
-```bash
-python3.11 -m venv .venv
-source .venv/bin/activate
-python -m pip install -e '.[dev]'
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements-dev.lock
+python -m pip install --no-deps -e .
 python -m ruff check .
 python -m ruff format --check .
 python -m pytest
 ```
 
-Windows 可使用 `.venv\Scripts\Activate.ps1` 激活环境。仓库中尚无服务启动或 Compose 命令；服务实现后同步补充。`.env.example` 仅提供未来配置约定，不包含可用凭据。
+macOS/Linux 将虚拟环境命令替换为 `python3.11 -m venv .venv` 和 `source .venv/bin/activate`。仓库中尚无服务启动或 Compose 命令；服务实现后同步补充。`.env.example` 仅提供未来配置约定，不包含可用凭据。
 
-开发工具使用固定版本；构建依赖和全部传递依赖尚未锁定。引入真实运行依赖时建立并提交统一锁文件，记录测试软硬件配置。禁止提交 `.env`、私钥、token、数据库快照及敏感日志。
+开发工具与运行时直接依赖使用固定版本，`requirements.lock` 同时固定当前运行时传递依赖。禁止提交 `.env`、私钥、token、数据库快照及敏感日志。
 
 ## 6. 实施计划
 

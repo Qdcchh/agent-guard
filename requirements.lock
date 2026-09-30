@@ -1,0 +1,6 @@
+# Runtime dependency lock for Python 3.11+.
+# Regenerate and re-run the cryptographic interoperability tests before changing it.
+cffi==2.1.1
+pycparser==3.0
+rfc8785==0.1.4
+tongsuopy==1.0.1
