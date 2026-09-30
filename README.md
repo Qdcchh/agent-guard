@@ -1,10 +1,10 @@
-# 权链卫士 · Agent Guard
+# Agent Guard
 
-**面向企业多智能体协作的可验证授权与受控执行系统。**
+**面向企业多智能体协同的可验证授权与可信执行系统。**
 
 目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
 
-> 当前状态：工程初始化。仓库包含设计草案、Python 包骨架、基础测试及 CI 配置；尚未实现密码机制、API 服务、预算账本、代理流程或前端。骨架测试通过不代表任何安全目标已实现。
+> 当前状态：A1 执行账本已实现并通过阶段验收（版本化迁移、原子接受、共享预算、抗重放、业务幂等、撤销/时效复核、根生命周期防护、并发与回滚用例均跑在真实 PostgreSQL 上）。2026-09-30 本地正式套件 146 项及独立探针 5 项通过，条件与边界见 [A1最终验收记录](tasks/A1-review-r4.md)。**密码机制、OAuth/OIDC 端点、HTTP 网关、SM2/SM3、DID、执行/结算/恢复、签名回执、审计检查点与前端均尚未实现**；验收矩阵 M/SEC/CON 各项不得视为已通过。
 
 ## 1. 项目目标
 
@@ -39,10 +39,10 @@
 ## 3. 架构与技术路线
 
 ```text
-用户确认 / 可信业务策略 → 授权签发
+用户登录并确认任务 → OAuth/OIDC AS统一签发（SM2）
                               ↓
-统筹代理 → 选品代理 → 执行代理
-                              ↓ 授权链 + 持有者签名请求
+统筹代理 → AS交换子令牌 → 选品代理 → AS交换 → 执行代理
+                              ↓ Access Token + AGPoP（DID/登记密钥绑定）
                          统一执行网关
                     验权 / 抗重放 / 动态状态检查
                               ↓
@@ -53,7 +53,7 @@
                  结算 / 签名回执 / 独立审计锚定
 ```
 
-规划采用 Python 3.11、FastAPI、PostgreSQL、成熟 SM2/SM3 实现及 Docker Compose。当前只安装基础开发工具，不提前选定尚未验证的密码库。密码库选型须先完成测试向量、签名格式、SM2 用户标识和互操作验证。
+当前设计统一采用 GM-MVP-1：OAuth/OIDC流程、AS统一签发、SM2/SM3、DID绑定及私有AGPoP请求证明。规划采用 Python 3.11、FastAPI网关、PostgreSQL、成熟密码/OAuth库及 Docker Compose；AS框架适配须先做可行性验证。当前只安装基础开发工具，密码库选型须先完成测试向量、签名格式、SM2 用户标识和互操作验证。该国密profile不是完整标准OIDC/DPoP互通声明。
 
 代理不得持有下游管理凭据或可信状态库访问凭据。单仓库不意味着共享密钥、数据库权限或信任域。网关与下游之间不假定存在分布式事务。
 
@@ -63,34 +63,59 @@
 AGENT.md                    AI 开发约束（详细）
 AGENTS.md                   自动发现入口，指向 AGENT.md
 docs/
-  protocol-v1.md            授权、请求、工具和接口契约草案
-  architecture.md           组件与信任边界
-  execution-state.md        预算、幂等、撤销及恢复状态机
-  threat-model.md           威胁模型与安全边界
-  acceptance.md             验收与测试矩阵
-src/agent_guard/            当前仅包元信息
-tests/                      当前仅骨架测试
-.github/workflows/ci.yml    lint + 骨架测试
+  oauth-oidc-sm2-mvp.md      当前路线：术语、架构、A/B分工与HTTP/SDK接口
+  security-model.md         威胁模型、事务、撤销、恢复及审计边界
+  acceptance.md             初版/成熟版验收、性能实验及交付清单
+src/agent_guard/
+  contracts/ledger.py        最小进程内契约（可信输入类型、错误码）
+  ledger/                    A1：迁移器、SQL存储、原子接受、可信初始化夹具
+migrations/                  版本化 SQL 迁移（checksum 保护，勿改历史文件）
+tests/                       骨架/文档检查、U1输入边界、P1—P14集成与并发用例
+compose.test.yaml            隔离测试 PostgreSQL（仅本地 127.0.0.1）
+constraints.txt              运行依赖可复现约束
+.github/workflows/ci.yml     lint + unit + 迁移 + 真实 PostgreSQL 集成测试
 ```
 
-后续按需增加 `contracts/`、`crypto/`、`authorization/`、`gateway/`、`ledger/`、`tools/`、`agents/`、`audit/`、`migrations/`、`benchmarks/`。不以空目录或占位接口充当实现。
+后续按需增加 `crypto/`、`authorization/`、`gateway/`、`tools/`、`agents/`、`audit/`、`benchmarks/`。不以空目录或占位接口充当实现。A1 的 `VerifiedInvocation` 是**可信进程内输入**，只能由未来 B 的验证器构造；不存在“已验权 JSON”直接入库的入口。
+
+文档按上述顺序阅读。旧通用凭证协议与重复架构文档已移除，可通过Git历史查看；威胁模型和执行状态机已合并。Markdown是唯一文档源，PDF仅作本地导出，不入库且需自行重新生成。
 
 ## 5. 开发环境与验证
 
-要求 Python 3.11、Git。以下在仓库根目录执行（macOS/Linux）：
+要求 Python 3.11+（CI 基准 3.11）、Git、Docker（仅测试数据库需要）。以下在仓库根目录执行（macOS/Linux）：
 
 ```bash
 python3.11 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e '.[dev]'
+python -m pip install -e '.[dev]' -c constraints.txt
 python -m ruff check .
 python -m ruff format --check .
-python -m pytest
+python -m pytest tests/unit tests/test_scaffold.py tests/test_docs.py
 ```
 
-Windows 可使用 `.venv\Scripts\Activate.ps1` 激活环境。仓库中尚无服务启动或 Compose 命令；服务实现后同步补充。`.env.example` 仅提供未来配置约定，不包含可用凭据。
+### A1 账本：数据库、迁移与集成测试
 
-开发工具使用固定版本；构建依赖和全部传递依赖尚未锁定。引入真实运行依赖时建立并提交统一锁文件，记录测试软硬件配置。禁止提交 `.env`、私钥、token、数据库快照及敏感日志。
+```bash
+# 1) 启动隔离的测试 PostgreSQL（127.0.0.1:55432，数据在 tmpfs，无宿主 volume）
+docker compose -f compose.test.yaml up -d --wait
+
+# 2) 导出测试专用连接串（凭据仅用于本 compose 的测试容器；可注入自己的密码）
+export AGENT_GUARD_TEST_PG_PASSWORD="${AGENT_GUARD_TEST_PG_PASSWORD:-agent-guard-test-only-pw}"
+export AGENT_GUARD_TEST_DATABASE_URL="postgresql://agent_guard_test:${AGENT_GUARD_TEST_PG_PASSWORD}@127.0.0.1:55432/agent_guard_test"
+
+# 3) 执行版本化迁移（幂等，可重复运行）
+python -m agent_guard.ledger.migrate
+
+# 4) 集成测试（真实 PostgreSQL；缺库时报错退出，不会静默跳过）
+python -m pytest tests/integration
+
+# 5) 清理（无需删 volume；tmpfs 数据随容器消失）
+docker compose -f compose.test.yaml down
+```
+
+测试专用凭据是显式的 test-only 值，只作用于本机 127.0.0.1 的一次性容器，不得用于任何部署；生产/演示凭据由部署时独立注入。变量优先级如实说明：迁移器 `python -m agent_guard.ledger.migrate` 先读 `AGENT_GUARD_DATABASE_URL`（未来服务/正式库预留），未设置时回退 `AGENT_GUARD_TEST_DATABASE_URL`；pytest 集成测试入口只读取 `AGENT_GUARD_TEST_DATABASE_URL`，不会触碰 `AGENT_GUARD_DATABASE_URL` 指向的库。测试会在目标库内创建本轮独占 schema（`ag_test_run_*`，含所有权标记），清库只作用于该 schema；迁移用的 scratch 库为随机名且仅清理自建资源。
+
+Windows 可使用 `.venv\Scripts\Activate.ps1` 激活环境。`.env.example` 仅提供未来配置约定，不包含可用凭据。开发工具使用固定版本，账本运行依赖（psycopg）经 `constraints.txt` 锁定。禁止提交 `.env`、私钥、token、数据库快照及敏感日志；`artifacts/` 下的本地测试日志不入库。
 
 ## 6. 实施计划
 
@@ -121,6 +146,8 @@ A 负责可信执行与集成；B 负责密码授权及审计核心；C 在后�
 
 ## 8. 协作入口
 
-从最新 `main` 创建短期任务分支，提交 PR，至少一名非作者审核，CI 通过后 Squash merge。初始化首次上传为例外。分支保护是否强制生效以 GitHub 实际设置为准。
+OAuth/OIDC、SM2/SM3、Agent间委托与DID的唯一当前设计见 [实施及接口契约](docs/oauth-oidc-sm2-mvp.md)。不再并行维护父holder直接签发子凭证的旧路线。老师是否要求实改liboauth2本体仍需确认，该问题影响实现选型，不允许绕开既定安全契约。
 
-修改前先阅读 [AGENT.md](AGENT.md)、[协议](docs/protocol-v1.md)和[执行状态机](docs/execution-state.md)。协议草案中的未决参数必须先冻结并添加测试，再进入真实密码和执行实现。
+从最新 `main` 创建短期任务分支，提交 PR，CI通过后Squash merge。队友PR须由CODEOWNERS指定的仓库负责人 `Qdcchh` 审核批准；负责人自己的PR免审批，但合并前仍须确认CI通过、分支最新且讨论解决。当前通过管理员豁免实现负责人的免审批，队友仅有Write权限；若未来增加其他管理员，该豁免同样适用，须重新审视权限策略。禁止强推或删除main。
+
+修改前先阅读 [AGENT.md](AGENT.md)、[实施与接口](docs/oauth-oidc-sm2-mvp.md)、[安全模型](docs/security-model.md)和[验收矩阵](docs/acceptance.md)。设计文档不代表实现完成；选型和契约变更需先明确边界、更新测试与文档，再进入真实实现。

@@ -12,17 +12,39 @@ jobs:
   checks:
     name: checks
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: agent_guard_ci
+          POSTGRES_PASSWORD: ci-only-throwaway
+          POSTGRES_DB: agent_guard_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U agent_guard_ci -d agent_guard_ci"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 25
+    env:
+      # Temporary CI credentials for the ephemeral service container only;
+      # never reused for any deployment.
+      AGENT_GUARD_TEST_DATABASE_URL: postgresql://agent_guard_ci:ci-only-throwaway@127.0.0.1:5432/agent_guard_ci
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install scaffold and development tools
-        run: python -m pip install -e '.[dev]'
+      - name: Install package and development tools
+        run: python -m pip install -e '.[dev]' -c constraints.txt
       - name: Lint
         run: python -m ruff check .
       - name: Format check
         run: python -m ruff format --check .
-      - name: Scaffold tests
-        run: python -m pytest
+      - name: Unit and scaffold tests
+        run: python -m pytest tests/unit tests/test_scaffold.py tests/test_docs.py
+      - name: Migrations
+        run: python -m agent_guard.ledger.migrate
+      - name: Integration tests (real PostgreSQL, must not skip)
+        run: python -m pytest tests/integration

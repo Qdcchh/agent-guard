@@ -1,0 +1,6 @@
+# Reproducible install constraints for A1 runtime dependencies.
+# Apply with: python -m pip install -e '.[dev]' -c constraints.txt
+# Scope: only the packages introduced for the ledger (not a full local freeze;
+# local environments may run other Python versions, e.g. 3.14, while CI is 3.11).
+psycopg==3.2.13
+psycopg-binary==3.2.13
