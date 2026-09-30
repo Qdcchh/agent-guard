@@ -10,7 +10,6 @@ from agent_guard.contracts import (
     b64url_encode,
     canonical_json_bytes,
     load_strict_json,
-    signature_message,
 )
 
 
@@ -57,12 +56,6 @@ def test_base64url_round_trip_and_strict_rejections():
             b64url_decode(invalid)
 
 
-def test_signature_domains_are_explicit_and_separated():
-    payload = {"version": "1"}
-    capability = signature_message("capability", payload)
-    invocation = signature_message("invocation", payload)
-    assert capability.startswith(b"AGENT-GUARD/v1/capability\n")
-    assert capability != invocation
-
-    with pytest.raises(EncodingError):
-        signature_message("capabilitY", payload)
+def test_duplicate_key_rejection_covers_nested_protected_headers():
+    with pytest.raises(DuplicateKeyError):
+        load_strict_json('{"alg":"expected","kid":"one","kid":"two"}')

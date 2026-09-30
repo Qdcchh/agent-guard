@@ -1,8 +1,7 @@
-"""Strict wire-format helpers shared by Agent Guard protocol objects."""
+"""Shared wire encoding and trusted in-process ledger contracts."""
 
 from agent_guard.contracts.encoding import (
     MAX_SAFE_INTEGER,
-    SIGNATURE_DOMAINS,
     DuplicateKeyError,
     EncodingError,
     JsonObject,
@@ -10,14 +9,26 @@ from agent_guard.contracts.encoding import (
     b64url_decode,
     b64url_encode,
     canonical_json_bytes,
-    hash_message,
     load_strict_json,
-    signature_message,
+)
+from agent_guard.contracts.ledger import (
+    CURRENCY,
+    INVOKE_ENDPOINT,
+    INVOKE_METHOD,
+    MAX_SAFE_INT,
+    PROFILE,
+    PURPOSE_INVOKE,
+    TOOL_VERSION,
+    AcceptDisposition,
+    AcceptResult,
+    ErrorCode,
+    LedgerError,
+    TrustedCost,
+    VerifiedInvocation,
 )
 
 __all__ = [
     "MAX_SAFE_INTEGER",
-    "SIGNATURE_DOMAINS",
     "DuplicateKeyError",
     "EncodingError",
     "JsonObject",
@@ -25,7 +36,18 @@ __all__ = [
     "b64url_decode",
     "b64url_encode",
     "canonical_json_bytes",
-    "hash_message",
     "load_strict_json",
-    "signature_message",
+    "CURRENCY",
+    "INVOKE_ENDPOINT",
+    "INVOKE_METHOD",
+    "MAX_SAFE_INT",
+    "PROFILE",
+    "PURPOSE_INVOKE",
+    "TOOL_VERSION",
+    "AcceptDisposition",
+    "AcceptResult",
+    "ErrorCode",
+    "LedgerError",
+    "TrustedCost",
+    "VerifiedInvocation",
 ]

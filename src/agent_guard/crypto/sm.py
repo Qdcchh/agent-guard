@@ -1,4 +1,4 @@
-"""SM2-with-SM3 operations for the Agent Guard v1 profile.
+"""SM2-with-SM3 operations for the GM-MVP-1 JWS profile.
 
 This module delegates cryptographic primitives to Tongsuo. It does not implement
 SM2 or SM3 itself.
@@ -6,29 +6,30 @@ SM2 or SM3 itself.
 
 from __future__ import annotations
 
-from collections.abc import Mapping, Sequence
-from typing import cast
+from collections.abc import Mapping
 
 from tongsuopy.crypto import hashes, serialization
 from tongsuopy.crypto.asymciphers import ec
+from tongsuopy.crypto.asymciphers.utils import encode_dss_signature
 from tongsuopy.crypto.exceptions import InternalError as BackendInternalError
 from tongsuopy.crypto.exceptions import InvalidSignature as BackendInvalidSignature
 
 from agent_guard.contracts.encoding import (
     EncodingError,
     JsonObject,
-    JsonValue,
     b64url_decode,
     b64url_encode,
     canonical_json_bytes,
-    hash_message,
-    signature_message,
+    load_strict_json,
 )
 
 SM2_CURVE = "sm2p256v1"
 SM2_USER_ID = b"1234567812345678"
-SIGNATURE_ENCODING = "ASN.1 DER sequence of INTEGER r and INTEGER s"
+JWS_ALG = "https://github.com/Qdcchh/agent-guard#sm2-sm3-v1"
+JWS_TYPES = frozenset({"ag-id+jwt", "ag-at+jwt", "ag-pop+jwt", "ag-receipt+jwt"})
+SIGNATURE_ENCODING = "64-byte big-endian r||s in JWS; DER only at the backend boundary"
 PUBLIC_KEY_ENCODING = "X.509 SubjectPublicKeyInfo DER"
+_SM2_ORDER = int("FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123", 16)
 
 
 class InvalidSm2Signature(ValueError):
@@ -116,61 +117,124 @@ def verify_sm2_message(
         raise InvalidSm2Signature("SM2 signature verification failed") from exc
 
 
-def _validate_envelope(envelope: Mapping[str, JsonValue]) -> tuple[JsonObject, str]:
-    if type(envelope) is not dict:
-        raise TypeError("signed envelope must be a JSON object")
-    if set(envelope) != {"payload", "signature"}:
-        raise ValueError("signed envelope must contain only payload and signature")
-    payload = envelope["payload"]
-    signature = envelope["signature"]
+def _der_to_jws_signature(signature: bytes) -> bytes:
+    # A valid SM2 signature has two positive INTEGERs of at most 33 bytes each.
+    # The sequence is at most 72 bytes, so DER uses one-byte lengths throughout.
+    if len(signature) < 8 or len(signature) > 72:
+        raise InvalidSm2Signature("SM2 backend returned malformed DER")
+    if signature[0] != 0x30 or signature[1] != len(signature) - 2:
+        raise InvalidSm2Signature("SM2 backend returned malformed DER")
+
+    def read_integer(offset: int) -> tuple[int, int]:
+        if offset + 2 > len(signature) or signature[offset] != 0x02:
+            raise InvalidSm2Signature("SM2 backend returned malformed DER")
+        length = signature[offset + 1]
+        end = offset + 2 + length
+        if length < 1 or length > 33 or end > len(signature):
+            raise InvalidSm2Signature("SM2 backend returned malformed DER")
+        value = int.from_bytes(signature[offset + 2 : end], "big")
+        return value, end
+
+    r, offset = read_integer(2)
+    s, offset = read_integer(offset)
+    if offset != len(signature) or encode_dss_signature(r, s) != signature:
+        raise InvalidSm2Signature("SM2 backend returned noncanonical DER")
+    if not (1 <= r < _SM2_ORDER and 1 <= s < _SM2_ORDER):
+        raise InvalidSm2Signature("SM2 signature integer is outside the curve order")
+    return r.to_bytes(32, "big") + s.to_bytes(32, "big")
+
+
+def _jws_to_der_signature(signature: bytes) -> bytes:
+    if len(signature) != 64:
+        raise InvalidSm2Signature("JWS SM2 signature must be exactly 64 bytes")
+    r = int.from_bytes(signature[:32], "big")
+    s = int.from_bytes(signature[32:], "big")
+    if not (1 <= r < _SM2_ORDER and 1 <= s < _SM2_ORDER):
+        raise InvalidSm2Signature("SM2 signature integer is outside the curve order")
+    return encode_dss_signature(r, s)
+
+
+def _validate_type(token_type: str) -> None:
+    if token_type not in JWS_TYPES:
+        raise ValueError("unsupported GM-MVP-1 JWS type")
+
+
+def _valid_key_id(key_id: object) -> bool:
+    return (
+        type(key_id) is str
+        and bool(key_id)
+        and all(0x21 <= ord(character) <= 0x7E for character in key_id)
+    )
+
+
+def sign_compact_jws(
+    private_key: ec.EllipticCurvePrivateKey,
+    payload: JsonObject,
+    *,
+    key_id: str,
+    token_type: str,
+) -> str:
+    """Sign canonical JWS segments with the fixed project SM2 profile."""
+
+    _validate_type(token_type)
+    if not _valid_key_id(key_id):
+        raise ValueError("key_id must be nonempty printable ASCII without whitespace")
     if type(payload) is not dict:
-        raise TypeError("signed envelope payload must be a JSON object")
-    if type(signature) is not str:
-        raise TypeError("signed envelope signature must be a string")
-    return cast(JsonObject, payload), signature
+        raise TypeError("JWS payload must be a JSON object")
+    header: JsonObject = {"alg": JWS_ALG, "typ": token_type, "kid": key_id}
+    signing_input = (
+        b64url_encode(canonical_json_bytes(header))
+        + "."
+        + b64url_encode(canonical_json_bytes(payload))
+    )
+    der_signature = sign_sm2_message(private_key, signing_input.encode("ascii"))
+    return signing_input + "." + b64url_encode(_der_to_jws_signature(der_signature))
 
 
-def create_signed_envelope(
-    private_key: ec.EllipticCurvePrivateKey, payload: JsonObject, domain: str
+def verify_compact_jws(
+    token: str,
+    *,
+    expected_type: str,
+    trusted_keys: Mapping[str, ec.EllipticCurvePublicKey],
 ) -> JsonObject:
-    """Create a v1 envelope whose signature covers only the complete payload."""
+    """Verify original Compact JWS segments against locally trusted keys.
 
-    message = signature_message(domain, payload)
-    signature = sign_sm2_message(private_key, message)
-    return {"payload": payload, "signature": b64url_encode(signature)}
+    This checks the protected header and signature only. Claim validation belongs
+    to the caller after this function succeeds.
+    """
 
-
-def verify_signed_envelope(
-    public_key: ec.EllipticCurvePublicKey,
-    envelope: Mapping[str, JsonValue],
-    domain: str,
-) -> JsonObject:
-    """Validate an envelope shape, encoding, domain, and SM2 signature."""
-
-    payload, encoded_signature = _validate_envelope(envelope)
+    _validate_type(expected_type)
+    if type(token) is not str:
+        raise TypeError("token must be str")
+    parts = token.split(".")
+    if len(parts) != 3:
+        raise InvalidSm2Signature("JWS must contain exactly three segments")
     try:
-        signature = b64url_decode(encoded_signature)
+        header_bytes = b64url_decode(parts[0])
+        payload_bytes = b64url_decode(parts[1])
+        signature = b64url_decode(parts[2])
+        header = load_strict_json(header_bytes)
+        payload = load_strict_json(payload_bytes)
     except EncodingError as exc:
-        raise InvalidSm2Signature("SM2 signature encoding is invalid") from exc
-    verify_sm2_message(public_key, signature_message(domain, payload), signature)
+        raise InvalidSm2Signature("invalid JWS encoding") from exc
+    if type(header) is not dict or set(header) != {"alg", "typ", "kid"}:
+        raise InvalidSm2Signature("invalid protected JWS header")
+    if header["alg"] != JWS_ALG or header["typ"] != expected_type:
+        raise InvalidSm2Signature("JWS algorithm or type mismatch")
+    key_id = header["kid"]
+    if not _valid_key_id(key_id):
+        raise InvalidSm2Signature("invalid JWS key ID")
+    public_key = trusted_keys.get(key_id)
+    if public_key is None:
+        raise InvalidSm2Signature("JWS key ID is not trusted")
+    if type(payload) is not dict:
+        raise InvalidSm2Signature("JWS payload must be a JSON object")
+    signing_input = (parts[0] + "." + parts[1]).encode("ascii")
+    verify_sm2_message(public_key, signing_input, _jws_to_der_signature(signature))
     return payload
 
 
-def credential_digest(envelope: Mapping[str, JsonValue]) -> bytes:
-    """Digest the complete signed envelope with the credential hash domain."""
+def sm3_b64url(message: bytes) -> str:
+    """Encode the SM3 digest of exact input bytes as unpadded base64url."""
 
-    _validate_envelope(envelope)
-    body = canonical_json_bytes(cast(JsonObject, envelope))
-    return sm3_digest(hash_message("credential", body))
-
-
-def chain_digest(envelopes: Sequence[Mapping[str, JsonValue]]) -> bytes:
-    """Digest ordered credential digests from root to leaf."""
-
-    if isinstance(envelopes, (str, bytes)) or not isinstance(envelopes, Sequence):
-        raise TypeError("envelopes must be a sequence")
-    encoded_digests: list[JsonValue] = [
-        b64url_encode(credential_digest(item)) for item in envelopes
-    ]
-    body = canonical_json_bytes(encoded_digests)
-    return sm3_digest(hash_message("chain", body))
+    return b64url_encode(sm3_digest(message))

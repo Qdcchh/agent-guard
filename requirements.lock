@@ -1,6 +1,10 @@
 # Runtime dependency lock for Python 3.11+.
-# Regenerate and re-run the cryptographic interoperability tests before changing it.
+# Re-run the cryptographic vectors and ledger integration tests after changes.
 cffi==2.1.1
 pycparser==3.0
+psycopg==3.2.13
+psycopg-binary==3.2.13
 rfc8785==0.1.4
 tongsuopy==1.0.1
+typing_extensions==4.16.0
+tzdata==2026.4

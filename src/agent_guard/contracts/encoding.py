@@ -1,4 +1,4 @@
-"""Canonical JSON, strict JSON parsing, base64url, and domain separation."""
+"""Canonical JSON, strict JSON parsing, and unpadded base64url."""
 
 from __future__ import annotations
 
@@ -11,12 +11,8 @@ from typing import NoReturn, TypeAlias, cast
 import rfc8785
 
 MAX_SAFE_INTEGER = (1 << 53) - 1
-SIGNATURE_DOMAINS = frozenset({"capability", "invocation", "result-read", "receipt", "checkpoint"})
-HASH_DOMAINS = frozenset({"credential", "chain", "intent", "result"})
 
 _BASE64URL_RE = re.compile(r"[A-Za-z0-9_-]*\Z", re.ASCII)
-_SIGNATURE_PREFIX = b"AGENT-GUARD/v1/"
-_HASH_PREFIX = b"AGENT-GUARD/v1/hash/"
 
 JsonValue: TypeAlias = None | bool | int | str | list["JsonValue"] | dict[str, "JsonValue"]
 JsonObject: TypeAlias = dict[str, JsonValue]
@@ -143,21 +139,3 @@ def b64url_decode(value: str) -> bytes:
     if b64url_encode(decoded) != value:
         raise EncodingError("non-canonical base64url value")
     return decoded
-
-
-def signature_message(domain: str, payload: JsonValue) -> bytes:
-    """Build the exact full message consumed by SM2 signing and verification."""
-
-    if domain not in SIGNATURE_DOMAINS:
-        raise EncodingError(f"unsupported signature domain: {domain!r}")
-    return _SIGNATURE_PREFIX + domain.encode("ascii") + b"\n" + canonical_json_bytes(payload)
-
-
-def hash_message(domain: str, body: bytes) -> bytes:
-    """Apply the independent v1 prefix for an SM3 digest input."""
-
-    if domain not in HASH_DOMAINS:
-        raise EncodingError(f"unsupported hash domain: {domain!r}")
-    if type(body) is not bytes:
-        raise TypeError("hash body must be bytes")
-    return _HASH_PREFIX + domain.encode("ascii") + b"\n" + body
