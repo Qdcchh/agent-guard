@@ -18,10 +18,10 @@ from agent_guard.authorization.claims import (
     ClaimsError,
     validate_access_claims,
 )
+from agent_guard.authorization.proof import ProofVerificationError, verify_ag_proof
 from agent_guard.contracts.encoding import (
     EncodingError,
     JsonObject,
-    b64url_decode,
     canonical_json_bytes,
     load_strict_json,
 )
@@ -29,18 +29,6 @@ from agent_guard.contracts.ledger import INVOKE_ENDPOINT, VerifiedInvocation
 from agent_guard.crypto.sm import InvalidSm2Signature, sm3_b64url, verify_compact_jws
 from agent_guard.identity.resolver import IdentityError, IdentityResolver
 
-_PROOF_FIELDS = {
-    "profile",
-    "purpose",
-    "client_id",
-    "jti",
-    "iat",
-    "exp",
-    "htm",
-    "htu",
-    "token_sm3",
-    "body_sm3",
-}
 _INVOKE_FIELDS = {"profile", "task_id", "tool_id", "tool_version", "idempotency_key", "params"}
 _TOOLS = {
     "procurement.request.read": {"request_id"},
@@ -179,38 +167,25 @@ class InvocationVerifier:
                 or raw_claims["ag_cnf"]["spki_sm3"] != identity.registration.spki_sm3
             ):
                 raise VerificationError("token holder does not match enterprise registry")
-            signed_proof = verify_compact_jws(
-                proof,
-                expected_type="ag-pop+jwt",
-                trusted_keys={identity.registration.kid: identity.public_key},
-            )
         except (InvalidSm2Signature, ClaimsError, IdentityError, TypeError, ValueError) as exc:
-            raise VerificationError("invalid access token, holder or proof") from exc
-        p = _object(signed_proof, _PROOF_FIELDS, "AG-Proof")
-        if p["profile"] != PROFILE or p["purpose"] != "invoke":
-            raise VerificationError("wrong proof profile or purpose")
-        if p["client_id"] != raw_claims["client_id"] or p["htm"] != method or p["htu"] != endpoint:
-            raise VerificationError("proof client or endpoint mismatch")
-        proof_jti = _id(p["jti"], "proof jti")
-        try:
-            if len(b64url_decode(proof_jti)) < 16:
-                raise VerificationError("proof jti must encode at least 128 bits")
-        except EncodingError as exc:
-            raise VerificationError("proof jti must be unpadded base64url") from exc
-        if type(p["iat"]) is not int or type(p["exp"]) is not int:
-            raise VerificationError("proof timestamps must be integers")
-        if not p["iat"] <= p["exp"] <= p["iat"] + 60:
-            raise VerificationError("invalid proof validity window")
-        if p["iat"] > now + 5 or now >= p["exp"]:
-            raise VerificationError("stale proof")
-        if p["token_sm3"] != sm3_b64url(token.encode("ascii")):
-            raise VerificationError("proof does not bind token")
+            raise VerificationError("invalid access token or holder") from exc
         try:
             request, normalized_body, params = _validate_intent(body, claims)
         except (UnicodeError, TypeError) as exc:
             raise VerificationError("invalid invocation body") from exc
-        if p["body_sm3"] != sm3_b64url(normalized_body):
-            raise VerificationError("proof does not bind body")
+        try:
+            p = verify_ag_proof(
+                proof,
+                trusted_keys={identity.registration.kid: identity.public_key},
+                client_id=raw_claims["client_id"],
+                purpose="invoke",
+                endpoint=endpoint,
+                token=token,
+                body=request,
+                now=now,
+            )
+        except ProofVerificationError as exc:
+            raise VerificationError("invalid AG-Proof") from exc
         evidence_ref = self._stage_evidence(token, proof, body)
         _id(evidence_ref, "evidence reference")
         return VerifiedInvocation(

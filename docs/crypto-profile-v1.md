@@ -1,6 +1,6 @@
 # GM-MVP-1 密码与编码配置
 
-状态：SM2/SM3 与 Compact JWS 基础 SDK、部分业务 claims 模式、DID只读解析、静态调用验权、委托收窄策略及ID Token/PKCE辅助函数已实现；独立第二实现互验、授权服务、事务性委托/撤销、完整验权入口及密钥生命周期尚未完成。本配置遵循 [当前接口契约](oauth-oidc-sm2-mvp.md)，不使用历史能力凭证 v1 的签名信封或域前缀。
+状态：SM2/SM3 与 Compact JWS 基础 SDK、部分业务 claims 模式、DID只读解析、静态调用验权、委托收窄及授权码/Token Exchange请求预校验、ID Token/PKCE辅助函数、进程内一次性授权码及唯一根签发已实现；独立第二实现互验、登录/同意HTTP服务、事务性子委托/撤销、完整验权入口及密钥生命周期尚未完成。本配置遵循 [当前接口契约](oauth-oidc-sm2-mvp.md)，不使用历史能力凭证 v1 的签名信封或域前缀。
 
 ## 固定参数
 
@@ -31,6 +31,8 @@
 - `agent_guard.authorization.oidc`：RP侧ID Token的SM2签验、nonce/aud/issuer/时效验证及标准S256 PKCE辅助函数；不包含真实登录、浏览器session或AS HTTP端点。
 - `agent_guard.authorization.proof.sign_ag_proof`：客户端侧生成每次新jti的短时AG-Proof，绑定固定HTTPS端点、token原始字节摘要和规范业务/表单映射摘要。OAuth表单重复键拒绝仍由HTTP解码层负责。
 - `agent_guard.authorization.policy.GrantPolicy`：将已验签父令牌与预登记接收者、交换请求逐维比较，输出不可变 `ChildSpec`；不签发、存储或改变预算。AS仍须在同根锁事务内重验父子状态及幂等，再保存授权节点和原签名令牌。
+- `agent_guard.authorization.forms`、`code`、`exchange`：严格OAuth表单解码，验证授权码换码或Token Exchange请求的客户端密钥证明、端点及正文绑定，输出预校验结果。Basic认证结果、租户及重定向配置必须来自可信服务；静态预校验本身不消费code或登记防重放。授权码的事务处理见下项，子委托的实时撤销/过期和幂等仍待实现。
+- `agent_guard.authorization.code_service.AuthorizationCodeService`：以真实PostgreSQL事务生成一次性哈希授权码、核对PKCE和证明、登记防重放、创建唯一根并由AS签SM2 ID/Access Token。输入 `ApprovedAuthorization` 仅能由未来真实登录及同意服务在进程内构造；当前没有外部可调用的登录/同意入口，不能据此宣称M1已通过。Token Exchange的子授权事务仍未实现。
 
 ## 依赖与验证
 

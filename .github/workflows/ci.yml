@@ -45,7 +45,7 @@ jobs:
       - name: Format check
         run: python -m ruff format --check .
       - name: Unit and SDK tests
-        run: python -m pytest tests/unit tests/test_scaffold.py tests/test_docs.py tests/test_encoding.py tests/test_crypto_profile.py
+        run: python -m pytest tests --ignore=tests/integration
       - name: Migrations
         run: python -m agent_guard.ledger.migrate
       - name: Integration tests (real PostgreSQL, must not skip)
