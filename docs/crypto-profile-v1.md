@@ -1,6 +1,6 @@
 # GM-MVP-1 密码与编码配置
 
-状态：SM2/SM3 与 Compact JWS 基础 SDK 已实现；独立第二实现互验、业务 claims 模式、授权链、验权入口及密钥生命周期尚未完成。本配置遵循 [当前接口契约](oauth-oidc-sm2-mvp.md)，不使用历史能力凭证 v1 的签名信封或域前缀。
+状态：SM2/SM3 与 Compact JWS 基础 SDK、部分业务 claims 模式、DID只读解析、静态调用验权、委托收窄策略及ID Token/PKCE辅助函数已实现；独立第二实现互验、授权服务、事务性委托/撤销、完整验权入口及密钥生命周期尚未完成。本配置遵循 [当前接口契约](oauth-oidc-sm2-mvp.md)，不使用历史能力凭证 v1 的签名信封或域前缀。
 
 ## 固定参数
 
@@ -25,6 +25,12 @@
 - `agent_guard.contracts`：`load_strict_json`、`canonical_json_bytes`、`b64url_encode`、`b64url_decode`。
 - `agent_guard.crypto`：SM2 临时密钥生成、公钥 SPKI DER 编解码、SM2 完整消息签验、SM3 摘要、`sign_compact_jws`、`verify_compact_jws`。
 - `verify_compact_jws` 只完成线格式、受保护 header、可信 key 查找和密码验签；返回 payload 后仍须按令牌类型校验 claims。不可将其返回值直接转换成账本 `VerifiedInvocation`。
+- `agent_guard.authorization.claims`：严格验证Access Token字段、时效、actor链、范围和子令牌静态收窄；不代替AS事务性签发或实时授权树校验。
+- `agent_guard.identity.resolver`：只读取管理员预批准的 `(tenant_id, client_id) → DID/kid/SPKI` 快照，固定did:web主机白名单、HTTPS、无重定向，并对照文档用途和公钥。它不提供自助登记或数据库生命周期管理。
+- `agent_guard.authorization.verifier.InvocationVerifier`：对固定调用端点验签Access Token与AG-Proof、绑定持有者、令牌摘要和规范请求体，验证工具参数静态约束后构造账本的可信进程内输入。调用方必须提供受控原始证据暂存回调；账本接受事务仍须检查重放、授权链、撤销、时效、key状态、可信业务关联与预算。
+- `agent_guard.authorization.oidc`：RP侧ID Token的SM2签验、nonce/aud/issuer/时效验证及标准S256 PKCE辅助函数；不包含真实登录、浏览器session或AS HTTP端点。
+- `agent_guard.authorization.proof.sign_ag_proof`：客户端侧生成每次新jti的短时AG-Proof，绑定固定HTTPS端点、token原始字节摘要和规范业务/表单映射摘要。OAuth表单重复键拒绝仍由HTTP解码层负责。
+- `agent_guard.authorization.policy.GrantPolicy`：将已验签父令牌与预登记接收者、交换请求逐维比较，输出不可变 `ChildSpec`；不签发、存储或改变预算。AS仍须在同根锁事务内重验父子状态及幂等，再保存授权节点和原签名令牌。
 
 ## 依赖与验证
 

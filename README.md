@@ -4,7 +4,7 @@
 
 目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
 
-> 当前状态：A1 执行账本已通过阶段验收，详见 [A1最终验收记录](tasks/A1-review-r4.md)。B 的 SM2/SM3、严格编码和 GM-MVP-1 Compact JWS 基础 SDK 已实现并通过本地测试；独立第二实现互验尚未完成。OAuth/OIDC 端点、DID 登记、完整授权链/验权、HTTP 网关、执行/结算/恢复、签名回执、审计检查点与前端仍未实现。局部测试通过不代表端到端安全目标已实现。
+> 当前状态：A1 执行账本已通过阶段验收，详见 [A1最终验收记录](tasks/A1-review-r4.md)。B 的 SM2/SM3、严格编码、GM-MVP-1 Compact JWS，以及部分只读 DID 解析、令牌/AG-Proof 静态验权、委托收窄策略与 ID Token/PKCE 校验代码已实现；独立第二实现互验尚未完成。OAuth/OIDC 服务端点、企业登记管理、事务性委托签发与撤销、完整验权联调、HTTP 网关、执行/结算/恢复、签名回执、审计检查点与前端仍未实现。局部测试通过不代表端到端安全目标已实现。
 
 ## 1. 项目目标
 
@@ -71,6 +71,8 @@ src/agent_guard/
   contracts/encoding.py      严格 JSON、RFC 8785、base64url
   contracts/ledger.py        最小进程内契约（可信输入类型、错误码）
   crypto/                    SM2/SM3 与 Compact JWS 基础 SDK
+  authorization/             严格claims、静态验权、ID Token与PKCE辅助函数
+  identity/                  did:web受控解析与登记快照核对
   ledger/                    A1：迁移器、SQL存储、原子接受、可信初始化夹具
 migrations/                  版本化 SQL 迁移（checksum 保护，勿改历史文件）
 tests/                       SDK、U1输入边界、P1—P14集成与并发用例
