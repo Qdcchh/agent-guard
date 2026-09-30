@@ -1,0 +1,30 @@
+# Isolated PostgreSQL for agent-guard A1 development and tests only.
+#
+# Start:   docker compose -f compose.test.yaml up -d --wait
+# Stop:    docker compose -f compose.test.yaml down
+# Wipe:    docker compose -f compose.test.yaml down -v  (only this file's namespace)
+#
+# Credentials are local test-only values. Override the password by exporting
+# AGENT_GUARD_TEST_PG_PASSWORD before starting. Never reuse these credentials
+# for any deployment; nothing outside this compose file reads them.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: agent-guard-test-pg
+    environment:
+      POSTGRES_USER: agent_guard_test
+      POSTGRES_PASSWORD: ${AGENT_GUARD_TEST_PG_PASSWORD:-agent-guard-test-only-pw}
+      POSTGRES_DB: agent_guard_test
+    ports:
+      - "127.0.0.1:55432:5432"
+    # Data lives on tmpfs: no volume is created on the host and nothing to clean.
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agent_guard_test -d agent_guard_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 25
+      start_period: 5s
+    restart: "no"
