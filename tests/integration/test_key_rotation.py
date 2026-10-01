@@ -91,5 +91,5 @@ def test_rotation_without_historical_key_rejects_old_parent_token(ledger, dsn):
     rotated = _rotated_exchange(
         dsn, old_key.public_key(), new_key, registrations, include_historical=False
     )
-    with pytest.raises(TokenExchangeError, match="SUBJECT_INVALID"):
+    with pytest.raises(TokenExchangeError, match="SUBJECT_OR_PROOF_INVALID"):
         _exchange(rotated, keys, registrations, _form(old_key, root.access_token))

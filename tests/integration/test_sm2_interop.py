@@ -1,12 +1,13 @@
 """SM2 second-implementation interoperability against the OpenSSL CLI.
 
-The OpenSSL command-line tool is an implementation independent of Tongsuo.
-Both directions are exercised over the same fixed key and message: Tongsuo
-signature -> OpenSSL verify, and OpenSSL signature -> Tongsuo verify, plus a
-JWS whose signature segment was produced by OpenSSL. OpenSSL applies the
-default SM2 user identifier ``1234567812345678``, matching GM-MVP-1. This is a
-development-vector check on the CI runner, not a claim about all OpenSSL
-builds or algorithm suites.
+OpenSSL is an implementation independent of Tongsuo. The keypair is generated
+by OpenSSL as an SM2 key (so OpenSSL applies SM2 semantics) and loaded into
+Tongsuo; both directions are then exercised over the same fixed message:
+Tongsuo signature -> OpenSSL verify, OpenSSL signature -> Tongsuo verify, and
+a JWS whose signature segment was produced by OpenSSL. Both sides use the
+GM-MVP-1 user identifier ``1234567812345678``, which is the OpenSSL SM2
+default. This is a development-vector check on the CI runner, not a claim
+about every OpenSSL build or algorithm suite.
 """
 
 from __future__ import annotations
@@ -21,7 +22,6 @@ from agent_guard.contracts.encoding import b64url_encode
 from agent_guard.crypto.sm import (
     InvalidSm2Signature,
     _der_to_jws_signature,
-    generate_sm2_private_key,
     sign_compact_jws,
     sign_sm2_message,
     verify_compact_jws,
@@ -42,33 +42,28 @@ def _require_openssl() -> None:
         pytest.fail("openssl CLI is required for the SM2 interop test", pytrace=False)
 
 
-def _write_keypair(tmp_path):
-    key = generate_sm2_private_key()
+def _openssl_keypair(tmp_path):
+    """Let OpenSSL generate a genuine SM2 keypair for both sides to use."""
     private_path = tmp_path / "sm2-private.pem"
     public_path = tmp_path / "sm2-public.pem"
-    private_path.write_bytes(
-        key.private_bytes(
-            serialization.Encoding.PEM,
-            serialization.PrivateFormat.PKCS8,
-            serialization.NoEncryption(),
-        )
-    )
-    public_path.write_bytes(
-        key.public_key().public_bytes(
-            serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo
-        )
-    )
-    return key, private_path, public_path
+    generated = _openssl(["genpkey", "-algorithm", "SM2", "-out", str(private_path)])
+    assert generated.returncode == 0, generated.stdout + generated.stderr
+    exported = _openssl(["pkey", "-in", str(private_path), "-pubout", "-out", str(public_path)])
+    assert exported.returncode == 0, exported.stdout + exported.stderr
+    private_key = serialization.load_pem_private_key(private_path.read_bytes(), password=None)
+    public_key = serialization.load_pem_public_key(public_path.read_bytes())
+    assert private_key.curve.name == "SM2" and public_key.curve.name == "SM2"
+    return private_key, public_key, private_path, public_path
 
 
 def test_sm2_signatures_interoperate_in_both_directions(tmp_path):
     _require_openssl()
-    key, private_path, public_path = _write_keypair(tmp_path)
+    private_key, public_key, private_path, public_path = _openssl_keypair(tmp_path)
     message_path = tmp_path / "message.bin"
     message_path.write_bytes(MESSAGE)
 
     tongsuo_signature = tmp_path / "tongsuo.der"
-    tongsuo_signature.write_bytes(sign_sm2_message(key, MESSAGE))
+    tongsuo_signature.write_bytes(sign_sm2_message(private_key, MESSAGE))
     verified = _openssl(
         [
             "pkeyutl",
@@ -104,21 +99,21 @@ def test_sm2_signatures_interoperate_in_both_directions(tmp_path):
         ]
     )
     assert signed.returncode == 0, signed.stdout + signed.stderr
-    verify_sm2_message(key.public_key(), MESSAGE, openssl_signature.read_bytes())
+    verify_sm2_message(public_key, MESSAGE, openssl_signature.read_bytes())
 
     with pytest.raises(InvalidSm2Signature):
-        verify_sm2_message(key.public_key(), MESSAGE + b"!", openssl_signature.read_bytes())
+        verify_sm2_message(public_key, MESSAGE + b"!", openssl_signature.read_bytes())
 
 
 def test_openssl_jws_segment_verifies_through_b_verifier(tmp_path):
     _require_openssl()
-    key, private_path, _ = _write_keypair(tmp_path)
+    private_key, public_key, private_path, _ = _openssl_keypair(tmp_path)
     payload = {
         "iss": "https://auth.agent-guard.test",
         "sub": "user-001",
         "client_id": "agent-planner",
     }
-    token = sign_compact_jws(key, payload, key_id="as-sign-1", token_type="ag-at+jwt")
+    token = sign_compact_jws(private_key, payload, key_id="as-sign-1", token_type="ag-at+jwt")
     signing_input = token.rsplit(".", 1)[0]
 
     signing_path = tmp_path / "signing-input.bin"
@@ -148,7 +143,7 @@ def test_openssl_jws_segment_verifies_through_b_verifier(tmp_path):
         verify_compact_jws(
             independently_signed,
             expected_type="ag-at+jwt",
-            trusted_keys={"as-sign-1": key.public_key()},
+            trusted_keys={"as-sign-1": public_key},
         )
         == payload
     )
