@@ -128,18 +128,19 @@ docker compose -f compose.test.yaml down
 
 `LoginService`、`ConsentService` 与 `BrowserLoginApp` 提供登录与同意的可信闭环：一次性预认证 CSRF、scrypt 口令 KDF、服务端登录会话及会话绑定 CSRF、服务端授权请求持久化、从 `ag_task_policies` 读取任务边界，并校验 `state`、`nonce`、精确 `redirect_uri` 与 PKCE S256。只有批准分支才调用 `AuthorizationCodeService` 签发一次性授权码并重定向携带 `code`/`state`；拒绝分支只记录不签发。`ApprovedAuthorization` 只能由该同意服务构造。提供浏览器组件时 `AuthorizationHttpApp` 会挂载 `GET/POST /oauth/authorize`、`GET/POST /ag/login` 与 `POST /ag/consent`。这些路由仍未挂载 TLS HTTP 监听器，企业登记管理与端到端网关联调仍未实现。运行 `python -m pytest tests/test_login_consent.py` 及 `python -m pytest tests/integration/test_login_consent.py`（后者需测试 PostgreSQL）验证接口与真实数据库签发。
 
-迁移 `007_admin_grant_revocation.sql` 新增租户管理员登记及不可变节点撤销记录，不改写现有授权或账本数据。可信部署流程须先在 `ag_tenant_admins` 登记真实管理员，并限制该表的写权限；外部请求不得自行登记。`GrantRevocationService` 只接受已验证且有 CSRF 防护的管理员会话传入的主体，并在数据库中再次核验管理员资格，按根至叶锁序撤销目标子树。`RevocationHttpApp` 在提供时挂载 `POST /ag/tasks/{task_id}/revoke`（任务所有者）与 `POST /ag/grants/{grant_id}/revoke`（租户管理员）：租户与主体只来自已验证会话，CSRF 取 `X-CSRF-Token`，请求体严格为 `{reason_code:"USER_CANCELLED"}`，重复请求返回同一撤销记录；这些路由同样尚未挂载生产 TLS。运行 `python -m pytest tests/test_revocation_http.py tests/integration/test_revocation_http.py` 验证接口与真实数据库撤销。
+迁移 `007_admin_grant_revocation.sql` 新增租户管理员登记及不可变节点撤销记录，不改写现有授权或账本数据。可信部署流程须先在 `ag_tenant_admins` 登记真实管理员，并限制该表的写权限；外部请求不得自行登记。`GrantRevocationService` 只接受已验证且有 CSRF 防护的管理员会话传入的主体，并在数据库中再次核验管理员资格，按根至叶锁序撤销目标子树。`RevocationHttpApp` 在提供时挂载 `POST /ag/tasks/{task_id}/revoke`（任务所有者）与 `POST /ag/grants/{grant_id}/revoke`（租户管理员）：租户与主体只来自已验证会话，CSRF 取 `X-CSRF-Token`，请求体严格为 `{reason_code:"USER_CANCELLED"}`，重复请求返回同一撤销记录；这些路由同样尚未挂载生产 TLS。运行 `python -m pytest tests/test_revocation_http.py tests/integration/test_revocation_http.py` 验证接口与真实数据库撤销。升级前备份，用相同迁移命令增量升级；旧数据库若缺少 007 将不能调用该服务。集成测试为 `python -m pytest tests/integration/test_grant_revocation_service.py`。
 
 `agent_guard.server` 提供 AS/OP 的开发装配与启动：`config.py` 严格加载私有配置（issuer、AS 签名 key 路径、客户端登记、DID 登记与文档、TTL 边界），`factory.py` 将全部服务组成 `AuthorizationHttpApp` 并包上请求超时中间件，`python -m agent_guard.server init/check/run` 提供生成合成开发密钥与配置、校验及 TLS 启动。明文客户端/gateway secret 只存在于独立的私有 secrets 文件，从不进入配置或日志；运行需要 `AGENT_GUARD_DATABASE_URL` 与 `--ssl-certfile/--ssl-keyfile`（缺证书拒绝启动）。issuer、证明目标与 scheme 均来自配置和可信 ASGI scope，绝不从 `Host`/`X-Forwarded-*` 推导；开发启动默认 `--no-proxy-headers`，只有在可信反向代理后面才允许单独评估开启。开发自签证书可用 `openssl req -x509 -newkey rsa:2048 -nodes -days 1 -subj /CN=localhost -keyout key.pem -out cert.pem` 生成。这是开发边界，不是生产部署；新增运行依赖 uvicorn 0.35.x（BSD-3-Clause，Encode 维护的 ASGI 服务器），版本已写入 `requirements.lock`。真实 TLS 全链路（登录→同意→换码→内省→撤销）由 `python -m pytest tests/integration/test_server_tls.py` 在 CI 的 PostgreSQL 与 openssl 环境验证。
 
 ### 密钥生命周期（开发与部署边界）
-
 - 生成：`python -m agent_guard.server init` 在输出目录生成 AS SM2 签名私钥与三个代理 SM2 私钥；目录同时含明文 secrets，必须放在部署私有位置，禁止入库。
 - 分发：仅 AS 服务持有 AS 签名私钥，代理各自持有自己的私钥；公开密钥通过 `/ag/keys`（项目私有密钥文档，非标准 JWKS）与受控 did:web 文档发布。
 - 轮换：新密钥使用新 `kid`。配置的 `signing_kid` + `as_signing_key_path` 是当前签发密钥，可选的 `historical_verification_keys` 列出旧公钥，供 `TokenExchangeService`、`IntrospectionService` 与 `/ag/keys` 验签历史令牌与快照；旧 key 只验签、不再签发。轮换行为由 `python -m pytest tests/integration/test_key_rotation.py` 验证。
 - 撤销/停用：持有者密钥通过 `ag_principals.active=false` 停用；AS 签名密钥从配置移除并停止分发，历史公钥快照另行离线保存以验证既有证据。
 - 销毁与泄露处置：退役私钥从在线主机删除；若签名私钥疑似泄露，先用新 `kid` 上线并停止旧 key 签发，再按任务/授权撤销流程处置，未锚定证据的信任说明须重建。不承诺自动完成外部取证。
-- 局限：不提供 HSM/KMS 托管、自动轮换调度或第三方 CA 集成；以上是开发与本地部署流程，生产部署须另行评估。升级前备份，用相同迁移命令增量升级；旧数据库若缺少 007 将不能调用该服务。集成测试为 `python -m pytest tests/integration/test_grant_revocation_service.py`。
+- 局限：不提供 HSM/KMS 托管、自动轮换调度或第三方 CA 集成；以上是开发与本地部署流程，生产部署须另行评估。
+
+`tests/integration/test_as_ledger_integration.py` 在真实 PostgreSQL 上打通当前仓库中已经存在的 B→A 接缝：B 的 AS 签发根并经两级 Token Exchange 得到 executor 令牌，B 的 `InvocationVerifier` 将签名工具请求转成可信 `VerifiedInvocation`，再交给 A1 的 `ExecutionLedger.accept` 做加锁、原子的预算决定。覆盖两级委托后的执行调用、被盗令牌无私钥拒绝、参数篡改拒绝、幂等重试不重复预留、proof 重放拒绝、根与中间祖先撤销后拒绝、以及内省 `active:true` 不构成执行许可。A 的 HTTP 网关、四工具、下游执行、恢复与证据导出**尚未实现**，因此这只是 A1 接受事务的联调，M1—M13 仍不能整体通过。
 
 `verify_receipt_bundle` 提供 B 侧 `AG-EVIDENCE-1` 单笔未锚定证据的离线验证：可信 AS、网关及历史 holder 公钥和登记快照必须独立配置，不能从证据包自带字段建立信任。验证器复核签名、授权祖先收窄、AG-Proof、调用与结果摘要，以及根至叶 RESERVE/SETTLE/RELEASE 的金额和次数变动；只有四种账本 delta 允许有界负整数。运行 `python -m pytest tests/test_receipt.py`。当前没有 A 侧证据导出和独立审计检查点，因此不宣称任务历史完整、防回滚或 M9 整项通过。
 

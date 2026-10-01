@@ -13,12 +13,13 @@
 - 真实登录与同意闭环（迁移 `008_login_consent.sql`）：scrypt 口令 KDF、一次性预认证 CSRF、服务端登录会话与会话绑定 CSRF、服务端授权请求持久化、`ag_task_policies` 任务边界读取、state/nonce/redirect/PKCE 校验。`LoginService`、`ConsentService`、`BrowserLoginApp` 已落地；只有批准分支签发一次性授权码，拒绝分支只记录不签发；`ApprovedAuthorization` 只能由同意服务构造。`AuthorizationHttpApp` 在提供浏览器组件时挂载 `GET/POST /oauth/authorize`、`GET/POST /ag/login`、`POST /ag/consent`。
 - 开发 TLS 装配（`agent_guard.server`）：`config.py` 严格私有配置加载（明文 secret 只存在于独立 secrets 文件），`factory.py` 全量组装 + 请求超时中间件，`python -m agent_guard.server init/check/run` 生成合成开发密钥与配置、校验并以 uvicorn（0.35.x，BSD-3）启动 TLS；缺 `AGENT_GUARD_DATABASE_URL` 或证书拒绝启动；issuer/证明目标/scheme 只来自配置与可信 ASGI scope，不信任 `Host`/`X-Forwarded-*`（开发启动默认 `--no-proxy-headers`）。真实 TLS 全链路由 CI 集成测试 `tests/integration/test_server_tls.py` 验证（自签开发证书，非生产装配）。
 - 密钥轮换与独立实现互验：配置支持 `historical_verification_keys`（旧 `kid` 仅验签、不再签发），`TokenExchangeService`/`IntrospectionService`/`/ag/keys` 同持历史公钥；`tests/integration/test_key_rotation.py` 验证轮换后旧令牌可验签、新令牌由新 `kid` 签发。`tests/integration/test_sm2_interop.py` 用 OpenSSL CLI 作为独立第二实现做双向签名互验及 JWS r||s/DER 转换互验（CI 环境执行）。README 增加密钥生成/分发/轮换/撤销/销毁与泄露处置边界说明。
+- B→A1 接缝联调（`tests/integration/test_as_ledger_integration.py`）：真实 PostgreSQL 上由 B 登录/同意签发根、两级 Token Exchange 得到 executor 令牌，B `InvocationVerifier` 产出 `VerifiedInvocation`，交给 A1 `ExecutionLedger.accept` 做加锁预算决定；覆盖被盗令牌/参数篡改拒绝、幂等重试不重复预留、proof 重放拒绝、根与中间祖先撤销后拒绝、内省 active 不代替接受事务。A 的 HTTP 网关、四工具、下游、恢复与证据导出在 `origin/main` 尚未实现，M1—M13 仍不能整体通过。
 - 合成 B 授权演示 `python -m tests.demo_b_flow`，不代表完整浏览器或网关流程。
 
 ## 未完成的关键闭环
 
 1. 生产化部署边界仍未做：TLS 证书由部署方提供，反向代理只允许可信来源的 `X-Forwarded-*`（当前方案不读取）；密钥轮换的自动调度、HSM/KMS 托管与泄露取证未实现（README 已给出手工流程与局限）。
-2. 与 A 的真实网关、下游、证据导出集成；`origin/main` 当前仍停在 A1（无 HTTP 网关/工具/收款/证据导出），B 验证器尚无 A 导出的真实最终回执。M1—M13 不能按局部单测宣称整体通过。
+2. 与 A 的真实 HTTP 网关、四工具、下游执行/恢复及证据导出联调；`origin/main` 当前仍停在 A1（`b120c7c`，无网关/工具/证据导出），已完成的是 B 令牌经 B 验证器进入 A1 `ExecutionLedger.accept` 的接缝联调。M1—M13 不能按局部测试宣称整体通过。
 3. 独立检查点尚未实现，`AG-EVIDENCE-1` 只能验证单笔未锚定证据（UNANCHORED），不能声称检测日志回滚。
 
 ## 最新验证
