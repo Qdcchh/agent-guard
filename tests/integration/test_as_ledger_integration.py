@@ -173,7 +173,7 @@ def test_tampered_params_are_rejected_before_ledger(ledger, dsn):
     assert fetch_one(dsn, "SELECT count(*) FROM ag_operations") == (0,)
 
 
-def test_idempotent_retry_and_proof_replay_are_distinct(ledger, dsn):
+def test_idempotent_retry_does_not_reserve_twice(ledger, dsn):
     bridge = Bridge(dsn)
     first = bridge.accept("purchase-002")
     retry = bridge.accept("purchase-002")
@@ -184,11 +184,15 @@ def test_idempotent_retry_and_proof_replay_are_distinct(ledger, dsn):
     assert counters["amount_reserved"] == AMOUNT_FEN
     assert fetch_one(dsn, "SELECT count(*) FROM ag_operations") == (1,)
 
+
+def test_proof_replay_is_rejected_by_the_ledger(ledger, dsn):
+    bridge = Bridge(dsn)
     replay = bridge.verified("purchase-003")
     bridge.ledger.accept(replay, TrustedCost(AMOUNT_FEN))
     with pytest.raises(LedgerError) as error:
         bridge.ledger.accept(replay, TrustedCost(AMOUNT_FEN))
     assert error.value.code is ErrorCode.REPLAY
+    assert fetch_one(dsn, "SELECT count(*) FROM ag_operations") == (1,)
 
 
 def test_revoked_ancestor_blocks_new_accept_and_idempotent_retry(ledger, dsn):
