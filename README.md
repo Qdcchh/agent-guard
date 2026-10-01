@@ -131,6 +131,8 @@ docker compose -f compose.test.yaml down
 
 `DiscoveryEndpoint` 从固定 HTTPS issuer 与受信任的 AS 公钥生成 OP 元数据及项目私有 `/ag/keys` 文档，不输出私钥，也不伪称标准 JWKS。它是纯 GET 适配层，仍须由受 TLS 保护的服务挂载；测试为 `python -m pytest tests/test_discovery.py`。
 
+`AuthorizationHttpApp` 是无额外运行依赖的 ASGI 边界，挂载 `/oauth/token`、`/oauth/introspect`、`/.well-known/openid-configuration` 与 `/ag/keys`，保留重复原始头、限制表单体大小并拒绝非 HTTPS scheme。部署仍需可信 TLS ASGI 服务器/反向代理、准确的 scheme 配置、请求超时和私有凭据注入；尚无仓库内启动/部署配置、浏览器登录同意及管理路由。运行 `python -m pytest tests/test_http_app.py` 检查 HTTP 边界。
+
 明天演示 B 侧授权闭环时，在设置隔离测试数据库连接变量 `AGENT_GUARD_TEST_DATABASE_URL` 后运行 `python -m tests.demo_b_flow`。该命令在本轮独占 schema 内生成合成身份和密钥，展示根签发、两级委托、盗取令牌拒绝、幂等重试与撤销拒绝，结束后仅清理自己创建的 schema；不打印原始令牌或密钥。它不包含浏览器登录、真实 HTTP 监听、网关订单执行或独立审计锚定，不可据此声称 M1—M13 全部通过。
 
 测试专用凭据是显式的 test-only 值，只作用于本机 127.0.0.1 的一次性容器，不得用于任何部署；生产/演示凭据由部署时独立注入。变量优先级如实说明：迁移器 `python -m agent_guard.ledger.migrate` 先读 `AGENT_GUARD_DATABASE_URL`（未来服务/正式库预留），未设置时回退 `AGENT_GUARD_TEST_DATABASE_URL`；pytest 集成测试入口只读取 `AGENT_GUARD_TEST_DATABASE_URL`，不会触碰 `AGENT_GUARD_DATABASE_URL` 指向的库。测试会在目标库内创建本轮独占 schema（`ag_test_run_*`，含所有权标记），清库只作用于该 schema；迁移用的 scratch 库为随机名且仅清理自建资源。
