@@ -21,10 +21,12 @@
 4. 与 A 的真实网关、下游、证据导出集成；B 验证器尚无 A 导出的真实最终回执。M1—M13 不能按局部单测宣称整体通过。
 5. SM2 第二独立实现互验、历史密钥配置/轮换、完整审计检查点与部署运行手册。
 
-## 最新验证（本轮提交 `29bd3e7`）
+## 最新验证
 
-- 本机：`ruff check .` 与 `ruff format --check .` 通过；`pytest -q -m "not integration"` 153 passed（本机仍无测试 PostgreSQL，未在本地伪造集成通过）。
-- GitHub Actions CI（Python 3.11 + PostgreSQL 16 服务容器）：run #19，head `29bd3e7`，全部步骤 success，包含 `pytest tests/integration`（覆盖迁移 `008`、登录/同意/换码真实数据库路径）与合成演示。
+- 本机：`ruff check .` 与 `ruff format --check .` 通过；`pytest -q -m "not integration"` 161 passed（本机仍无测试 PostgreSQL，未在本地伪造集成通过）。
+- GitHub Actions CI（Python 3.11 + PostgreSQL 16 服务容器）：
+  - run #19，head `29bd3e7`：success，覆盖迁移 `008`、登录/同意/换码真实数据库路径与合成演示。
+  - run #21，head `3ad3299`：success，额外覆盖会话 + CSRF 撤销 HTTP 路由（任务所有者、租户管理员、跨租户、重复与并发撤销）。
 
 ## 续跑顺序
 
