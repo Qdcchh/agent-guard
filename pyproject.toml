@@ -8,7 +8,12 @@ version = "0.0.1"
 description = "Scaffold for verifiable delegation and controlled agent execution"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["psycopg[binary]>=3.2,<3.3"]
+dependencies = [
+    "psycopg[binary]>=3.2,<3.3",
+    "rfc8785==0.1.4",
+    "tongsuopy==1.0.1",
+    "uvicorn>=0.35,<0.36",
+]
 
 [project.optional-dependencies]
 dev = ["pytest==8.3.5", "ruff==0.11.13"]

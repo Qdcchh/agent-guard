@@ -511,6 +511,8 @@ RESERVE对各节点记录金额/次数预留增加；SETTLE记录预留等额减
 
 离线验证器从部署时独立交付的可信配置获得AS、网关及审计端公钥/指纹，不能把证据包自带的新公钥当信任根。历史密钥快照须能关联到可信登记记录；不得用当前DID文档倒推历史授权。网关回执key由A生成并经B验证接口验收，密钥轮换使用新kid；可信配置中的旧key保留用于历史验签，撤销状态另行说明。
 
+B 侧第一版离线单笔验证接口采用 `AG-EVIDENCE-1` 包：字段严格为 `manifest_version, anchoring_status, receipt_jws, ancestor_tokens, token_jws, proof_jws, request, result, ledger_changes`。`ancestor_tokens` 按根到叶排列且最后一项等于 `token_jws`；`request` 为首次接受时的规范调用对象。当前验证器只接受 `anchoring_status:"UNANCHORED"`，不把自报 `ANCHORED` 当作检查点证明。`ledger_changes` 中仅四个明确命名的 `*_delta` 字段可为有界负整数，其规范字节单独使用 RFC 8785 生成；普通 JSON/令牌仍禁止负整数。该接口验证单笔签名与关联，不证明导出包来自真实网关数据库、下游结果真实性、任务历史完整或独立锚定。
+
 ### 9.6 错误契约
 
 OAuth端点保持OAuth风格：`{"error":"invalid_request","ag_error":"DELEGATION_EXPANSION"}`。初版映射：

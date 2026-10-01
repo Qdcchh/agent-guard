@@ -37,6 +37,20 @@ MAINTENANCE_DBS = frozenset({"postgres", "template0", "template1"})
 
 #: Tables owned by the ledger schema (schema-qualified for every wipe).
 TABLES = (
+    "ag_auth_events",
+    "ag_authorization_requests",
+    "ag_login_sessions",
+    "ag_login_csrf",
+    "ag_task_policies",
+    "ag_users",
+    "ag_grant_revocations",
+    "ag_tenant_admins",
+    "ag_task_revocations",
+    "ag_exchange_evidence",
+    "ag_delegations",
+    "ag_auth_evidence",
+    "ag_grant_tokens",
+    "ag_authorization_codes",
     "ag_proofs",
     "ag_ledger_event_nodes",
     "ag_ledger_events",
