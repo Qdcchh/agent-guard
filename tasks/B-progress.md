@@ -20,6 +20,11 @@
 4. 与 A 的真实网关、下游、证据导出集成；B 验证器尚无 A 导出的真实最终回执。M1—M13 不能按局部单测宣称整体通过。
 5. SM2 第二独立实现互验、历史密钥配置/轮换、完整审计检查点与部署运行手册。
 
+## 最新验证（本轮提交 `29bd3e7`）
+
+- 本机：`ruff check .` 与 `ruff format --check .` 通过；`pytest -q -m "not integration"` 153 passed（本机仍无测试 PostgreSQL，未在本地伪造集成通过）。
+- GitHub Actions CI（Python 3.11 + PostgreSQL 16 服务容器）：run #19，head `29bd3e7`，全部步骤 success，包含 `pytest tests/integration`（覆盖迁移 `008`、登录/同意/换码真实数据库路径）与合成演示。
+
 ## 续跑顺序
 
 登录/同意闭环已落地；下一步实现撤销 HTTP 路由（`POST /ag/tasks/{task_id}/revoke`、`POST /ag/grants/{grant_id}/revoke`，会话授权 + CSRF），再把 AS 装配到受 TLS 保护的 ASGI 服务，最后与 A 的网关/证据导出进行 M1—M13 联调。每节点运行 `python -m ruff check .`、`python -m ruff format --check .`、`python -m pytest`；本机无 Docker/测试 PostgreSQL 时不能将失败的集成测试当作通过，使用 GitHub CI 的真实 PostgreSQL 结果核验。只向现有 B 分支提交/推送，不自行合并 main。
