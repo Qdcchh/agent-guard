@@ -224,7 +224,11 @@ def _request(port, method, path, body=None, headers=None):
     try:
         connection.request(method, path, body=body, headers=headers or {})
         response = connection.getresponse()
-        return response.status, dict(response.getheaders()), response.read()
+        return (
+            response.status,
+            {key.lower(): value for key, value in response.getheaders()},
+            response.read(),
+        )
     finally:
         connection.close()
 
@@ -243,7 +247,7 @@ def _drive_flow(port: int, planner_key) -> None:
 
     status, headers, _ = _request(port, "GET", "/ag/login")
     check(status, b"", 200, "login page")
-    login_csrf = headers["Set-Cookie"].split("ag_login_csrf=", 1)[1].split(";", 1)[0]
+    login_csrf = headers["set-cookie"].split("ag_login_csrf=", 1)[1].split(";", 1)[0]
 
     status, headers, _ = _request(
         port,
@@ -264,7 +268,7 @@ def _drive_flow(port: int, planner_key) -> None:
         },
     )
     check(status, b"", 303, "login submit")
-    session_cookie = headers["Set-Cookie"].split("ag_session=", 1)[1].split(";", 1)[0]
+    session_cookie = headers["set-cookie"].split("ag_session=", 1)[1].split(";", 1)[0]
 
     status, _, body = _request(
         port,
@@ -291,7 +295,7 @@ def _drive_flow(port: int, planner_key) -> None:
         },
     )
     check(status, b"", 303, "consent approve", headers=headers)
-    code = parse_qs(urlsplit(headers["Location"]).query)["code"][0]
+    code = parse_qs(urlsplit(headers["location"]).query)["code"][0]
 
     token_form = {
         "grant_type": "authorization_code",
