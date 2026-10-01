@@ -83,7 +83,7 @@ python -m pytest tests/test_receipt.py
 
 ## 4. 联调请求（发往 A 负责人）
 
-B 侧材料已就绪，请求 A 在实现后按以下顺序交付并联调（详见对应章节）：
+本清单已作为仓库 Issue #4 发给 A 负责人（<https://github.com/Qdcchh/agent-guard/issues/4>）。B 侧材料已就绪，请求 A 在实现后按以下顺序交付并联调（详见对应章节）：
 
 1. 实现 `POST /v1/invocations`：接受 AGPoP + AG-Proof，调用 `InvocationVerifier.verify_static` 产出 `VerifiedInvocation`，再调 `ExecutionLedger.accept`；返回 202 与错误码见 §2.1。
 2. 实现 `POST /v1/operations/query`：接受 `purpose=result-read`，调用 `InvocationVerifier.verify_result_read`，在自己的读事务内复核操作归属与当前授权，不扣业务次数；见 §2.2。

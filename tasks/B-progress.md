@@ -34,8 +34,9 @@
   - run #29，head `34b71d0`：success，覆盖密钥轮换（历史 `kid` 仅验签）与 OpenSSL CLI 独立实现双向互验及 JWS `r||s`/DER 转换。
   - run #31、#32，head `2ee85f5`/`f408c1a`：B→A1 接缝联调（#31 因同测试内先耗尽额度再做重放用例而失败，已拆分为独立用例；#32 success）。
   - run #34，head `8be9f47`：success，新增固定联调向量（`tests/fixtures/interop.py` + `tests/test_interop_vectors.py`，无数据库 187 passed）与 `tasks/B-interop.md` 契约/运行手册。
+  - run #36，head `db36ec2`：success，新增 `verify_result_read`/`VerifiedOperationQuery` 及 result-read 向量负例（无数据库 188 passed）。
   - 期间 run #23/#24 因 TLS 测试响应头大小写、#27/#28 因 OpenSSL 3 provider 默认 `distid` 与 GB/T 默认不同而失败；均已定位修复（显式 `distid=1234567812345678`）。
 
 ## 续跑顺序
 
-登录/同意闭环、撤销 HTTP 路由、开发 TLS 装配、密钥轮换与 OpenSSL 独立互验均已落地；下一步在 `origin/main` 出现 A 的网关/证据导出后做真实 M1—M13 联调，并补独立审计检查点与生产密钥托管/运行手册。
+登录/同意闭环、撤销 HTTP 路由、开发 TLS 装配、密钥轮换与 OpenSSL 独立互验、操作查询验权与固定联调向量均已落地；联调请求已通过仓库 Issue #4 发给 A 负责人。下一步：每次开工先 fetch 并核对 `origin/main` 是否出现网关/查询/证据导出；出现后按 `tasks/B-interop.md` 执行真实 HTTPS 联调并逐项留痕，再补独立审计检查点与生产密钥托管/运行手册。
