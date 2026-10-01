@@ -153,6 +153,7 @@ def run_server(args: argparse.Namespace) -> None:
         ssl_keyfile=args.ssl_keyfile,
         log_level="warning",
         access_log=False,
+        proxy_headers=False,
     )
 
 

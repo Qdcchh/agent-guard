@@ -11,7 +11,7 @@
 - OP 元数据、AS 公开密钥文档，以及令牌/内省/发现四条路由的 ASGI 入口。
 - `AG-EVIDENCE-1` 单笔未锚定回执的离线签名、摘要、祖先和账本 delta 验证；四个 delta 字段允许有界负整数。
 - 真实登录与同意闭环（迁移 `008_login_consent.sql`）：scrypt 口令 KDF、一次性预认证 CSRF、服务端登录会话与会话绑定 CSRF、服务端授权请求持久化、`ag_task_policies` 任务边界读取、state/nonce/redirect/PKCE 校验。`LoginService`、`ConsentService`、`BrowserLoginApp` 已落地；只有批准分支签发一次性授权码，拒绝分支只记录不签发；`ApprovedAuthorization` 只能由同意服务构造。`AuthorizationHttpApp` 在提供浏览器组件时挂载 `GET/POST /oauth/authorize`、`GET/POST /ag/login`、`POST /ag/consent`。
-- 开发 TLS 装配（`agent_guard.server`）：`config.py` 严格私有配置加载（明文 secret 只存在于独立 secrets 文件），`factory.py` 全量组装 + 请求超时中间件，`python -m agent_guard.server init/check/run` 生成合成开发密钥与配置、校验并以 uvicorn（0.35.x，BSD-3）启动 TLS；缺 `AGENT_GUARD_DATABASE_URL` 或证书拒绝启动；issuer/证明目标/scheme 只来自配置与可信 ASGI scope，不信任 `Host`/`X-Forwarded-*`。真实 TLS 全链路由 CI 集成测试 `tests/integration/test_server_tls.py` 验证（自签开发证书，非生产装配）。
+- 开发 TLS 装配（`agent_guard.server`）：`config.py` 严格私有配置加载（明文 secret 只存在于独立 secrets 文件），`factory.py` 全量组装 + 请求超时中间件，`python -m agent_guard.server init/check/run` 生成合成开发密钥与配置、校验并以 uvicorn（0.35.x，BSD-3）启动 TLS；缺 `AGENT_GUARD_DATABASE_URL` 或证书拒绝启动；issuer/证明目标/scheme 只来自配置与可信 ASGI scope，不信任 `Host`/`X-Forwarded-*`（开发启动默认 `--no-proxy-headers`）。真实 TLS 全链路由 CI 集成测试 `tests/integration/test_server_tls.py` 验证（自签开发证书，非生产装配）。
 - 合成 B 授权演示 `python -m tests.demo_b_flow`，不代表完整浏览器或网关流程。
 
 ## 未完成的关键闭环
@@ -26,7 +26,7 @@
 - GitHub Actions CI（Python 3.11 + PostgreSQL 16 服务容器）：
   - run #19，head `29bd3e7`：success，覆盖迁移 `008`、登录/同意/换码真实数据库路径与合成演示。
   - run #21，head `3ad3299`：success，额外覆盖会话 + CSRF 撤销 HTTP 路由（任务所有者、租户管理员、跨租户、重复与并发撤销）。
-  - 最新 run（本条目在推送后补记）：覆盖开发 TLS 装配与真实 HTTPS 全链路。
+  - run #25，head `f041619`：success，覆盖开发 TLS 装配与真实 HTTPS 全链路（登录→同意→换码→内省→撤销）；期间 run #23/#24 因 TLS 测试读取响应头大小写问题失败，已定位修复。
 
 ## 续跑顺序
 
