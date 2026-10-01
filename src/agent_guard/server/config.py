@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import re
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -37,6 +37,7 @@ _CONFIG_FIELDS = {
     "request_ttl_seconds",
     "request_timeout_seconds",
 }
+_OPTIONAL_CONFIG_FIELDS = {"historical_verification_keys"}
 _SECRET_FIELDS = {"note", "client_secrets", "gateway_secret"}
 _TTL_BOUNDS = {
     "session_ttl_seconds": (30, 86400),
@@ -81,6 +82,7 @@ class ServerConfig:
     csrf_ttl_seconds: int
     request_ttl_seconds: int
     request_timeout_seconds: int
+    historical_verification_keys: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -146,7 +148,11 @@ def load_server_config(raw: bytes) -> ServerConfig:
         value = load_strict_json(raw)
     except (EncodingError, UnicodeError) as exc:
         raise ConfigError("config must be strict JSON without duplicates") from exc
-    if type(value) is not dict or set(value) != _CONFIG_FIELDS:
+    if (
+        type(value) is not dict
+        or not _CONFIG_FIELDS <= set(value)
+        or not set(value) <= (_CONFIG_FIELDS | _OPTIONAL_CONFIG_FIELDS)
+    ):
         raise ConfigError("config fields do not match the profile")
     issuer = _https_url(value["issuer"], "issuer", allow_query=False)
     if urlsplit(issuer).path not in ("", "/"):
@@ -229,6 +235,20 @@ def load_server_config(raw: bytes) -> ServerConfig:
     for name in _TTL_BOUNDS:
         _ttl(value[name], name)
 
+    historical_raw = value.get("historical_verification_keys", [])
+    if type(historical_raw) is not list:
+        raise ConfigError("historical_verification_keys must be a list")
+    historical: dict[str, str] = {}
+    for entry in historical_raw:
+        if type(entry) is not dict or set(entry) != {"kid", "spki_pem"}:
+            raise ConfigError("historical verification key fields do not match the profile")
+        kid = _string(entry["kid"], "historical kid")
+        if kid == signing_kid:
+            raise ConfigError("historical verification kid must differ from the signing kid")
+        if kid in historical:
+            raise ConfigError("duplicate historical verification kid")
+        historical[kid] = _spki_pem(entry["spki_pem"], f"historical {kid} spki_pem")
+
     return ServerConfig(
         issuer=issuer,
         as_signing_key_path=as_key_path,
@@ -243,6 +263,7 @@ def load_server_config(raw: bytes) -> ServerConfig:
         csrf_ttl_seconds=value["csrf_ttl_seconds"],
         request_ttl_seconds=value["request_ttl_seconds"],
         request_timeout_seconds=value["request_timeout_seconds"],
+        historical_verification_keys=historical,
     )
 
 

@@ -45,14 +45,18 @@ def _load_as_private_key(path: str):
     return key
 
 
-def _load_registered_spki(pem: str, client_id: str) -> bytes:
+def _load_public_key(pem: str, label: str):
     try:
         key = serialization.load_pem_public_key(pem.encode("ascii"))
     except (ValueError, TypeError, UnicodeError) as exc:
-        raise ConfigError(f"identity {client_id} spki_pem is invalid") from exc
+        raise ConfigError(f"{label} spki_pem is invalid") from exc
     if getattr(key, "curve", None) is None or key.curve.name != "SM2":
-        raise ConfigError(f"identity {client_id} key is not SM2")
-    return serialize_sm2_public_key(key)
+        raise ConfigError(f"{label} key is not SM2")
+    return key
+
+
+def _load_registered_spki(pem: str, client_id: str) -> bytes:
+    return serialize_sm2_public_key(_load_public_key(pem, f"identity {client_id}"))
 
 
 def build_app(
@@ -75,6 +79,9 @@ def build_app(
 
     as_key = _load_as_private_key(config.as_signing_key_path)
     as_public = as_key.public_key()
+    verification_keys = {config.signing_kid: as_public}
+    for kid, pem in config.historical_verification_keys.items():
+        verification_keys[kid] = _load_public_key(pem, f"historical:{kid}")
     token_endpoint = config.issuer.rstrip("/") + "/oauth/token"
 
     registrations: dict[tuple[str, str], RegisteredIdentity] = {}
@@ -116,6 +123,7 @@ def build_app(
         signing_key=as_key,
         signing_kid=config.signing_kid,
         identities=identities,
+        verification_keys=verification_keys,
         connector=connector,
     )
     login = LoginService(
@@ -154,16 +162,14 @@ def build_app(
     )
 
     app = AuthorizationHttpApp(
-        discovery=DiscoveryEndpoint(
-            issuer=config.issuer, signing_keys={config.signing_kid: as_public}
-        ),
+        discovery=DiscoveryEndpoint(issuer=config.issuer, signing_keys=verification_keys),
         token=TokenEndpoint(clients=token_clients, codes=codes, exchanges=exchanges),
         introspection=IntrospectionEndpoint(
             gateway_client=gateway_client,
             inspector=IntrospectionService(
                 dsn,
                 issuer=config.issuer,
-                as_keys={config.signing_kid: as_public},
+                as_keys=verification_keys,
                 identities=identities,
                 connector=connector,
             ),

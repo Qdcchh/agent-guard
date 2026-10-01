@@ -212,3 +212,31 @@ def test_secrets_reject_weak_or_malformed_values():
         secret_sha256("")
     with pytest.raises(ConfigError):
         secret_sha256(123)
+
+
+def test_historical_verification_keys_are_optional_and_validated():
+    _, planner_pem, document = _planner()
+    old_key = generate_sm2_private_key()
+    accepted = load_server_config(
+        _config_bytes(
+            planner_pem,
+            document,
+            historical_verification_keys=[{"kid": "as-sign-0", "spki_pem": _pem_public(old_key)}],
+        )
+    )
+    assert set(accepted.historical_verification_keys) == {"as-sign-0"}
+
+    for bad in (
+        [{"kid": "as-sign-1", "spki_pem": _pem_public(old_key)}],
+        [
+            {"kid": "as-sign-0", "spki_pem": _pem_public(old_key)},
+            {"kid": "as-sign-0", "spki_pem": _pem_public(old_key)},
+        ],
+        [{"kid": "as-sign-0"}],
+        [{"kid": "as-sign-0", "spki_pem": "not-a-pem"}],
+        "not-a-list",
+    ):
+        with pytest.raises(ConfigError):
+            load_server_config(
+                _config_bytes(planner_pem, document, historical_verification_keys=bad)
+            )

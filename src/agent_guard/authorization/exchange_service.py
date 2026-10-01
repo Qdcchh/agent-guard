@@ -8,12 +8,12 @@ insert a grant or to return a previously issued token.
 from __future__ import annotations
 
 import uuid
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
 import psycopg
-from tongsuopy.crypto.asymciphers.ec import EllipticCurvePrivateKey
+from tongsuopy.crypto.asymciphers.ec import EllipticCurvePrivateKey, EllipticCurvePublicKey
 
 from agent_guard.authorization.claims import (
     GATEWAY_AUDIENCE,
@@ -80,6 +80,7 @@ class TokenExchangeService:
         signing_key: EllipticCurvePrivateKey,
         signing_kid: str,
         identities: IdentityResolver,
+        verification_keys: Mapping[str, EllipticCurvePublicKey] | None = None,
         connector: Callable[..., psycopg.Connection] = psycopg.connect,
     ) -> None:
         self._dsn = dsn
@@ -89,7 +90,16 @@ class TokenExchangeService:
         self._signing_kid = signing_kid
         self._identities = identities
         self._connector = connector
-        self._trusted_keys = {signing_kid: signing_key.public_key()}
+        trusted = (
+            dict(verification_keys)
+            if verification_keys is not None
+            else {signing_kid: signing_key.public_key()}
+        )
+        if signing_kid not in trusted or not all(
+            isinstance(key, EllipticCurvePublicKey) for key in trusted.values()
+        ):
+            raise ValueError("trusted AS verification keys must include the signing kid")
+        self._trusted_keys = trusted
         self._preflight = ExchangePreflight(
             issuer=issuer,
             token_endpoint=token_endpoint,

@@ -19,7 +19,7 @@ from agent_guard.server.config import (
 )
 from agent_guard.server.factory import build_app
 from agent_guard.server.middleware import RequestTimeoutMiddleware
-from tests.test_server_config import ISSUER, _config_bytes, _planner, _secrets_bytes
+from tests.test_server_config import ISSUER, _config_bytes, _pem_public, _planner, _secrets_bytes
 
 DSN = "postgresql://synthetic-test-only@127.0.0.1:1/synthetic"
 
@@ -121,6 +121,25 @@ def test_build_app_rejects_missing_secret_or_key(tmp_path):
     secrets = load_secrets(_secrets_bytes())
     with pytest.raises(ConfigError, match="signing key"):
         build_app(config, secrets, dsn=DSN)
+
+
+def test_discovery_advertises_historical_verification_keys(tmp_path):
+    _, planner_pem, document = _planner()
+    old_key = generate_sm2_private_key()
+    _write_as_key(tmp_path)
+    config = load_server_config(
+        _config_bytes(
+            planner_pem,
+            document,
+            historical_verification_keys=[{"kid": "as-sign-0", "spki_pem": _pem_public(old_key)}],
+        )
+    )
+    config = resolve_paths(config, tmp_path)
+    app = build_app(config, load_secrets(_secrets_bytes()), dsn=DSN)
+    sent = _call(app, path="/ag/keys")
+    assert sent[0]["status"] == 200
+    payload = load_strict_json(sent[1]["body"])
+    assert {entry["kid"] for entry in payload["keys"]} == {"as-sign-1", "as-sign-0"}
 
 
 def test_timeout_middleware_bounds_dispatch():

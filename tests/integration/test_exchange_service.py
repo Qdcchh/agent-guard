@@ -26,6 +26,7 @@ from agent_guard.identity.resolver import (
     SPKI_PROPERTY,
     IdentityResolver,
     RegisteredIdentity,
+    did_web_url,
 )
 from agent_guard.ledger import store
 from agent_guard.ledger.provisioning import deactivate_principal, register_principal, revoke_grant
@@ -41,39 +42,45 @@ TENANT = "tenant-001"
 TASK = "task-001"
 
 
+def _resolver(registrations):
+    """Rebuild the DID-document resolver for already registered identities."""
+    documents = {}
+    for registration in registrations.values():
+        name = registration.client_id.removeprefix("agent-")
+        document = {
+            "id": registration.did,
+            "verificationMethod": [
+                {
+                    "id": registration.kid,
+                    "type": METHOD_TYPE,
+                    "controller": registration.did,
+                    SPKI_PROPERTY: b64url_encode(registration.spki_der),
+                }
+            ],
+            "authentication": [registration.kid],
+            "capabilityInvocation": [registration.kid],
+        }
+        if name != "executor":
+            document["capabilityDelegation"] = [registration.kid]
+        documents[did_web_url(registration.did)] = document
+    return IdentityResolver(
+        registrations,
+        allowed_hosts=frozenset({"identity.agent-guard.test"}),
+        fetch_document=lambda url: canonical_json_bytes(documents[url]),
+    )
+
+
 def _identities():
     keys = {name: generate_sm2_private_key() for name in ("planner", "selector", "executor")}
-    documents = {}
     registrations = {}
     for name, key in keys.items():
         did = f"did:web:identity.agent-guard.test:agents:{name}"
         kid = did + "#key-1"
         spki = serialize_sm2_public_key(key.public_key())
-        document = {
-            "id": did,
-            "verificationMethod": [
-                {
-                    "id": kid,
-                    "type": METHOD_TYPE,
-                    "controller": did,
-                    SPKI_PROPERTY: b64url_encode(spki),
-                }
-            ],
-            "authentication": [kid],
-            "capabilityInvocation": [kid],
-        }
-        if name != "executor":
-            document["capabilityDelegation"] = [kid]
-        documents[f"https://identity.agent-guard.test/agents/{name}/did.json"] = document
         registrations[(TENANT, f"agent-{name}")] = RegisteredIdentity(
             TENANT, f"agent-{name}", did, kid, spki
         )
-    resolver = IdentityResolver(
-        registrations,
-        allowed_hosts=frozenset({"identity.agent-guard.test"}),
-        fetch_document=lambda url: canonical_json_bytes(documents[url]),
-    )
-    return keys, registrations, resolver
+    return keys, registrations, _resolver(registrations)
 
 
 def _root(dsn):
