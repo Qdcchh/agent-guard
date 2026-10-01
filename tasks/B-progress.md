@@ -30,6 +30,7 @@
   - run #21，head `3ad3299`：success，额外覆盖会话 + CSRF 撤销 HTTP 路由（任务所有者、租户管理员、跨租户、重复与并发撤销）。
   - run #25，head `f041619`：success，覆盖开发 TLS 装配与真实 HTTPS 全链路（登录→同意→换码→内省→撤销）。
   - run #29，head `34b71d0`：success，覆盖密钥轮换（历史 `kid` 仅验签）与 OpenSSL CLI 独立实现双向互验及 JWS `r||s`/DER 转换。
+  - run #31、#32，head `2ee85f5`/`f408c1a`：B→A1 接缝联调（#31 因同测试内先耗尽额度再做重放用例而失败，已拆分为独立用例；#32 success）。
   - 期间 run #23/#24 因 TLS 测试响应头大小写、#27/#28 因 OpenSSL 3 provider 默认 `distid` 与 GB/T 默认不同而失败；均已定位修复（显式 `distid=1234567812345678`）。
 
 ## 续跑顺序
