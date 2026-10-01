@@ -49,6 +49,15 @@ jobs:
       - name: Migrations
         run: python -m agent_guard.ledger.migrate
       - name: Integration tests (real PostgreSQL, must not skip)
-        run: python -m pytest tests/integration
+        run: |
+          set -o pipefail
+          python -m pytest tests/integration 2>&1 | tee integration-tests.log
+      - name: Upload integration log for diagnosis
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-tests-log
+          path: integration-tests.log
+          if-no-files-found: ignore
       - name: Synthetic B authorization demo
         run: python -m tests.demo_b_flow

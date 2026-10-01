@@ -201,11 +201,13 @@ def test_tls_server_runs_the_full_as_flow(ledger, dsn, tmp_path):
     thread = threading.Thread(target=server.run, daemon=True)
     thread.start()
     try:
-        deadline = time.time() + 20
+        deadline = time.time() + 30
         while not server.started and time.time() < deadline:
             time.sleep(0.05)
         if not server.started:
             pytest.fail("uvicorn TLS server did not start", pytrace=False)
+        if not server.servers or not server.servers[0].sockets:
+            pytest.fail("uvicorn bound no listening sockets", pytrace=False)
         port = server.servers[0].sockets[0].getsockname()[1]
         _drive_flow(port, planner_key)
     finally:
@@ -228,14 +230,19 @@ def _request(port, method, path, body=None, headers=None):
 
 
 def _drive_flow(port: int, planner_key) -> None:
+    def check(status, body, expected, step, headers=None):
+        assert status == expected, (
+            f"{step}: expected {expected}, got {status}, body={body[:400]!r}, headers={headers}"
+        )
+
     status, headers, body = _request(
         port, "GET", "/.well-known/openid-configuration", headers={"Host": "evil.example"}
     )
-    assert status == 200
+    check(status, body, 200, "discovery")
     assert load_strict_json(body)["issuer"] == ISSUER
 
     status, headers, _ = _request(port, "GET", "/ag/login")
-    assert status == 200
+    check(status, b"", 200, "login page")
     login_csrf = headers["Set-Cookie"].split("ag_login_csrf=", 1)[1].split(";", 1)[0]
 
     status, headers, _ = _request(
@@ -256,7 +263,7 @@ def _drive_flow(port: int, planner_key) -> None:
             "Content-Type": "application/x-www-form-urlencoded",
         },
     )
-    assert status == 303
+    check(status, b"", 303, "login submit")
     session_cookie = headers["Set-Cookie"].split("ag_session=", 1)[1].split(";", 1)[0]
 
     status, _, body = _request(
@@ -265,9 +272,12 @@ def _drive_flow(port: int, planner_key) -> None:
         "/oauth/authorize?" + urlencode(_authorize_params()),
         headers={"Cookie": f"ag_session={session_cookie}"},
     )
-    assert status == 200
-    request_id = re.search(rb'name="request_id" value="([^"]+)"', body).group(1).decode()
-    csrf = re.search(rb'name="csrf_token" value="([^"]+)"', body).group(1).decode()
+    check(status, body, 200, "authorize")
+    match_id = re.search(rb'name="request_id" value="([^"]+)"', body)
+    match_csrf = re.search(rb'name="csrf_token" value="([^"]+)"', body)
+    assert match_id is not None and match_csrf is not None, body[:400]
+    request_id = match_id.group(1).decode()
+    csrf = match_csrf.group(1).decode()
     assert csrf == session_cookie.split("~", 1)[1]
 
     status, headers, _ = _request(
@@ -280,7 +290,7 @@ def _drive_flow(port: int, planner_key) -> None:
             "Content-Type": "application/x-www-form-urlencoded",
         },
     )
-    assert status == 303
+    check(status, b"", 303, "consent approve", headers=headers)
     code = parse_qs(urlsplit(headers["Location"]).query)["code"][0]
 
     token_form = {
@@ -313,7 +323,7 @@ def _drive_flow(port: int, planner_key) -> None:
             "Content-Type": "application/x-www-form-urlencoded",
         },
     )
-    assert status == 200
+    check(status, body, 200, "token redeem")
     tokens = load_strict_json(body)
     assert tokens["token_type"] == "AGPoP"
 
@@ -330,7 +340,7 @@ def _drive_flow(port: int, planner_key) -> None:
             "Content-Type": "application/x-www-form-urlencoded",
         },
     )
-    assert status == 200
+    check(status, body, 200, "introspect")
     assert load_strict_json(body)["active"] is True
 
     status, _, body = _request(
@@ -344,5 +354,5 @@ def _drive_flow(port: int, planner_key) -> None:
             "Content-Type": "application/json",
         },
     )
-    assert status == 200
+    check(status, body, 200, "revoke")
     assert load_strict_json(body)["scope"] == "SUBTREE"
