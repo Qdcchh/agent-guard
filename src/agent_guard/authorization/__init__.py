@@ -22,6 +22,7 @@ from agent_guard.authorization.revocation_service import (
     TaskRevocationResult,
     TaskRevocationService,
 )
+from agent_guard.authorization.token_endpoint import TokenClient, TokenEndpoint, TokenResponse
 from agent_guard.authorization.verifier import InvocationVerifier, VerificationError
 
 __all__ = [
@@ -51,6 +52,9 @@ __all__ = [
     "TaskRevocationError",
     "TaskRevocationResult",
     "TaskRevocationService",
+    "TokenClient",
+    "TokenEndpoint",
+    "TokenResponse",
     "InvocationVerifier",
     "VerificationError",
 ]

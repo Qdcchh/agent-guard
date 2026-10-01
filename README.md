@@ -4,7 +4,7 @@
 
 目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
 
-> 当前状态：A1 执行账本已通过阶段验收，详见 [A1最终验收记录](tasks/A1-review-r4.md)。B 的 SM2/SM3、严格编码、GM-MVP-1 Compact JWS，以及部分只读 DID 解析、令牌/AG-Proof 静态验权、委托收窄策略、授权码和 Token Exchange 请求预校验、ID Token/PKCE 校验代码已实现；一次性授权码与唯一根签发、事务性子委托签发、任务所有者撤销已有进程内数据库实现。独立第二实现互验尚未完成。OAuth/OIDC 登录和同意 HTTP 服务端点、企业登记管理、管理员节点撤销与撤销 HTTP 接口、完整验权联调、HTTP 网关、执行/结算/恢复、签名回执、审计检查点与前端仍未实现。局部测试通过不代表端到端安全目标已实现。
+> 当前状态：A1 执行账本已通过阶段验收，详见 [A1最终验收记录](tasks/A1-review-r4.md)。B 的 SM2/SM3、严格编码、GM-MVP-1 Compact JWS，以及部分只读 DID 解析、令牌/AG-Proof 静态验权、委托收窄策略、授权码和 Token Exchange 请求预校验、ID Token/PKCE 校验代码已实现；一次性授权码与唯一根签发、事务性子委托签发、任务所有者撤销已有进程内数据库实现，并新增严格 Basic 认证的 `/oauth/token` 请求适配层（尚未挂载 HTTP 监听器）。独立第二实现互验尚未完成。OAuth/OIDC 登录和同意 HTTP 服务端点、企业登记管理、管理员节点撤销与撤销 HTTP 接口、完整验权联调、HTTP 网关、执行/结算/恢复、签名回执、审计检查点与前端仍未实现。局部测试通过不代表端到端安全目标已实现。
 
 ## 1. 项目目标
 
@@ -120,6 +120,8 @@ docker compose -f compose.test.yaml down
 ```
 
 迁移 `004_authorization_code.sql`、`005_delegation.sql` 与 `006_task_revocation.sql` 为增量升级：新增一次性授权码、签名令牌快照、受控证明、不可变委托关系及任务撤销记录；不修改已有账本行或旧迁移。已有数据库也用同一迁移命令升级；迁移器校验历史 checksum，失败会回滚，不提供自动降级。部署前备份并限制 AS 表的数据库角色访问；005 将证明 JWS 保存在受限表中，证据保留/访问控制须由部署负责。`AuthorizationCodeService` 是仅供可信登录/同意服务调用的进程内组件，不能把外部提交的 `user_id` 或 `ApprovedAuthorization` JSON 直接交给它；`TokenExchangeService` 须由已完成 Basic 客户端认证的服务端调用；`TaskRevocationService` 的 subject 必须来自已验证且有 CSRF 防护的用户会话，不能直接使用外部自报值。完整 HTTP 流程尚未实现。
+
+`TokenEndpoint` 是可挂载到 TLS HTTP 服务的纯请求适配层：输入原始表单与逐条 Authorization/AG-Proof 头，使用部署时私有注入的高熵客户端密钥 SHA-256 摘要进行 Basic 校验，调用上述两个事务服务，并返回 OAuth 形状、禁止缓存的响应。它不自行提供监听器、客户端密钥初始化、用户登录或同意页面；HTTP 服务必须保留重复头信息并限制请求大小，不能从用户提交值推导 tenant、redirect 或密钥。可用 `python -m pytest tests/test_token_endpoint.py tests/integration/test_token_endpoint.py` 验证接口与真实数据库签发（后者需要测试 PostgreSQL）。
 
 测试专用凭据是显式的 test-only 值，只作用于本机 127.0.0.1 的一次性容器，不得用于任何部署；生产/演示凭据由部署时独立注入。变量优先级如实说明：迁移器 `python -m agent_guard.ledger.migrate` 先读 `AGENT_GUARD_DATABASE_URL`（未来服务/正式库预留），未设置时回退 `AGENT_GUARD_TEST_DATABASE_URL`；pytest 集成测试入口只读取 `AGENT_GUARD_TEST_DATABASE_URL`，不会触碰 `AGENT_GUARD_DATABASE_URL` 指向的库。测试会在目标库内创建本轮独占 schema（`ag_test_run_*`，含所有权标记），清库只作用于该 schema；迁移用的 scratch 库为随机名且仅清理自建资源。
 
