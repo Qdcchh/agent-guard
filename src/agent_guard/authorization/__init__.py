@@ -17,6 +17,11 @@ from agent_guard.authorization.forms import FormError, decode_oauth_form
 from agent_guard.authorization.oidc import OidcValidationError, pkce_s256_challenge, verify_id_token
 from agent_guard.authorization.policy import ChildSpec, DelegationError, GrantPolicy
 from agent_guard.authorization.proof import ProofInputError, sign_ag_proof
+from agent_guard.authorization.revocation_service import (
+    TaskRevocationError,
+    TaskRevocationResult,
+    TaskRevocationService,
+)
 from agent_guard.authorization.verifier import InvocationVerifier, VerificationError
 
 __all__ = [
@@ -43,6 +48,9 @@ __all__ = [
     "GrantPolicy",
     "ProofInputError",
     "sign_ag_proof",
+    "TaskRevocationError",
+    "TaskRevocationResult",
+    "TaskRevocationService",
     "InvocationVerifier",
     "VerificationError",
 ]
