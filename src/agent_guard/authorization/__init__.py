@@ -35,7 +35,11 @@ from agent_guard.authorization.revocation_service import (
     TaskRevocationService,
 )
 from agent_guard.authorization.token_endpoint import TokenClient, TokenEndpoint, TokenResponse
-from agent_guard.authorization.verifier import InvocationVerifier, VerificationError
+from agent_guard.authorization.verifier import (
+    InvocationVerifier,
+    VerificationError,
+    VerifiedOperationQuery,
+)
 
 __all__ = [
     "BrowserLoginApp",
@@ -84,4 +88,5 @@ __all__ = [
     "TokenResponse",
     "InvocationVerifier",
     "VerificationError",
+    "VerifiedOperationQuery",
 ]

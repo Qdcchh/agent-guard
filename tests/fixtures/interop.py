@@ -351,6 +351,25 @@ def invocation_proof(chain: InteropChain, request: JsonObject, now: int) -> str:
     )
 
 
+def result_read_request(operation_id: str = "operation-interop-1") -> JsonObject:
+    return {"profile": "GM-MVP-1", "task_id": TASK, "operation_id": operation_id}
+
+
+def result_read_proof(chain: InteropChain, request: JsonObject, now: int) -> str:
+    from agent_guard.contracts.ledger import QUERY_ENDPOINT
+
+    return sign_ag_proof(
+        agent_key("executor"),
+        kid=agent_kid("executor"),
+        client_id="agent-executor",
+        purpose="result-read",
+        endpoint=QUERY_ENDPOINT,
+        body=request,
+        token=chain.executor_token,
+        now=now,
+    )
+
+
 def verifier() -> InvocationVerifier:
     return InvocationVerifier(
         issuer=ISSUER,

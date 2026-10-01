@@ -7,6 +7,7 @@
 | 组件 | 入口 | 用途 |
 | --- | --- | --- |
 | 静态验权 SDK | `agent_guard.authorization.verifier.InvocationVerifier.verify_static` | 校验 Access Token、AG-Proof、holder 绑定与工具参数，产出唯一可信的 `VerifiedInvocation` |
+| 操作查询验权 SDK | `InvocationVerifier.verify_result_read` | 校验查询令牌与 `purpose=result-read` 证明，产出可信 `VerifiedOperationQuery`（只读，不扣次数、不授权执行） |
 | 接受事务（A1，位于 main） | `agent_guard.ledger.service.ExecutionLedger.accept(verified, TrustedCost)` | 加锁、原子预算/幂等/重放决定；网关不得绕过 |
 | 内省（网关照会） | `oauth/introspect` 适配层 / `IntrospectionService` | `active:true` 只是查询时点快照，不代替接受事务 |
 | 固定互操作向量 | `tests/fixtures/interop.py`、`tests/test_interop_vectors.py` | TEST-ONLY 固定 SM2 密钥、SPKI/DER 与 SM3 摘要、根与两级子令牌、executor AG-Proof、三方路径 `AG-EVIDENCE-1` 包及负例 |
@@ -32,7 +33,10 @@
 
 ### 2.2 结果查询 `POST /v1/operations/query`
 
-- 相同 AGPoP + AG-Proof，`purpose=result-read`；body `{profile, task_id, operation_id}`；返回 `{operation_id, status, receipt_status, result, receipt_jws}`；无终局回执时 `receipt_jws=null`，UNKNOWN 不得伪装 FAILED。
+- 相同 AGPoP + AG-Proof，`purpose=result-read`，`htu` 固定为 `QUERY_ENDPOINT`；body 严格为 `{profile, task_id, operation_id}`，拒绝额外字段。
+- B 提供 `InvocationVerifier.verify_result_read`，返回可信 `VerifiedOperationQuery`，字段：`subject, tenant_id, task_id, grant_id, root_id, holder_client_id, holder_kid, operation_id, token_exp, token_digest, proof_digest, proof_jti, proof_iat, proof_exp, evidence_ref`（`purpose=result-read`）。
+- A 的查询事务必须自行复核：`operation_id` 属于该 tenant/task/grant/holder，当前授权链、撤销、时效与 key 状态有效；查询不再次扣业务次数、不改变预留；结果读取不得泄露其他租户对象。
+- 返回 `{operation_id, status, receipt_status, result, receipt_jws}`；无终局回执时 `receipt_jws=null`，UNKNOWN 不得伪装 FAILED。
 
 ### 2.3 执行状态与恢复（安全模型第 5 节）
 
@@ -77,6 +81,19 @@ python -m pytest tests/integration/test_as_ledger_integration.py
 python -m pytest tests/test_receipt.py
 ```
 
-## 4. 与验收矩阵的关系
+## 4. 联调请求（发往 A 负责人）
+
+B 侧材料已就绪，请求 A 在实现后按以下顺序交付并联调（详见对应章节）：
+
+1. 实现 `POST /v1/invocations`：接受 AGPoP + AG-Proof，调用 `InvocationVerifier.verify_static` 产出 `VerifiedInvocation`，再调 `ExecutionLedger.accept`；返回 202 与错误码见 §2.1。
+2. 实现 `POST /v1/operations/query`：接受 `purpose=result-read`，调用 `InvocationVerifier.verify_result_read`，在自己的读事务内复核操作归属与当前授权，不扣业务次数；见 §2.2。
+3. 实现状态机与恢复：`UNKNOWN` 保留预留、不得自动释放；终局失败必须有持久化终态；恢复不产生新意图；见 §2.3。
+4. 实现 `/v1/evidence/export`：返回 §2.4 的 `AG-EVIDENCE-1` 字段与回执字段；无检查点必须 `UNANCHORED`；提供网关回执 kid + SPKI 公钥给 B 配置信任。
+5. 提供与我方 `tests/fixtures/interop.py` 对齐的网关配置：issuer、网关 audience、固定的 `INVOKE_ENDPOINT`/`QUERY_ENDPOINT` 与共享 PostgreSQL 事务域。
+6. 交付后通知 B：由 B 运行 `python -m pytest tests/test_interop_vectors.py` 自检向量，再按 §3 执行真实 HTTPS 联调并逐项留痕。
+
+在上述接口进入 `origin/main` 前，B 不接受"已联调"或"M1—M13 通过"的结论。
+
+## 5. 与验收矩阵的关系
 
 已局部覆盖：M1 相关（登录/同意/换码）、M2（两级委托签发与收窄）、M3（DID/登记静态校验）、M4（盗用令牌无私钥失败，验权与接缝层）、M5 的静态部分（参数/令牌绑定、proof 防重放）、M8 的事务部分（撤销后拒绝）、SEC-01/02/05/06 的 SDK 与账本部分、AUD-02（UNANCHORED 局限）。仍未覆盖：A 侧 HTTP 网关与四工具的 HTTP 语义、M6/M7/M11/M12/M13 的端到端与恢复路径、M9 对 A 真实导出包的验证、M10 的干净部署演示。待 A 提供上述接口后按本文联调，再更新验收状态。

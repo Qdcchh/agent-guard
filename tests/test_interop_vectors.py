@@ -10,7 +10,7 @@ from agent_guard.authorization.claims import validate_access_claims, validate_ch
 from agent_guard.authorization.proof import sign_ag_proof
 from agent_guard.authorization.verifier import VerificationError
 from agent_guard.contracts.encoding import b64url_encode, canonical_json_bytes
-from agent_guard.contracts.ledger import INVOKE_ENDPOINT
+from agent_guard.contracts.ledger import INVOKE_ENDPOINT, QUERY_ENDPOINT
 from agent_guard.contracts.ledger_changes import canonical_ledger_changes_bytes
 from agent_guard.crypto.sm import (
     serialize_sm2_public_key,
@@ -140,6 +140,64 @@ def test_stolen_tampered_and_type_swapped_vectors_fail():
             method="POST",
             body=body,
             now=NOW,
+        )
+
+
+def test_result_read_verification_from_fixed_vectors():
+    chain = interop.interop_chain(NOW)
+    request = interop.result_read_request()
+    proof = interop.result_read_proof(chain, request, NOW)
+    verified = interop.verifier().verify_result_read(
+        chain.executor_token, proof, body=canonical_json_bytes(request), now=NOW
+    )
+    assert verified.operation_id == "operation-interop-1"
+    assert verified.purpose == "result-read"
+    assert verified.endpoint == QUERY_ENDPOINT
+    assert verified.holder_client_id == "agent-executor"
+    assert verified.holder_kid == interop.agent_kid("executor")
+    assert verified.grant_id == interop.EXECUTOR_GRANT
+    assert verified.root_id == interop.ROOT_GRANT
+
+    invoke_proof = interop.invocation_proof(chain, interop.invocation_request(), NOW)
+    with pytest.raises(VerificationError):
+        interop.verifier().verify_result_read(
+            chain.executor_token, invoke_proof, body=canonical_json_bytes(request), now=NOW
+        )
+    with pytest.raises(VerificationError):
+        interop.verifier().verify_result_read(
+            chain.executor_token,
+            proof,
+            body=canonical_json_bytes({**request, "extra": "x"}),
+            now=NOW,
+        )
+    with pytest.raises(VerificationError):
+        interop.verifier().verify_result_read(
+            chain.executor_token,
+            proof,
+            endpoint="https://evil.example/v1/operations/query",
+            body=canonical_json_bytes(request),
+            now=NOW,
+        )
+    with pytest.raises(VerificationError):
+        interop.verifier().verify_result_read(
+            chain.executor_token,
+            proof,
+            body=canonical_json_bytes(interop.result_read_request("operation-other")),
+            now=NOW,
+        )
+    stolen = sign_ag_proof(
+        interop.agent_key("planner"),
+        kid=interop.agent_kid("executor"),
+        client_id="agent-executor",
+        purpose="result-read",
+        endpoint=QUERY_ENDPOINT,
+        body=request,
+        token=chain.executor_token,
+        now=NOW,
+    )
+    with pytest.raises(VerificationError):
+        interop.verifier().verify_result_read(
+            chain.executor_token, stolen, body=canonical_json_bytes(request), now=NOW
         )
 
 

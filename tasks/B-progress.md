@@ -15,6 +15,7 @@
 - 密钥轮换与独立实现互验：配置支持 `historical_verification_keys`（旧 `kid` 仅验签、不再签发），`TokenExchangeService`/`IntrospectionService`/`/ag/keys` 同持历史公钥；`tests/integration/test_key_rotation.py` 验证轮换后旧令牌可验签、新令牌由新 `kid` 签发。`tests/integration/test_sm2_interop.py` 用 OpenSSL CLI 作为独立第二实现做双向签名互验及 JWS r||s/DER 转换互验（CI 环境执行）。README 增加密钥生成/分发/轮换/撤销/销毁与泄露处置边界说明。
 - B→A1 接缝联调（`tests/integration/test_as_ledger_integration.py`）：真实 PostgreSQL 上由 B 登录/同意签发根、两级 Token Exchange 得到 executor 令牌，B `InvocationVerifier` 产出 `VerifiedInvocation`，交给 A1 `ExecutionLedger.accept` 做加锁预算决定；覆盖被盗令牌/参数篡改拒绝、幂等重试不重复预留、proof 重放拒绝、根与中间祖先撤销后拒绝、内省 active 不代替接受事务。A 的 HTTP 网关、四工具、下游、恢复与证据导出在 `origin/main` 尚未实现，M1—M13 仍不能整体通过。
 - 固定联调夹具与契约：`tests/fixtures/interop.py`（TEST-ONLY 固定 SM2 密钥、冻结 SPKI/SM3 向量、planner→selector→executor 令牌链、executor AG-Proof、三方路径 `AG-EVIDENCE-1` 包）与 `tests/test_interop_vectors.py`（无数据库）。`tasks/B-interop.md` 列出等待 A 提供的网关/工具/查询/恢复/证据导出接口与字段及运行手册。
+- 操作查询验权（B 侧 SDK 缺口补齐）：`InvocationVerifier.verify_result_read` 校验 `purpose=result-read` 的 AGPoP/AG-Proof 与严格查询体 `{profile, task_id, operation_id}`，产出可信 `VerifiedOperationQuery`（只读、不扣业务次数、不授权执行）；`contracts/ledger.py` 新增固定 `QUERY_ENDPOINT`；固定向量新增 result-read 证明，测试覆盖正例与错误 purpose、额外字段、换端点、篡改 operation_id、盗用密钥负例。
 - 合成 B 授权演示 `python -m tests.demo_b_flow`，不代表完整浏览器或网关流程。
 
 ## 未完成的关键闭环
