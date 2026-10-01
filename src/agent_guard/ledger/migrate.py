@@ -4,11 +4,16 @@ Migrations live in ``migrations/NNN_name.sql`` at the repository root and are
 applied in lexical order inside one transaction each. Applied versions and
 file checksums are recorded in ``ag_schema_migrations``; re-running is a
 no-op, and editing an already-applied migration is rejected.
+
+The migrations directory is the repository copy by default; installed (wheel)
+deployments that keep migrations outside the package set
+``AGENT_GUARD_MIGRATIONS_DIR`` to the deployed directory.
 """
 
 from __future__ import annotations
 
 import hashlib
+import os
 import re
 from pathlib import Path
 
@@ -17,7 +22,15 @@ import psycopg
 MIGRATIONS_TABLE = "ag_schema_migrations"
 _FILENAME_RE = re.compile(r"^(?P<version>\d{3})_[A-Za-z0-9_]+\.sql$")
 
-DEFAULT_MIGRATIONS_DIR = Path(__file__).resolve().parents[3] / "migrations"
+
+def _migrations_dir() -> Path:
+    override = os.environ.get("AGENT_GUARD_MIGRATIONS_DIR")
+    if override:
+        return Path(override)
+    return Path(__file__).resolve().parents[3] / "migrations"
+
+
+DEFAULT_MIGRATIONS_DIR = _migrations_dir()
 
 
 class MigrationError(Exception):

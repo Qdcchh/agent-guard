@@ -52,3 +52,62 @@ jobs:
         run: python -m pytest tests/integration
       - name: Synthetic B authorization demo
         run: python -m tests.demo_b_flow
+
+  clean-install:
+    name: clean-install (wheel)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: agent_guard_ci
+          POSTGRES_PASSWORD: ci-only-throwaway
+          POSTGRES_DB: agent_guard_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U agent_guard_ci -d agent_guard_ci"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 25
+    env:
+      # Ephemeral CI credentials only; migrations live outside the wheel and
+      # are supplied explicitly for this installed deployment.
+      AGENT_GUARD_TEST_DATABASE_URL: postgresql://agent_guard_ci:ci-only-throwaway@127.0.0.1:5432/agent_guard_ci
+      AGENT_GUARD_MIGRATIONS_DIR: ${{ github.workspace }}/migrations
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Build wheel
+        run: python -m pip wheel . --no-deps -w dist
+      - name: Create isolated environment and install the wheel
+        run: |
+          python -m venv .clean
+          .clean/bin/python -m pip install --upgrade pip
+          .clean/bin/python -m pip install -r requirements-dev.lock
+          .clean/bin/python -m pip install --no-deps dist/*.whl
+      - name: Prove the import comes from the installed wheel
+        run: |
+          .clean/bin/python - <<'PY'
+          import pathlib
+          import agent_guard
+          path = pathlib.Path(agent_guard.__file__).resolve()
+          assert ".clean" in path.parts, path
+          assert "src" not in path.parts, path
+          print(path)
+          PY
+      - name: Lint (installed toolchain)
+        run: .clean/bin/python -m ruff check .
+      - name: Format check (installed toolchain)
+        run: .clean/bin/python -m ruff format --check .
+      - name: Unit and SDK tests from the wheel
+        run: .clean/bin/python -m pytest tests --ignore=tests/integration
+      - name: Migrations on an empty database
+        run: .clean/bin/python -m agent_guard.ledger.migrate
+      - name: Integration tests, OpenSSL interop and TLS (real PostgreSQL)
+        run: .clean/bin/python -m pytest tests/integration
+      - name: Synthetic B authorization demo
+        run: .clean/bin/python -m tests.demo_b_flow

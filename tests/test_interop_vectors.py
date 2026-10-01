@@ -201,6 +201,106 @@ def test_result_read_verification_from_fixed_vectors():
         )
 
 
+def test_public_contract_field_sets_and_exports_are_frozen():
+    from dataclasses import fields as dataclass_fields
+
+    from agent_guard.authorization.verifier import VerifiedOperationQuery
+    from agent_guard.contracts.ledger import (
+        PURPOSE_RESULT_READ,
+        QUERY_ENDPOINT,
+        VerifiedInvocation,
+    )
+    from agent_guard.evidence.receipt import _BUNDLE_FIELDS, _RECEIPT_FIELDS
+
+    assert {field.name for field in dataclass_fields(VerifiedOperationQuery)} == {
+        "subject",
+        "tenant_id",
+        "task_id",
+        "grant_id",
+        "root_id",
+        "holder_client_id",
+        "holder_kid",
+        "operation_id",
+        "token_exp",
+        "token_digest",
+        "proof_digest",
+        "proof_jti",
+        "proof_iat",
+        "proof_exp",
+        "evidence_ref",
+        "profile",
+        "purpose",
+        "endpoint",
+    }
+    assert {field.name for field in dataclass_fields(VerifiedInvocation)} == {
+        "subject",
+        "tenant_id",
+        "task_id",
+        "grant_id",
+        "root_id",
+        "holder_client_id",
+        "holder_kid",
+        "tool_id",
+        "idempotency_key",
+        "canonical_params",
+        "token_exp",
+        "proof_iat",
+        "proof_exp",
+        "proof_jti",
+        "token_digest",
+        "proof_digest",
+        "intent_digest",
+        "evidence_ref",
+        "ancestor_ids",
+        "profile",
+        "purpose",
+        "endpoint",
+        "method",
+        "tool_version",
+    }
+    assert _BUNDLE_FIELDS == {
+        "manifest_version",
+        "anchoring_status",
+        "receipt_jws",
+        "ancestor_tokens",
+        "token_jws",
+        "proof_jws",
+        "request",
+        "result",
+        "ledger_changes",
+    }
+    assert _RECEIPT_FIELDS == {
+        "profile",
+        "receipt_id",
+        "operation_id",
+        "tenant_id",
+        "task_id",
+        "root_grant_id",
+        "grant_id",
+        "token_sm3",
+        "proof_sm3",
+        "intent_sm3",
+        "tool_id",
+        "tool_version",
+        "status",
+        "amount_fen",
+        "result_sm3",
+        "ledger_sm3",
+        "iat",
+    }
+    assert PURPOSE_RESULT_READ == "result-read"
+    assert QUERY_ENDPOINT == "https://gateway.agent-guard.test/v1/operations/query"
+
+
+def test_public_exports_are_importable_from_package_roots():
+    from agent_guard.authorization import InvocationVerifier, VerifiedOperationQuery
+    from agent_guard.contracts import QUERY_ENDPOINT
+    from agent_guard.evidence import ReceiptTrust, verify_receipt_bundle
+
+    assert InvocationVerifier and VerifiedOperationQuery and QUERY_ENDPOINT
+    assert ReceiptTrust and verify_receipt_bundle
+
+
 def test_evidence_bundle_verifies_and_tampering_is_detected():
     bundle, trust = interop.evidence_bundle(NOW)
     verified = verify_receipt_bundle(bundle, trust=trust)
