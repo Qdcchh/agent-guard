@@ -4,9 +4,10 @@ OpenSSL is an implementation independent of Tongsuo. The keypair is generated
 by OpenSSL as an SM2 key (so OpenSSL applies SM2 semantics) and loaded into
 Tongsuo; both directions are then exercised over the same fixed message:
 Tongsuo signature -> OpenSSL verify, OpenSSL signature -> Tongsuo verify, and
-a JWS whose signature segment was produced by OpenSSL. Both sides use the
-GM-MVP-1 user identifier ``1234567812345678``, which is the OpenSSL SM2
-default. This is a development-vector check on the CI runner, not a claim
+a JWS whose signature segment was produced by OpenSSL. The OpenSSL commands
+pass ``-pkeyopt distid:1234567812345678`` so both sides use the GM-MVP-1 user
+identifier explicitly (the OpenSSL 3 provider default distid is not the GB/T
+default). This is a development-vector check on the CI runner, not a claim
 about every OpenSSL build or algorithm suite.
 """
 
@@ -31,6 +32,7 @@ from agent_guard.crypto.sm import (
 pytestmark = pytest.mark.integration
 
 MESSAGE = b"agent-guard GM-MVP-1 SM2 independent interop vector v1"
+DISTID = "distid:1234567812345678"
 
 
 def _openssl(args: list[str]) -> subprocess.CompletedProcess:
@@ -76,6 +78,8 @@ def test_sm2_signatures_interoperate_in_both_directions(tmp_path):
             "-rawin",
             "-digest",
             "sm3",
+            "-pkeyopt",
+            DISTID,
             "-sigfile",
             str(tongsuo_signature),
         ]
@@ -94,6 +98,8 @@ def test_sm2_signatures_interoperate_in_both_directions(tmp_path):
             "-rawin",
             "-digest",
             "sm3",
+            "-pkeyopt",
+            DISTID,
             "-out",
             str(openssl_signature),
         ]
@@ -130,6 +136,8 @@ def test_openssl_jws_segment_verifies_through_b_verifier(tmp_path):
             "-rawin",
             "-digest",
             "sm3",
+            "-pkeyopt",
+            DISTID,
             "-out",
             str(der_path),
         ]
