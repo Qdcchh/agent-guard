@@ -1,6 +1,8 @@
-# B 角色进度与续跑入口（2026-10-01）
+# B 角色进度与续跑入口（2026-10-02）
 
 分支：`feature/fjr-B-character`，PR #3。此记录只描述已落地代码与待办，不替代 [`docs/acceptance.md`](../docs/acceptance.md) 的 M1—M13 验收。不要将分支推送等同于合并 main。
+
+> **B 独立交付已封版（2026-10-02）。** 封版代码提交 `5dc832a`，交接记录见 [B-handoff](B-handoff.md)。之后不再新增 B 单边功能；剩余工作（网关、四工具、查询/恢复、证据导出、网关回执公钥）必须等待 A 或双方联调。M1—M13 仍不得写成端到端通过。
 
 ## 已落地
 
@@ -16,6 +18,7 @@
 - B→A1 接缝联调（`tests/integration/test_as_ledger_integration.py`）：真实 PostgreSQL 上由 B 登录/同意签发根、两级 Token Exchange 得到 executor 令牌，B `InvocationVerifier` 产出 `VerifiedInvocation`，交给 A1 `ExecutionLedger.accept` 做加锁预算决定；覆盖被盗令牌/参数篡改拒绝、幂等重试不重复预留、proof 重放拒绝、根与中间祖先撤销后拒绝、内省 active 不代替接受事务。A 的 HTTP 网关、四工具、下游、恢复与证据导出在 `origin/main` 尚未实现，M1—M13 仍不能整体通过。
 - 固定联调夹具与契约：`tests/fixtures/interop.py`（TEST-ONLY 固定 SM2 密钥、冻结 SPKI/SM3 向量、planner→selector→executor 令牌链、executor AG-Proof、三方路径 `AG-EVIDENCE-1` 包）与 `tests/test_interop_vectors.py`（无数据库）。`tasks/B-interop.md` 列出等待 A 提供的网关/工具/查询/恢复/证据导出接口与字段及运行手册。
 - 操作查询验权（B 侧 SDK 缺口补齐）：`InvocationVerifier.verify_result_read` 校验 `purpose=result-read` 的 AGPoP/AG-Proof 与严格查询体 `{profile, task_id, operation_id}`，产出可信 `VerifiedOperationQuery`（只读、不扣业务次数、不授权执行）；`contracts/ledger.py` 新增固定 `QUERY_ENDPOINT`；固定向量新增 result-read 证明，测试覆盖正例与错误 purpose、额外字段、换端点、篡改 operation_id、盗用密钥负例。
+- 封版收尾：`clean-install (wheel)` CI 作业（Python 3.11 + 空 PostgreSQL，装 wheel、空库迁移、全部测试含 OpenSSL 互验与 TLS 全链路、演示）；`AGENT_GUARD_MIGRATIONS_DIR` 支持 wheel 部署；`agent_guard.evidence`/`agent_guard.contracts` 公共导出补齐；result-read 过期/未来 proof、过期 token、错误 issuer/audience、错误 method、任务篡改、停用 key 负例；公共字段集合冻结测试；`tasks/B-handoff.md` 交接记录。
 - 合成 B 授权演示 `python -m tests.demo_b_flow`，不代表完整浏览器或网关流程。
 
 ## 未完成的关键闭环
@@ -35,8 +38,9 @@
   - run #31、#32，head `2ee85f5`/`f408c1a`：B→A1 接缝联调（#31 因同测试内先耗尽额度再做重放用例而失败，已拆分为独立用例；#32 success）。
   - run #34，head `8be9f47`：success，新增固定联调向量（`tests/fixtures/interop.py` + `tests/test_interop_vectors.py`，无数据库 187 passed）与 `tasks/B-interop.md` 契约/运行手册。
   - run #36，head `db36ec2`：success，新增 `verify_result_read`/`VerifiedOperationQuery` 及 result-read 向量负例（无数据库 188 passed）。
+  - run #38，head `5dc832a`：success，双作业 `checks` + `clean-install (wheel)`；wheel 干净安装、空库迁移、真实 PostgreSQL 集成、OpenSSL SM2 互验、TLS 全链路与合成演示全部通过；本机非集成 199 passed、wheel 隔离环境 199 passed。
   - 期间 run #23/#24 因 TLS 测试响应头大小写、#27/#28 因 OpenSSL 3 provider 默认 `distid` 与 GB/T 默认不同而失败；均已定位修复（显式 `distid=1234567812345678`）。
 
 ## 续跑顺序
 
-登录/同意闭环、撤销 HTTP 路由、开发 TLS 装配、密钥轮换与 OpenSSL 独立互验、操作查询验权与固定联调向量均已落地；联调请求已通过仓库 Issue #4 发给 A 负责人。下一步：每次开工先 fetch 并核对 `origin/main` 是否出现网关/查询/证据导出；出现后按 `tasks/B-interop.md` 执行真实 HTTPS 联调并逐项留痕，再补独立审计检查点与生产密钥托管/运行手册。
+B 独立交付已封版，停止新增 B 单边功能。每次开工先 `git fetch` 核对 `origin/main` 是否出现 Issue #4 所述接口；出现后按 [B-interop](B-interop.md) 执行真实 HTTPS 端到端联调与真实导出包验证并逐项留痕。未联调前，M1—M13 只能维持“局部覆盖”表述。

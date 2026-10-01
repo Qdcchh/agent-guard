@@ -17,7 +17,7 @@
 5. 授权链、请求、执行效果、签名回执与独立检查点的证据关联。
 6. 可脱离大模型运行的确定性安全测试和公开条件下的效率实验。
 
-以上均为开发目标，不是已完成能力或普适安全保证。
+以上均为开发目标，不是已完成能力或普适安全保证。B 角色独立交付已封版，安装、公共 API、固定向量、可信公钥配置与已知限制见 [B 交接记录](tasks/B-handoff.md)；端到端仍须等待 A 的网关、查询、恢复与证据导出。
 
 ## 2. 场景与范围
 
@@ -99,6 +99,22 @@ python -m ruff check .
 python -m ruff format --check .
 python -m pytest tests --ignore=tests/integration
 ```
+
+### 构建产物与干净安装（wheel）
+
+```bash
+python -m pip wheel . --no-deps -w dist
+python -m venv .clean
+.clean/bin/python -m pip install -r requirements-dev.lock
+.clean/bin/python -m pip install --no-deps dist/*.whl
+export AGENT_GUARD_MIGRATIONS_DIR="$PWD/migrations"   # wheel 不打包迁移 SQL，需显式提供
+export AGENT_GUARD_TEST_DATABASE_URL=postgresql://...
+.clean/bin/python -m agent_guard.ledger.migrate
+.clean/bin/python -m pytest tests --ignore=tests/integration
+.clean/bin/python -m pytest tests/integration          # 含 OpenSSL SM2 互验与 TLS 全链路
+```
+
+CI 的 `clean-install (wheel)` 作业在 Python 3.11 + 空 PostgreSQL 上执行以上流程，确认安装产物不依赖源码目录；本机缺 PostgreSQL/OpenSSL/3.11 时不得用本地结果代替。
 
 ### A1 账本：数据库、迁移与集成测试
 
