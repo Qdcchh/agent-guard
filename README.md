@@ -127,6 +127,8 @@ docker compose -f compose.test.yaml down
 
 迁移 `007_admin_grant_revocation.sql` 新增租户管理员登记及不可变节点撤销记录，不改写现有授权或账本数据。可信部署流程须先在 `ag_tenant_admins` 登记真实管理员，并限制该表的写权限；外部请求不得自行登记。`GrantRevocationService` 只接受已验证且有 CSRF 防护的管理员会话传入的主体，并在数据库中再次核验管理员资格，按根至叶锁序撤销目标子树；它尚未挂载管理 HTTP 接口。升级前备份，用相同迁移命令增量升级；旧数据库若缺少 007 将不能调用该服务。集成测试为 `python -m pytest tests/integration/test_grant_revocation_service.py`。
 
+`verify_receipt_bundle` 提供 B 侧 `AG-EVIDENCE-1` 单笔未锚定证据的离线验证：可信 AS、网关及历史 holder 公钥和登记快照必须独立配置，不能从证据包自带字段建立信任。验证器复核签名、授权祖先收窄、AG-Proof、调用与结果摘要，以及根至叶 RESERVE/SETTLE/RELEASE 的金额和次数变动；只有四种账本 delta 允许有界负整数。运行 `python -m pytest tests/test_receipt.py`。当前没有 A 侧证据导出和独立审计检查点，因此不宣称任务历史完整、防回滚或 M9 整项通过。
+
 明天演示 B 侧授权闭环时，在设置隔离测试数据库连接变量 `AGENT_GUARD_TEST_DATABASE_URL` 后运行 `python -m tests.demo_b_flow`。该命令在本轮独占 schema 内生成合成身份和密钥，展示根签发、两级委托、盗取令牌拒绝、幂等重试与撤销拒绝，结束后仅清理自己创建的 schema；不打印原始令牌或密钥。它不包含浏览器登录、真实 HTTP 监听、网关订单执行或独立审计锚定，不可据此声称 M1—M13 全部通过。
 
 测试专用凭据是显式的 test-only 值，只作用于本机 127.0.0.1 的一次性容器，不得用于任何部署；生产/演示凭据由部署时独立注入。变量优先级如实说明：迁移器 `python -m agent_guard.ledger.migrate` 先读 `AGENT_GUARD_DATABASE_URL`（未来服务/正式库预留），未设置时回退 `AGENT_GUARD_TEST_DATABASE_URL`；pytest 集成测试入口只读取 `AGENT_GUARD_TEST_DATABASE_URL`，不会触碰 `AGENT_GUARD_DATABASE_URL` 指向的库。测试会在目标库内创建本轮独占 schema（`ag_test_run_*`，含所有权标记），清库只作用于该 schema；迁移用的 scratch 库为随机名且仅清理自建资源。
