@@ -1,6 +1,8 @@
 # Runtime dependency lock for Python 3.11+.
 # Re-run the cryptographic vectors and ledger integration tests after changes.
 cffi==2.1.1
+click==8.5.0
+h11==0.16.0
 pycparser==3.0
 psycopg==3.2.13
 psycopg-binary==3.2.13
@@ -8,3 +10,4 @@ rfc8785==0.1.4
 tongsuopy==1.0.1
 typing_extensions==4.16.0
 tzdata==2026.4
+uvicorn==0.35.0

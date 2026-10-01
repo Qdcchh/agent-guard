@@ -12,6 +12,7 @@ dependencies = [
     "psycopg[binary]>=3.2,<3.3",
     "rfc8785==0.1.4",
     "tongsuopy==1.0.1",
+    "uvicorn>=0.35,<0.36",
 ]
 
 [project.optional-dependencies]
