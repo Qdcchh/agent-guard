@@ -10,6 +10,7 @@ from __future__ import annotations
 import asyncio
 from typing import Any
 
+from agent_guard.authorization.browser import BrowserLoginApp
 from agent_guard.authorization.discovery import DiscoveryEndpoint
 from agent_guard.authorization.introspection_endpoint import IntrospectionEndpoint
 from agent_guard.authorization.token_endpoint import TokenEndpoint, TokenResponse
@@ -20,7 +21,11 @@ _NO_STORE = {"Content-Type": "application/json", "Cache-Control": "no-store"}
 
 
 class AuthorizationHttpApp:
-    """ASGI adapter; login/consent and revocation routes are not yet mounted."""
+    """ASGI adapter for the public, token, introspection and browser routes.
+
+    Login/consent routes are mounted only when a :class:`BrowserLoginApp` is
+    supplied; revocation routes remain unmounted and are a separate boundary.
+    """
 
     def __init__(
         self,
@@ -28,12 +33,14 @@ class AuthorizationHttpApp:
         discovery: DiscoveryEndpoint,
         token: TokenEndpoint,
         introspection: IntrospectionEndpoint,
+        browser: BrowserLoginApp | None = None,
     ) -> None:
         if discovery is None or token is None or introspection is None:
             raise ValueError("all AS route handlers required")
         self._discovery = discovery
         self._token = token
         self._introspection = introspection
+        self._browser = browser
 
     async def __call__(self, scope: dict, receive: Any, send: Any) -> None:
         if scope.get("type") != "http":
@@ -52,6 +59,25 @@ class AuthorizationHttpApp:
                 if method == "GET"
                 else self._error(405, "METHOD_NOT_ALLOWED")
             )
+            await self._send(send, response)
+            return
+        if self._browser is not None and path in self._browser.paths:
+            if method not in {"GET", "POST"}:
+                await self._send(send, self._error(405, "METHOD_NOT_ALLOWED"))
+                return
+            try:
+                query_string = scope.get("query_string", b"")
+                raw_body = await self._body(receive) if method == "POST" else b""
+                response = await asyncio.to_thread(
+                    self._browser.dispatch,
+                    method=method,
+                    path=path,
+                    query_string=query_string,
+                    headers=scope["headers"],
+                    body=raw_body,
+                )
+            except Exception:
+                response = self._error(500, "INTERNAL_ERROR")
             await self._send(send, response)
             return
         if path not in {"/oauth/token", "/oauth/introspect"}:
