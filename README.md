@@ -123,6 +123,8 @@ docker compose -f compose.test.yaml down
 
 `TokenEndpoint` 是可挂载到 TLS HTTP 服务的纯请求适配层：输入原始表单与逐条 Authorization/AG-Proof 头，使用部署时私有注入的高熵客户端密钥 SHA-256 摘要进行 Basic 校验，调用上述两个事务服务，并返回 OAuth 形状、禁止缓存的响应。它不自行提供监听器、客户端密钥初始化、用户登录或同意页面；HTTP 服务必须保留重复头信息并限制请求大小，不能从用户提交值推导 tenant、redirect 或密钥。可用 `python -m pytest tests/test_token_endpoint.py tests/integration/test_token_endpoint.py` 验证接口与真实数据库签发（后者需要测试 PostgreSQL）。
 
+`IntrospectionService` 与 `IntrospectionEndpoint` 提供网关专用的令牌状态查询：独立 Basic 服务凭据、严格表单、签名及不可变快照验证，并在同一锁序下复查祖先撤销、期限和密钥状态。无效令牌只返回 `active:false`，可信数据库不可用则失败关闭。它们同样尚未挂载 TLS HTTP 监听器；`active:true` 是查询时点快照，绝非网关执行许可，网关仍需在接受事务内重新验权。运行 `python -m pytest tests/test_introspection_endpoint.py tests/integration/test_introspection.py` 验证接口及数据库路径。
+
 明天演示 B 侧授权闭环时，在设置隔离测试数据库连接变量 `AGENT_GUARD_TEST_DATABASE_URL` 后运行 `python -m tests.demo_b_flow`。该命令在本轮独占 schema 内生成合成身份和密钥，展示根签发、两级委托、盗取令牌拒绝、幂等重试与撤销拒绝，结束后仅清理自己创建的 schema；不打印原始令牌或密钥。它不包含浏览器登录、真实 HTTP 监听、网关订单执行或独立审计锚定，不可据此声称 M1—M13 全部通过。
 
 测试专用凭据是显式的 test-only 值，只作用于本机 127.0.0.1 的一次性容器，不得用于任何部署；生产/演示凭据由部署时独立注入。变量优先级如实说明：迁移器 `python -m agent_guard.ledger.migrate` 先读 `AGENT_GUARD_DATABASE_URL`（未来服务/正式库预留），未设置时回退 `AGENT_GUARD_TEST_DATABASE_URL`；pytest 集成测试入口只读取 `AGENT_GUARD_TEST_DATABASE_URL`，不会触碰 `AGENT_GUARD_DATABASE_URL` 指向的库。测试会在目标库内创建本轮独占 schema（`ag_test_run_*`，含所有权标记），清库只作用于该 schema；迁移用的 scratch 库为随机名且仅清理自建资源。

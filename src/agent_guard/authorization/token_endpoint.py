@@ -63,6 +63,37 @@ class TokenResponse:
     body: bytes
 
 
+def authenticate_basic(
+    headers: tuple[str, ...], clients: dict[str, TokenClient]
+) -> TokenClient | None:
+    """Authenticate one canonical Basic header against trusted secret hashes."""
+    if type(headers) is not tuple or len(headers) != 1:
+        return None
+    header = headers[0]
+    if type(header) is not str or header[:6].lower() != "basic ":
+        return None
+    value = header[6:]
+    if not value or len(value) > 2048 or not value.isascii():
+        return None
+    try:
+        decoded = base64.b64decode(value, validate=True)
+    except (ValueError, binascii.Error):
+        return None
+    if base64.b64encode(decoded).decode("ascii") != value or b":" not in decoded:
+        return None
+    raw_client_id, secret = decoded.split(b":", 1)
+    try:
+        client_id = raw_client_id.decode("ascii")
+    except UnicodeDecodeError:
+        return None
+    if not _CLIENT_ID.fullmatch(client_id) or not secret:
+        return None
+    client = clients.get(client_id)
+    expected = client.secret_sha256 if client is not None else b"\x00" * 32
+    matched = hmac.compare_digest(hashlib.sha256(secret).digest(), expected)
+    return client if matched and client is not None and client.active else None
+
+
 class TokenEndpoint:
     """Map one authenticated OAuth form request to AS transaction services."""
 
@@ -123,7 +154,7 @@ class TokenEndpoint:
         required so duplicate Authorization/AG-Proof lines cannot be merged.
         The surrounding HTTP server must enforce TLS and request-size limits.
         """
-        client = self._authenticate(authorization_headers)
+        client = authenticate_basic(authorization_headers, self._clients)
         if client is None:
             return self._error(
                 401,
@@ -178,33 +209,6 @@ class TokenEndpoint:
                 return self._error(503, "temporarily_unavailable", exc.code)
             return self._error(400, "invalid_request", exc.code)
         return TokenResponse(200, dict(_NO_STORE), canonical_json_bytes(asdict(result)))
-
-    def _authenticate(self, headers: tuple[str, ...]) -> TokenClient | None:
-        if type(headers) is not tuple or len(headers) != 1:
-            return None
-        header = headers[0]
-        if type(header) is not str or header[:6].lower() != "basic ":
-            return None
-        value = header[6:]
-        if not value or len(value) > 2048 or not value.isascii():
-            return None
-        try:
-            decoded = base64.b64decode(value, validate=True)
-        except (ValueError, binascii.Error):
-            return None
-        if base64.b64encode(decoded).decode("ascii") != value or b":" not in decoded:
-            return None
-        raw_client_id, secret = decoded.split(b":", 1)
-        try:
-            client_id = raw_client_id.decode("ascii")
-        except UnicodeDecodeError:
-            return None
-        if not _CLIENT_ID.fullmatch(client_id) or not secret:
-            return None
-        client = self._clients.get(client_id)
-        expected = client.secret_sha256 if client is not None else b"\x00" * 32
-        matched = hmac.compare_digest(hashlib.sha256(secret).digest(), expected)
-        return client if matched and client is not None and client.active else None
 
     @staticmethod
     def _error(
