@@ -77,6 +77,8 @@ def test_p13_fresh_database_migrates_and_is_versioned(scratch):
             "ag_tasks",
             "ag_principals",
             "ag_grants",
+            "ag_tenant_admins",
+            "ag_grant_revocations",
             "ag_operations",
             "ag_proofs",
             "ag_ledger_events",
