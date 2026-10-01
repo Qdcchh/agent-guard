@@ -32,6 +32,7 @@
   - run #25，head `f041619`：success，覆盖开发 TLS 装配与真实 HTTPS 全链路（登录→同意→换码→内省→撤销）。
   - run #29，head `34b71d0`：success，覆盖密钥轮换（历史 `kid` 仅验签）与 OpenSSL CLI 独立实现双向互验及 JWS `r||s`/DER 转换。
   - run #31、#32，head `2ee85f5`/`f408c1a`：B→A1 接缝联调（#31 因同测试内先耗尽额度再做重放用例而失败，已拆分为独立用例；#32 success）。
+  - run #34，head `8be9f47`：success，新增固定联调向量（`tests/fixtures/interop.py` + `tests/test_interop_vectors.py`，无数据库 187 passed）与 `tasks/B-interop.md` 契约/运行手册。
   - 期间 run #23/#24 因 TLS 测试响应头大小写、#27/#28 因 OpenSSL 3 provider 默认 `distid` 与 GB/T 默认不同而失败；均已定位修复（显式 `distid=1234567812345678`）。
 
 ## 续跑顺序
