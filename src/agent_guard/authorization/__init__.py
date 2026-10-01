@@ -28,6 +28,7 @@ from agent_guard.authorization.oidc import OidcValidationError, pkce_s256_challe
 from agent_guard.authorization.passwords import PasswordError, hash_password, verify_password
 from agent_guard.authorization.policy import ChildSpec, DelegationError, GrantPolicy
 from agent_guard.authorization.proof import ProofInputError, sign_ag_proof
+from agent_guard.authorization.revocation_http import RevocationHttpApp
 from agent_guard.authorization.revocation_service import (
     TaskRevocationError,
     TaskRevocationResult,
@@ -74,6 +75,7 @@ __all__ = [
     "GrantPolicy",
     "ProofInputError",
     "sign_ag_proof",
+    "RevocationHttpApp",
     "TaskRevocationError",
     "TaskRevocationResult",
     "TaskRevocationService",

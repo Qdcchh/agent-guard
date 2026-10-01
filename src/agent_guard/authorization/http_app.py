@@ -13,6 +13,7 @@ from typing import Any
 from agent_guard.authorization.browser import BrowserLoginApp
 from agent_guard.authorization.discovery import DiscoveryEndpoint
 from agent_guard.authorization.introspection_endpoint import IntrospectionEndpoint
+from agent_guard.authorization.revocation_http import RevocationHttpApp
 from agent_guard.authorization.token_endpoint import TokenEndpoint, TokenResponse
 from agent_guard.contracts.encoding import canonical_json_bytes
 
@@ -34,6 +35,7 @@ class AuthorizationHttpApp:
         token: TokenEndpoint,
         introspection: IntrospectionEndpoint,
         browser: BrowserLoginApp | None = None,
+        revocation: RevocationHttpApp | None = None,
     ) -> None:
         if discovery is None or token is None or introspection is None:
             raise ValueError("all AS route handlers required")
@@ -41,6 +43,7 @@ class AuthorizationHttpApp:
         self._token = token
         self._introspection = introspection
         self._browser = browser
+        self._revocation = revocation
 
     async def __call__(self, scope: dict, receive: Any, send: Any) -> None:
         if scope.get("type") != "http":
@@ -73,6 +76,20 @@ class AuthorizationHttpApp:
                     method=method,
                     path=path,
                     query_string=query_string,
+                    headers=scope["headers"],
+                    body=raw_body,
+                )
+            except Exception:
+                response = self._error(500, "INTERNAL_ERROR")
+            await self._send(send, response)
+            return
+        if self._revocation is not None and self._revocation.handles(path):
+            try:
+                raw_body = await self._body(receive) if method == "POST" else b""
+                response = await asyncio.to_thread(
+                    self._revocation.dispatch,
+                    method=method,
+                    path=path,
                     headers=scope["headers"],
                     body=raw_body,
                 )
