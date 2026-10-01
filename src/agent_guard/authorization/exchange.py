@@ -13,7 +13,7 @@ from agent_guard.authorization.policy import ChildSpec, DelegationError, GrantPo
 from agent_guard.authorization.proof import ProofVerificationError, verify_ag_proof
 from agent_guard.contracts.encoding import EncodingError, canonical_json_bytes, load_strict_json
 from agent_guard.crypto.sm import InvalidSm2Signature, sm3_b64url, verify_compact_jws
-from agent_guard.identity.resolver import IdentityError, IdentityResolver
+from agent_guard.identity.resolver import IdentityError, IdentityResolver, ResolvedIdentity
 
 TOKEN_EXCHANGE_GRANT = "urn:ietf:params:oauth:grant-type:token-exchange"
 ACCESS_TOKEN_TYPE = "urn:ietf:params:oauth:token-type:access_token"
@@ -42,6 +42,27 @@ _POLICY_FIELDS = _FORM_FIELDS - {
 
 class ExchangeError(ValueError):
     """Static Token Exchange authentication, proof or narrowing failed."""
+
+
+@dataclass(frozen=True)
+class AuthenticatedExchange:
+    """Signed parent/form/proof without a new-child decision yet."""
+
+    parent: AccessClaims
+    recipient: ResolvedIdentity
+    form: dict[str, str]
+    subject_token: str
+    proof_jti: str
+    proof_iat: int
+    proof_exp: int
+    token_digest: str
+    proof_digest: str
+    request_digest: str
+    request_bytes: bytes
+
+    @property
+    def requested_child(self) -> dict[str, str]:
+        return {key: self.form[key] for key in _POLICY_FIELDS}
 
 
 @dataclass(frozen=True)
@@ -98,6 +119,41 @@ class ExchangePreflight:
         authenticated_client_id: str,
         now: int,
     ) -> ExchangePreflightResult:
+        authenticated = self.authenticate(
+            raw_form=raw_form,
+            proof=proof,
+            authenticated_client_id=authenticated_client_id,
+            now=now,
+        )
+        try:
+            child = self._policy.validate_child(
+                authenticated.parent,
+                authenticated.requested_child,
+                authenticated.recipient,
+                now=now,
+            )
+        except DelegationError as exc:
+            raise ExchangeError("invalid requested child") from exc
+        return ExchangePreflightResult(
+            parent=authenticated.parent,
+            child=child,
+            proof_jti=authenticated.proof_jti,
+            proof_iat=authenticated.proof_iat,
+            proof_exp=authenticated.proof_exp,
+            token_digest=authenticated.token_digest,
+            proof_digest=authenticated.proof_digest,
+            request_digest=authenticated.request_digest,
+        )
+
+    def authenticate(
+        self,
+        *,
+        raw_form: bytes,
+        proof: str,
+        authenticated_client_id: str,
+        now: int,
+    ) -> AuthenticatedExchange:
+        """Verify parent/holder/proof, deferring child policy to the AS lock."""
         try:
             form = decode_oauth_form(raw_form)
         except FormError as exc:
@@ -145,30 +201,27 @@ class ExchangePreflight:
                 raw_parent["ag_tenant_id"],
                 "capabilityInvocation",
             )
-            child = self._policy.validate_child(
-                parent,
-                {key: form[key] for key in _POLICY_FIELDS},
-                recipient,
-                now=now,
-            )
         except (
             EncodingError,
             InvalidSm2Signature,
             ClaimsError,
             IdentityError,
             ProofVerificationError,
-            DelegationError,
             TypeError,
             UnicodeError,
         ) as exc:
-            raise ExchangeError("invalid Token Exchange token, holder, proof or child") from exc
-        return ExchangePreflightResult(
+            raise ExchangeError("invalid Token Exchange token, holder or proof") from exc
+        request_bytes = canonical_json_bytes(form)
+        return AuthenticatedExchange(
             parent=parent,
-            child=child,
+            recipient=recipient,
+            form=form,
+            subject_token=token,
             proof_jti=signed_proof["jti"],
             proof_iat=signed_proof["iat"],
             proof_exp=signed_proof["exp"],
             token_digest=sm3_b64url(token.encode("ascii")),
             proof_digest=sm3_b64url(proof.encode("ascii")),
-            request_digest=sm3_b64url(canonical_json_bytes(form)),
+            request_digest=sm3_b64url(request_bytes),
+            request_bytes=request_bytes,
         )

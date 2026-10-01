@@ -8,6 +8,11 @@ from agent_guard.authorization.code_service import (
     AuthorizationCodeService,
 )
 from agent_guard.authorization.exchange import ExchangeError, ExchangePreflight
+from agent_guard.authorization.exchange_service import (
+    TokenExchangeError,
+    TokenExchangeResult,
+    TokenExchangeService,
+)
 from agent_guard.authorization.forms import FormError, decode_oauth_form
 from agent_guard.authorization.oidc import OidcValidationError, pkce_s256_challenge, verify_id_token
 from agent_guard.authorization.policy import ChildSpec, DelegationError, GrantPolicy
@@ -25,6 +30,9 @@ __all__ = [
     "AuthorizationCodeService",
     "ExchangeError",
     "ExchangePreflight",
+    "TokenExchangeError",
+    "TokenExchangeResult",
+    "TokenExchangeService",
     "FormError",
     "decode_oauth_form",
     "OidcValidationError",
