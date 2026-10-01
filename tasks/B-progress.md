@@ -27,8 +27,10 @@
 - GitHub Actions CI（Python 3.11 + PostgreSQL 16 服务容器）：
   - run #19，head `29bd3e7`：success，覆盖迁移 `008`、登录/同意/换码真实数据库路径与合成演示。
   - run #21，head `3ad3299`：success，额外覆盖会话 + CSRF 撤销 HTTP 路由（任务所有者、租户管理员、跨租户、重复与并发撤销）。
-  - run #25，head `f041619`：success，覆盖开发 TLS 装配与真实 HTTPS 全链路（登录→同意→换码→内省→撤销）；期间 run #23/#24 因 TLS 测试读取响应头大小写问题失败，已定位修复。
+  - run #25，head `f041619`：success，覆盖开发 TLS 装配与真实 HTTPS 全链路（登录→同意→换码→内省→撤销）。
+  - run #29，head `34b71d0`：success，覆盖密钥轮换（历史 `kid` 仅验签）与 OpenSSL CLI 独立实现双向互验及 JWS `r||s`/DER 转换。
+  - 期间 run #23/#24 因 TLS 测试响应头大小写、#27/#28 因 OpenSSL 3 provider 默认 `distid` 与 GB/T 默认不同而失败；均已定位修复（显式 `distid=1234567812345678`）。
 
 ## 续跑顺序
 
-登录/同意闭环、撤销 HTTP 路由与开发 TLS 装配已落地；下一步与 A 的网关/账本/证据导出进行真实联调（M1—M13），并补 SM2 第二实现互验与密钥轮换/独立检查点。
+登录/同意闭环、撤销 HTTP 路由、开发 TLS 装配、密钥轮换与 OpenSSL 独立互验均已落地；下一步在 `origin/main` 出现 A 的网关/证据导出后做真实 M1—M13 联调，并补独立审计检查点与生产密钥托管/运行手册。

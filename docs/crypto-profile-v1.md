@@ -1,6 +1,6 @@
 # GM-MVP-1 密码与编码配置
 
-状态：SM2/SM3 与 Compact JWS 基础 SDK、部分业务 claims 模式、DID只读解析、静态调用验权、委托收窄及授权码/Token Exchange请求预校验、ID Token/PKCE辅助函数、进程内一次性授权码及唯一根签发已实现；独立第二实现互验、登录/同意HTTP服务、事务性子委托/撤销、完整验权入口及密钥生命周期尚未完成。本配置遵循 [当前接口契约](oauth-oidc-sm2-mvp.md)，不使用历史能力凭证 v1 的签名信封或域前缀。
+状态：SM2/SM3 与 Compact JWS 基础 SDK、部分业务 claims 模式、DID只读解析、静态调用验权、委托收窄及授权码/Token Exchange请求预校验、ID Token/PKCE辅助函数、进程内一次性授权码及唯一根签发、事务性子委托签发、任务与租户管理员的撤销事务及撤销 HTTP 路由、登录/同意与会话 CSRF、开发 TLS 装配、密钥轮换历史公钥、OpenSSL CLI 独立实现固定向量互验均已实现；完整网关验权联调、独立审计检查点及生产密钥托管尚未完成。本配置遵循 [当前接口契约](oauth-oidc-sm2-mvp.md)，不使用历史能力凭证 v1 的签名信封或域前缀。
 
 ## 固定参数
 
@@ -32,10 +32,12 @@
 - `agent_guard.authorization.proof.sign_ag_proof`：客户端侧生成每次新jti的短时AG-Proof，绑定固定HTTPS端点、token原始字节摘要和规范业务/表单映射摘要。OAuth表单重复键拒绝仍由HTTP解码层负责。
 - `agent_guard.authorization.policy.GrantPolicy`：将已验签父令牌与预登记接收者、交换请求逐维比较，输出不可变 `ChildSpec`；不签发、存储或改变预算。AS仍须在同根锁事务内重验父子状态及幂等，再保存授权节点和原签名令牌。
 - `agent_guard.authorization.forms`、`code`、`exchange`：严格OAuth表单解码，验证授权码换码或Token Exchange请求的客户端密钥证明、端点及正文绑定，输出预校验结果。Basic认证结果、租户及重定向配置必须来自可信服务；静态预校验本身不消费code或登记防重放。授权码的事务处理见下项，子委托的实时撤销/过期和幂等仍待实现。
-- `agent_guard.authorization.code_service.AuthorizationCodeService`：以真实PostgreSQL事务生成一次性哈希授权码、核对PKCE和证明、登记防重放、创建唯一根并由AS签SM2 ID/Access Token。输入 `ApprovedAuthorization` 仅能由未来真实登录及同意服务在进程内构造；当前没有外部可调用的登录/同意入口，不能据此宣称M1已通过。Token Exchange的子授权事务仍未实现。
+- `agent_guard.authorization.code_service.AuthorizationCodeService`：以真实PostgreSQL事务生成一次性哈希授权码、核对PKCE和证明、登记防重放、创建唯一根并由AS签SM2 ID/Access Token。输入 `ApprovedAuthorization` 只能由 `ConsentService` 在验证登录会话与 CSRF 后于进程内构造；浏览器入口由 `BrowserLoginApp` 提供。局部测试不构成 M1 整体通过。
+- `agent_guard.authorization.exchange_service.TokenExchangeService`：AS 在同一锁序事务内签发收窄子令牌并保存签名快照与委托幂等；可配置 `verification_keys` 以在轮换后继续验签历史 `kid`，旧 key 不再签发。
+- `agent_guard.authorization.login`、`consent`、`revocation_http`、`agent_guard.server`：scrypt 口令 KDF 与服务端会话/CSRF、服务端授权请求与任务政策、会话授权的任务/管理员撤销路由、严格私有配置与开发 TLS 装配。
 
 ## 依赖与验证
 
-`tongsuopy` 是铜锁 Python SDK（Apache-2.0）；`rfc8785==0.1.4` 由 Trail of Bits 维护（Apache-2.0）。固定版本与当前传递依赖在仓库根 `requirements.lock`；开发依赖在 `requirements-dev.lock`。本地 Windows Python 3.12 已覆盖 SM3 `abc` 标准向量、铜锁公开 SM2 验签向量、临时密钥 JWS 签验、原始 JWS 字节验证、类型/密钥/正文篡改和严格编码拒绝。CI 使用 Python 3.11 验证。
+`tongsuopy` 是铜锁 Python SDK（Apache-2.0）；`rfc8785==0.1.4` 由 Trail of Bits 维护（Apache-2.0）。固定版本与当前传递依赖在仓库根 `requirements.lock`；开发依赖在 `requirements-dev.lock`。本地 Windows Python 3.13 已覆盖 SM3 `abc` 标准向量、铜锁公开 SM2 验签向量、临时密钥 JWS 签验、原始 JWS 字节验证、类型/密钥/正文篡改和严格编码拒绝。CI 使用 Python 3.11 验证，并以 OpenSSL CLI 作为独立第二实现对固定消息与 JWS `r||s`/DER 做双向互验；OpenSSL 3 provider 默认 `distid` 与 GB/T 默认不同，测试显式传入 `distid=1234567812345678`，该结论不覆盖所有 OpenSSL 构建或算法套件。
 
 铜锁 Python SDK 的公开接口不允许调用方设置 SM2 用户标识，当前以公开向量锁定标准默认值。独立第二实现的双向验签仍须完成并记录版本、命令及结果；完成前不得将基础 SDK 称为正式签发能力。仓库不保存私钥；测试密钥临时生成。
