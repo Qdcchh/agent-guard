@@ -50,3 +50,5 @@ jobs:
         run: python -m agent_guard.ledger.migrate
       - name: Integration tests (real PostgreSQL, must not skip)
         run: python -m pytest tests/integration
+      - name: Synthetic B authorization demo
+        run: python -m tests.demo_b_flow
