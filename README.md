@@ -140,7 +140,7 @@ docker compose -f compose.test.yaml down
 - 销毁与泄露处置：退役私钥从在线主机删除；若签名私钥疑似泄露，先用新 `kid` 上线并停止旧 key 签发，再按任务/授权撤销流程处置，未锚定证据的信任说明须重建。不承诺自动完成外部取证。
 - 局限：不提供 HSM/KMS 托管、自动轮换调度或第三方 CA 集成；以上是开发与本地部署流程，生产部署须另行评估。
 
-`tests/integration/test_as_ledger_integration.py` 在真实 PostgreSQL 上打通当前仓库中已经存在的 B→A 接缝：B 的 AS 签发根并经两级 Token Exchange 得到 executor 令牌，B 的 `InvocationVerifier` 将签名工具请求转成可信 `VerifiedInvocation`，再交给 A1 的 `ExecutionLedger.accept` 做加锁、原子的预算决定。覆盖两级委托后的执行调用、被盗令牌无私钥拒绝、参数篡改拒绝、幂等重试不重复预留、proof 重放拒绝、根与中间祖先撤销后拒绝、以及内省 `active:true` 不构成执行许可。A 的 HTTP 网关、四工具、下游执行、恢复与证据导出**尚未实现**，因此这只是 A1 接受事务的联调，M1—M13 仍不能整体通过。
+`tests/integration/test_as_ledger_integration.py` 在真实 PostgreSQL 上打通当前仓库中已经存在的 B→A 接缝：B 的 AS 签发根并经两级 Token Exchange 得到 executor 令牌，B 的 `InvocationVerifier` 将签名工具请求转成可信 `VerifiedInvocation`，再交给 A1 的 `ExecutionLedger.accept` 做加锁、原子的预算决定。覆盖两级委托后的执行调用、被盗令牌无私钥拒绝、参数篡改拒绝、幂等重试不重复预留、proof 重放拒绝、根与中间祖先撤销后拒绝、以及内省 `active:true` 不构成执行许可。A 的 HTTP 网关、四工具、下游执行、恢复与证据导出**尚未实现**，因此这只是 A1 接受事务的联调，M1—M13 仍不能整体通过。固定互操作向量（TEST-ONLY 密钥、SPKI/SM3 摘要、两级链、AG-Proof 与 `AG-EVIDENCE-1` 包）在 `tests/fixtures/interop.py`，无数据库执行 `python -m pytest tests/test_interop_vectors.py`；等待 A 提供的接口与字段清单及联调运行手册见 [A/B 联调契约](tasks/B-interop.md)。
 
 `verify_receipt_bundle` 提供 B 侧 `AG-EVIDENCE-1` 单笔未锚定证据的离线验证：可信 AS、网关及历史 holder 公钥和登记快照必须独立配置，不能从证据包自带字段建立信任。验证器复核签名、授权祖先收窄、AG-Proof、调用与结果摘要，以及根至叶 RESERVE/SETTLE/RELEASE 的金额和次数变动；只有四种账本 delta 允许有界负整数。运行 `python -m pytest tests/test_receipt.py`。当前没有 A 侧证据导出和独立审计检查点，因此不宣称任务历史完整、防回滚或 M9 整项通过。
 
