@@ -86,3 +86,15 @@ def test_check_refuses_symlink_and_open_permissions(tmp_path):
         out_dir.chmod(0o777)
         with pytest.raises(SystemExit, match="2"):
             check_config(argparse.Namespace(config=str(config)))
+
+
+def test_read_refuses_symlinked_parent_directory(tmp_path):
+    out_dir = tmp_path / "dev-as"
+    init_config(out_dir, "https://auth.agent-guard.test")
+    linked = tmp_path / "linked-dev-as"
+    try:
+        linked.symlink_to(out_dir, target_is_directory=True)
+    except (OSError, NotImplementedError):
+        pytest.skip("directory symlinks unavailable")
+    with pytest.raises(ConfigError, match="symlink"):
+        read_private_file(linked / "secrets.json")
