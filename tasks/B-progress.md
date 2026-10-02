@@ -2,14 +2,17 @@
 
 分支：`feature/fjr-B-character`，PR #3。此记录只描述已落地代码与待办，不替代 [`docs/acceptance.md`](../docs/acceptance.md) 的 M1—M13 验收。不要将分支推送等同于合并 main。
 
-> **B 独立功能已封版（2026-10-02），R1 安全修复进行中。** 原封版代码提交 `5dc832a`，交接记录见 [B-handoff](B-handoff.md)。本轮只修复审查确认的 B 缺口；剩余网关、四工具、查询/恢复、证据导出、网关回执公钥仍须 A 或双方联调。M1—M13 仍不得写成端到端通过。
+> **B 独立功能已封版（2026-10-02），R1 安全修复已推送并完成 B 侧本地与 CI 复验（2026-10-03），待 fresh reviewer 验收。** 原封版代码提交 `5dc832a`，交接记录见 [B-handoff](B-handoff.md)。PR #3 仍 open/dirty（与 main `153f14e` 存在迁移/文本冲突），本轮不合并 main。剩余网关、四工具、查询/恢复、证据导出、网关回执公钥仍须 A 或双方联调；M1—M13 不得写成端到端通过。
 
-## 2026-10-03 R1 修复（尚未提交/推送）
+## 2026-10-03 R1 修复（已推送，待 fresh reviewer）
 
-- 严格 JSON 补孤立代理项与资源边界，JWS/DID/SDK 入口补拒绝回归。
+- R1 修复提交 `f84da1c`（已推送）：严格 JSON 补孤立代理项与资源边界，JWS/DID/SDK 入口补拒绝回归。
 - `009_consent_policy_snapshot.sql` 为授权页政策加快照和自动递增版本（变更再还原仍需重新同意）；同意决定锁后重查会话、用户、请求时效与政策，将事件、状态和授权码放进一个事务。旧的无快照待同意请求安全拒绝，须重新打开授权页。
 - 开发服务器只在新目录独占创建 0700/0600 凭据文件，启动时检查私有路径和权限；Windows ACL 须由部署另行审核。
-- 本机非集成测试已通过；新增 PostgreSQL 事务/并发测试尚未运行（本机无测试 DSN 与 Docker），不得据此宣称 R1 修复完整验证或 CI 通过。
+- 本机复验（Windows，Python 3.13.7，PostgreSQL 17.11 @127.0.0.1:55432，OpenSSL 3.5.6；独立测试实例，未触碰 5432 业务库）：`ruff check .`、`ruff format --check .` 通过；完整 `pytest` 在 `f84da1c` 为 367 passed/1 skipped，在 `942dacd` 为 367 passed/2 skipped（skip 均为 Windows 无法创建测试目录符号链接，Linux CI 会执行）；R1 相关 84 项在 `f84da1c` 为 83 passed/1 skipped；补充探针 45 项编码、20 项同意政策/事务/时钟、8 项私有文件全部通过（脚本在 `.venv`，未入库）；wheel 构建成功。
+- 后续小修：`8822990` 仅给 CI 增加 `push: feature/fjr-B-character` 触发（PR dirty 时 `pull_request` 不产生运行）；`0b94547` 修复 Linux 集成测试夹具（`test_server_tls.py` 原以 0644 写 AS key，被 R1 启动权限检查拒绝，改为 POSIX 上先写后 chmod 0600）；`942dacd` 增加父目录 symlink 拒绝正式用例。
+- GitHub Actions（Python 3.11 + PostgreSQL 16）：run #42（head `8822990`）集成步骤失败，定位为上述夹具权限问题而非产品逻辑；run #43（head `0b94547`）、run #44（head `942dacd`）双作业全部步骤 success。
+- 上述为 B 侧复验证据；是否接受由 fresh reviewer 判定，M1—M13 不得据此整体通过。A/B 迁移与契约整合方案见 [B-integration-proposal](B-integration-proposal.md)。
 
 ## 已落地
 
@@ -31,12 +34,13 @@
 ## 未完成的关键闭环
 
 1. 生产化部署边界仍未做：TLS 证书由部署方提供，反向代理只允许可信来源的 `X-Forwarded-*`（当前方案不读取）；密钥轮换的自动调度、HSM/KMS 托管与泄露取证未实现（README 已给出手工流程与局限）。
-2. 与 A 的真实 HTTP 网关、四工具、下游执行/恢复及证据导出联调；`origin/main` 当前仍停在 A1（`b120c7c`，无网关/工具/证据导出），已完成的是 B 令牌经 B 验证器进入 A1 `ExecutionLedger.accept` 的接缝联调。M1—M13 不能按局部测试宣称整体通过。
+2. 与 A 的真实 HTTP 网关、四工具、下游执行/恢复及证据导出联调；`origin/main` 已从 B 封版基线 `b120c7c` 推进到 `153f14e`（A2.1 执行恢复核心），但 A/B 的 invoke/query DTO、`ledger_changes.seq`、`evidence_ref` 生命周期与迁移 lineage 仍待双方按 [B-integration-proposal](B-integration-proposal.md) 确认。已完成的是 B 令牌经 B 验证器进入 A1 `ExecutionLedger.accept` 的接缝联调。M1—M13 不能按局部测试宣称整体通过。
 3. 独立检查点尚未实现，`AG-EVIDENCE-1` 只能验证单笔未锚定证据（UNANCHORED），不能声称检测日志回滚。
 
 ## 最新验证
 
-- 本机：`ruff check .` 与 `ruff format --check .` 通过；`pytest -q -m "not integration"` 全绿（本机仍无测试 PostgreSQL/openssl，未在本地伪造集成或 TLS 通过）。
+- 2026-10-02（`5dc832a` 时期，历史记录）：本机无测试 PostgreSQL/openssl，仅跑非集成；集成与 TLS 由 CI 验证。
+- 2026-10-03（`942dacd`）：Windows + Python 3.13.7 + PostgreSQL 17.11 @127.0.0.1:55432 + OpenSSL 3.5.6；`ruff check .`/`ruff format --check .` 通过，完整 `pytest` 367 passed/2 skipped（skip 均为 Windows 符号链接限制），wheel 构建成功。详见上方 R1 小节。
 - GitHub Actions CI（Python 3.11 + PostgreSQL 16 服务容器）：
   - run #19，head `29bd3e7`：success，覆盖迁移 `008`、登录/同意/换码真实数据库路径与合成演示。
   - run #21，head `3ad3299`：success，额外覆盖会话 + CSRF 撤销 HTTP 路由（任务所有者、租户管理员、跨租户、重复与并发撤销）。
@@ -46,6 +50,10 @@
   - run #34，head `8be9f47`：success，新增固定联调向量（`tests/fixtures/interop.py` + `tests/test_interop_vectors.py`，无数据库 187 passed）与 `tasks/B-interop.md` 契约/运行手册。
   - run #36，head `db36ec2`：success，新增 `verify_result_read`/`VerifiedOperationQuery` 及 result-read 向量负例（无数据库 188 passed）。
   - run #38，head `5dc832a`：success，双作业 `checks` + `clean-install (wheel)`；wheel 干净安装、空库迁移、真实 PostgreSQL 集成、OpenSSL SM2 互验、TLS 全链路与合成演示全部通过；本机非集成 199 passed、wheel 隔离环境 199 passed。
+  - run #39，head `c888528`：success（封版交接提交，R1 前断言集）。
+  - run #42，head `8822990`：failure，集成步骤失败；定位为 `test_server_tls.py` 以默认 0644 写 AS key 被 R1 启动私有权限检查拒绝，属测试夹具遗漏。
+  - run #43，head `0b94547`：success，双作业全部步骤；覆盖 Linux POSIX 0700/0600 与文件/目录 symlink 拒绝、迁移 001—009、登录/同意/授权码事务与锁等待、TLS 全链路、OpenSSL SM2 互验、wheel 空库安装与合成演示。
+  - run #44，head `942dacd`：success，双作业全部步骤；新增父目录 symlink 拒绝正式用例后复跑。
   - 期间 run #23/#24 因 TLS 测试响应头大小写、#27/#28 因 OpenSSL 3 provider 默认 `distid` 与 GB/T 默认不同而失败；均已定位修复（显式 `distid=1234567812345678`）。
 
 ## 续跑顺序
