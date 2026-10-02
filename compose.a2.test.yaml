@@ -1,0 +1,39 @@
+# Isolated PostgreSQL 16 for A2 development and tests only (self-built, owned).
+#
+# Start:   docker compose -f compose.a2.test.yaml up -d --wait
+# Stop:    docker compose -f compose.a2.test.yaml down
+# Wipe:    docker compose -f compose.a2.test.yaml down -v
+#
+# The top-level `name` pins the Compose project to `agent-guard-a2` so this
+# file can NEVER manage the A1 project (`agent-guard`, compose.test.yaml):
+# different container names/ports alone do not isolate Compose management
+# scope. Always run these commands via this file (which carries the pinned
+# name); never pass a shared `-p` value. Only resources created here are
+# cleaned up by A2 tooling. Credentials are explicit test-only values;
+# override by exporting AGENT_GUARD_A2_PG_PASSWORD before starting. Never
+# reuse them for any deployment. The gateway ledger uses run-exclusive
+# schemas inside `agent_guard_a2_test`; the mock downstream uses its own
+# random-named database per test session (independent transaction domain).
+
+name: agent-guard-a2
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: agent-guard-a2-pg
+    environment:
+      POSTGRES_USER: agent_guard_a2_test
+      POSTGRES_PASSWORD: ${AGENT_GUARD_A2_PG_PASSWORD:-agent-guard-a2-test-only-pw}
+      POSTGRES_DB: agent_guard_a2_test
+    ports:
+      - "127.0.0.1:55433:5432"
+    # tmpfs: no host volume is created and nothing survives the container.
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agent_guard_a2_test -d agent_guard_a2_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 25
+      start_period: 5s
+    restart: "no"
