@@ -53,6 +53,20 @@ from agent_guard.ledger.validation import validate_cost, validate_invocation
 #: Bounded retries for deadlock/serialization failures only; never an infinite loop.
 MAX_TX_RETRIES = 3
 
+#: Per-call, trusted, in-process validator for the *actual* existing operation
+#: row that an idempotent accept is about to return as ``EXISTING``.
+#:
+#: It is invoked **inside** the accept transaction, on the same connection and
+#: under the same locks, after the business key has been found and before the
+#: request is allowed to return ``EXISTING``/commit. It receives the live
+#: connection and the found row and must raise when the persisted accept
+#: material is unusable. It is passed explicitly per call (never stored on the
+#: instance) so concurrent calls with different validators cannot cross-talk,
+#: and it must not commit, contact a downstream or open another connection.
+#: Raising rolls the whole request back — including this request's proof
+#: registration — so an unusable candidate never consumes a proof.
+ExistingMaterialValidator = Callable[[psycopg.Connection, "store.OperationRow"], None]
+
 #: Upper bounds for connect/lock waiting and statement execution (fail closed).
 DEFAULT_CONNECT_TIMEOUT_S = 5
 DEFAULT_LOCK_TIMEOUT_MS = 10_000
@@ -123,7 +137,41 @@ class ExecutionLedger:
     # ------------------------------------------------------------------ public
 
     def accept(self, verified: VerifiedInvocation, cost: TrustedCost) -> AcceptResult:
-        """Reserve budget for one invocation, exactly once per business key."""
+        """Reserve budget for one invocation, exactly once per business key.
+
+        Default API and semantics are unchanged: no material validator runs and
+        every A1 caller behaves exactly as before.
+        """
+        return self._accept_with(verified, cost, existing_validator=None)
+
+    def accept_checked(
+        self,
+        verified: VerifiedInvocation,
+        cost: TrustedCost,
+        *,
+        existing_validator: ExistingMaterialValidator,
+    ) -> AcceptResult:
+        """Like :meth:`accept`, plus an atomic check of the actual existing row.
+
+        The validator runs **inside** this accept transaction on the same
+        connection/locks, after the business key has been found and before
+        ``EXISTING`` is returned. A request whose existing material is unusable
+        is refused and rolled back (proof registration included) instead of
+        being answered from it. Authorization freshness, proof anti-replay,
+        full intent comparison, budget and lock order are identical to
+        :meth:`accept`.
+        """
+        if existing_validator is None or not callable(existing_validator):
+            raise ValueError("existing_validator must be callable")
+        return self._accept_with(verified, cost, existing_validator=existing_validator)
+
+    def _accept_with(
+        self,
+        verified: VerifiedInvocation,
+        cost: TrustedCost,
+        *,
+        existing_validator: ExistingMaterialValidator | None,
+    ) -> AcceptResult:
         validate_invocation(verified)
         validate_cost(cost)
 
@@ -132,7 +180,9 @@ class ExecutionLedger:
             try:
                 with self._connect() as conn:
                     with conn.transaction():
-                        return self._accept_tx(conn, verified, cost)
+                        return self._accept_tx(
+                            conn, verified, cost, existing_validator=existing_validator
+                        )
             except (psycopg.errors.DeadlockDetected, psycopg.errors.SerializationFailure) as exc:
                 last_error = exc
                 if attempt == self._max_retries:
@@ -165,7 +215,12 @@ class ExecutionLedger:
         return conn
 
     def _accept_tx(
-        self, conn: psycopg.Connection, verified: VerifiedInvocation, cost: TrustedCost
+        self,
+        conn: psycopg.Connection,
+        verified: VerifiedInvocation,
+        cost: TrustedCost,
+        *,
+        existing_validator: ExistingMaterialValidator | None = None,
     ) -> AcceptResult:
         # (1) trusted path discovery — database parent chain is authoritative.
         path = store.load_path(conn, verified.grant_id)
@@ -205,6 +260,12 @@ class ExecutionLedger:
         )
         if existing is not None:
             self._check_intent(existing, verified)
+            # A2's per-call material check, atomically inside this transaction:
+            # after the *actual* existing row is known and before EXISTING can
+            # be returned or committed. A refusal rolls this request (and its
+            # new proof) back; the caller persists the quarantine afterwards.
+            if existing_validator is not None:
+                existing_validator(conn, existing)
             store.link_proof_to_operation(
                 conn,
                 holder_kid=verified.holder_kid,

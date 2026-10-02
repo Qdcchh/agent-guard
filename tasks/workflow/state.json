@@ -1,0 +1,985 @@
+{
+  "schema_version": 1,
+  "project_root": "/Users/qdcc/code/密码技术竞赛/agent-guard",
+  "configured_at": "2026-10-01",
+  "current_stage": "A2.1-core",
+  "status": "ACCEPTED",
+  "authorization": {
+    "stage": "A2.1-core",
+    "status": "GRANTED",
+    "source_message": {
+      "role": "user",
+      "session_id": "ses_f0ac0e676ffecn71p6Ww7zaqQq",
+      "message_id": "msg_0f54148e0001ZW7yCMdK0TE97F",
+      "text": "批准 A2.1-core，按冻结的 Markdown 任务包完成主体、详细独立复核、所有补正和再复核。核心通过后停下来给我查看与审批，不进入 A2.2，不 commit/push/PR/合并。"
+    },
+    "allowed_paths": [
+      "src/agent_guard/contracts/",
+      "src/agent_guard/execution/",
+      "src/agent_guard/tools/",
+      "src/agent_guard/ledger/migrate.py",
+      "src/agent_guard/ledger/service.py",
+      "migrations/004*",
+      "migrations/005*",
+      "migrations/006*",
+      "tests/",
+      "README.md",
+      "tasks/A2-report.md",
+      "compose.a2.test.yaml",
+      "pyproject.toml",
+      "uv.lock",
+      "constraints.txt",
+      "tasks/workflow/runs/A2.1-core/implementation-r1.md",
+      "tasks/workflow/runs/A2.1-core/implementation-r2.md",
+      "tasks/workflow/runs/A2.1-core/implementation-r3.md",
+      "tasks/workflow/runs/A2.1-core/implementation-r4.md",
+      "tasks/workflow/runs/A2.1-core/implementation-r5.md",
+      "artifacts/workflow/A2.1-core-impl-*/",
+      "artifacts/workflow/A2.1-core-impl-correction-*/"
+    ],
+    "forbidden_actions": [
+      "commit/push/PR/merge/reset/clean/rebase",
+      "modify migrations 001-003",
+      "import/merge/change B code or production auth/crypto doubles",
+      "write A2.2/A2.3/A3 implementation before new human approval",
+      "modify or destroy unowned resources",
+      "worker edits to workflow authorization/requirements/contracts"
+    ],
+    "note": "Actual user message read back from OpenCode database. Scope is A2.1-core only, ownership frozen in runs/A2.1-core/task-v1.md; PACKAGE_READY and gate can_start=true still required before implementation. Workflow state/contracts/issues are controller-owned; implementation report is the only writer exception under runs."
+  },
+  "expected_requirement_ids": [
+    "A2-P01",
+    "A2-P02",
+    "A2-P03",
+    "A2-P04",
+    "A2-P05",
+    "A2-P06",
+    "A2-P07",
+    "A2-P08",
+    "A2-P09",
+    "A2-P10",
+    "A2-P11",
+    "A2-P12",
+    "A2-P13",
+    "A2-P14",
+    "A2-P15-CORE",
+    "A2-P19",
+    "A2-P20",
+    "A2-CKPT1-OBL01",
+    "A2-CKPT1-OBL02",
+    "A2-CKPT1-OBL03",
+    "A2-CKPT1-OBL04",
+    "A2-CKPT1-OBL05",
+    "A2-CKPT1-OBL06",
+    "WF-A1-REGRESSION",
+    "WF-INDEPENDENT-PROBES",
+    "WF-QUALITY-CHECKS",
+    "WF-PY311-ENV",
+    "WF-RESOURCE-ISOLATION",
+    "WF-IMMUTABLE-BASELINE",
+    "WF-DOCS-REPORT",
+    "WF-SNAPSHOT-COVERAGE"
+  ],
+  "independent_run_requirement_ids": [
+    "A2-P01",
+    "A2-P02",
+    "A2-P03",
+    "A2-P04",
+    "A2-P05",
+    "A2-P06",
+    "A2-P07",
+    "A2-P08",
+    "A2-P09",
+    "A2-P10",
+    "A2-P11",
+    "A2-P12",
+    "A2-P13",
+    "A2-P14",
+    "A2-P15-CORE",
+    "A2-P19",
+    "A2-P20",
+    "A2-CKPT1-OBL01",
+    "A2-CKPT1-OBL02",
+    "A2-CKPT1-OBL03",
+    "A2-CKPT1-OBL04",
+    "A2-CKPT1-OBL05",
+    "A2-CKPT1-OBL06",
+    "WF-A1-REGRESSION",
+    "WF-INDEPENDENT-PROBES",
+    "WF-QUALITY-CHECKS",
+    "WF-PY311-ENV",
+    "WF-RESOURCE-ISOLATION"
+  ],
+  "snapshot": {
+    "schema_version": 1,
+    "project_root": "/Users/qdcc/code/密码技术竞赛/agent-guard",
+    "algorithm": "sha256",
+    "excluded_control_names": [
+      ".git",
+      ".opencode"
+    ],
+    "excluded_control_files": [
+      "tasks/workflow/issues.md",
+      "tasks/workflow/state.json"
+    ],
+    "excluded_control_prefixes": [
+      "tasks/workflow/runs",
+      "tasks/workflow/artifacts",
+      ".codex/tasks/workflow"
+    ],
+    "excluded_generated_names": [
+      ".cache",
+      ".hypothesis",
+      ".mypy_cache",
+      ".nox",
+      ".pytest_cache",
+      ".ruff_cache",
+      ".tox",
+      ".venv",
+      "__pycache__",
+      "node_modules",
+      "venv"
+    ],
+    "manifest": [
+      {
+        "path": ".editorconfig",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "6c2efed555a08e3b2a673dccaff9d2ea6234411b6cad992d15a54a092c20c882"
+      },
+      {
+        "path": ".env.example",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "d5e3d7fe2a798490231aa1e3d848737d6dacb0e4b77e7fcc0ec73098ab98f772"
+      },
+      {
+        "path": ".github/CODEOWNERS",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "3dbb036f9099a47e340caaeeca3a30e1fa85a9d09604e123bf9219a5725105eb"
+      },
+      {
+        "path": ".github/pull_request_template.md",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "54d9821bd58fc03d27defedc721fdbce34b444dcd7d5775e3f7f61e66bf143ee"
+      },
+      {
+        "path": ".github/workflows/ci.yml",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "bd914a6f2c49ec5e2b472120bdda2682dec77f3626c9eb6e008b93ae5e17d547"
+      },
+      {
+        "path": ".gitignore",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "901a4fb1f89441e596ed8d8ae814dc6346661d3a989de5231027b7dec9f1a411"
+      },
+      {
+        "path": "AGENT.md",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "a61d8b0b15b3e6d4dab54e5fd88ef5dd3157cc7a77c78018d23b1b15c5431eae"
+      },
+      {
+        "path": "AGENTS.md",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "bff0879f590af57bfa0a80459e12f307cb9c5e4383aea53e3adffed8f01bc596"
+      },
+      {
+        "path": "HANDOFF.md",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "19d780f845b5622e70de515cd85d92b9bdb23f3e202f2e860da58a84e90e151c"
+      },
+      {
+        "path": "README.md",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "6699bb7d85c20eae2630546ce212943f7febbbd6d60306aa1909adc272098ca4"
+      },
+      {
+        "path": "compose.a2.test.yaml",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "469ee1ed4ab2cb0aca83e5ddbbd69bae1e98150df6252c18b96f242db07aa20a"
+      },
+      {
+        "path": "compose.test.yaml",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "9a162fc7890c66f340d05a24c980d206f1c6fab9d346225b01a538257531ddf5"
+      },
+      {
+        "path": "constraints.txt",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "f77140a447d9c02053f8dd998dab19339c88dece4799926b70f6b6f7a95b55f6"
+      },
+      {
+        "path": "docs/acceptance.md",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "08a5b1a63931ac1dcef87f328fe6bf77866a1113a1be73493c866db2fab8d901"
+      },
+      {
+        "path": "docs/oauth-oidc-sm2-mvp.md",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "17cd2cd470f7c64eb3744cb9380218c9fab7ed1483c4037a777b2f0283732720"
+      },
+      {
+        "path": "docs/oauth-oidc-sm2-mvp.pdf",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "0662d2d7297cedd62b1fe29fde1516f099ff52acf08772ce42cf92b173af7038"
+      },
+      {
+        "path": "docs/security-model.md",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "404cad6daeeb1b7744b3698d6fc37dc75760088d45fc989e5b09fcc1fbb1b57b"
+      },
+      {
+        "path": "migrations/001_init.sql",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "d5e7bb01b9713b7fd9f80b5da85ea039bdf311e2d4a8b6a191d7c48eb43b148c"
+      },
+      {
+        "path": "migrations/002_root_invariants.sql",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "bae1d72e1cf3dbe95ea73408e43196cdaa51297279319ac2dbf6111a68d44519"
+      },
+      {
+        "path": "migrations/003_root_delete_guard.sql",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "1d919f8f59a8d4f4bfe49a278006dd4b79f1bb8d791e701ec604ae051ec7527b"
+      },
+      {
+        "path": "migrations/004_execution_lifecycle.sql",
+        "state": "untracked", "type": "file", "mode": 420,
+        "sha256": "41527dc2926c379895527b16d71c059d9bf8adac6d1f0a930d48361cbc964c98"
+      },
+      {
+        "path": "migrations/005_event_node_seal.sql", "state": "untracked", "type": "file", "mode": 420, "sha256": "29529103ec7ffab8f785746edc4823a14e5e41d364010e3578e732e1a4e39c9e"
+      },
+      {
+        "path": "migrations/006_event_seal.sql", "state": "untracked", "type": "file", "mode": 420, "sha256": "3abb279bc88b2fd7b2ff427a57fda407b77908182ec612334d500bea2f76760c"
+      },
+      {
+        "path": "pyproject.toml",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "2ad4fcc2f5f8a89674717e9450aebd9b59476620bf4b627f769083e136cef759"
+      },
+      {
+        "path": "src/agent_guard/__init__.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "2cce7ae4599822ff839daeda921ae2f298133ac60682e08f5eedf664f0fe5112"
+      },
+      {
+        "path": "src/agent_guard/contracts/__init__.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "6fd651af041bc8761cafd4ccab42b29291df4697c650c07ec0e462376eaa864e"
+      },
+      {
+        "path": "src/agent_guard/contracts/execution.py",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "ed60990ce17b68c147ff9b16f717b7d61d752a9ad6467c9c0a46702d97ad87b8"
+      },
+      {
+        "path": "src/agent_guard/contracts/ledger.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "ff067c41e1b22d2ff0682a82b2c22897473057c674f07df8d42c8b48cc93b4fe"
+      },
+      {
+        "path": "src/agent_guard/execution/__init__.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "2d2fb6a8882acc18a779b37bdaca622619c9656732504fff6b4f34214ffe721c"
+      },
+      {
+        "path": "src/agent_guard/execution/receipts.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "12d374951cb404a25b3ad0d609f9fc64ece89db9a87a99560a3fdb05c63fad30"
+      },
+      {
+        "path": "src/agent_guard/execution/service.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "5098e91cc3a41d852184975d8e31aa2d879466f8b34ca2df48a6d94caf4c0f3a"
+      },
+      {
+        "path": "src/agent_guard/execution/store.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "d0975a55d7aea7c5e3f43714d08787f50d019af7edc7c391ecca047f22058a5c"
+      },
+      {
+        "path": "src/agent_guard/execution/worker.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "c6ba7df9e9dc2fba568355de77a716e275c108a52cbd1f8f8d0eba34343ce277"
+      },
+      {
+        "path": "src/agent_guard/ledger/__init__.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "de5c60ac8b33f44f0ffd68921e6792018c39f1f8a45770c0c521ab73e122d76b"
+      },
+      {
+        "path": "src/agent_guard/ledger/migrate.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "248b2059b7b5b80529b24c93cdb3c5d5578fa4459174cfc41ab42b9c0a85c257"
+      },
+      {
+        "path": "src/agent_guard/ledger/provisioning.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "e16168f6397d3303ad2714c953e2e006502cc1996f1b8f649c45f54228b84d57"
+      },
+      {
+        "path": "src/agent_guard/ledger/service.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "4c7268c5d64e38d1ec3e4ab08d1a7239d1e4d5387262b7b61aeba8a67355b5de"
+      },
+      {
+        "path": "src/agent_guard/ledger/store.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "f86b656ac481a1a2e5d8edcb4d598945ef944e154b0887a22d889a01f57ac4d8"
+      },
+      {
+        "path": "src/agent_guard/ledger/validation.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "5aee896e21f0fcabf3f5c62964608c8157aacf01693908959150288d22604bef"
+      },
+      {
+        "path": "src/agent_guard/tools/__init__.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "ad30a8c1d11760a9a2454366b52d5d06a92e8e31775abf8807c4705785ad62e6"
+      },
+      {
+        "path": "src/agent_guard/tools/catalog.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "62b1993b8f146a03df0a0d2e1be0496c76dc980827de414714373171605cbf4c"
+      },
+      {
+        "path": "src/agent_guard/tools/downstream.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "783b7ba5aa17023620666add0e41d597fee6169e5ea39b60c89e9ca2cb7ef2b3"
+      },
+      {
+        "path": "src/agent_guard/tools/params.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "f8083ffa1f82d9b250f07ab3112beeae89e1543901688636fe11be49de6f7ba4"
+      },
+      {
+        "path": "src/agent_guard/tools/policy.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "8a70ff78216a5134ec6da028fcec678c8d4dea918bb9001ff19dfdcab808f553"
+      },
+      {
+        "path": "src/agent_guard/tools/results.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "4dd616bb57164250ca61e38db07d3d61d9bc17c7c5a6cda950726850d0b1e51e"
+      },
+      {
+        "path": "tasks/A1-ledger.md",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "99170b6b32e8b58d3f1748d62fe45125b009daf428de6e290134463c4ec0dbb8"
+      },
+      {
+        "path": "tasks/A1-report.md",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "205374da9f9809330160266d945ef8a570f4b675cb33cd7f4a8b72e79f5beb29"
+      },
+      {
+        "path": "tasks/A1-review-r2.md",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "c0bde014193899e06c8b3d9264bb37a29a344164c8b8ff49e217ef0313b3e915"
+      },
+      {
+        "path": "tasks/A1-review-r3.md",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "68b1172af91aff2a6e6b453067eefd4c1fe0615cc235342ce37deb2a7331e0b9"
+      },
+      {
+        "path": "tasks/A1-review-r4.md",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "d1f02bdf6f73ab2510386f0002a27967b981bb25e249c15990f6fd0909fe18bb"
+      },
+      {
+        "path": "tasks/A1-review.md",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "3820ca3de8dff6eff601d212640e378d0602d3c3f9a9ae9b0fe5f0b29d0dfde3"
+      },
+      {
+        "path": "tasks/A2-execution-gateway.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "ceab732b618de7b33a866a161a250349e447c8f62182c07405362990afa0abb4"
+      },
+      {
+        "path": "tasks/A2-report.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "507822d39598f030bae41a9a9d7ae3f842e7eb03ce978538de7f4e654cbc0655"
+      },
+      {
+        "path": "tasks/A2-review-ckpt1-r2.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "d9ff41bd7a9a7694010628de5a96e3ac723aaa4d90c4347c550da7b339016e42"
+      },
+      {
+        "path": "tasks/A2-review-ckpt1.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "d68e5751b233202e01d19cc934a460afa29897458262e7f91f88801fafa203d7"
+      },
+      {
+        "path": "tasks/workflow/README.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "7f12901261db3d0ddd08d1e39111747a95fda19acc5cf14b61bd64a3c8ef623b"
+      },
+      {
+        "path": "tasks/workflow/context.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "990406aced286ea2c5a15f680b47868b805c86aeb7f2a573804e2b762cd0e5b5"
+      },
+      {
+        "path": "tasks/workflow/implementation-contract.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "96e095783b9a2e122c4d8c3a1618dcfde2f86e4028eb1769a55f63f5d07c4d3a"
+      },
+      {
+        "path": "tasks/workflow/review-contract.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "9a114dc140f5f0d2bf66eda1b4d579d43e407763c9f75039d6f79204a8bbceb4"
+      },
+      {
+        "path": "tasks/workflow/stages/A2.1-core.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "c1cf4cfdf17300652a8f937db606b098f51b5be91f012bd41ea38778031cc6b3"
+      },
+      {
+        "path": "tasks/workflow/stages/A2.2-integration.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "eb861785d818594ffb7c8a0bab6a44d59e4c3618cb72036ec55100d200355a83"
+      },
+      {
+        "path": "tasks/workflow/stages/A2.3-receipts.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "c95e22f2a80389140ba65523e2ab1cd6001a7be329faa19e66798420d50eec1a"
+      },
+      {
+        "path": "tasks/workflow/state-guide.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "2c5628b839c8736a0de207684c836986ae98125607520aaddbfe00ca26822c82"
+      },
+      {
+        "path": "tasks/workflow/templates/correction.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "c53e29cd0f4fbbafd17d9dfd7070903778044dc9d7891c78a7cbdd1b90f19766"
+      },
+      {
+        "path": "tasks/workflow/templates/implementation-report.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "6d52805a760ad0cefa21489e6cbc582d7ec381f40dd827b1ec15bf1b91f7cad9"
+      },
+      {
+        "path": "tasks/workflow/templates/review.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "a2882a83994853b85436b819547e413b4d51c95fb2af81730190b9a1546c537c"
+      },
+      {
+        "path": "tasks/workflow/templates/task.md",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "27b1cc2c605dfbccde6321024d4b8ab2ed48dd2a49333856c1f9e463fc574fcb"
+      },
+      {
+        "path": "tests/__init__.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "tests/fixtures/__init__.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "tests/fixtures/dbstate.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "8abaa96eb04452497bd5de1dd3ca4fc1866ee867f24460f606418cb22daaa78c"
+      },
+      {
+        "path": "tests/fixtures/execution.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "c80ae05b03e19e668240069215e1d3e02cfdc681130cac3c2df404297c4b21ec"
+      },
+      {
+        "path": "tests/fixtures/isolation.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "d37fe322c4b2ae2c9a8312d39ed1f478c9f25906e27fe016e3c39de606f2ba26"
+      },
+      {
+        "path": "tests/fixtures/state.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "19a6cb5ff9f0d1c893cd554ae0f1ca5c10b9f277230be34829db54db5ab6c892"
+      },
+      {
+        "path": "tests/integration/__init__.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "tests/integration/conftest.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "65563fae73c2bbd8af4bbafd4d501e2a0d20395bfdd08ce352e08c8fe04ce962"
+      },
+      {
+        "path": "tests/integration/test_a2_migrations.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "dca69eaafbef2165e42fdd07834a85e1c769d82f0cb12595a1183a779102d237"
+      },
+      {
+        "path": "tests/integration/test_accept_core.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "256a232d4f8edf3e9b5ef08944c6833285e322024dc53111f2d784cde397eb48"
+      },
+      {
+        "path": "tests/integration/test_concurrency.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "d2e554a7eedc04192e8d41c06888aee15a1791520cf1a46d674c637d9b6bcb51"
+      },
+      {
+        "path": "tests/integration/test_downstream.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "10df94451a9bdaa01e72bbcea0828c43b7cb6885af105a47362bd3ab8ba472e0"
+      },
+      {
+        "path": "tests/integration/test_execution_concurrency.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "b401ff9b70fba439903577a8826953f377432ee8a2fb8258c48c320b691f3304"
+      },
+      {
+        "path": "tests/integration/test_execution_core.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "be1c06fec4035d8590e7929a3d74392fd1a1ddcd61588ab954b98d499c73fa93"
+      },
+      {
+        "path": "tests/integration/test_execution_quotes.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "48f8ed801e9ce9e905f466656f22ee7537e19cd2645ac125e8041b8567179b9f"
+      },
+      {
+        "path": "tests/integration/test_execution_r3_regressions.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "3ba094c731819848d5a6af29153428732553cbc87ebd1175952a10cd5ba7b5ae"
+      },
+      {
+        "path": "tests/integration/test_execution_r4_regressions.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "a4ebfe78e2d66ea30dbc515704ab70733a18abb1d4a24c00b724f4fa3a147004"
+      },
+      {
+        "path": "tests/integration/test_execution_r5_regressions.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "16bf703ac36286a8f212096e08136c9ad8bbf2f51b22426f1e1bd416cdbaed68"
+      },
+      {
+        "path": "tests/integration/test_execution_recovery.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "e454ee82c9a963e30570faab85392c12186b5adadf82809524bd06d64db138f7"
+      },
+      {
+        "path": "tests/integration/test_execution_regressions.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "f07ce0857ab344bc0975653878493b02aaa341cf2502acacdbb79ad3c0fef5dc"
+      },
+      {
+        "path": "tests/integration/test_execution_validation.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "6edf9c6d8918498b02e0485e56dd25471d2432d07b95cee3fbc2843f7e2540ff"
+      },
+      {
+        "path": "tests/integration/test_invariants.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "39e6b16cead4b90af3a1f7ec7afd84c7ee53b47db8fd1d68039c8c980f89ca88"
+      },
+      {
+        "path": "tests/integration/test_isolation.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "cebf12cd837f65307337a53efb76f6dc1aac580f95ca81d77dd7053c7a97fb92"
+      },
+      {
+        "path": "tests/integration/test_migrations.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "b79e863461b52713960f1317eeb6cda4e4cbade269d5712119084756741f185c"
+      },
+      {
+        "path": "tests/integration/test_rejects.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "a7c0a994b37b15b98960e6a8c6c840e2d600aa54dc574e6dace393f328602716"
+      },
+      {
+        "path": "tests/integration/test_rollback.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "48147fc620a61f165b6c354989614b0fb6a366a865299b3f36a3ccc3322dcad4"
+      },
+      {
+        "path": "tests/integration/test_state_checks.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "4a4a7b973297b542544fa81d6299c267ad58c05cfd22a918ddcb8863398db231"
+      },
+      {
+        "path": "tests/test_docs.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "73ceb4fdb126f6dde631e397f9d12dfdd571d61bdd95d148ed5bd642715220e8"
+      },
+      {
+        "path": "tests/test_scaffold.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "a02263401b7e03bcab3f359f252a07b26bc2a7f295d2e876896132ae93a46f24"
+      },
+      {
+        "path": "tests/unit/__init__.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "tests/unit/test_execution_contracts.py",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "f3d31cb27c8900a7d51913d7307f8835bec30f4cd34e5dfdd66e8ea95dc2cf35"
+      },
+      {
+        "path": "tests/unit/test_input_validation.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "6b45fe3285c5a2e6b0acd1422e0728f41aee962fd96d2992fc133c344407b54a"
+      },
+      {
+        "path": "tests/unit/test_service_config.py",
+        "state": "tracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "9c5c5f093c8a520b49f50ff663a30412e26165babd3241c6d3129f7f26667787"
+      },
+      {
+        "path": "tests/unit/test_tool_validation.py", "state": "untracked", "type": "file", "mode": 420, "sha256": "6c6071fbc713584b6fe5daa098921b78f37cae1d9e992e5c5768f997a7afd851"
+      },
+      {
+        "path": "tools/workflow_gate.py",
+        "state": "untracked",
+        "type": "file",
+        "mode": 420,
+        "sha256": "bd3e1f99402afdbe9c98ae90bf4edb3b446a5aa53b474a924c3187ee7c9bae3a"
+      }
+    ],
+    "fingerprint": "15dc8782e1788e0bae6359a5c7538287db679078012b50f8901ab72dea4c5b09"
+  },
+  "contract_files": [
+    { "path": "tasks/workflow/runs/A2.1-core/correction-r4.md", "sha256": "74223c6e07cdf0ef346dcfb50b381aa29df3c07efb5c03bcb2c757bd5792af73" },
+    { "path": "tasks/workflow/runs/A2.1-core/correction-r3.md", "sha256": "cedb802105131f77ca7a0e67c6b55c689ae8df2ffde7971871d97dd9fdc6076b" },
+    { "path": "tasks/workflow/runs/A2.1-core/correction-r2.md", "sha256": "8d3901e14a3c808a72bafdf0bf7c201d72de7af6d21df8070d72d326acb0a141" },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/correction-r1.md",
+      "sha256": "c6c27944f4d3750df18eff9505c884d9f6b74133c6b1ce350b3c906684d7f394"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/task-v1.md",
+      "sha256": "67896f80e7b80fe05087f88ef08576c805117bfdd12654addff03efadf2bfec4"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "bff0879f590af57bfa0a80459e12f307cb9c5e4383aea53e3adffed8f01bc596"
+    },
+    {
+      "path": "AGENT.md",
+      "sha256": "a61d8b0b15b3e6d4dab54e5fd88ef5dd3157cc7a77c78018d23b1b15c5431eae"
+    },
+    {
+      "path": "docs/security-model.md",
+      "sha256": "404cad6daeeb1b7744b3698d6fc37dc75760088d45fc989e5b09fcc1fbb1b57b"
+    },
+    {
+      "path": "docs/oauth-oidc-sm2-mvp.md",
+      "sha256": "17cd2cd470f7c64eb3744cb9380218c9fab7ed1483c4037a777b2f0283732720"
+    },
+    {
+      "path": "docs/acceptance.md",
+      "sha256": "08a5b1a63931ac1dcef87f328fe6bf77866a1113a1be73493c866db2fab8d901"
+    },
+    {
+      "path": "tasks/A2-execution-gateway.md",
+      "sha256": "ceab732b618de7b33a866a161a250349e447c8f62182c07405362990afa0abb4"
+    },
+    {
+      "path": "tasks/A2-review-ckpt1-r2.md",
+      "sha256": "d9ff41bd7a9a7694010628de5a96e3ac723aaa4d90c4347c550da7b339016e42"
+    },
+    {
+      "path": "tasks/A1-review-r4.md",
+      "sha256": "d1f02bdf6f73ab2510386f0002a27967b981bb25e249c15990f6fd0909fe18bb"
+    },
+    {
+      "path": "tasks/workflow/README.md",
+      "sha256": "7f12901261db3d0ddd08d1e39111747a95fda19acc5cf14b61bd64a3c8ef623b"
+    },
+    {
+      "path": "tasks/workflow/context.md",
+      "sha256": "990406aced286ea2c5a15f680b47868b805c86aeb7f2a573804e2b762cd0e5b5"
+    },
+    {
+      "path": "tasks/workflow/implementation-contract.md",
+      "sha256": "96e095783b9a2e122c4d8c3a1618dcfde2f86e4028eb1769a55f63f5d07c4d3a"
+    },
+    {
+      "path": "tasks/workflow/review-contract.md",
+      "sha256": "9a114dc140f5f0d2bf66eda1b4d579d43e407763c9f75039d6f79204a8bbceb4"
+    },
+    {
+      "path": "tasks/workflow/stages/A2.1-core.md",
+      "sha256": "c1cf4cfdf17300652a8f937db606b098f51b5be91f012bd41ea38778031cc6b3"
+    },
+    {
+      "path": "tasks/workflow/stages/A2.2-integration.md",
+      "sha256": "eb861785d818594ffb7c8a0bab6a44d59e4c3618cb72036ec55100d200355a83"
+    },
+    {
+      "path": "tasks/workflow/stages/A2.3-receipts.md",
+      "sha256": "c95e22f2a80389140ba65523e2ab1cd6001a7be329faa19e66798420d50eec1a"
+    },
+    {
+      "path": "tasks/workflow/state-guide.md",
+      "sha256": "2c5628b839c8736a0de207684c836986ae98125607520aaddbfe00ca26822c82"
+    },
+    {
+      "path": "tasks/workflow/templates/correction.md",
+      "sha256": "c53e29cd0f4fbbafd17d9dfd7070903778044dc9d7891c78a7cbdd1b90f19766"
+    },
+    {
+      "path": "tasks/workflow/templates/implementation-report.md",
+      "sha256": "6d52805a760ad0cefa21489e6cbc582d7ec381f40dd827b1ec15bf1b91f7cad9"
+    },
+    {
+      "path": "tasks/workflow/templates/review.md",
+      "sha256": "a2882a83994853b85436b819547e413b4d51c95fb2af81730190b9a1546c537c"
+    },
+    {
+      "path": "tasks/workflow/templates/task.md",
+      "sha256": "27b1cc2c605dfbccde6321024d4b8ab2ed48dd2a49333856c1f9e463fc574fcb"
+    }
+  ],
+  "implementation": {
+    "session_id": "ses_f0aa292caffeODmd0G8jUSZ1Y9",
+    "reported_model": "opencode-go/mimo-v2.6-pro",
+    "status": "STOPPED_READY_FOR_REVIEW",
+    "report_path": "tasks/workflow/runs/A2.1-core/implementation-r5.md",
+    "report_sha256": "fd264c1b34cfb0bc5821ab4da7e6bbd2493ae1f869ea7665f5232fd2e619b199",
+    "evidence_path": "artifacts/workflow/A2.1-core-impl-correction-r4-20261002c4"
+  },
+  "package_review": {
+    "review_kind": "PACKAGE_REVIEW",
+    "conclusion": "PACKAGE_READY",
+    "independent_session_id": "ses_f0ab8a768ffeMxCPUnp24UPa6T",
+    "model": "openai/gpt-6.1-sol",
+    "reasoning_effort_note": "Configured xhigh; runtime variant in session metadata is default, actual effort not independently exposed.",
+    "report_path": "tasks/workflow/runs/A2.1-core/package-review-r1.md",
+    "report_sha256": "58f2dacc225bddab512512252addc979162953393b6189594ccc4dfcff73c61f",
+    "snapshot_fingerprint": "bf2717112af336f17f79ebbe499c2610b9394d48daea187ea159ac81b89f4958",
+    "contract_files_sha256": "701a06938365ba0dd74399f1952566d57562bd141dcecdff2398cd8cc45cbef5"
+  },
+  "review_rounds": [
+    { "round": "r7", "review_kind": "IMPLEMENTATION_ACCEPTANCE", "independent_session_id": "ses_f07b43a4affenxt8HroNe3U3FB", "model": "openai/gpt-6.1-sol", "reasoning_effort": "high", "conclusion": "NOT_ACCEPTED", "report_path": "tasks/workflow/runs/A2.1-core/review-r7.md", "report_sha256": "568592df1901dd2bb52a2ae540f4de6a8d9683d74d95bd7c0b258f5fff37eed6", "snapshot_fingerprint": "17a3b2c7a61ccc82348de5fc6de6840d8f37861b98c6851a45983981d524f3f5", "contract_files_sha256": "24b2bf395b9d4ee8b2e754bf85e443dd25f5315e6b4098772c98984bb671c045", "evidence_index_path": "artifacts/workflow/A2.1-core-review-r7-a93e6b42/evidence-index.json", "evidence_index_sha256": "6f39e9bcaa8598350a30cf9b626a9131b188128124dc818b3bc73915bf8af88b", "open_blockers": ["A21-R2-SNAPSHOT", "DOC-CKPT1-01"], "closed_issues": ["A21-R1-LEGACY", "A21-R1-OUTCOME", "A21-R1-CANDIDATE", "A21-R3-TESTSYNC", "A21-R5-P11-EVIDENCE"] },
+    { "round": "r6", "review_kind": "IMPLEMENTATION_ACCEPTANCE", "independent_session_id": "ses_f07fb4086ffeaWkDmUBM3mDghi", "model": "openai/gpt-6.1-sol", "status": "TOOL_ABORTED_NO_FINAL_REPORT", "evidence_path": "artifacts/workflow/A2.1-core-review-r6-ccf8e91a", "snapshot_fingerprint": "17a3b2c7a61ccc82348de5fc6de6840d8f37861b98c6851a45983981d524f3f5" },
+    { "round": "package-r2", "review_kind": "PACKAGE_REVIEW", "independent_session_id": "ses_f0892f2bfffezCvUsClN3kmSPQ", "model": "openai/gpt-6.1-sol", "conclusion": "PACKAGE_READY", "report_path": "tasks/workflow/runs/A2.1-core/package-review-r2.md", "report_sha256": "c1e5e9f741655ca091a0339bcbff5c0b05cbd3586aba25e0a27b1b0cd392db63", "snapshot_fingerprint": "d7ea969a34b63782d06506d7f6ff9f221c6fbdc0590b2d2d9561e55554364c9c", "contract_files_sha256": "24b2bf395b9d4ee8b2e754bf85e443dd25f5315e6b4098772c98984bb671c045" },
+    {
+      "round": "r5", "review_kind": "IMPLEMENTATION_ACCEPTANCE", "independent_session_id": "ses_f08c896cbffeptdE23OBohV4bm", "model": "openai/gpt-6.1-sol", "conclusion": "NOT_ACCEPTED",
+      "report_path": "tasks/workflow/runs/A2.1-core/review-r5.md", "report_sha256": "ba09960b1c248d811452a4e35c33b386735be753de2e8050122971ea4398110c",
+      "snapshot_fingerprint": "d7ea969a34b63782d06506d7f6ff9f221c6fbdc0590b2d2d9561e55554364c9c", "contract_files_sha256": "27f22d55e88bb824a87b6e3c4124e69b030d4a59e6a5238572d130d0bae0ab7f",
+      "evidence_index_path": "artifacts/workflow/A2.1-core-review-r5-4f8c2d19/evidence-index.json", "evidence_index_sha256": "99fd737d0061e4a50c1be9595822fc1955e235706bc6f926d7b4d6d2f9d97718",
+      "closed_issues": ["A21-R1-LOCK", "A21-R1-NOTIFY", "A21-R1-CHAIN", "A21-R1-LOG", "A21-R1-BOUNDS", "A21-R1-EVENT", "A21-R3-UNKNOWN"],
+      "open_blockers": ["A21-R1-LEGACY", "A21-R1-OUTCOME", "A21-R1-CANDIDATE", "A21-R2-SNAPSHOT", "A21-R3-TESTSYNC", "A21-R5-P11-EVIDENCE"]
+    },
+    { "round": "r4", "review_kind": "IMPLEMENTATION_ACCEPTANCE", "independent_session_id": "ses_f09170d1cffeYHkFN5L76xDlU3", "model": "openai/gpt-6.1-sol", "status": "INTERRUPTED_USAGE_LIMIT_NO_FINAL_REPORT", "evidence_path": "artifacts/workflow/A2.1-core-review-r4-7bf291ac", "snapshot_fingerprint": "d7ea969a34b63782d06506d7f6ff9f221c6fbdc0590b2d2d9561e55554364c9c" },
+    {
+      "round": "r3", "review_kind": "IMPLEMENTATION_ACCEPTANCE",
+      "independent_session_id": "ses_f0970a878ffegigoOO59gEQydI", "model": "openai/gpt-6.1-sol",
+      "conclusion": "NOT_ACCEPTED", "report_path": "tasks/workflow/runs/A2.1-core/review-r3.md",
+      "report_sha256": "a1de8580f0f50f39b3248741104700daf4da5f4fe0c3fac755604711daaebc06",
+      "snapshot_fingerprint": "3814a5869984e334d12aa768a7aefbbc88a98f617ed519064af4b918fb471aba",
+      "contract_files_sha256": "c17869452226d18ea8e72870f588452b19dc1f03c81002a056bf83fef9a6c8d1",
+      "evidence_index_path": "artifacts/workflow/A2.1-core-review-r3-936bc079/evidence-index.json",
+      "evidence_index_sha256": "0450e61e3659a36067536c250fe5f4d0d81e9b0edd9e7abaa65f49ff08331e57",
+      "closed_issues": ["A21-R1-LOCK", "A21-R1-NOTIFY", "A21-R1-CHAIN", "A21-R1-LOG", "A21-R1-BOUNDS"],
+      "open_blockers": ["A21-R1-LEGACY", "A21-R1-OUTCOME", "A21-R1-EVENT", "A21-R1-CANDIDATE", "A21-R2-SNAPSHOT", "A21-R3-UNKNOWN", "A21-R3-TESTSYNC"]
+    },
+    {
+      "round": "r1",
+      "review_kind": "IMPLEMENTATION_ACCEPTANCE",
+      "independent_session_id": "ses_f0a2fe2deffeJ426h91wyVZ6yC",
+      "model": "openai/gpt-6.1-sol",
+      "status": "INTERRUPTED_USAGE_LIMIT_NO_FINAL_REPORT",
+      "evidence_path": "artifacts/workflow/A2.1-core-review-r1-8a71f3bc"
+    },
+    {
+      "round": "r2",
+      "review_kind": "IMPLEMENTATION_ACCEPTANCE",
+      "independent_session_id": "ses_f09c688edffenINjKt4oOU8erV",
+      "model": "openai/gpt-6.1-sol",
+      "conclusion": "NOT_ACCEPTED",
+      "report_path": "tasks/workflow/runs/A2.1-core/review-r2.md",
+      "report_sha256": "3e1224e20aae31af6ae8dbbddb898d5e3a5c0df70d6e8e1dc72d657df3ed504d",
+      "snapshot_fingerprint": "b2ad9065b9d24a3e71f6f3e27a42416326da2a8c9bd0cbfa3d6be9003c279288",
+      "contract_files_sha256": "701a06938365ba0dd74399f1952566d57562bd141dcecdff2398cd8cc45cbef5",
+      "evidence_index_path": "artifacts/workflow/A2.1-core-review-r2-c6d39e12/evidence-index.json",
+      "evidence_index_sha256": "c7f57204d2e6e2ebe812dbd92bbf85a21c56cbe50f67213e14e6be1a57780009",
+      "open_blockers": ["A21-R1-LOCK", "A21-R1-LEGACY", "A21-R1-OUTCOME", "A21-R1-NOTIFY", "A21-R1-CHAIN", "A21-R1-LOG", "A21-R1-BOUNDS", "A21-R1-EVENT", "A21-R1-CANDIDATE", "A21-R2-SNAPSHOT"]
+    }
+  ],
+  "acceptance": {
+    "stage": "A2.1-core",
+    "date": "2026-10-02",
+    "report_path": "tasks/workflow/runs/A2.1-core/acceptance.md",
+    "report_sha256": "78e682f52a7f86eab399333b2e534a9c6560d79395e2a8de6e047dbdd4229e03",
+    "overall_a2_status": "PARTIAL",
+    "stage_boundary": "STOPPED_AWAITING_NEW_HUMAN_APPROVAL_FOR_A2.2",
+    "gate_before_acceptance": {"exit_code": 0, "status": "READY_FOR_REVIEW", "can_accept": true, "errors": []},
+    "controller_reconciliation": "Original31 requirements and all14 issues reconciled; raw logs/JUnit/hash originals checked, snapshot+contract unchanged. Gate structural validity is not semantic proof or authorization.",
+    "forbidden_next_actions": ["start/provision A2.2/A2.3/A3", "import B", "commit/push/PR/merge"]
+  },
+  "pause_resume": {
+    "pause_message": {"role": "user", "session_id": "ses_f0ac0e676ffecn71p6Ww7zaqQq", "message_id": "msg_0f887e93e001D7S0b27RlnzOD3", "text": "额度要没了，请在合适的节点暂停"},
+    "resume_message": {"role": "user", "session_id": "ses_f0ac0e676ffecn71p6Ww7zaqQq", "message_id": "msg_0f9cc37f8001PyAvQX6K0ucvFu", "text": "继续"},
+    "note": "Paused after MiMo correction-r4 stopped, before fresh review; latest real user message read back resumes same authorized A2.1 only. Not next-stage authorization."
+  },
+  "review": {
+    "review_kind": "IMPLEMENTATION_ACCEPTANCE",
+    "independent_session_id": "ses_f06312272ffeGlM7w2nBLXi2DM",
+    "model": "openai/gpt-6.1-sol",
+    "reasoning_effort": "high",
+    "conclusion": "ACCEPTED",
+    "report_path": "tasks/workflow/runs/A2.1-core/review-r8.md",
+    "report_sha256": "93c4b0d06f46a2ca1d9a6745091ae8b7408081717b22e5c07a881ed7c44a04a7",
+    "snapshot_fingerprint": "15dc8782e1788e0bae6359a5c7538287db679078012b50f8901ab72dea4c5b09",
+    "contract_files_sha256": "43c996ada95eebca2c5cbc72bd21b792aed03ad687736baeb4d8041a974b09a2",
+    "evidence_index_path": "artifacts/workflow/A2.1-core-review-r8-2fd79c61/evidence-index.json",
+    "evidence_index_sha256": "07fc53e3307663d4840ce2e202e857a635d96bef31a8fdaf28caf4f941c7b330",
+    "requirements": [
+      {"id":"A2-P01","status":"PASS","reason":"Three-layer70000/1 unique order; reserved zero, settled70000/1; events/outbox agree.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P02","status":"PASS","reason":"Same-key persisted refusal releases, prevents late success; malformed/key/tool outcomes UNKNOWN.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P03","status":"PASS","reason":"Zero money reads/notifications cost1call; terminal counts correct, fixed reads and unique notifications10rounds.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P04","status":"PASS","reason":"Uncommitted operation invisible; true SIGKILL exit-9/newPID recovery from durable state.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P05","status":"PASS","reason":"Actual downstream commit with port response loss preserves UNKNOWN70000/1; recovery one effect/settlement.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P06","status":"PASS","reason":"Postdownstream/preterminal SIGKILL and restart retains one order/terminal/outbox, no finally recovery.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P07","status":"PASS","reason":"Partial counters/events/outbox/status transactions rollback; validator refusal rolls back proof and retry rechecks.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P08","status":"PASS","reason":"Query-none retains reservation; late same-key success once; real SQL lock automatic bounded timeout.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P09","status":"PASS","reason":"Recoverer/staleowner races10rounds, UNKNOWN40variants; true heldlock cycle with negative efficacy controls.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P10","status":"PASS","reason":"Original intent recovers after revocation/expiry/key stop; external checked retry rejects. True result-read remains later stage.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P11","status":"PASS","reason":"Original cost/snapshot after quote edit/delete; lastmiss good/bad10each atomic callback; newkey and invalid version rejects.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P12","status":"PASS","reason":"Full key/tool/params/currency/amount/quote/effect/result association; actual malformed dataclass safelyUNKNOWN, lawful list succeeds.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P13","status":"PASS","reason":"Root/middle/call competition and accept-settle-recovery10rounds; independent connections/sync, full ancestor bounds/nonnegative.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P14","status":"PASS","reason":"Independent durable downstream transaction; orders/notifications unique10rounds; conflict/auth failures no effect/leak.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P15-CORE","status":"PASS","reason":"Strict fourtools/schema/types/sets/scope/resources/tenant/fullchain negative zero-state; trusted-invalid versions reject before lookup. Fixtures not crypto.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P19","status":"PASS","reason":"001/003/004/005 legal/illegal8 upgrades nonzero/revoked seven fullrows and complete registry; legacy material isolated/no effects.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-P20","status":"PASS","reason":"DirectSQL immutable facts/events/nodes/path/operation/seals, state and doubleterminal attacks refused; legal updates and first event writes remain.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-CKPT1-OBL01","status":"PASS","reason":"Schema/static/fullDBchain before candidate; no currentquote onhit; actualexisting sameconnection check with A1 dynamicproof/intent intact.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-CKPT1-OBL02","status":"PASS","reason":"Deterministic miss/competingcommit/resourcegone/saferecheck; good/bad/revoked/replay/expired10each code/cause/clock/window recorded; historical unknown cause retained.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-CKPT1-OBL03","status":"PASS","reason":"Complete durable params/cost/quote/evidence/RESERVEpath; allentry quarantine; failedvalidator proofrollback then independentflag; flagfails failclosed.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-CKPT1-OBL04","status":"PASS","reason":"Lease owner/fence/legalstate/lockafterDBexpiry; expirednoowner rejects; UNKNOWN currentrecheck/retainbudget, takeover queriesfirst.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-CKPT1-OBL05","status":"PASS","reason":"Additive sidecars preserve seven oldrows; phase-seq/committed nodes seals; registryrollback and legalupdate/ownedcleanup.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"A2-CKPT1-OBL06","status":"PASS","reason":"Originalfullquote execution/query, totaltyped compare; stable immutable receiptID/time/UTCiat/PENDINGNULL, no fakeSM3/RFC8785.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"WF-A1-REGRESSION","status":"PASS","reason":"A1 independent68unit/78PG U1/P1-14/F1-5; original4+root1 pass; only002upgrade obsolete, dynamic8combo equivalent stronger.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/a1-unit.xml","sha256":"8b48876c910fa71174fa4194a50318489f53ce1ccf2314eb172ef6af37db68b3","kind":"independent_run","exit_code":0},{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/integration.xml","sha256":"f4b69212587a5d8a2121faaf6224ec8e6ea3e7e12e6a483e4ab6c514dd09301f","kind":"independent_run","exit_code":0}]},
+      {"id":"WF-INDEPENDENT-PROBES","status":"PASS","reason":"Newr8 58 Unicode/control/version3schema/trustedinvalid/maxlifecyclecases; all482 current probes pass after documented lawful-list expectedresult correction.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/fresh-r8.xml","sha256":"6ce30955a5b9c3f116f31d617dcaf44e0f3b700363e85de3ec4301384df74405","kind":"independent_run","exit_code":0},{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/probes-verified.xml","sha256":"c2e1519da9ca68474cde802231c52db525614d47f679ec05af6c28caabe704e7","kind":"independent_run","exit_code":0}]},
+      {"id":"WF-QUALITY-CHECKS","status":"PASS","reason":"Ruff check/format56/diff0; unit137/integration522 no errors/fails/skip; CI coverage and concurrent negativeefficacy verified.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/quality-check.log","sha256":"82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18","kind":"independent_run","exit_code":0}]},
+      {"id":"WF-PY311-ENV","status":"PASS","reason":"FreshPython3.11.16 constraintsinstall/pipcheck/freeze, realPG16.15 and correct driver/dev versions; not fulltransitivelock.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/install.log","sha256":"3e0a9fc88029bfde3c173e51db7ec6b17380c7c558c9cb6a01c48f0699d0e864","kind":"independent_run","exit_code":0}]},
+      {"id":"WF-RESOURCE-ISOLATION","status":"PASS","reason":"Newowner containers/network, ROsource/selfRWartifact; distinct gateway/downstream, ordinaryDSNabsent; exactcleanup zeroowned, unrelated7inventory unchanged.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/environment.log","sha256":"84ec09cb5e361ecbc2ed8ed49f20fa37f7a393b6b36756fbd4344f259b73dd82","kind":"independent_run","exit_code":0}]},
+      {"id":"WF-IMMUTABLE-BASELINE","status":"PASS","reason":"001-003/defaultA1/contracts/deps/CI equalHEAD; approvedadditive servicecompat,004-006frozenhash/registryverified,noBHTTPimport.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/database-end.log","sha256":"ebb707a021f7f85fff802b104652d24795e4cc8cfa0b4681cc55f338fae398cc","kind":"independent_run","exit_code":0}]},
+      {"id":"WF-DOCS-REPORT","status":"PASS","reason":"Current66line report truthful READY/PARTIAL,tracked5/counts137522/format56/newfiles/evidence correct; verbatim twofreshDB READMEsmokes.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/readme-smoke.log","sha256":"5f25f0cba4123dba6963e6019e9004389cd411d96cd75eb58406c16cfbe35cbb","kind":"independent_run","exit_code":0}]},
+      {"id":"WF-SNAPSHOT-COVERAGE","status":"PASS","reason":"102manifest/bytes/modes independently rebuilt start/end/executedcopy; contracts/controlinputs/report/Git unchanged; writer stopped, no observed drift.","evidence":[{"path":"artifacts/workflow/A2.1-core-review-r8-2fd79c61/inspection.json","sha256":"5d7a6e975b735f29f745fbb8bb5366e651b3ae7c28847f9b2a05dde28fcf5dfd","kind":"inspection","exit_code":null}]}
+    ],
+    "open_blockers": []
+  },
+  "handoff": {
+    "checkpoint": "A2.1 checkpoint 1 correction re-review ACCEPTED",
+    "checkpoint_report": "tasks/A2-review-ckpt1-r2.md",
+    "entry_agent": "orchestrator-auto",
+    "old_orchestrator_session_id": "ses_f0e893afcffeMRWvuS4UsK3x20",
+    "next_action": "A2.1-core ACCEPTED after fresh r8 all31PASS and personal evidence/gate reconciliation; complete acceptance report saved. STOP awaiting user's new explicit approval for A2.2; do not change current_stage, start/provision/import B or publish Git."
+  }
+}
