@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, feature/fjr-B-character]
   pull_request:
 
 permissions:
