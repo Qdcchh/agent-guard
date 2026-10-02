@@ -226,3 +226,33 @@ class LoginService:
         if row is None or not hmac.compare_digest(bytes(row[0]), _sha256(csrf_token)):
             raise LoginError("CSRF_INVALID")
         return context
+
+    def verify_session_csrf_locked(
+        self,
+        conn: psycopg.Connection,
+        *,
+        session_token: str,
+        csrf_token: str,
+    ) -> SessionContext:
+        """Recheck a session/user after taking locks in the caller's decision transaction."""
+        if type(session_token) is not str or not _TOKEN.fullmatch(session_token):
+            raise LoginError("SESSION_INVALID")
+        if type(csrf_token) is not str or not _TOKEN.fullmatch(csrf_token):
+            raise LoginError("CSRF_INVALID")
+        session_hash = _sha256(session_token)
+        row = conn.execute(
+            "SELECT s.tenant_id, s.subject, s.auth_time, s.csrf_sha256, "
+            "s.expires_at, s.revoked_at, u.active "
+            "FROM ag_login_sessions s JOIN ag_users u "
+            "ON u.tenant_id = s.tenant_id AND u.subject = s.subject "
+            "WHERE s.session_sha256 = %s FOR UPDATE OF s, u",
+            (session_hash,),
+        ).fetchone()
+        if row is None:
+            raise LoginError("SESSION_INVALID")
+        now = store.db_now_epoch(conn)
+        if row[5] is not None or not row[6] or now >= row[4].timestamp():
+            raise LoginError("SESSION_INVALID")
+        if not hmac.compare_digest(bytes(row[3]), _sha256(csrf_token)):
+            raise LoginError("CSRF_INVALID")
+        return SessionContext(row[0], row[1], row[2], session_hash)

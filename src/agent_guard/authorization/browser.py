@@ -202,10 +202,16 @@ class BrowserLoginApp:
         return self._consent_page(view, csrf)
 
     def _consent_page(self, view: AuthorizeRequestView, csrf: str) -> TokenResponse:
+        constraints = html.escape(canonical_json_bytes(view.constraints).decode("utf-8"))
         body = (
             f"<p>Task {html.escape(view.task_id)} for {html.escape(view.client_id)}</p>"
-            f"<p>Scope: {html.escape(view.scope)}</p>"
+            f"<p>Requested scope: {html.escape(view.scope)}</p>"
+            f"<p>Policy scope: {html.escape(view.available_scope)}</p>"
             f"<p>Amount limit (fen): {view.amount_limit_fen}; calls: {view.call_limit}</p>"
+            f"<p>Expires (Unix time): {view.task_expires_at}</p>"
+            f"<p>Delegation depth: {view.delegation_depth}; "
+            f"policy version: {view.policy_version}</p>"
+            f"<pre>Constraints: {constraints}</pre>"
             f'<form method="post" action="/ag/consent">'
             f"{_hidden({'request_id': view.request_id, 'csrf_token': csrf})}"
             '<button name="decision" value="approve" type="submit">Approve</button>'

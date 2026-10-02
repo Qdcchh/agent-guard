@@ -9,7 +9,9 @@ from __future__ import annotations
 
 import re
 import secrets
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlencode
 
@@ -410,6 +412,258 @@ def test_existing_root_rejects_new_consent_without_marking_approved(ledger, dsn)
     ) == ("pending",)
 
 
+@pytest.mark.parametrize(
+    "change",
+    [
+        "amount_limit_fen = 200000",
+        "call_limit = 20",
+        "scope = 'openid procurement.order.create procurement.document.read'",
+        "task_expires_at = task_expires_at + interval '1 hour'",
+        "constraints_json = %s",
+    ],
+)
+def test_policy_change_after_display_fails_closed(ledger, dsn, change):
+    stack = _setup(dsn)
+    session = _session(stack)
+    request = stack.consent.create_request(
+        session_token=session.session_token, csrf_token=session.csrf_token, params=_params()
+    )
+    with psycopg.connect(dsn) as conn:
+        changed_constraints = {**CONSTRAINTS, "skus": ["sku-001", "sku-002"]}
+        values = (canonical_json_bytes(changed_constraints),) if "%s" in change else ()
+        conn.execute(
+            f"UPDATE ag_task_policies SET {change} WHERE tenant_id = %s AND task_id = %s",
+            (*values, TENANT, "task-001"),
+        )
+    with pytest.raises(ConsentError, match="TASK_POLICY_CHANGED"):
+        stack.consent.decide(
+            session_token=session.session_token,
+            csrf_token=session.csrf_token,
+            request_id=request.request_id,
+            decision="approve",
+        )
+    assert fetch_one(dsn, "SELECT count(*) FROM ag_authorization_codes") == (0,)
+    assert fetch_one(dsn, "SELECT status, consent_ref FROM ag_authorization_requests") == (
+        "pending",
+        None,
+    )
+
+
+def test_code_and_consent_rollback_together(ledger, dsn, monkeypatch):
+    stack = _setup(dsn)
+    session = _session(stack)
+    request = stack.consent.create_request(
+        session_token=session.session_token, csrf_token=session.csrf_token, params=_params()
+    )
+    original_issue = stack.codes.issue_code
+
+    def issue_then_fail(approved, *, conn):
+        assert conn is not None
+        original_issue(approved, conn=conn)
+        raise psycopg.OperationalError("synthetic failure after code insert")
+
+    monkeypatch.setattr(stack.codes, "issue_code", issue_then_fail)
+    with pytest.raises(ConsentError, match="TRUSTED_STATE_UNAVAILABLE"):
+        stack.consent.decide(
+            session_token=session.session_token,
+            csrf_token=session.csrf_token,
+            request_id=request.request_id,
+            decision="approve",
+        )
+    assert fetch_one(dsn, "SELECT count(*) FROM ag_authorization_codes") == (0,)
+    assert fetch_one(dsn, "SELECT status, consent_ref FROM ag_authorization_requests") == (
+        "pending",
+        None,
+    )
+    assert fetch_one(dsn, "SELECT count(*) FROM ag_auth_events WHERE event_type = 'consent'") == (
+        0,
+    )
+
+
+@pytest.mark.parametrize("fault_after", ["event", "mark"])
+def test_consent_partial_writes_rollback(ledger, dsn, monkeypatch, fault_after):
+    stack = _setup(dsn)
+    session = _session(stack)
+    request = stack.consent.create_request(
+        session_token=session.session_token, csrf_token=session.csrf_token, params=_params()
+    )
+    if fault_after == "event":
+        original = stack.consent._insert_event
+
+        def insert_then_fail(conn, **kwargs):
+            original(conn, **kwargs)
+            raise psycopg.OperationalError("synthetic failure after consent event")
+
+        monkeypatch.setattr(stack.consent, "_insert_event", insert_then_fail)
+    else:
+        original = stack.consent._mark_decided
+
+        def mark_then_fail(conn, *args):
+            original(conn, *args)
+            raise psycopg.OperationalError("synthetic failure after request update")
+
+        monkeypatch.setattr(stack.consent, "_mark_decided", mark_then_fail)
+    with pytest.raises(ConsentError, match="TRUSTED_STATE_UNAVAILABLE"):
+        stack.consent.decide(
+            session_token=session.session_token,
+            csrf_token=session.csrf_token,
+            request_id=request.request_id,
+            decision="approve",
+        )
+    assert fetch_one(dsn, "SELECT count(*) FROM ag_authorization_codes") == (0,)
+    assert fetch_one(dsn, "SELECT status, consent_ref FROM ag_authorization_requests") == (
+        "pending",
+        None,
+    )
+    assert fetch_one(dsn, "SELECT count(*) FROM ag_auth_events WHERE event_type = 'consent'") == (
+        0,
+    )
+
+
+def test_policy_change_then_restore_still_requires_new_consent(ledger, dsn):
+    stack = _setup(dsn)
+    session = _session(stack)
+    request = stack.consent.create_request(
+        session_token=session.session_token, csrf_token=session.csrf_token, params=_params()
+    )
+    with psycopg.connect(dsn) as conn:
+        conn.execute(
+            "UPDATE ag_task_policies SET amount_limit_fen = 900000 "
+            "WHERE tenant_id = %s AND task_id = %s",
+            (TENANT, "task-001"),
+        )
+        conn.execute(
+            "UPDATE ag_task_policies SET amount_limit_fen = 100000 "
+            "WHERE tenant_id = %s AND task_id = %s",
+            (TENANT, "task-001"),
+        )
+    assert fetch_one(dsn, "SELECT policy_version FROM ag_task_policies") == (3,)
+    with pytest.raises(ConsentError, match="TASK_POLICY_CHANGED"):
+        stack.consent.decide(
+            session_token=session.session_token,
+            csrf_token=session.csrf_token,
+            request_id=request.request_id,
+            decision="approve",
+        )
+    assert fetch_one(dsn, "SELECT count(*) FROM ag_authorization_codes") == (0,)
+
+
+def test_legacy_pending_request_without_policy_snapshot_fails_closed(ledger, dsn):
+    stack = _setup(dsn)
+    session = _session(stack)
+    request = stack.consent.create_request(
+        session_token=session.session_token, csrf_token=session.csrf_token, params=_params()
+    )
+    with psycopg.connect(dsn) as conn:
+        conn.execute(
+            "UPDATE ag_authorization_requests SET policy_snapshot_json = NULL "
+            "WHERE request_id = %s",
+            (request.request_id,),
+        )
+    with pytest.raises(ConsentError, match="TASK_POLICY_CHANGED"):
+        stack.consent.decide(
+            session_token=session.session_token,
+            csrf_token=session.csrf_token,
+            request_id=request.request_id,
+            decision="approve",
+        )
+    assert fetch_one(dsn, "SELECT count(*) FROM ag_authorization_codes") == (0,)
+
+
+def test_consent_rechecks_request_expiry_after_lock_wait(ledger, dsn, monkeypatch):
+    stack = _setup(dsn)
+    session = _session(stack)
+    request = stack.consent.create_request(
+        session_token=session.session_token, csrf_token=session.csrf_token, params=_params()
+    )
+    with psycopg.connect(dsn) as conn:
+        conn.execute(
+            "UPDATE ag_authorization_requests "
+            "SET expires_at = clock_timestamp() + interval '2 seconds' "
+            "WHERE request_id = %s",
+            (request.request_id,),
+        )
+    prechecked = threading.Event()
+    original_verify = stack.login.verify_session_csrf
+
+    def signal_precheck(**kwargs):
+        result = original_verify(**kwargs)
+        prechecked.set()
+        return result
+
+    monkeypatch.setattr(stack.login, "verify_session_csrf", signal_precheck)
+    with ThreadPoolExecutor(max_workers=1) as workers:
+        with psycopg.connect(dsn) as blocker:
+            with blocker.transaction():
+                blocker.execute(
+                    "SELECT 1 FROM ag_authorization_requests WHERE request_id = %s FOR UPDATE",
+                    (request.request_id,),
+                )
+                result = workers.submit(
+                    stack.consent.decide,
+                    session_token=session.session_token,
+                    csrf_token=session.csrf_token,
+                    request_id=request.request_id,
+                    decision="approve",
+                )
+                assert prechecked.wait(5)
+                time.sleep(2.2)
+        with pytest.raises(ConsentError, match="REQUEST_EXPIRED"):
+            result.result(timeout=5)
+    assert fetch_one(dsn, "SELECT count(*) FROM ag_authorization_codes") == (0,)
+
+
+@pytest.mark.parametrize("state_change", ["revoke_session", "disable_user"])
+def test_consent_rechecks_session_after_lock_wait(ledger, dsn, monkeypatch, state_change):
+    stack = _setup(dsn)
+    session = _session(stack)
+    request = stack.consent.create_request(
+        session_token=session.session_token, csrf_token=session.csrf_token, params=_params()
+    )
+    prechecked = threading.Event()
+    original_verify = stack.login.verify_session_csrf
+
+    def signal_precheck(**kwargs):
+        result = original_verify(**kwargs)
+        prechecked.set()
+        return result
+
+    monkeypatch.setattr(stack.login, "verify_session_csrf", signal_precheck)
+    session_hash = fetch_one(dsn, "SELECT session_sha256 FROM ag_login_sessions")[0]
+    with ThreadPoolExecutor(max_workers=1) as workers:
+        with psycopg.connect(dsn) as blocker:
+            with blocker.transaction():
+                blocker.execute(
+                    "SELECT 1 FROM ag_authorization_requests WHERE request_id = %s FOR UPDATE",
+                    (request.request_id,),
+                )
+                result = workers.submit(
+                    stack.consent.decide,
+                    session_token=session.session_token,
+                    csrf_token=session.csrf_token,
+                    request_id=request.request_id,
+                    decision="approve",
+                )
+                assert prechecked.wait(5)
+                with psycopg.connect(dsn) as conn:
+                    if state_change == "revoke_session":
+                        conn.execute(
+                            "UPDATE ag_login_sessions SET revoked_at = clock_timestamp() "
+                            "WHERE session_sha256 = %s",
+                            (session_hash,),
+                        )
+                    else:
+                        conn.execute(
+                            "UPDATE ag_users SET active = false "
+                            "WHERE tenant_id = %s AND subject = %s",
+                            (TENANT, SUBJECT),
+                        )
+        with pytest.raises(ConsentError, match="SESSION_INVALID"):
+            result.result(timeout=5)
+    assert fetch_one(dsn, "SELECT count(*) FROM ag_authorization_codes") == (0,)
+    assert fetch_one(dsn, "SELECT status FROM ag_authorization_requests") == ("pending",)
+
+
 def test_browser_app_full_flow_over_http_boundary(ledger, dsn):
     stack = _setup(dsn)
     login_page = stack.browser.dispatch(
@@ -444,6 +698,10 @@ def test_browser_app_full_flow_over_http_boundary(ledger, dsn):
         body=b"",
     )
     assert consent_page.status == 200
+    assert b"Constraints:" in consent_page.body
+    assert b"sku-001" in consent_page.body
+    assert b"Expires (Unix time):" in consent_page.body
+    assert b"Delegation depth: 2; policy version: 1" in consent_page.body
     request_id = re.search(rb'name="request_id" value="([^"]+)"', consent_page.body).group(1)
     csrf = re.search(rb'name="csrf_token" value="([^"]+)"', consent_page.body).group(1)
     assert csrf.decode() == session_cookie.split("~", 1)[1]

@@ -9,7 +9,6 @@ still requires the ASGI server to supply an accurate ``https`` scheme.
 from __future__ import annotations
 
 from collections.abc import Callable
-from pathlib import Path
 
 import psycopg
 from tongsuopy.crypto import serialization
@@ -32,11 +31,12 @@ from agent_guard.crypto.sm import serialize_sm2_public_key
 from agent_guard.identity.resolver import IdentityError, IdentityResolver, RegisteredIdentity
 from agent_guard.server.config import ConfigError, SecretsBundle, ServerConfig, secret_sha256
 from agent_guard.server.middleware import RequestTimeoutMiddleware
+from agent_guard.server.private_files import read_private_file
 
 
 def _load_as_private_key(path: str):
     try:
-        raw = Path(path).read_bytes()
+        raw = read_private_file(path)
         key = serialization.load_pem_private_key(raw, password=None)
     except (OSError, ValueError, TypeError) as exc:
         raise ConfigError("AS signing key cannot be loaded from its PEM path") from exc

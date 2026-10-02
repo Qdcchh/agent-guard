@@ -76,9 +76,13 @@ class FakeConsent:
             task_id="task-001",
             client_id="agent-planner",
             scope="openid procurement.order.create",
+            available_scope="openid procurement.order.create",
             amount_limit_fen=100000,
             call_limit=10,
             task_expires_at=1800000000,
+            constraints={"skus": ["sku-001"]},
+            policy_version=1,
+            delegation_depth=2,
             csrf_token=CSRF,
         )
         self.redirect = ConsentRedirect(REDIRECT + "?code=CODE123&state=state-value-123456")

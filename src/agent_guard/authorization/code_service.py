@@ -12,6 +12,7 @@ import re
 import secrets
 import uuid
 from collections.abc import Callable
+from contextlib import nullcontext
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlsplit
@@ -34,6 +35,7 @@ from agent_guard.ledger import store
 from agent_guard.ledger.provisioning import TaskAlreadyInitialized, create_task_root
 
 _SAFE_ID = re.compile(r"[\x21-\x7e]{1,128}\Z", re.ASCII)
+ROOT_DELEGATION_DEPTH = 2
 
 
 class AuthorizationCodeError(ValueError):
@@ -130,7 +132,9 @@ class AuthorizationCodeService:
             raise
         return conn
 
-    def issue_code(self, approved: ApprovedAuthorization) -> CodeIssueResult:
+    def issue_code(
+        self, approved: ApprovedAuthorization, *, conn: psycopg.Connection | None = None
+    ) -> CodeIssueResult:
         """Persist a hashed 60-second code after a trusted consent decision."""
         if not isinstance(approved, ApprovedAuthorization):
             raise AuthorizationCodeError("CONSENT_REQUIRED")
@@ -165,19 +169,18 @@ class AuthorizationCodeService:
         code = secrets.token_urlsafe(32)
         code_sha256 = hashlib.sha256(code.encode("ascii")).digest()
         try:
-            with self._connect() as conn:
-                with conn.transaction():
-                    now = _utc_epoch(int(store.db_now_epoch(conn)))
-                    if approved.task_expires_at <= int(now.timestamp()) or approved.auth_time > int(
-                        now.timestamp()
-                    ):
+            with self._connect() if conn is None else nullcontext(conn) as active_conn:
+                with active_conn.transaction():
+                    now_epoch = store.db_now_epoch(active_conn)
+                    now = datetime.fromtimestamp(now_epoch, tz=timezone.utc)
+                    if approved.task_expires_at <= now_epoch or approved.auth_time > now_epoch:
                         raise AuthorizationCodeError("CONSENT_SNAPSHOT_EXPIRED")
-                    if conn.execute(
+                    if active_conn.execute(
                         "SELECT 1 FROM ag_tasks WHERE tenant_id = %s AND task_id = %s",
                         (approved.tenant_id, approved.task_id),
                     ).fetchone():
                         raise AuthorizationCodeError("TASK_ALREADY_AUTHORIZED")
-                    conn.execute(
+                    active_conn.execute(
                         "INSERT INTO ag_authorization_codes "
                         "(code_sha256, tenant_id, task_id, subject, client_id, holder_kid, "
                         "holder_spki_sm3, redirect_uri, pkce_challenge, nonce, auth_time, "
@@ -335,7 +338,7 @@ class AuthorizationCodeService:
                         "ag_grant_id": root_id,
                         "ag_parent_id": None,
                         "ag_root_id": root_id,
-                        "ag_delegation_remaining": 2,
+                        "ag_delegation_remaining": ROOT_DELEGATION_DEPTH,
                         "ag_limits": {
                             "currency": "CNY",
                             "amount_fen": amount_limit,

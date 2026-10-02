@@ -162,3 +162,24 @@ def test_jws_rejects_invalid_signing_inputs_and_signature_range():
         verify_compact_jws(
             invalid_range, expected_type="ag-at+jwt", trusted_keys={"as-1": key.public_key()}
         )
+
+
+@pytest.mark.parametrize(
+    "payload",
+    [
+        b'{"note":"\\ud800"}',
+        b'{"\\udfff":1}',
+        b'{"amount":' + b"1" * 5000 + b"}",
+        b'{"nested":' + b"[" * 1500 + b"0" + b"]" * 1500 + b"}",
+    ],
+)
+def test_jws_rejects_signed_invalid_json_with_crypto_error(payload):
+    key = generate_sm2_private_key()
+    header = canonical_json_bytes({"alg": JWS_ALG, "typ": "ag-at+jwt", "kid": "as-1"})
+    signed_part = b64url_encode(header) + "." + b64url_encode(payload)
+    signature = _der_to_jws_signature(sign_sm2_message(key, signed_part.encode("ascii")))
+    token = signed_part + "." + b64url_encode(signature)
+    with pytest.raises(InvalidSm2Signature, match="invalid JWS encoding"):
+        verify_compact_jws(
+            token, expected_type="ag-at+jwt", trusted_keys={"as-1": key.public_key()}
+        )

@@ -24,6 +24,7 @@ from agent_guard.authorization.claims import (
     parse_scope,
 )
 from agent_guard.authorization.code_service import (
+    ROOT_DELEGATION_DEPTH,
     ApprovedAuthorization,
     AuthorizationCodeError,
     AuthorizationCodeService,
@@ -94,6 +95,7 @@ class TaskPolicy:
     call_limit: int
     task_expires_at: datetime
     active: bool
+    version: int
 
 
 @dataclass(frozen=True)
@@ -103,9 +105,13 @@ class AuthorizeRequestView:
     task_id: str
     client_id: str
     scope: str
+    available_scope: str
     amount_limit_fen: int
     call_limit: int
     task_expires_at: int
+    constraints: JsonObject
+    policy_version: int
+    delegation_depth: int
     csrf_token: str
 
 
@@ -119,6 +125,24 @@ def _redirect(uri: str, params: Mapping[str, str]) -> str:
     query = dict(parse_qsl(parts.query, keep_blank_values=True))
     query.update(params)
     return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(query), ""))
+
+
+def _policy_snapshot(policy: TaskPolicy) -> bytes:
+    return canonical_json_bytes(
+        {
+            "tenant_id": policy.tenant_id,
+            "task_id": policy.task_id,
+            "owner_subject": policy.owner_subject,
+            "scope": policy.scope,
+            "constraints": policy.constraints,
+            "amount_limit_fen": policy.amount_limit_fen,
+            "call_limit": policy.call_limit,
+            "task_expires_at": policy.task_expires_at.isoformat(),
+            "active": policy.active,
+            "policy_version": policy.version,
+            "delegation_depth": ROOT_DELEGATION_DEPTH,
+        }
+    )
 
 
 def parse_authorize_params(params: object) -> AuthorizeParams:
@@ -254,8 +278,9 @@ class ConsentService:
                     conn.execute(
                         "INSERT INTO ag_authorization_requests "
                         "(request_id, session_sha256, tenant_id, task_id, subject, client_id, "
-                        " redirect_uri, scope, pkce_challenge, nonce, state, status, expires_at) "
-                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 'pending', "
+                        " redirect_uri, scope, pkce_challenge, nonce, state, "
+                        " policy_snapshot_json, status, expires_at) "
+                        "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 'pending', "
                         "clock_timestamp() + (%s * interval '1 second'))",
                         (
                             request_id,
@@ -269,6 +294,7 @@ class ConsentService:
                             parsed.pkce_challenge,
                             parsed.nonce,
                             parsed.state,
+                            _policy_snapshot(policy),
                             self._request_ttl,
                         ),
                     )
@@ -289,9 +315,13 @@ class ConsentService:
             task_id=parsed.task_id,
             client_id=client.client_id,
             scope=parsed.scope,
+            available_scope=policy.scope,
             amount_limit_fen=policy.amount_limit_fen,
             call_limit=policy.call_limit,
             task_expires_at=policy_expiry,
+            constraints=policy.constraints,
+            policy_version=policy.version,
+            delegation_depth=ROOT_DELEGATION_DEPTH,
             csrf_token=csrf_token,
         )
 
@@ -310,16 +340,14 @@ class ConsentService:
             or decision not in _DECISIONS
         ):
             raise ConsentError("INVALID_DECISION")
-        context = self._sessions.verify_session_csrf(
-            session_token=session_token, csrf_token=csrf_token
-        )
+        self._sessions.verify_session_csrf(session_token=session_token, csrf_token=csrf_token)
         try:
             with self._connect() as conn:
                 with conn.transaction():
                     row = conn.execute(
                         "SELECT session_sha256, tenant_id, task_id, subject, client_id, "
                         " redirect_uri, scope, pkce_challenge, nonce, state, status, "
-                        " expires_at > clock_timestamp() "
+                        " expires_at, policy_snapshot_json "
                         "FROM ag_authorization_requests WHERE request_id = %s FOR UPDATE",
                         (request_id,),
                     ).fetchone()
@@ -337,13 +365,19 @@ class ConsentService:
                         nonce,
                         state,
                         status,
-                        fresh,
+                        request_expires_at,
+                        policy_snapshot,
                     ) = row
+                    context = self._sessions.verify_session_csrf_locked(
+                        conn, session_token=session_token, csrf_token=csrf_token
+                    )
                     if bytes(session_hash) != context.session_sha256 or subject != context.subject:
+                        raise ConsentError("REQUEST_NOT_FOUND")
+                    if tenant_id != context.tenant_id:
                         raise ConsentError("REQUEST_NOT_FOUND")
                     if status != "pending":
                         raise ConsentError("ALREADY_DECIDED")
-                    if not fresh:
+                    if store.db_now_epoch(conn) >= request_expires_at.timestamp():
                         raise ConsentError("REQUEST_EXPIRED")
                     if decision == "deny":
                         event_id = self._insert_event(
@@ -358,11 +392,15 @@ class ConsentService:
                         return ConsentRedirect(
                             _redirect(redirect_uri, {"error": "access_denied", "state": state})
                         )
-                    policy = self._load_policy(conn, tenant_id, task_id)
+                    policy = self._load_policy(conn, tenant_id, task_id, lock=True)
                     if policy is None or not policy.active:
                         raise ConsentError("TASK_UNAVAILABLE")
                     if policy.owner_subject != context.subject:
                         raise ConsentError("NOT_TASK_OWNER")
+                    if policy_snapshot is None or bytes(policy_snapshot) != _policy_snapshot(
+                        policy
+                    ):
+                        raise ConsentError("TASK_POLICY_CHANGED")
                     if store.db_now_epoch(conn) >= policy.task_expires_at.timestamp():
                         raise ConsentError("TASK_EXPIRED")
                     scopes = parse_scope(scope)
@@ -393,7 +431,7 @@ class ConsentService:
                         nonce=nonce,
                         consent_ref=event_id,
                     )
-                    result = self._codes.issue_code(approved)
+                    result = self._codes.issue_code(approved, conn=conn)
                     return ConsentRedirect(
                         _redirect(redirect_uri, {"code": result.code, "state": state})
                     )
@@ -407,12 +445,13 @@ class ConsentService:
             raise ConsentError("TRUSTED_STATE_UNAVAILABLE") from exc
 
     def _load_policy(
-        self, conn: psycopg.Connection, tenant_id: str, task_id: str
+        self, conn: psycopg.Connection, tenant_id: str, task_id: str, *, lock: bool = False
     ) -> TaskPolicy | None:
         row = conn.execute(
             "SELECT tenant_id, task_id, owner_subject, scope, constraints_json, "
-            " amount_limit_fen, call_limit, task_expires_at, active "
-            "FROM ag_task_policies WHERE tenant_id = %s AND task_id = %s",
+            " amount_limit_fen, call_limit, task_expires_at, active, policy_version "
+            "FROM ag_task_policies WHERE tenant_id = %s AND task_id = %s"
+            + (" FOR UPDATE" if lock else ""),
             (tenant_id, task_id),
         ).fetchone()
         if row is None:
@@ -433,6 +472,7 @@ class ConsentService:
             call_limit=row[6],
             task_expires_at=row[7],
             active=row[8],
+            version=row[9],
         )
 
     @staticmethod

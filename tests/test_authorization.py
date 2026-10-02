@@ -162,6 +162,28 @@ def test_static_verifier_builds_ledger_context_only_after_signatures():
     validate_invocation(verified)
 
 
+@pytest.mark.parametrize(
+    "invalid_body",
+    [
+        b'{"note":"\\ud800"}',
+        b'{"amount":' + b"1" * 5000 + b"}",
+        b'{"nested":' + b"[" * 1500 + b"0" + b"]" * 1500 + b"}",
+    ],
+    ids=["surrogate", "large-integer", "deep-json"],
+)
+def test_static_verifier_rejects_invalid_json_before_staging(invalid_body):
+    as_key, holder_key, _, verifier, staged = _fixture()
+    body = _body()
+    token, proof = _sign_pair(
+        as_key, holder_key, _claims(serialize_sm2_public_key(holder_key.public_key())), body
+    )
+    with pytest.raises(VerificationError, match="invalid invocation JSON"):
+        verifier.verify_static(
+            token, proof, endpoint=ENDPOINT, method="POST", body=invalid_body, now=NOW
+        )
+    assert staged == []
+
+
 def test_static_verifier_rejects_tampering_and_does_not_stage():
     as_key, holder_key, _, verifier, staged = _fixture()
     body = _body()
@@ -211,6 +233,29 @@ def test_did_document_change_is_not_automatic_registry_approval():
             "agent-planner", "tenant-001", "capabilityInvocation"
         )
     assert holder_key is not None
+
+
+@pytest.mark.parametrize(
+    "document_bytes",
+    [
+        b'{"id":"\\ud800"}',
+        b'{"\\udfff":1}',
+        b'{"number":' + b"1" * 5000 + b"}",
+        b'{"nested":' + b"[" * 1500 + b"0" + b"]" * 1500 + b"}",
+    ],
+)
+def test_did_document_invalid_json_is_rejected_at_encoding_boundary(document_bytes):
+    key = generate_sm2_private_key()
+    registration = RegisteredIdentity(
+        "tenant-001", "agent-planner", DID, KID, serialize_sm2_public_key(key.public_key())
+    )
+    resolver = IdentityResolver(
+        {("tenant-001", "agent-planner"): registration},
+        allowed_hosts=frozenset({"identity.agent-guard.test"}),
+        fetch_document=lambda url: document_bytes,
+    )
+    with pytest.raises(IdentityError, match="invalid DID document JSON"):
+        resolver.resolve_registered("agent-planner", "tenant-001", "capabilityInvocation")
 
 
 def test_child_policy_rejects_expansion_and_unknown_fields():

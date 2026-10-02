@@ -21,6 +21,7 @@ from agent_guard.crypto.sm import generate_sm2_private_key, serialize_sm2_public
 from agent_guard.identity.resolver import METHOD_TYPE, SPKI_PROPERTY
 from agent_guard.server.config import ConfigError, load_secrets, load_server_config, resolve_paths
 from agent_guard.server.factory import build_app
+from agent_guard.server.private_files import read_private_file, write_private_file
 
 TEST_ONLY_NOTE = (
     "synthetic init-generated test-only secrets; replace with deployment-generated "
@@ -39,12 +40,13 @@ def _public_pem(key) -> str:
 
 
 def _write_private_key(key, path: Path) -> None:
-    path.write_bytes(
+    write_private_file(
+        path,
         key.private_bytes(
             serialization.Encoding.PEM,
             serialization.PrivateFormat.PKCS8,
             serialization.NoEncryption(),
-        )
+        ),
     )
 
 
@@ -63,10 +65,20 @@ def _did_document(did: str, kid: str, spki: bytes, *, delegating: bool) -> dict:
 
 
 def init_config(out_dir: Path, issuer: str) -> None:
-    if out_dir.exists() and any(out_dir.iterdir()):
-        print(f"error: refusing to write into non-empty directory {out_dir}")
+    if (
+        out_dir.is_symlink()
+        or out_dir.exists()
+        or any(parent.is_symlink() for parent in out_dir.absolute().parents)
+    ):
+        print(f"error: refusing to write into existing directory {out_dir}")
         raise SystemExit(2)
-    out_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        out_dir.mkdir(mode=0o700)
+        if os.name != "nt":
+            out_dir.chmod(0o700)
+    except OSError as exc:
+        print(f"error: cannot create private directory {out_dir}: {exc}")
+        raise SystemExit(2) from None
 
     as_key = generate_sm2_private_key()
     _write_private_key(as_key, out_dir / "as-sign-key.pem")
@@ -115,8 +127,8 @@ def init_config(out_dir: Path, issuer: str) -> None:
         "client_secrets": {f"agent-{name}": pysecrets.token_urlsafe(32) for name in _AGENTS},
         "gateway_secret": pysecrets.token_urlsafe(32),
     }
-    (out_dir / "config.json").write_bytes(canonical_json_bytes(config))
-    (out_dir / "secrets.json").write_bytes(canonical_json_bytes(secrets_doc))
+    write_private_file(out_dir / "config.json", canonical_json_bytes(config))
+    write_private_file(out_dir / "secrets.json", canonical_json_bytes(secrets_doc))
     print(f"wrote dev config tree under {out_dir} (contains private keys and secrets)")
     print("test-only: replace secrets and keys before any real deployment")
 
@@ -124,9 +136,9 @@ def init_config(out_dir: Path, issuer: str) -> None:
 def run_server(args: argparse.Namespace) -> None:
     config_path = Path(args.config)
     try:
-        config = load_server_config(config_path.read_bytes())
+        config = load_server_config(read_private_file(config_path))
         config = resolve_paths(config, config_path.parent)
-        secrets = load_secrets(Path(config.secrets_path).read_bytes())
+        secrets = load_secrets(read_private_file(config.secrets_path))
     except (ConfigError, OSError, ValueError) as exc:
         print(f"error: {exc}")
         raise SystemExit(2) from None
@@ -160,9 +172,10 @@ def run_server(args: argparse.Namespace) -> None:
 def check_config(args: argparse.Namespace) -> None:
     config_path = Path(args.config)
     try:
-        config = load_server_config(config_path.read_bytes())
+        config = load_server_config(read_private_file(config_path))
         config = resolve_paths(config, config_path.parent)
-        load_secrets(Path(config.secrets_path).read_bytes())
+        read_private_file(config.as_signing_key_path)
+        load_secrets(read_private_file(config.secrets_path))
     except (ConfigError, OSError, ValueError) as exc:
         print(f"error: {exc}")
         raise SystemExit(2) from None

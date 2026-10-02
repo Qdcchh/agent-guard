@@ -59,3 +59,45 @@ def test_base64url_round_trip_and_strict_rejections():
 def test_duplicate_key_rejection_covers_nested_protected_headers():
     with pytest.raises(DuplicateKeyError):
         load_strict_json('{"alg":"expected","kid":"one","kid":"two"}')
+
+
+@pytest.mark.parametrize("surrogate", ["\ud800", "\udfff"])
+def test_unpaired_surrogates_in_values_and_keys_are_rejected(surrogate):
+    escaped = f"\\u{ord(surrogate):04x}"
+    for raw in (f'{{"value":"{escaped}"}}', f'{{"{escaped}":1}}'):
+        with pytest.raises(EncodingError, match="surrogate"):
+            load_strict_json(raw)
+    with pytest.raises(EncodingError, match="surrogate"):
+        load_strict_json('{"value":"' + surrogate + '"}')
+    for value in ({"value": surrogate}, {surrogate: "value"}):
+        with pytest.raises(EncodingError, match="surrogate"):
+            canonical_json_bytes(value)
+
+
+def test_chinese_and_supplementary_unicode_remain_canonical():
+    value = load_strict_json('{"中文":"😀"}')
+    assert canonical_json_bytes(value) == '{"中文":"😀"}'.encode("utf-8")
+
+
+@pytest.mark.parametrize(
+    "raw",
+    [
+        "1" * 5000,
+        "[" * 1500 + "0" + "]" * 1500,
+        "[0," * 4096 + "0" + "]" * 4096,
+        '"' + "x" * 65536 + '"',
+    ],
+    ids=["large-integer", "deep-json", "wide-json", "large-raw-body"],
+)
+def test_raw_json_bounds_fail_with_profile_error(raw):
+    with pytest.raises(EncodingError):
+        load_strict_json(raw)
+
+
+def test_programmatic_json_bounds_fail_without_recursion_or_large_output():
+    deep: object = 0
+    for _ in range(1500):
+        deep = [deep]
+    for value in (deep, [0] * 4096, {"text": "\n" * 40000}):
+        with pytest.raises(EncodingError):
+            canonical_json_bytes(value)

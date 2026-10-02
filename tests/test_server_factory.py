@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import os
 
 import pytest
 from tongsuopy.crypto import serialization
@@ -34,6 +35,8 @@ def _write_as_key(tmp_path) -> str:
             serialization.NoEncryption(),
         )
     )
+    if os.name != "nt":
+        path.chmod(0o600)
     return str(path)
 
 

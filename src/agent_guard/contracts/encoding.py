@@ -11,6 +11,9 @@ from typing import NoReturn, TypeAlias, cast
 import rfc8785
 
 MAX_SAFE_INTEGER = (1 << 53) - 1
+MAX_JSON_BYTES = 65536
+MAX_JSON_DEPTH = 64
+MAX_JSON_NODES = 4096
 
 _BASE64URL_RE = re.compile(r"[A-Za-z0-9_-]*\Z", re.ASCII)
 
@@ -37,6 +40,10 @@ def _reject_constant(value: str) -> NoReturn:
 def _parse_int(value: str) -> int:
     if value.startswith("-"):
         raise EncodingError("negative integers are not allowed")
+    # Check the lexical form before int(): Python's decimal conversion limit
+    # otherwise leaks ValueError for attacker-controlled long JSON numbers.
+    if len(value) > len(str(MAX_SAFE_INTEGER)):
+        raise EncodingError(f"integer is outside 0..{MAX_SAFE_INTEGER}")
     parsed = int(value)
     if not 0 <= parsed <= MAX_SAFE_INTEGER:
         raise EncodingError(f"integer is outside 0..{MAX_SAFE_INTEGER}")
@@ -52,32 +59,59 @@ def _object_from_pairs(pairs: list[tuple[str, JsonValue]]) -> JsonObject:
     return result
 
 
-def _validate_json_value(value: object, path: str = "$") -> None:
-    if value is None or type(value) in (bool, str):
-        return
-    if type(value) is int:
-        if not 0 <= value <= MAX_SAFE_INTEGER:
-            raise EncodingError(f"integer at {path} is outside 0..{MAX_SAFE_INTEGER}")
-        return
-    if type(value) is float:
-        raise EncodingError(f"floating-point value at {path} is not allowed")
-    if type(value) is list:
-        for index, item in enumerate(value):
-            _validate_json_value(item, f"{path}[{index}]")
-        return
-    if type(value) is dict:
-        for key, item in value.items():
-            if type(key) is not str:
-                raise EncodingError(f"object member name at {path} is not a string")
-            _validate_json_value(item, f"{path}.{key}")
-        return
-    raise EncodingError(f"unsupported value at {path}: {type(value).__name__}")
+def _validate_json_string(value: str, path: str) -> int:
+    if any(0xD800 <= ord(character) <= 0xDFFF for character in value):
+        raise EncodingError(f"unpaired Unicode surrogate at {path}")
+    size = len(value.encode("utf-8"))
+    if size > MAX_JSON_BYTES:
+        raise EncodingError(f"string at {path} exceeds the JSON byte limit")
+    return size
+
+
+def _validate_json_value(value: object) -> None:
+    stack: list[tuple[object, int, str]] = [(value, 0, "$")]
+    nodes = 0
+    string_bytes = 0
+    while stack:
+        item, depth, path = stack.pop()
+        nodes += 1
+        if nodes > MAX_JSON_NODES:
+            raise EncodingError("JSON structure exceeds the node limit")
+        if depth > MAX_JSON_DEPTH:
+            raise EncodingError("JSON structure exceeds the depth limit")
+        if item is None or type(item) is bool:
+            continue
+        if type(item) is str:
+            string_bytes += _validate_json_string(item, path)
+        elif type(item) is int:
+            if not 0 <= item <= MAX_SAFE_INTEGER:
+                raise EncodingError(f"integer at {path} is outside 0..{MAX_SAFE_INTEGER}")
+        elif type(item) is float:
+            raise EncodingError(f"floating-point value at {path} is not allowed")
+        elif type(item) is list:
+            if len(item) > MAX_JSON_NODES - nodes - len(stack):
+                raise EncodingError("JSON structure exceeds the node limit")
+            stack.extend((child, depth + 1, f"{path}[{index}]") for index, child in enumerate(item))
+        elif type(item) is dict:
+            if len(item) > MAX_JSON_NODES - nodes - len(stack):
+                raise EncodingError("JSON structure exceeds the node limit")
+            for key, child in item.items():
+                if type(key) is not str:
+                    raise EncodingError(f"object member name at {path} is not a string")
+                string_bytes += _validate_json_string(key, path)
+                stack.append((child, depth + 1, f"{path}.{key}"))
+        else:
+            raise EncodingError(f"unsupported value at {path}: {type(item).__name__}")
+        if string_bytes > MAX_JSON_BYTES:
+            raise EncodingError("JSON strings exceed the byte limit")
 
 
 def load_strict_json(raw: bytes | str) -> JsonValue:
     """Parse one JSON value while rejecting duplicates and unsafe number forms."""
 
     if type(raw) is bytes:
+        if len(raw) > MAX_JSON_BYTES:
+            raise EncodingError("JSON exceeds the byte limit")
         try:
             text = raw.decode("utf-8", errors="strict")
         except UnicodeDecodeError as exc:
@@ -86,6 +120,12 @@ def load_strict_json(raw: bytes | str) -> JsonValue:
         text = raw
     else:
         raise TypeError("raw JSON must be bytes or str")
+
+    try:
+        if len(text.encode("utf-8")) > MAX_JSON_BYTES:
+            raise EncodingError("JSON exceeds the byte limit")
+    except UnicodeEncodeError as exc:
+        raise EncodingError("JSON contains an unpaired Unicode surrogate") from exc
 
     try:
         value = json.loads(
@@ -97,7 +137,7 @@ def load_strict_json(raw: bytes | str) -> JsonValue:
         )
     except EncodingError:
         raise
-    except json.JSONDecodeError as exc:
+    except (json.JSONDecodeError, RecursionError) as exc:
         raise EncodingError("invalid JSON") from exc
 
     _validate_json_value(value)
@@ -109,9 +149,12 @@ def canonical_json_bytes(value: JsonValue) -> bytes:
 
     _validate_json_value(value)
     try:
-        return rfc8785.dumps(value)
+        encoded = rfc8785.dumps(value)
     except rfc8785.CanonicalizationError as exc:
         raise EncodingError("value cannot be canonicalized with RFC 8785") from exc
+    if len(encoded) > MAX_JSON_BYTES:
+        raise EncodingError("canonical JSON exceeds the byte limit")
+    return encoded
 
 
 def b64url_encode(value: bytes) -> str:
