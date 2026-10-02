@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import base64
 import http.client
+import os
 import re
 import shutil
 import ssl
@@ -124,7 +125,10 @@ def test_tls_server_runs_the_full_as_flow(ledger, dsn, tmp_path):
 
     as_key = generate_sm2_private_key()
     planner_key = generate_sm2_private_key()
-    (tmp_path / "as-sign-key.pem").write_bytes(_pem_private(as_key))
+    as_key_path = tmp_path / "as-sign-key.pem"
+    as_key_path.write_bytes(_pem_private(as_key))
+    if os.name != "nt":
+        as_key_path.chmod(0o600)
     spki = serialize_sm2_public_key(planner_key.public_key())
     document = {
         "id": DID,
