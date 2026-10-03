@@ -4,7 +4,9 @@
 
 目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
 
-> 当前状态：A1 已有历史阶段验收；A2.1 执行/恢复核心与 B 的 SM2/SM3、授权码、两级委托、登录/同意、撤销、AS HTTPS、DID/登记绑定、回执验证 SDK 已实现。当前 B→A 接入是**进程内真实验签→执行**与只读回执投影，整体仍为 **PARTIAL / NOT_ACCEPTED，等待补正后的独立复验**。公开调用/最终动态查询（A2.2）、持续签名发布/证据导出（A2.3）、独立锚定与完整演示（A3）尚未完成，outbox 保持 `PENDING`。原 A1 验收见 [历史记录](tasks/A1-review-r4.md)；当前限制、未关闭问题和复现实测见 [B 修补报告](tasks/B-remediation-report.md)，不得把局部测试或实现状态当成整体验收。
+> 本轮补正（2026-10-04）：结果变体与工具绑定、统一 256 项边界、离线完整路径 grant 唯一性、P13 线程 oracle 和 future-token 分支已实施；v1实施交付时五项均为 **FIXED_PENDING_REVIEW**。实施证据与完整自查见 [implementation-r1](tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)，后续验收状态见 [本轮控制状态](tasks/workflow/runs/local-remediation-20261004/state.json)。整体项目仍为 **PARTIAL**；后续接受与合并结论以本轮控制状态及主控关联的正式报告为准，须 fresh reviewer 完整复验后由主控决定。文档同步见 [implementation-docs-r1](tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。公开调用/最终动态查询（A2.2）、持续签名发布（A2.3）、独立锚定及完整演示（A3）尚未完成，outbox 保持 `PENDING`。局部测试通过不代表阶段验收。
+
+`product-manifest.json` 保留 2026-10-03 原始交付的 186 项文件哈希；本轮文档已更新，该清单仅用于核对历史传输快照，不是当前工作树清单。旧云端内部报告与原始证据没有随此分支完整交付，不能把旧工作流 `state.json` 的 A2.1 `ACCEPTED` 当作 B 整合放行。
 
 ## 1. 项目目标
 
@@ -32,7 +34,7 @@
 | `procurement.order.create` | 按可信报价创建模拟订单 |
 | `notification.template.send` | 向批准接收方发送固定模板模拟通知 |
 
-首版固定 CNY 币种、商品与报价数据、收货对象；金额为整数分。采购金额由可信服务依据报价版本和数量计算，不信任代理申报金额。
+首版固定 CNY 币种、商品与报价数据、收货对象；金额为整数分。订单参数、持久报价快照和结果共用最多 256 项边界，超过该上限在接受前拒绝。采购金额由可信服务依据报价版本和数量计算，不信任代理申报金额。
 
 退款仅作为主线稳定后的可选轻量适配。不会接入真实支付、训练大模型、自研密码算法、构建完整采购平台或引入区块链。模型接口可替换，无模型 API 时使用确定性代理进行复现。
 
@@ -369,8 +371,8 @@ exp 边界求一个共同可能的历史接受时刻，且不晚于已签 receip
 ### 非 editable wheel 复现
 
 构建后端固定 `setuptools==80.9.0`，仅构建 wheel。先从官方 PyPI 核对版本、
-许可与 SHA256；本轮使用已有 uv 前端的隔离 PEP517 构建，无需另加 build/wheel
-运行包。示例中的目录均应为本轮独占的新目录：
+许可与 SHA256；以下为 uv 前端的隔离 PEP517 复现示例，v1实际构建和安装
+命令以实施报告为准。示例中的目录均应为自有独占的新目录：
 
 ```bash
 uv build --wheel --python python3.11 --out-dir "$RUN_WHEEL_DIR" .
@@ -380,8 +382,8 @@ uv pip install --python "$RUN_WHEEL_VENV/bin/python" --no-deps "$RUN_WHEEL_DIR"/
 uv pip check --python "$RUN_WHEEL_VENV/bin/python"
 ```
 
-本轮源码验证也使用新建的锁定 venv：先安装同一 wheel 以提供发行元数据，再仅在
-源码运行中显式选择 `src`。这是源码测试，不计入非 editable wheel 的隔离验证：
+以下是源码模式复现示例；v1交付的实际命令与普通非editable安装方式以实施报告为准。
+源码模式在新建锁定venv安装wheel提供发行元数据，再显式选择 `src`。这是源码测试，不计入非 editable wheel 的隔离验证：
 
 ```bash
 uv venv --python python3.11 "$RUN_SOURCE_VENV"
@@ -397,7 +399,7 @@ unset PYTHONPATH
 该目录不含 `src` 或复制的 `agent_guard` 包，父进程及每个 Python 子进程都须
 证明从安装的 wheel 导入。wheel 包含全部 common/A/B/lineage SQL；可通过
 `AGENT_GUARD_MIGRATIONS_DIR` 指定可信完整迁移目录，不从任意 cwd 猜目录。
-具体构建输入、依赖元数据、wheel成员/哈希、实跑命令和结果见当前修补报告。
+具体构建输入、依赖元数据、wheel成员/哈希、实跑命令和结果见 [本轮实施报告](tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)。
 
 setuptools 80.9.0 的官方元数据列出 CVE-2026-59890：macOS 非 ASCII 文件名
 规范化差异可能绕过 sdist 的 MANIFEST 排除。本轮在 Linux 从明确干净输入构建
@@ -435,6 +437,6 @@ A 负责可信执行与集成；B 负责密码授权及审计核心；C 在后�
 
 OAuth/OIDC、SM2/SM3、Agent间委托与DID的唯一当前设计见 [实施及接口契约](docs/oauth-oidc-sm2-mvp.md)。不再并行维护父holder直接签发子凭证的旧路线。老师是否要求实改liboauth2本体仍需确认，该问题影响实现选型，不允许绕开既定安全契约。
 
-从最新 `main` 创建短期任务分支，提交 PR，CI通过后Squash merge。队友PR须由CODEOWNERS指定的仓库负责人 `Qdcchh` 审核批准；负责人自己的PR免审批，但合并前仍须确认CI通过、分支最新且讨论解决。当前通过管理员豁免实现负责人的免审批，队友仅有Write权限；若未来增加其他管理员，该豁免同样适用，须重新审视权限策略。禁止强推或删除main。
+从最新 `main` 创建短期任务分支，提交 PR，CI通过后Squash merge。队友PR须由CODEOWNERS指定的仓库负责人 `Qdcchh` 审核批准；负责人自己的PR免审批，但合并前仍须确认CI通过、分支最新且讨论解决。历史仓库配置曾通过管理员豁免实现负责人的免审批；发布时由主控核实实际保护规则。本轮按用户授权的正常Git门处理，不自批或管理员绕过。禁止强推或删除main。
 
 修改前先阅读 [AGENT.md](AGENT.md)、[实施与接口](docs/oauth-oidc-sm2-mvp.md)、[安全模型](docs/security-model.md)和[验收矩阵](docs/acceptance.md)。设计文档不代表实现完成；选型和契约变更需先明确边界、更新测试与文档，再进入真实实现。

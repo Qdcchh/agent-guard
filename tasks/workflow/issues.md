@@ -1,5 +1,48 @@
 # 问题与独立复验账本
 
+## 2026-10-04 当前权威闭环：fresh r2 ACCEPTED
+
+[完整review-r2](runs/local-remediation-20261004/review-r2.md)和[主控接受记录](runs/local-remediation-20261004/acceptance.md)：67项全PASS、60项独立运行，247项候选首尾一致，303证据hash经主控读回；声明范围内已知阻断清零，整体PARTIAL。以下旧轮记录保留当时状态，不覆盖本段。
+
+**CLOSED_REVIEWED_R2**：A21-R1-OUTCOME、BR-FINAL-ITEM-LIMIT、BR-FINAL-RECEIPT-DUPLICATE、BR-FINAL-P13-ORACLE、BR-FINAL-RECEIPT-TEST-BRANCH、BR-FINAL-P13-TIMEOUT-CONTROL、LOCAL-DOC-CLEAN-CHECKOUT。最后一项P13残余经单阻塞参与者修正、独立60调度/负控及多线程/真实PG全回归确认；未删弱义务。LOCAL-DOC-LINK修正已在干净检出docs复验；LOCAL-WORKFLOW-EVIDENCE当前67/60义务按已批准适配闭合，缺失云端原件与旧P11未知根因限制继续保留，不冒称恢复。
+
+Git发布与main合并仍须满足必需CI及正常独立审核；此关闭不授权后段开发、部署或保护绕过。
+
+## 2026-10-04 r3交付待新独立验收
+
+[implementation-r3](runs/local-remediation-20261004/implementation-r3.md)已停写，BR-FINAL-P13-TIMEOUT-CONTROL为FIXED_PENDING_REVIEW。只改变超时负控为单真实阻塞参与者，其他多线程正负控制及P13四组各10轮保留；60控制、6 oracle、952非集成、P13/Ruff/diff均实施自查通过。主控核63证据hash、单文件范围与Git暂存/HEAD不变；不以自查关闭问题，待fresh完整67/60复核。
+
+## 2026-10-04 窄补正 r2 后残余与 r3
+
+[implementation-r2](runs/local-remediation-20261004/implementation-r2.md) 保留当时自查交付。主控读回指出单线程延后变体，[diagnostic-r2](runs/local-remediation-20261004/diagnostic-r2.md) 在独占Python3.11中10/10确认同一 BR-FINAL-P13-TIMEOUT-CONTROL 残余：peer先超时，blocked无法进入。仍 OPEN_CONFIRMED，不启动r2候选的完整验收；按[correction-r3](runs/local-remediation-20261004/correction-r3.md)单文件职责隔离补正，保留多线程其他负控及P13整组义务。未发现新的业务源缺陷。
+
+## 2026-10-04 本轮独立 r1：原缺陷已修，新增负控调度问题
+
+[完整 review-r1](runs/local-remediation-20261004/review-r1.md) 对241项冻结候选独立完成67项/60项运行义务，64 PASS/3 FAIL，结论 NOT_ACCEPTED。source与严格锁定构建的非editable wheel各952非集成+1388 PG通过，原始失败、等价探针、环境编排偏差及资源清理均保留。请求 gpt-6-astra/high，后台有效元数据 UNKNOWN，使用真人已批准的有限适配。
+
+- **CLOSED_REVIEWED_R1**：A21-R1-OUTCOME、BR-FINAL-ITEM-LIMIT、BR-FINAL-RECEIPT-DUPLICATE、BR-FINAL-P13-ORACLE、BR-FINAL-RECEIPT-TEST-BRANCH、LOCAL-DOC-CLEAN-CHECKOUT。原五项触发和变体已独立实跑；不代表整个候选已接受。
+- **BR-FINAL-P13-TIMEOUT-CONTROL / P2 / OPEN_CONFIRMED**：`tests/unit/test_execution_concurrency_oracle.py:70-71` 在50ms有界timeout后错误要求blocked回调已开始。受控延迟启动10/10正式断言假失败；oracle正确报timeout，未发现业务绕过或假PASS。影响WF-QUALITY-CHECKS、B-15-CONCURRENCY-TEST-EFFICACY、B-17-B-SUITE-QUALITY。按[窄补正r2](runs/local-remediation-20261004/correction-r2.md)建立确定性进入/启动同步，保留所有超时/完整性/异常/清理断言，再交fresh reviewer整段复验。
+- **LOCAL-WORKFLOW-EVIDENCE / VERIFIED_FOR_R1**：当前67/60义务和历史等价证据已独立核验；缺失原云端日志仍未取回，不冒称原件，旧一次P11异常根因不可追溯的历史风险保留。
+
+下面各段为对应当时版本的历史记录；当前优先读取本段和本轮state。
+
+## 2026-10-04 当前 B 整合候选补记
+
+本段只追加当前候选的质量发现，不改写下文历史 r8 关闭证据。详见 [本地质量复核](runs/local-quality-20261004/review.md)。基线 HEAD `2051b40` **NOT_ACCEPTED**。用户随后批准修复与运行适配；[本轮包审](runs/local-remediation-20261004/package-review-r1.md) 已 PACKAGE_READY，当前实施进行中，尚无正式 issue 关闭。
+
+| ID | 当前候选状态 | 本轮证据 |
+| --- | --- | --- |
+| A21-R1-OUTCOME | REOPENED_LOCAL_DIAGNOSTIC / 阻断 | 订单、通知 read 形状误 SETTLE 两项纯函数失败；不冒充 PG 生命周期实跑 |
+| BR-FINAL-ITEM-LIMIT | OPEN / 阻断 | 257 项 params 未拒绝而持久快照拒绝；256 正控制通过 |
+| BR-FINAL-P13-ORACLE | OPEN_STATIC_CONFIRMED / 阻断 | worker 异常漏收集及错误码未限定；本轮未跑并发负控 |
+| BR-FINAL-RECEIPT-DUPLICATE | OPEN_STATIC_CONFIRMED / 阻断 | 离线祖先路径未检查全路径 grant 唯一性；本轮未复跑真实签名反例 |
+| BR-FINAL-RECEIPT-TEST-BRANCH | OPEN_STATIC_CONFIRMED / 覆盖缺口 | future-token 被通用 future 前缀分支遮蔽 |
+| LOCAL-DOC-LINK | 文档已修正，验证见当前报告 | README 原本引用未交付的 B 修补报告 |
+| LOCAL-DOC-CLEAN-CHECKOUT | FIXED_PENDING_REVIEW | 文档收尾新增验收页链接指向Git忽略artifacts，本地存在检查不足；须改可交付入口并在不含artifacts的精确干净副本实跑docs检查，见本轮correction-docs-r1 |
+| LOCAL-WORKFLOW-EVIDENCE | ADAPTATION_GRANTED / VERIFICATION_PENDING | 正式包和包审已完成，用户已批准有限运行适配；历史原件/缺失证据的等价补齐与完整独立运行仍待核验 |
+
+下方“当前权威状态”等措辞仅在原 A2.1 历史阶段范围内有效，不能覆盖此 B 整合候选的未关闭问题。
+
 状态日期：2026-10-01。检查点一C1—C6设计/类型补正已被A2-review-ckpt1-r2.md技术放行；这些主体行为尚未实现，已作为A2-CKPT1-OBL01—06保留在A2.1-core任务和必需矩阵，不能因历史设计放行而省略实现复验。
 
 ## 当前记录

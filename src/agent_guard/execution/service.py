@@ -194,7 +194,11 @@ class ExecutionService:
     # ------------------------------------------------------------- accept
 
     def accept_invocation(
-        self, verified: VerifiedInvocation, snapshot: TrustedPermissionSnapshot, *, binding=None
+        self,
+        verified: VerifiedInvocation,
+        snapshot: TrustedPermissionSnapshot,
+        *,
+        binding=None,
     ) -> AcceptResult:
         """Reserve budget for one invocation through the full A2 accept flow."""
         tool = parse_tool_id(verified.tool_id)
@@ -266,7 +270,13 @@ class ExecutionService:
             row = exec_store.fetch_operation(conn, operation_id)
         if row is None:
             return None
-        return (row.tenant_id, row.task_id, row.grant_id, row.holder_client_id, row.holder_kid)
+        return (
+            row.tenant_id,
+            row.task_id,
+            row.grant_id,
+            row.holder_client_id,
+            row.holder_kid,
+        )
 
     def _find_candidate(self, verified: VerifiedInvocation):
         with self._read() as conn:
@@ -510,7 +520,8 @@ class ExecutionService:
                     or task.root_grant_id != path[0].grant_id
                 ):
                     raise ExecutionError(
-                        ExecutionErrorCode.ILLEGAL_TRANSITION, "operation path root mismatch"
+                        ExecutionErrorCode.ILLEGAL_TRANSITION,
+                        "operation path root mismatch",
                     )
                 # lock-after re-check of the immutable location
                 locked = exec_store.lock_operation(conn, operation_id)
@@ -633,7 +644,10 @@ class ExecutionService:
         if effect_id is None:
             if outcome.effect_ref is not None:
                 return None
-            if not isinstance(record, results.ReadResult):
+            if not isinstance(record, results.ReadResult) or outcome.tool_id not in (
+                ToolId.REQUEST_READ,
+                ToolId.DOCUMENT_READ,
+            ):
                 return None
         else:
             if outcome.effect_ref != effect_id:
@@ -701,7 +715,8 @@ class ExecutionService:
                 grants = ledger_store.lock_grants_root_to_leaf(conn, [g.grant_id for g in path])
                 if task.root_grant_id != grants[0].grant_id:
                     raise ExecutionError(
-                        ExecutionErrorCode.ILLEGAL_TRANSITION, "operation path root mismatch"
+                        ExecutionErrorCode.ILLEGAL_TRANSITION,
+                        "operation path root mismatch",
                     )
                 current = exec_store.assert_terminal_write_allowed(
                     conn,
@@ -893,7 +908,14 @@ def strict_snapshots_equal(left, right) -> bool:
         return left is right
     if type(left) is not type(right):
         return False
-    for name in ("quote_id", "quote_version", "supplier_id", "currency", "total_fen", "items"):
+    for name in (
+        "quote_id",
+        "quote_version",
+        "supplier_id",
+        "currency",
+        "total_fen",
+        "items",
+    ):
         if not hasattr(left, name) or not hasattr(right, name):
             return False
     if type(left.total_fen) is not int or isinstance(left.total_fen, bool):
@@ -914,7 +936,11 @@ def strict_snapshots_equal(left, right) -> bool:
     if len(left.items) != len(right.items):
         return False
     for a, b in zip(left.items, right.items, strict=False):
-        if (a.sku, a.quantity, a.unit_price_fen) != (b.sku, b.quantity, b.unit_price_fen):
+        if (a.sku, a.quantity, a.unit_price_fen) != (
+            b.sku,
+            b.quantity,
+            b.unit_price_fen,
+        ):
             return False
     return True
 
@@ -965,7 +991,14 @@ def verify_accept_facts(operation, events, *, db_path: tuple[str, ...]) -> None:
         quote_snapshot = snapshot_from_bytes(operation.quote_snapshot)
     except ExecutionError as exc:
         raise ExecutionError(fail, f"accepted material is not usable: {exc.code.value}") from exc
-    except (RecursionError, ValueError, TypeError, AttributeError, KeyError, OverflowError) as exc:
+    except (
+        RecursionError,
+        ValueError,
+        TypeError,
+        AttributeError,
+        KeyError,
+        OverflowError,
+    ) as exc:
         raise ExecutionError(
             fail, f"accepted material is not decodable: {type(exc).__name__}"
         ) from exc
@@ -1041,5 +1074,6 @@ def verify_accept_facts(operation, events, *, db_path: tuple[str, ...]) -> None:
             )
             if got != want:
                 raise ExecutionError(
-                    fail, f"{event.phase} event node deltas do not match the accepted cost"
+                    fail,
+                    f"{event.phase} event node deltas do not match the accepted cost",
                 )

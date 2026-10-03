@@ -13,10 +13,18 @@ from dataclasses import dataclass
 
 from tongsuopy.crypto.asymciphers.ec import EllipticCurvePublicKey
 
-from agent_guard.authorization.claims import ClaimsError, validate_access_claims, validate_child
+from agent_guard.authorization.claims import (
+    ClaimsError,
+    validate_access_claims,
+    validate_child,
+)
 from agent_guard.authorization.proof import ProofVerificationError, verify_ag_proof
 from agent_guard.authorization.verifier import VerificationError, _validate_intent
-from agent_guard.contracts.encoding import MAX_SAFE_INTEGER, EncodingError, canonical_json_bytes
+from agent_guard.contracts.encoding import (
+    MAX_SAFE_INTEGER,
+    EncodingError,
+    canonical_json_bytes,
+)
 from agent_guard.contracts.ledger import INVOKE_ENDPOINT
 from agent_guard.contracts.ledger_changes import canonical_ledger_changes_bytes
 from agent_guard.crypto.sm import (
@@ -193,7 +201,9 @@ def verify_receipt_bundle(bundle: object, *, trust: ReceiptTrust) -> VerifiedRec
         receipt_jws = _ascii_jws(data["receipt_jws"], "receipt_jws")
         receipt = _object(
             verify_compact_jws(
-                receipt_jws, expected_type="ag-receipt+jwt", trusted_keys=trust.gateway_keys
+                receipt_jws,
+                expected_type="ag-receipt+jwt",
+                trusted_keys=trust.gateway_keys,
             ),
             _RECEIPT_FIELDS,
             "receipt",
@@ -217,7 +227,13 @@ def verify_receipt_bundle(bundle: object, *, trust: ReceiptTrust) -> VerifiedRec
             raise ReceiptVerificationError("unsupported tool version")
         _integer(receipt["iat"], "receipt iat")
         _integer(receipt["amount_fen"], "receipt amount")
-        for name in ("token_sm3", "proof_sm3", "intent_sm3", "result_sm3", "ledger_sm3"):
+        for name in (
+            "token_sm3",
+            "proof_sm3",
+            "intent_sm3",
+            "result_sm3",
+            "ledger_sm3",
+        ):
             _text(receipt[name], name)
 
         token = _ascii_jws(data["token_jws"], "token_jws")
@@ -253,9 +269,13 @@ def verify_receipt_bundle(bundle: object, *, trust: ReceiptTrust) -> VerifiedRec
             raise ReceiptVerificationError("no common historical authorization time")
         path = []
         previous = None
+        grant_ids: set[str] = set()
         for payload in ancestor_payloads:
             claims = validate_access_claims(payload, issuer=trust.issuer, now=earliest)
             raw = claims.raw
+            if raw["ag_grant_id"] in grant_ids:
+                raise ReceiptVerificationError("duplicate grant in ancestor path")
+            grant_ids.add(raw["ag_grant_id"])
             kid = raw["ag_cnf"]["kid"]
             registration = trust.historical_registrations.get(kid)
             holder_key = trust.holder_keys.get(kid)

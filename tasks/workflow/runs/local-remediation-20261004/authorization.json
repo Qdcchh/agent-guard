@@ -1,0 +1,9 @@
+{
+  "stage": "B-remediation-integration-local-r3",
+  "source": "Visible user messages in current chat; native message IDs not exposed",
+  "request": "那请你修改问题后再度复核，按照工作流，最后弄成一个没有任何缺陷的版本，最后合并到main分支中去，有任何问题随时问我",
+  "runtime_adaptation_reply": "批准本轮适配，继续修复与复核",
+  "status": "GRANTED",
+  "runtime_addendum_sha256": "943e23ec88f7c582ab51eff625ac4bc012ceeadd587d0bca9b4821e47b792701",
+  "merge_condition": "Full acceptance and normal remote protection requirements; no forced merge"
+}

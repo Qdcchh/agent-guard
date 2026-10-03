@@ -4,7 +4,7 @@
 
 状态：实施设计草案，不是已有功能或标准兼容认证。面向 A、B 两人开发；C 不承担初版关键路径。本文中的域名、令牌和密钥均为示意，不含可用凭据。
 
-阅读顺序：第1—4节理解技术，第5—7节确定实现与分工，第8—10节据此联调。事务、状态机及安全边界统一在 [安全模型](security-model.md) 维护；测试清单统一在 [验收矩阵](acceptance.md) 维护。当前只保留GM-MVP-1一条设计路线，尚无业务实现。
+阅读顺序：第1—4节理解技术，第5—7节确定实现与分工，第8—10节据此联调。事务、状态机及安全边界统一在 [安全模型](security-model.md) 维护；测试清单统一在 [验收矩阵](acceptance.md) 维护。当前只保留GM-MVP-1一条设计路线。A1/A2.1 和 B 整合已有代码；本文接口示意及日程仍是目标设计，不代表全部已验收。本轮 v1 实施交付时五项修补均标记 FIXED_PENDING_REVIEW，产品自查不是正式接受；具体命令、原失败、JUnit 和67项/60运行义务见 [v1实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)。后续验收与合并结论以 [本轮控制状态](../tasks/workflow/runs/local-remediation-20261004/state.json) 及主控关联的正式报告为准；本文档同步证据见 [文档实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。整体项目仍 PARTIAL：A2.2公开调用/最终动态查询、A2.3持续签名发布、A3独立锚定/导出/完整采购演示/规模对照实验尚未完成，outbox保持 PENDING。 修补前问题保留在 [历史本地质量复核](../tasks/workflow/runs/local-quality-20261004/review.md)。
 
 ## 1. 先说明结论
 
@@ -276,7 +276,7 @@ Access Token 示意（时间及摘要为说明值，不能直接用于调用）�
 
 约束模式补充（D1据此形成机器模式）：`ag_constraints`中的七个集合字段均必需，类型为不重复的ASCII字符串数组；`max_quantity`为非负整数。集合缺失是格式错误，空集合表示不允许任何对应资源，不表示无限制；只读授权可用0作为数量上限。所有子集合须包含于父集合，子max_quantity不得增加。报价版本采用固定 `quote_id@version` 键，quote_id和version禁止含`@`，版本使用十进制正整数的无前导零字符串。
 
-`max_quantity`限制每笔订单中每个SKU的数量，不宣称任务累计件数限制；若需累计件数，另增账本维度。items至少一项且拒绝重复SKU；每个quantity必须为正整数且不超过max_quantity。可信数据检查申请与租户/任务、文档与申请、报价与申请/SKU/供应商的关联；供应商由批准的报价版本确定，不允许请求替换。通知operation_id须属于该任务且当前授权可访问。四类工具的params字段均必需，拒绝额外字段；不能用客户端声称的关联替代可信查询。
+`max_quantity`限制每笔订单中每个SKU的数量，不宣称任务累计件数限制；若需累计件数，另增账本维度。items为1—256项且拒绝重复SKU；参数、持久报价快照和结果共用 `MAX_ORDER_ITEMS=256`；每个quantity必须为正整数且不超过max_quantity。可信数据检查申请与租户/任务、文档与申请、报价与申请/SKU/供应商的关联；供应商由批准的报价版本确定，不允许请求替换。通知operation_id须属于该任务且当前授权可访问。四类工具的params字段均必需，拒绝额外字段；不能用客户端声称的关联替代可信查询。
 
 ### 8.4 DID不是“字符串贴标签”
 
@@ -482,7 +482,7 @@ Content-Type: application/json
 | --- | --- | --- |
 | procurement.request.read | request_id | 申请属于当前租户/任务且在授权集合内 |
 | procurement.document.read | request_id, document_id | 文档在授权集合且与该申请可信关联，不接受任意URL/路径 |
-| procurement.order.create | request_id, quote_id, quote_version, items[{sku, quantity}], delivery_id | 受批准报价、SKU、数量、收货对象约束，检查8.3节的关联与重复SKU规则 |
+| procurement.order.create | request_id, quote_id, quote_version, items[{sku, quantity}], delivery_id | items为1—256项；受批准报价、SKU、数量、收货对象约束，检查8.3节的关联与重复SKU规则 |
 | notification.template.send | template_id, recipient_id, operation_id | 模板/接收方在批准集合，操作属于当前任务且可访问，无任意消息载荷 |
 
 所有tool_version固定字符串 `1`。可信服务按已绑定报价计算金额，禁止代理提供权威总价。只读及通知金额成本为0，新操作次数成本为1。
@@ -564,7 +564,7 @@ OAuth不替代业务一致性。A/B共同实现 [安全模型](security-model.md
 
 ## 12. 验收入口、演示与剩余工作
 
-初版M1—M13与成熟版回归、性能、交付清单统一维护在 [验收矩阵](acceptance.md)。当前全部功能项待实现，不把文档审查或骨架CI通过当作安全验收通过。
+初版M1—M13与成熟版回归、性能、交付清单统一维护在 [验收矩阵](acceptance.md)。当前已有阶段实现，但完整项目仍 PARTIAL；不得把文档审查、局部测试或历史阶段通过当作当前整体验收通过。
 
 建议五分钟演示：用户确认预算 → 显示三代理与DID密钥绑定 → 正常采购 → 复制token盗用失败 → 并发争抢预算 → 模拟响应丢失和恢复 → 导出并验证回执。
 

@@ -13,7 +13,7 @@ from agent_guard.authorization.permission_snapshot import PermissionSnapshotProv
 from agent_guard.authorization.proof import sign_ag_proof
 from agent_guard.authorization.verifier import InvocationVerifier
 from agent_guard.contracts.encoding import canonical_json_bytes, load_strict_json
-from agent_guard.contracts.execution import ExecutionError
+from agent_guard.contracts.execution import ExecutionError, ExecutionErrorCode
 from agent_guard.contracts.ledger import INVOKE_ENDPOINT, AcceptDisposition, LedgerError
 from agent_guard.crypto.sm import generate_sm2_private_key, sign_compact_jws
 from agent_guard.evidence.receipt import ReceiptTrust, verify_receipt_bundle
@@ -23,7 +23,13 @@ from agent_guard.execution.verified import VerifiedExecution
 from agent_guard.ledger.service import ExecutionLedger
 from agent_guard.tools.downstream import MockDownstream
 from tests.fixtures.execution import DOWNSTREAM_SECRET, build_catalog
-from tests.integration.test_exchange_service import ISSUER, TENANT, _exchange, _form, _root
+from tests.integration.test_exchange_service import (
+    ISSUER,
+    TENANT,
+    _exchange,
+    _form,
+    _root,
+)
 
 pytestmark = pytest.mark.integration
 TOOLS = (
@@ -101,7 +107,11 @@ class SignedEnv:
 
 def signed_env(dsn, downstream_dsn, *, leaf_ttl=100):
     as_key, keys, registrations, exchanges, root = _root(
-        dsn, approved_overrides={"scope": "openid " + " ".join(TOOLS), "constraints": CONSTRAINTS}
+        dsn,
+        approved_overrides={
+            "scope": "openid " + " ".join(TOOLS),
+            "constraints": CONSTRAINTS,
+        },
     )
     form = _form(as_key, root.access_token)
     form["scope"] = " ".join(TOOLS)
@@ -224,8 +234,6 @@ def test_signed_chain_all_four_tools_and_real_receipt(ledger, dsn, downstream_ds
 
 @pytest.mark.parametrize("tool", TOOLS[2:])
 def test_projection_rejects_read_shaped_nonread_success(ledger, dsn, downstream_dsn, tool):
-    from agent_guard.execution.receipt_projection import ReceiptProjectionError
-
     env = signed_env(dsn, downstream_dsn)
     order = env.adapter.accept(env.bundle())
     assert env.service.run_operation(order.operation_id).status == "SUCCEEDED"
@@ -254,13 +262,18 @@ def test_projection_rejects_read_shaped_nonread_success(ledger, dsn, downstream_
                 "UPDATE ag_receipt_outbox SET result_bytes=%s WHERE operation_id=%s",
                 (
                     canonical_json_bytes(
-                        {"kind": "read", "operation_id": operation.operation_id, "tool_id": tool}
+                        {
+                            "kind": "read",
+                            "operation_id": operation.operation_id,
+                            "tool_id": tool,
+                        }
                     ),
                     operation.operation_id,
                 ),
             )
-            with pytest.raises(ReceiptProjectionError):
+            with pytest.raises(ExecutionError) as exc:
                 project_receipt(conn, operation.operation_id)
+            assert exc.value.code is ExecutionErrorCode.DOWNSTREAM_INCONSISTENT
         assert project_receipt(conn, operation.operation_id) == original
         assert (
             conn.execute("SELECT * FROM ag_receipt_outbox ORDER BY operation_id").fetchall()
@@ -277,14 +290,18 @@ def test_tampered_bundle_fails_without_new_accept(ledger, dsn, downstream_dsn, c
     if change == "scope":
         b = replace(b, permissions=replace(b.permissions, scope=()))
     if change == "chain":
-        b = replace(b, permissions=replace(b.permissions, chain_grant_ids=(b.invocation.grant_id,)))
+        b = replace(
+            b,
+            permissions=replace(b.permissions, chain_grant_ids=(b.invocation.grant_id,)),
+        )
     if change == "subject":
         b = replace(b, invocation=replace(b.invocation, subject="other-user"))
     if change == "proof":
         b = replace(b, invocation=replace(b.invocation, proof_jti="forged-jti"))
     if change == "source":
         modified = replace(
-            b.permissions, chain=tuple(replace(c, max_quantity=5) for c in b.permissions.chain)
+            b.permissions,
+            chain=tuple(replace(c, max_quantity=5) for c in b.permissions.chain),
         )
         b = replace(b, permissions=modified, source=replace(b.source, snapshot=modified))
     with psycopg.connect(dsn) as conn:
@@ -306,7 +323,11 @@ def test_canonical_query_real_verification_and_zero_budget_effect(ledger, dsn, d
 
     env = signed_env(dsn, downstream_dsn)
     now = int(time.time())
-    request = {"profile": "GM-MVP-1", "task_id": "task-001", "operation_id": "unowned-operation"}
+    request = {
+        "profile": "GM-MVP-1",
+        "task_id": "task-001",
+        "operation_id": "unowned-operation",
+    }
     proof = sign_ag_proof(
         env.keys["executor"],
         kid=env.registrations[(TENANT, "agent-executor")].kid,
@@ -341,7 +362,8 @@ def test_canonical_query_real_verification_and_zero_budget_effect(ledger, dsn, d
 
 
 @pytest.mark.parametrize(
-    "mutation", ["seq", "duplicate", "truncated", "reorder", "phase", "delta", "unknown", "result"]
+    "mutation",
+    ["seq", "duplicate", "truncated", "reorder", "phase", "delta", "unknown", "result"],
 )
 def test_persisted_projection_refuses_adversarial_material(ledger, dsn, downstream_dsn, mutation):
     import json
@@ -404,7 +426,11 @@ def test_real_signed_ancestor_mismatch_is_rejected_before_staging(
 ):
     from agent_guard.authorization.claims import ClaimsError
     from agent_guard.authorization.permission_snapshot import PermissionSnapshotError
-    from agent_guard.crypto.sm import InvalidSm2Signature, sm3_b64url, verify_compact_jws
+    from agent_guard.crypto.sm import (
+        InvalidSm2Signature,
+        sm3_b64url,
+        verify_compact_jws,
+    )
 
     env = signed_env(dsn, downstream_dsn)
     with psycopg.connect(dsn) as conn:
@@ -418,7 +444,9 @@ def test_real_signed_ancestor_mismatch_is_rejected_before_staging(
             (grant_id,),
         ).fetchone()
         raw = verify_compact_jws(
-            saved[0], expected_type="ag-at+jwt", trusted_keys={"as-sign-1": env.as_key.public_key()}
+            saved[0],
+            expected_type="ag-at+jwt",
+            trusted_keys={"as-sign-1": env.as_key.public_key()},
         )
         conn.execute("ALTER TABLE ag_grant_tokens DISABLE TRIGGER ag_grant_tokens_immutable_trg")
         if variant == "missing":
@@ -631,7 +659,9 @@ def test_real_delayed_recovery_receipt_survives_token_and_proof_expiry(ledger, d
     accepted = env.adapter.accept(bundle)
     assert env.service.run_operation(accepted.operation_id).status == "UNKNOWN"
     leaf = verify_compact_jws(
-        env.token, expected_type="ag-at+jwt", trusted_keys={"as-sign-1": env.as_key.public_key()}
+        env.token,
+        expected_type="ag-at+jwt",
+        trusted_keys={"as-sign-1": env.as_key.public_key()},
     )
     with psycopg.connect(dsn) as conn:
         evidence_before = conn.execute("SELECT * FROM ag_operation_evidence").fetchall()
@@ -695,7 +725,7 @@ def test_offline_receipt_common_time_window_with_authentic_rebindings(
         bundle["proof_jws"], expected_type="ag-pop+jwt", trusted_keys=trust.holder_keys
     )
     proof.update(iat=base, exp=base + 5)
-    if variant.startswith("future-"):
+    if variant in {"future-five", "future-six"}:
         proof.update(iat=base + (5 if variant == "future-five" else 6), exp=base + 20)
     elif variant.startswith("pre-token-"):
         proof.update(iat=base - 10, exp=base + (1 if valid else 0))
@@ -726,6 +756,13 @@ def test_offline_receipt_common_time_window_with_authentic_rebindings(
         for token in path
     ]
     bundle["token_jws"] = bundle["ancestor_tokens"][-1]
+    if variant == "future-token":
+        signed_leaf = verify_compact_jws(
+            bundle["token_jws"], expected_type="ag-at+jwt", trusted_keys=trust.as_keys
+        )
+        assert signed_leaf["iat"] == signed_leaf["nbf"] == base + 1
+        assert proof["iat"] == base
+        assert receipt["iat"] == base
     proof["token_sm3"] = sm3_b64url(bundle["token_jws"].encode())
     bundle["proof_jws"] = sign_compact_jws(
         env.keys["executor"],

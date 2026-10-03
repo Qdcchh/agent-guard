@@ -146,7 +146,15 @@ def test_missing_and_unknown_fields_are_refused():
 
 @pytest.mark.parametrize(
     "bad",
-    [b"../etc/passwd", b"https://evil.test/x", b"a/b", b"a\\\\b", b"%2e%2e", b"a b", b"a@b"],
+    [
+        b"../etc/passwd",
+        b"https://evil.test/x",
+        b"a/b",
+        b"a\\\\b",
+        b"%2e%2e",
+        b"a b",
+        b"a@b",
+    ],
 )
 def test_url_and_path_injection_into_resource_ids_is_refused(bad):
     raw = b'{"request_id":' + b'"' + bad + b'"}'
@@ -485,3 +493,38 @@ def test_stored_snapshot_association_is_checked():
             amount_fen=5,
             quote_snapshot_bytes=None,
         )
+
+
+@pytest.mark.parametrize("count", [256, 257, 1000])
+def test_order_item_limit_matches_persisted_snapshot_and_result_limit(count):
+    import json
+
+    from agent_guard.contracts.execution import (
+        MAX_ORDER_ITEMS,
+        QuoteItem,
+        TrustedQuoteSnapshot,
+    )
+    from agent_guard.tools.catalog import snapshot_from_bytes, snapshot_to_bytes
+    from agent_guard.tools.results import MAX_RESULT_ITEMS
+
+    assert MAX_ORDER_ITEMS == MAX_RESULT_ITEMS == 256
+    payload = json.loads(ORDER_OK)
+    payload["items"] = [{"sku": f"sku-{i}", "quantity": 1} for i in range(count)]
+    raw = json.dumps(payload).encode()
+    snapshot = TrustedQuoteSnapshot(
+        "quote-001",
+        "1",
+        "supplier-001",
+        tuple(QuoteItem(f"sku-{i}", 1, 1) for i in range(count)),
+        count,
+    )
+    if count == MAX_ORDER_ITEMS:
+        assert len(params.parse_tool_params(ToolId.ORDER_CREATE, raw).items) == count
+        assert snapshot_from_bytes(snapshot_to_bytes(snapshot)) == snapshot
+    else:
+        with pytest.raises(ExecutionError) as exc:
+            params.parse_tool_params(ToolId.ORDER_CREATE, raw)
+        assert exc.value.code is ExecutionErrorCode.INVALID_PARAMS
+        with pytest.raises(ExecutionError) as exc:
+            snapshot_from_bytes(snapshot_to_bytes(snapshot))
+        assert exc.value.code is ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID

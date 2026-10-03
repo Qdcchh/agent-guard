@@ -154,6 +154,10 @@ class TrustedPermissionSnapshot:
     chain_grant_ids: tuple[str, ...]  # root-first grant node each chain layer describes
 
 
+#: Shared request/snapshot/result cardinality bound for one order.
+MAX_ORDER_ITEMS = 256
+
+
 # ------------------------------------------------------------ tool params
 
 

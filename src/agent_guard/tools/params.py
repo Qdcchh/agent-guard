@@ -19,6 +19,7 @@ import json
 import re
 
 from agent_guard.contracts.execution import (
+    MAX_ORDER_ITEMS,
     DocumentReadParams,
     ExecutionError,
     ExecutionErrorCode,
@@ -28,7 +29,12 @@ from agent_guard.contracts.execution import (
     RequestReadParams,
     ToolId,
 )
-from agent_guard.contracts.ledger import MAX_ID_LEN, MAX_PARAMS_BYTES, MAX_SAFE_INT, TOOL_VERSION
+from agent_guard.contracts.ledger import (
+    MAX_ID_LEN,
+    MAX_PARAMS_BYTES,
+    MAX_SAFE_INT,
+    TOOL_VERSION,
+)
 
 #: Plain ASCII resource identifiers only. Anything that could become a URL, a
 #: path segment, a scheme or an escape sequence is refused before lookup.
@@ -143,7 +149,9 @@ def _decode_object(raw: bytes, *, what: str) -> dict[str, object]:
         raise _fail(f"{what} is not valid UTF-8") from exc
     try:
         decoded = json.loads(
-            text, object_pairs_hook=_pairs_no_duplicates, parse_constant=_reject_constant
+            text,
+            object_pairs_hook=_pairs_no_duplicates,
+            parse_constant=_reject_constant,
         )
     except ExecutionError:
         raise
@@ -200,6 +208,8 @@ def _parse_items(raw: object) -> tuple[OrderItem, ...]:
         raise _fail("items must be a JSON array")
     if len(raw) == 0:
         raise _fail("items must not be empty")
+    if len(raw) > MAX_ORDER_ITEMS:
+        raise _fail(f"items exceeds {MAX_ORDER_ITEMS} entries")
     items: list[OrderItem] = []
     seen_skus: set[str] = set()
     for index, entry in enumerate(raw):

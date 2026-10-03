@@ -2,6 +2,8 @@
 
 状态：SM2/SM3 与 Compact JWS 基础 SDK、部分业务 claims 模式、DID只读解析、静态调用验权、委托收窄及授权码/Token Exchange请求预校验、ID Token/PKCE辅助函数、进程内一次性授权码及唯一根签发、事务性子委托签发、任务与租户管理员的撤销事务及撤销 HTTP 路由、登录/同意与会话 CSRF、开发 TLS 装配、密钥轮换历史公钥、OpenSSL CLI 独立实现固定向量互验均已实现；真实 B→A 进程内执行与只读回执投影已接入；公开调用/最终动态查询、持续发布、独立审计检查点及生产密钥托管尚未完成。本配置遵循 [当前接口契约](oauth-oidc-sm2-mvp.md)，不使用历史能力凭证 v1 的签名信封或域前缀。
 
+本轮 v1 实施交付时五项修补均标记 FIXED_PENDING_REVIEW，产品自查不是正式接受；具体命令、原失败、JUnit 和67项/60运行义务见 [v1实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)。后续验收与合并结论以 [本轮控制状态](../tasks/workflow/runs/local-remediation-20261004/state.json) 及主控关联的正式报告为准；本文档同步证据见 [文档实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。整体项目仍 PARTIAL：A2.2公开调用/最终动态查询、A2.3持续签名发布、A3独立锚定/导出/完整采购演示/规模对照实验尚未完成，outbox保持 PENDING。
+
 ## 固定参数
 
 | 项目 | GM-MVP-1 取值 |
@@ -34,7 +36,7 @@
 - `agent_guard.authorization.forms`、`code`、`exchange`：严格OAuth表单解码，验证授权码换码或Token Exchange请求的客户端密钥证明、端点及正文绑定，输出预校验结果。Basic认证结果、租户及重定向配置必须来自可信服务；静态预校验本身不消费code或登记防重放。授权码的事务处理见下项，子委托的实时撤销/过期与幂等由下述事务性 TokenExchangeService 实现。
 - `agent_guard.authorization.code_service.AuthorizationCodeService`：以真实PostgreSQL事务生成一次性哈希授权码、核对PKCE和证明、登记防重放、创建唯一根并由AS签SM2 ID/Access Token。输入 `ApprovedAuthorization` 只能由 `ConsentService` 在验证登录会话与 CSRF 后于进程内构造；浏览器入口由 `BrowserLoginApp` 提供。局部测试不构成 M1 整体通过。
 - `agent_guard.authorization.exchange_service.TokenExchangeService`：AS 在同一锁序事务内签发收窄子令牌并保存签名快照与委托幂等；可配置 `verification_keys` 以在轮换后继续验签历史 `kid`，旧 key 不再签发。
-- `agent_guard.authorization.login`、`consent`、`revocation_http`、`agent_guard.server`：scrypt 口令 KDF 与服务端会话/CSRF、服务端授权请求与任务政策、会话授权的任务/管理员撤销路由、私有配置与开发 TLS 装配。HTTP 请求边界及保留目录描述符的私有路径已进行串行修补；真实 TLS 与文件边界测试结果见当前修补报告，全阶段独立复核尚未完成。
+- `agent_guard.authorization.login`、`consent`、`revocation_http`、`agent_guard.server`：scrypt 口令 KDF 与服务端会话/CSRF、服务端授权请求与任务政策、会话授权的任务/管理员撤销路由、私有配置与开发 TLS 装配。HTTP 请求边界及保留目录描述符的私有路径已进行串行修补；真实 TLS 与文件边界测试结果见v1实施报告；其自查不替代独立全阶段验收，后续结论见本轮控制状态。
 
 ## 本轮 B→A 进程内接入
 
@@ -65,7 +67,7 @@ proof iat ≤ t+5 且 t < proof exp，t ≤ signed receipt iat。仍调用原 cl
 验证器检查完整类型、生命周期、绑定与收窄；不把 proof iat 或终局 iat 当作精确
 接受时间。合法迟延恢复的终局可以晚于原授权材料到期。wire 未携带独立认证的 DB
 接受时间，因此这里只证明历史时间一致性，加上原可信 GW 终局声明，不声称独立
-证明实际接受瞬间。原签名字段、ID、iat、PENDING 与在线新鲜性规则都不改。
+证明实际接受瞬间。完整root→leaf路径的grant ID必须全局唯一，非邻接重复也拒绝；此检查在全部AS快照验签后逐节点校验路径时执行，ledger_changes仍须与完整路径精确对应。独立AS/GW/三holder真签名正负例见v1报告中的test_receipt_paths。原签名字段、ID、iat、PENDING 与在线新鲜性规则都不改。
 
 ## 迁移入口与恢复边界
 
@@ -91,8 +93,10 @@ schema 重放固定 SQL，并检查列/约束/索引/函数/触发器及其启�
 ## 固定依赖、许可和验证范围
 
 `requirements.lock` / `requirements-dev.lock` 保留固定 B 候选原 pins；
-`constraints.txt` 汇总相同 pins，未升级或替换密码后端。当前实际验证环境为
-Linux x86_64、CPython 3.11.16、PostgreSQL 16.15。包元数据支持声明并不是所有
+`constraints.txt` 汇总相同 pins，未升级或替换密码后端。历史候选验证曾使用
+Linux x86_64、CPython 3.11.16、PostgreSQL 16.15；本轮v1自查使用Linux amd64、
+CPython 3.11.17、独占PG16，source/wheel分别锁安装、非root UID501、普通非editable
+安装。具体版本、原始元数据及资源绑定见v1实施报告，不能混用历史环境证明本轮通过。包元数据支持声明并不是所有
 平台的实跑证明；本轮不声称 Windows/macOS/PyPy 已复验。rfc8785 0.1.4
 (Apache-2.0) 要求 Python≥3.8；tongsuopy 1.0.1 (Apache-2.0) 声明 Python≥3.6
 并列出 CPython/PyPy、Windows/macOS/POSIX；实际选择的传递 cffi 2.1.1
@@ -110,4 +114,4 @@ h11 0.16.0 为 MIT。完整实际发行版元数据随本轮验证证据保存�
 固定 SM2/SM3、raw JWS 和公开向量，以及 OpenSSL CLI 双向互验使用明确
 `distid=1234567812345678`。SDK 不开放自定义 SM2 用户标识，标准默认值由向量
 锁定。具体本轮执行命令、版本、计数、失败修正与剩余范围见实施报告和原始日志；
-旧本机/历史 CI 记录不冒充本轮执行。远程 CI 未获授权，未触发。
+旧本机/历史 CI 记录不冒充本轮执行。用户已授权完整复核和条件合并；v1 worker未触发远程CI（NOT_RUN），不能写为通过。后续远程CI与正常Git门由主控按授权处理。

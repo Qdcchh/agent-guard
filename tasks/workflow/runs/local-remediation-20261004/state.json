@@ -1,0 +1,151 @@
+{
+  "stage": "B-remediation-integration-local-r3",
+  "status": "ACCEPTED_READY_FOR_GIT_PUBLICATION",
+  "authorization": "authorization.json",
+  "package": "task-v1.md",
+  "package_review": {
+    "task": "/root/package_review_r1",
+    "requested_model": "gpt-6-astra",
+    "requested_reasoning": "high",
+    "effective_model": "UNKNOWN",
+    "native_status": "completed",
+    "report": "package-review-r1.md",
+    "report_sha256": "6efde8a11e9f2229cd3bfce0ed6adc26139e13cf0547c266eb26c6f0a698f490"
+  },
+  "implementation": {
+    "task": "/root/implementation_r1",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning": "medium",
+    "effective_model": "UNKNOWN",
+    "native_status": "completed",
+    "tool": "collaboration.spawn_agent",
+    "ownership": "task-v1.md section 3 exact 17 paths plus worker-r1 evidence",
+    "dispatch_baseline": "artifacts/workflow/local-remediation-20261004/controller/dispatch-baseline-r1.json",
+    "report_sha256": "c29a8ea94823c238236ec522fe88761ea6de8806101de8e7265016f6eb6123ec",
+    "controller_check": "artifacts/workflow/local-remediation-20261004/controller/implementation-r1-controller-check.json"
+  },
+  "acceptance": "ACCEPTED",
+  "issues": "All current-stage blocking issues CLOSED_REVIEWED_R2; historical failures retained; overall project PARTIAL.",
+  "timestamp": "2026-10-03T20:37:55.418363+00:00",
+  "document_package_review": {
+    "task": "/root/package_review_docs_r1",
+    "requested_model": "gpt-6-astra",
+    "requested_reasoning": "high",
+    "effective_model": "UNKNOWN",
+    "native_status": "completed",
+    "conclusion": "PACKAGE_READY",
+    "report": "package-review-docs-r1.md",
+    "sha256": "799d5576334b7fb397605d6be6c7fe0cf93cc03f42c316d48a61a95a44192816"
+  },
+  "document_implementation": {
+    "task": "/root/implementation_r1",
+    "dispatch": "collaboration.followup_task after native completion",
+    "native_status": "completed",
+    "requested_model_inherited": "gpt-6.1-sol",
+    "requested_reasoning_inherited": "medium",
+    "effective_model": "UNKNOWN",
+    "package": "task-v2.md",
+    "baseline": "artifacts/workflow/local-remediation-20261004/controller/docs-dispatch-baseline.json",
+    "evidence": "artifacts/workflow/local-remediation-20261004/worker-docs-r1/",
+    "original_report_sha256": "626a5aa57c9ad51843c79c4e2d85aed18accd88e07ac237549a6cf4650394751",
+    "final_report_sha256": "99591e8e27271f7dded1d522c11acc60931fb3d526b41c0d17ee206476d6272a"
+  },
+  "document_issue": {
+    "id": "LOCAL-DOC-CLEAN-CHECKOUT",
+    "status": "CLOSED_REVIEWED_R2",
+    "finding": "docs/acceptance.md adds Markdown links into Git-ignored artifacts; fresh clone docs tests will fail",
+    "scope": "within approved v2 9 paths"
+  },
+  "correction_r2": {
+    "status": "RESIDUAL_CONFIRMED_AFTER_SELF_CHECK",
+    "package": "correction-r2.md",
+    "worker": "/root/implementation_r1",
+    "product_write_paths": [
+      "tests/unit/test_execution_concurrency_oracle.py"
+    ],
+    "report": "implementation-r2.md",
+    "diagnostic": "diagnostic-r2.md",
+    "worker_native_status": "completed"
+  },
+  "correction_r3": {
+    "status": "CLOSED_REVIEWED_R2",
+    "package": "correction-r3.md",
+    "worker": "/root/implementation_r1",
+    "product_write_paths": [
+      "tests/unit/test_execution_concurrency_oracle.py"
+    ],
+    "native_status": "completed",
+    "report": "implementation-r3.md",
+    "report_sha256": "6051ea41fc59623f69923901230959e3473796cc0198374c11b9b4c8bd247707",
+    "controller_check": "artifacts/workflow/local-remediation-20261004/controller/correction-r3-controller-check.json"
+  },
+  "final_acceptance_r2": {
+    "status": "ACCEPTED",
+    "round": 2,
+    "reviewer": "/root/acceptance_r2",
+    "requested_model": "gpt-6-astra",
+    "requested_reasoning": "high",
+    "effective_model": "UNKNOWN",
+    "native_status": "completed",
+    "report": "review-r2.md",
+    "report_sha256": "02e060952f1de4c45560a570791014080cb0713fe1e4169603e165019244cad2",
+    "requirements": 67,
+    "independent_run_obligations": 60,
+    "pass": 67,
+    "fail": 0,
+    "blocking_issues": 0,
+    "snapshot": "artifacts/workflow/local-remediation-20261004/controller/acceptance-freeze-r2.json",
+    "candidate_entries": 247,
+    "candidate_entries_sha256": "4c26b209b22ea2c8bf254d40eac608188f814ff93aea3bacf5d17e4225493a69",
+    "evidence_index_sha256": "8515b0c2247804a4151b9f1de2e2fa82d63ac44acf176157304e145b5d4390e3",
+    "controller_check": "artifacts/workflow/local-remediation-20261004/controller/acceptance-r2-controller-check.json"
+  },
+  "project_status": "PARTIAL",
+  "acceptance_round_1": {
+    "status": "NOT_ACCEPTED",
+    "round": 1,
+    "reviewer": "/root/acceptance_r1",
+    "requested_model": "gpt-6-astra",
+    "requested_reasoning": "high",
+    "effective_model": "UNKNOWN",
+    "native_status": "completed",
+    "report": "review-r1.md",
+    "report_sha256": "f1a695a978df8d796c1937a6ee9cdc739e184ade5d109755f8e185fa2828af54",
+    "requirements": 67,
+    "independent_run_obligations": 60,
+    "pass": 64,
+    "fail": 3,
+    "new_issue": "BR-FINAL-P13-TIMEOUT-CONTROL",
+    "snapshot": "artifacts/workflow/local-remediation-20261004/controller/acceptance-freeze-r1.json",
+    "candidate_entries_sha256": "4f757cd9f3742d50a9f14844977a70aa933449ed7e9964d3d9c2988601b092e5",
+    "evidence_index_sha256": "0e9edf747bc424af52b062342285c55f87f33e310917879fa4ede6362432c28e"
+  },
+  "final_acceptance": {
+    "status": "ACCEPTED",
+    "round": 2,
+    "reviewer": "/root/acceptance_r2",
+    "requested_model": "gpt-6-astra",
+    "requested_reasoning": "high",
+    "effective_model": "UNKNOWN",
+    "native_status": "completed",
+    "report": "review-r2.md",
+    "report_sha256": "02e060952f1de4c45560a570791014080cb0713fe1e4169603e165019244cad2",
+    "requirements": 67,
+    "independent_run_obligations": 60,
+    "pass": 67,
+    "fail": 0,
+    "blocking_issues": 0,
+    "snapshot": "artifacts/workflow/local-remediation-20261004/controller/acceptance-freeze-r2.json",
+    "candidate_entries": 247,
+    "candidate_entries_sha256": "4c26b209b22ea2c8bf254d40eac608188f814ff93aea3bacf5d17e4225493a69",
+    "evidence_index_sha256": "8515b0c2247804a4151b9f1de2e2fa82d63ac44acf176157304e145b5d4390e3",
+    "controller_check": "artifacts/workflow/local-remediation-20261004/controller/acceptance-r2-controller-check.json"
+  },
+  "publication": {
+    "authorization": "User authorized commit, push, PR and conditional main merge; runtime addendum section6 applies.",
+    "status_at_acceptance": "PENDING_GIT_CI_AND_INDEPENDENT_REVIEW",
+    "must_not_bypass_protection": true,
+    "must_not_self_approve": true,
+    "baseline_main": "153f14e9be180a1eb26b0f0e0898048d45170569"
+  }
+}
