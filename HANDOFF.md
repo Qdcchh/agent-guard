@@ -1,254 +1,300 @@
-# 工程交接：Agent Guard / A1账本验收收尾
-
-> **审核策略更新（2026-09-30，用户明确授权）：** 队友PR必须由 `Qdcchh` 审核（全仓CODEOWNERS＋必需代码所有者批准），负责人自己的PR免审批，但仍先核验CI再合并。当前仅Qdcchh为管理员，wa-rui为Write；利用现有管理员豁免，不取消队友审批或CI。指定用户审批豁免API返回500，未配置成功；管理员豁免并非仅限PR作者本人，新增管理员前须重新审视。PR #2的Python3.11远程CI已通过（68＋78项及迁移/lint/格式），配置文件推送后需重跑CI再合并。历史“管理员同样受限/必须非作者审核”不再是当前策略。
-
-> **最新结论（2026-09-30）：A1 ACCEPTED。** 最终独立复验 68 单元/骨架＋78 集成＋5 探针全部通过，F1—F5 关闭，见 [tasks/A1-review-r4.md](tasks/A1-review-r4.md)。用户已授权提交并推送当前 A1 分支，不合并 main。下方第三轮停点及正文均为历史快照；不要重复已完成的修复或验收。原测试库仍未应用 003；本地验证未覆盖 Python 3.11/远程 CI/wheel/真实网络故障，推送后需核对 CI。主代理继续以方向指导、委派与复核为主。
-
-> **2026-09-30 接手后更新：** 以下正文是原交接快照。当前新增 003 根 DELETE 防护及正式根重建/非零七表升级回归，78 集成＋68 单元/骨架测试通过，reviewer 无阻断发现。最终验收仍待独立探针重跑与留痕。下一步以 [tasks/A1-review-r3.md](tasks/A1-review-r3.md) 为准，不再重复已完成的 003 修复。用户要求主代理主要指导、委派和复核，本轮到此停点；未提交/推送，原测试库未应用 003。
-
-更新时间：2026-09-30。本文依据当前工作区、实际测试、Git/GitHub查询及本次对话整理。**当前交接只新增本文，不实现功能、不重构、不回退、不提交。**
-
-## 1. 接手先看这五点
-
-1. 仓库根目录：`/Users/qdcc/code/密码技术竞赛/agent-guard`。不要在父目录初始化另一个Git仓库。
-2. 当前分支 `feat/a1-ledger`，HEAD为 `9796825a4aa44f3ca3d6911e1094c15e7803cc35`。A1实现和任务材料大量为**未跟踪文件**，默认git diff不包含它们；绝不能reset/clean覆盖。
-3. 最新正式结论见 [tasks/A1-review-r2.md](tasks/A1-review-r2.md)：**A1 NOT_ACCEPTED / PARTIAL，仅F2根删除重建缺口仍阻断。** 不要只看实施agent报告正文里的历史“全部通过”。
-4. 先修根授权行的DELETE保护（新增003迁移，不改001/002），并把非零账本升级验证纳入正式测试。不做A2或B的OAuth/密码工作。
-5. 用户本轮明确禁止commit；目前没有对A1新获提交/推送授权。修复、记录、复验后等待用户指示，不绕过main保护。
-
-## 2. 最终目标与用户约束
-
-### 项目目标
-
-三人参加全国密码技术竞赛，题目已改为 **“面向企业多智能体协同的可验证授权与可信执行系统”**。保留A1-26可验证授权/受控工具执行主线，以企业协同采购为完整主场景；轻量客服退款适配为可选项。目标是2026-10-20前完成可复现的成熟竞赛工程与材料，10-23截止，最后三天只做提交缓冲。原9-30初版是计划目标，当前实际仅到A1账本验收收尾，不能写成端到端初版已完成。
-
-安全目标：根＋至少两级子委托、至少三代理、四工具、权限逐级收窄、SM2/SM3、持有者请求绑定、全部祖先累计额度、撤销、幂等/抗重放、异常恢复、独立证据验证。不以签名替换或模型数量单独声称创新。
-
-### 人员与协作
-
-- A是当前用户，负责可信执行、数据库、工具/代理集成、部署与后续演示。
-- B熟悉Python和密码学，负责密码、AS/OP、授权、DID/验权SDK与审计核心。
-- C任务较少且靠后，主要10月8日后做文档/图表/演示及复现，不承担前期关键依赖。对外内部规范只称A/B/C，语气客观，不评价成员忙闲或能力。
-- A按阶段拆分：A1账本与接受；A2真实验权/HTTP网关、下游执行与恢复；A3端到端、部署、实验与演示。约“三分之一”是独立交付范围，不是代码行数或已完成整个项目的比例。
-- 实施agent需持续写结构化记录，留脱敏命令、结果和文件清单，便于主代理验收节省token。不能仅凭子agent说成功就验收。
-
-### 文件、表单和安全约束
-
-- 父目录的 `01-协作规范与分工.md`、`02-自命题填写说明.md` **留在仓库外，不上传、不复制入仓库**；参考题目docx同样不上传。
-- 自命题表单：内容/性能指标各≤400字符，所需知识/仪器各≤200；已压缩至361、350（含换行）、98、139字符。指标是拟验收目标，不是已有测量。性能编号改为普通正文“（1）”，不是Markdown有序列表，以便PDF复制。再次修改须重新计数。
-- README必须包含目标、计划、真实完成边界；AGENT.md保留单数文件，AGENTS.md只是自动发现入口。
-- 用户要求文档收敛，通用docs只保留三份；任务材料放tasks，不恢复多套冲突协议。PDF是本地导出，保留但不入库，可能已过期。
-- 不提交真实私钥、token、业务数据、`.env`、数据库快照和敏感日志；artifacts为本地忽略目录。
-- 不自研密码，不加跳过验权/永远成功开关，不把测试输入当密码证明。无真实支付；不要求GPU、模型训练或区块链。
-- 测试必须真实PostgreSQL；不以SQLite或内存账本代替并发语义，缺库不得静默skip后宣称成功。不得为测试误清用户已有库或停止无关容器。
-
-## 3. Git/GitHub状态（交接时已查询）
-
-- 公开仓库：<https://github.com/Qdcchh/agent-guard>。最初私有，用户后来明确要求公开。
-- origin为HTTPS：`https://github.com/Qdcchh/agent-guard.git`。已登录GitHub账号为Qdcchh；先前补过workflow scope，令牌只在凭据管理器，不写本文。
-- 历史：`e762049` 初始化；`9796825` 文档收敛和OAuth国密设计。
-- 文档PR #1：<https://github.com/Qdcchh/agent-guard/pull/1>，交接时仍 **OPEN / REVIEW_REQUIRED**，head=`docs/consolidate-gm-mvp`，base=`main`，没有mergedAt。该PR的原文档CI此前通过，**不等于A1的新版CI通过**。
-- A1分支从该文档提交建立，尚无A1提交/远程分支。main仍不含未合并文档；别从旧main重新开工。后续文档PR若Squash合并，须在用户授权集成时处理基线，避免重复引入文档提交，不能现在擅自rebase/强推。
-- main保护：1名非作者批准、checks通过且分支最新、讨论解决、管理员同样受限；禁止强推/删除；只允许Squash merge，合并后删任务分支。
-- 队友 `wa-rui` 已邀请并在前次查询中确认Write权限，已请求其审核PR #1。不能用当前作者账号自批PR；另一个队友用户名未提供。
-
-## 4. 已完成什么，尚未完成什么
-
-### 已完成（实现，不只是规划）
-
-- Python包骨架、基本lint/测试CI、项目与协议文档、内部申报/协作文档。
-- A1同步psycopg进程内接口 `ExecutionLedger.accept(VerifiedInvocation, TrustedCost)`。
-- 类型/格式检查、DB父子路径、统一锁序、锁后实际DB时间、subject/holder/key/撤销/有效期复核。
-- 全路径预算和次数原子预留、DB proof唯一性、业务幂等、RESERVED操作、可信报价快照及首次/重试证据关联、RESERVE事件。
-- 版本化SQL迁移器及001/002，禁止篡改已应用迁移checksum；002修复部分根约束和calls=1。
-- 真实PostgreSQL集成、并发10轮、回滚/状态测试；测试隔离修复；CI已在工作区配置PostgreSQL服务，尚未上传运行。
-
-### 当前进行位置
-
-A1经历两次主代理验收。首轮F1—F5中，F1测试隔离、F3主体核对、F4每操作1次、F5有界连接已关闭。F2的唯一根索引和任务映射保护有效，但根授权行仍可同ID删后重建。最近一次操作是复验、写报告和本次交接，不是在实现新功能。
-
-### 未完成（依序）
-
-1. 修完F2余项：新增003阻止根授权行DELETE，保留正常计数/撤销UPDATE。
-2. 正式加入同ID删后重建回归，及真实非零预留/全部账本证据的迁移升级回归。
-3. 重跑lint、全部测试、并发组和独立探针，更新A1-report及最新验收结果。
-4. 验收通过后，由用户决定提交/推送；处理文档PR #1依赖，使用PR，不直推main。
-5. 再划分A2与B对接。OAuth/OIDC、SM2/SM3、DID、HTTP入口、模型/RP/三代理业务流程、下游订单、结算/释放/恢复、回执签名、独立审计、前端均**未实现**。
-
-## 5. 关键技术决策及原因
-
-- 一个Monorepo，减少契约分叉；模块有独立信任边界，不等于共享凭据或数据库权限。
-- 当前唯一设计为GM-MVP-1。AS统一签根与子令牌，父代理只签委托请求；取代旧的“父直接签子凭证”路线，避免维护两套权限链格式。
-- OAuth管授权，OIDC管人的登录；Access Token和ID Token分开。SM2用于签名，SM3用于项目摘要；自定义AGPoP绑定密钥和完整请求，不伪称标准DPoP。PKCE的S256保持SHA-256，不偷换语义。
-- JWS签名验证原始编码两段，不把旧自定义域前缀拼进去；SM2 profile/用户标识/签名格式已在方案定义，但尚未落地密码库。
-- DID采用did:web＋企业登记表：解析公钥不自动赋予企业权限。不做区块链、通用钱包，也不宣称全OIDC/DPoP互通或全栈国密。
-- 同一tenant/task永久唯一根；子额度共享上限，不签发即独占。所有祖先计账，读/通知金额0但次数1。
-- 同步psycopg＋版本化SQL，避免A1同时引入ORM/异步框架复杂度。BIGINT安全边界≤2^53−1，bool/浮点不当整数，delta允许明确有界负值。
-- 锁序为相关主体/key→任务/根→根至叶。锁后 `clock_timestamp()` 复核时效，不用事务启动时now掩盖排队过期。
-- proof_jti不是幂等键。EXISTING免重复计费，不免当前验权；保留首次证据，重试另关联proof。
-- A1仅接受可信内部对象，不验SM2。frozen dataclass不是安全隔离；A2只能从B真实验证器构造，不能开“已验权JSON”网络入口。
-- AS/网关账本共享可信事务域以明确撤销/接受边界；下游独立事务域，未来未知结果保留预留，不能超时即释放。撤销不回滚已接受操作。
-
-## 6. 当前唯一代码阻断与回归缺口
-
-详见 [tasks/A1-review-r2.md](tasks/A1-review-r2.md)，不要重新处理已关闭的F项。
-
-### F2同ID根重建（已实测失败）
-
-`002_root_invariants.sql`保护了ag_tasks DELETE/UPDATE，并用可延迟FK关联根；ag_grants只有UPDATE保护，无根DELETE防护。
-
-复现：无子节点根→真实预留70000分/1次→撤销→同事务DELETE根并以同ID重新INSERT（计数/撤销列取默认值）→提交成功。新连接查到根 `(reserved=0,calls_reserved=0,revoked=false)`，而operation仍记录70000分。
-
-是可信SQL维护路径的生命周期不变量缺口，不是当前公网攻击入口；不要求抵抗超级用户禁用触发器。合理修复是新增003中的 `BEFORE DELETE` 根行防护（依据OLD.parent_grant_id），不改001/002、不清零旧库、不关闭触发器通过测试。
-
-### 升级正式测试不足
-
-`tests/integration/test_migrations.py` 的001→002测试只build_tree，计数为0且仅比较少数表。主代理已用真实70000分预留比较七张表全部行，确认当前001→002不丢状态；需将其纳入正式回归并扩展到003。探针中版本硬编码002是当时快照，新增003后应让**正式测试**按实际版本推导，不能把期望版本失败误认为迁移数据丢失。
-
-### 其他限制/技术债（不是本轮新功能任务）
-
-- Python3.11与A1远程CI尚未实跑；本机3.14通过不能等价代替。
-- constraints.txt只固定psycopg/psycopg-binary，非全部传递/构建依赖锁；不要宣称完全可复现供应链。
-- 迁移脚本位于仓库根migrations，当前验证的是仓库/可编辑安装；没有验证构建wheel后在仓库外运行迁移。
-- 测试容器tmpfs、固定容器名与55432端口是本地开发方案，不是生产部署。
-- README开头“已通过自动化测试”指现有套件；最终验收仍未过，真实状态以最新review为准。
-- task报告保留历史实施agent“全部修复”等文字，页首及最新review优先；不得照抄历史计数和自查结论。
-
-## 7. 文件地图
-
-### 开发依据
-
-| 路径 | 当前作用 |
-| --- | --- |
-| README.md | 项目目标/范围/阶段、A1运行命令、协作入口 |
-| AGENT.md / AGENTS.md | 开发约束及自动发现入口 |
-| docs/oauth-oidc-sm2-mvp.md | 唯一当前架构、术语、A/B分工、OAuth/国密/DID和HTTP/SDK契约 |
-| docs/security-model.md | 威胁假设、锁序、账本、撤销、恢复与审计边界 |
-| docs/acceptance.md | 初版/成熟版、性能和交付清单，不代表各项已实现 |
-| tasks/A1-ledger.md | 本阶段范围、接口、U1/P1—P14与留痕要求 |
-| tasks/A1-report.md | 实施agent交付记录；页首已更新为PARTIAL |
-| tasks/A1-review.md | 首轮历史缺陷，不是当前未关闭清单 |
-| tasks/A1-review-r2.md | 最新复验结论，下一步唯一权威修复清单 |
-
-### 实现与环境
-
-| 路径 | 当前作用 |
-| --- | --- |
-| src/agent_guard/contracts/ledger.py | VerifiedInvocation/TrustedCost/AcceptResult、枚举与常量 |
-| src/agent_guard/ledger/validation.py | 纯输入校验，成本错误码、calls=1 |
-| src/agent_guard/ledger/service.py | accept事务编排、动态复核、幂等、预算、连接超时/重试 |
-| src/agent_guard/ledger/store.py | SQL、行类型、锁与证据/事件存储 |
-| src/agent_guard/ledger/provisioning.py | 可信初始化、根/子节点、撤销/key停用夹具，无HTTP授权入口 |
-| src/agent_guard/ledger/migrate.py | SQL发现/checksum/迁移CLI，普通DSN优先于TEST DSN |
-| migrations/001_init.sql | 原始7张业务表、计数约束、grant/operation不可变UPDATE触发器 |
-| migrations/002_root_invariants.sql | 升级预检、根部分唯一索引、任务不可变/禁删、延迟关联、calls=1；仍漏根DELETE |
-| compose.test.yaml | PostgreSQL16测试容器，localhost:55432，tmpfs |
-| pyproject.toml / constraints.txt | 新增psycopg依赖、pytest标记、固定驱动版本 |
-| .github/workflows/ci.yml | 工作区中新版：PostgreSQL服务＋lint＋unit＋迁移＋integration |
-| .env.example / .gitignore | 配置占位；忽略环境/秘密/artifacts/PDF等 |
-
-### 测试及证据
-
-- `tests/unit/test_input_validation.py`：类型/边界；`test_service_config.py`：超时配置、连接工厂、失败映射/重试。
-- `tests/integration/test_accept_core.py`、`test_rejects.py`、`test_concurrency.py`、`test_state_checks.py`、`test_rollback.py`：账本/拒绝/10轮并发/时效撤销/回滚。
-- `test_migrations.py`：迁移与scratch；`test_invariants.py`：F2/F3/F4；`test_isolation.py`：F1隔离。
-- `tests/fixtures/state.py`：可信合成身份/树/调用/成本；`isolation.py`：会话独占schema、所有权标记、随机scratch与DSN解析；`dbstate.py`：只读断言查询。
-- `tests/test_scaffold.py`、`tests/test_docs.py`：包导入/版本及文档链接/JSON检查，不是安全验收。
-- `artifacts/A1/20260929T1700-a1-r1/`、`20260930-a1-f-fixes-r2/`：实施agent两轮证据。
-- `artifacts/A1/review-20260930/`：主代理首轮XML和4项独立探针 `test_missing_invariants.py`。
-- `artifacts/A1/review-20260930-r2/`：最新独立复验XML；`test_root_rebuild.py`当前失败；`test_upgrade_nonzero.py`001→002非零升级通过。
-- `.venv/`本地环境及上述artifacts都被忽略，不在GitHub；换机器前应另行安全保存必要证据，不能只克隆仓库期望拿到未提交文件。
-
-## 8. 未提交工作区（本次交接读取git status确认）
-
-已跟踪修改仅3项：
-
-1. `.github/workflows/ci.yml`：增加PostgreSQL及集成步骤。
-2. `README.md`：A1实现边界、安装/数据库/隔离/迁移命令。
-3. `pyproject.toml`：psycopg运行依赖、unit/integration标记。
-
-未跟踪：`compose.test.yaml`、`constraints.txt`、`migrations/`、`src/agent_guard/contracts/`、`src/agent_guard/ledger/`、`tasks/`、`tests/__init__.py`、`tests/fixtures/`、`tests/integration/`、`tests/unit/`，以及本次新增 `HANDOFF.md`。全部属于需要保留的工程工作，不是可随手清理的缓存。
-
-没有暂存/提交A1；没有A1的commit可用于恢复。父目录内部两份Markdown已有历史修改但不属于本repo。现有SQL迁移是未跟踪文件，却已在开发/验收库应用，**未跟踪不等于允许改历史迁移**。
-
-## 9. 已验证结果与运行状态
-
-最近独立复验（2026-09-30，非本次交接重新测试）：
-
-| 项目 | 结果 |
-| --- | --- |
-| Ruff / 格式 | 通过，29文件 |
-| unit＋3项骨架/文档 | 68通过（65 unit＋3） |
-| PostgreSQL integration | 77通过，11.01秒，无skip |
-| 首轮4探针原样复跑 | 4通过 |
-| 非零预留/证据001→002升级 | 1通过 |
-| 同ID删后重建根 | **1失败**，已验证提交后预留/撤销被清除 |
-
-上述145套件测试全绿不能抵消独立探针失败。P3/P5/P6确实独立连接＋barrier各10轮；P9有真实锁等待；P12有真实DB回滚，但连接丢失项使用OperationalError注入，不是实断网络。
-
-交接时Docker daemon正常，`agent-guard-test-pg`健康运行于127.0.0.1:55432；其已有状态不要擅自清空。两次主代理review临时容器均已删除。系统还有其他项目容器，禁止docker prune或批量stop。没有启动本项目HTTP服务，因为没有实现。
-
-安装/本地pytest环境为Python3.14.7、psycopg3.2.13、测试PG16.15。未验证Python3.11、A1远程CI、wheel部署、真实OAuth/密码/模型/下游/恢复性能。
-
-## 10. 下一步最小执行计划
-
-1. 阅读AGENT、A1-review-r2及002迁移，检查工作区仍是上述状态；不要重新搜整个标准体系。
-2. 先把根同ID重建探针转成正式集成回归，确认当前失败；明确无子节点且有预留/已撤销场景，避免外键到子节点恰好遮住bug。
-3. 新增003根DELETE防护，不影响合法预算UPDATE与撤销。对已有数据不得清零/修复式删除。
-4. 加强正式升级测试：001库实际accept非零操作，保存七表全部内容，升级到所有最新版本后逐项一致；错误数据升级须回滚且保留原版本记录。
-5. 在安全隔离实例运行全量测试、并发10轮、原4探针和新根保护用例；已过项不能退化或skip。记录实际计数，不沿用旧68/77。
-6. 更新A1-report和新增复验记录；没有user新授权不commit/push。验收通过只代表A1，不进入A2。
-
-## 11. 常用命令与安全注意
-
-以下均在仓库根目录执行。连接串从本地测试环境注入，不写入报告；**迁移器普通DSN优先**，测试前确认并移除可能指向正式库的 `AGENT_GUARD_DATABASE_URL`。
-
-```bash
-git status --short --branch
-git log --oneline -5
-git diff --stat
-git diff --check
-git ls-files --others --exclude-standard
-
-.venv/bin/python -m pip install -e '.[dev]' -c constraints.txt
-.venv/bin/python -m ruff check .
-.venv/bin/python -m ruff format --check .
-.venv/bin/python -m pytest tests/unit tests/test_scaffold.py tests/test_docs.py -q
-
-docker compose -f compose.test.yaml ps
-# 仅确认无冲突且需要启动时：
-docker compose -f compose.test.yaml up -d --wait
-
-# 先配置AGENT_GUARD_TEST_DATABASE_URL为明确授权的测试实例。
-# 环境变量含密码，不要在日志中打印。
-env -u AGENT_GUARD_DATABASE_URL .venv/bin/python -m pytest tests/integration -q
-# 若需要手动迁移，确认目标后才执行：
-env -u AGENT_GUARD_DATABASE_URL .venv/bin/python -m agent_guard.ledger.migrate
-
-gh pr view 1 --repo Qdcchh/agent-guard
-```
-
-- 默认git diff不含新文件；先列未跟踪文件、读实际代码，不能只审3个已跟踪diff。
-- 不自动执行compose down：现有测试容器tmpfs数据会消失。主代理前两轮用另起的临时实例55439端口验证，结束只清理自己创建的实例。
-- 独立探针有专用数据库名断言：原4探针要求 `ag_review_probe`；根重建要求 `ag_review_f2`；非零升级要求 `ag_review_upgrade`。用新建隔离实例和正确数据库，不改断言去指向用户已有库。
-- 有些探针未放入正式tests，默认pytest不会运行它们；将关键场景纳入正式回归，保留历史失败证据。
-- 如以后获得推送授权，SSH在本环境曾超时，HTTPS成功。可临时使用 `GIT_TERMINAL_PROMPT=0 git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push ...`，不修改全局Git配置；本轮不要执行push。
-
-## 12. 历史尝试、否决方案及对话独有信息
-
-- 初期多次委派strong/fast写文档出现长时间等待、空结果或“成功但实际无文件”。确实发生过主代理read回查文件不存在；并非Word格式问题，文档一直是Markdown。后续主代理apply_patch成功，研究/只读review子agent可用。根因没有最终证明是提供商故障，不要重新无限派发大写入任务或擅自改OpenCode全局配置。
-- 用户曾授权初始化并上传GitHub，但A1阶段与本次交接明确要求不commit/push，**历史授权不能覆盖当前限制**。
-- 最初私有仓库无法在当时账号套餐启用分支保护；用户明确同意转公开，才启用保护。不要为了绕审核临时关闭保护。
-- 第一次HTTPS推送被workflow scope拒绝，用户已手动授权后成功。不要把令牌或一次性授权码写入文件。
-- 老师允许参考A1-26换场景自命题，不必再反复争论是否能参考；但不要把原题已有的共享预算/恢复/审计说成首次发明。正式赛规和评分标准未提供，不得编造。
-- 老师提出OAuth＋SM2/SM3＋OIDC＋Agent2Agent＋DID，并给 `https://github.com/OpenIDC/liboauth2` 与2022年GitHub第三方OAuth令牌被盗公告。liboauth2是C基础库，不是开箱即用完整OP；所查源码不足以证明直接支持SM2。**是否必须实改liboauth2本体仍未得到用户/老师确认**，当前计划默认参考机制、Python主线。
-- OIDC正确名称OpenID Connect。ID Token不当工具授权；偷有效Bearer令牌不是破解签名，换SM2还需持有者绑定/最小权限/撤销。不要把PKCE S256或标准DPoP ath/jkt里的SHA-256暗改成SM3仍标标准兼容。
-- “可信执行”项目名不额外承诺TEE硬件；“Agent2Agent”是授权场景，不等于已实现某独立A2A消息协议。
-- 原protocol-v1/architecture/execution-state/threat-model文件已合并或删除，有效内容在三份docs；不要恢复成两套活跃协议。
-- 最近两次review未修业务代码，只运行安全隔离测试、写探针及报告。后续模型不应误把主代理的复现探针当已修复实现。
-
-## 13. 交接核对与完成边界
-
-撰写前已检查Git状态/三项已跟踪diff、最新报告、001/002迁移列表、subject检查代码、依赖约束、PR状态和Docker运行状态；撰写后再次核对。此轮只生成HANDOFF.md，不重跑全部验收、不修改已知bug、不提交。
-
-成功的下一轮交付应是：F2余项真实修复＋新增回归＋所有旧测试保持通过＋最新留痕，然后交回验收。不要用“145测试全绿”提前宣布A1通过，也不要趁交接顺手搭建OAuth、重构目录或扩展A2。
+agent-guard 当前技术状态与接手说明
+
+出具日期：2026-10-03 UTC
+核对范围：现有源码、工作区状态、保存的实施和独立复核记录；本次仅编写交接并只读核对，没有启动测试、修改产品代码、清理资源或重试被阻断的复核。
+结论：BLOCKED / NOT_ACCEPTED。当前候选有完整 source 与非 editable wheel 的 2307 项通过记录，但已知阻塞缺陷仍在，独立复核缺少最终报告和完整验收矩阵，不能进入 A2.2 或宣称安全验收、生产就绪、比赛全部完成。
+
+一 接手时最需要知道的事
+
+1. 当前主要工作是 B-remediation-integration。S1 至 S4 的整合及五项后续 B/整合修复已经实施；无需把它们当成未做过重新开发。当前并非干净 Git 工作树，也不是一个已经发布的最终提交。
+2. 三个继承 A 的修复仍未获额外批准：执行结果类型误分类、257 项输入在接受后被既有上限卡住、P13 并发测试 oracle 不充分。B 离线回执重复 grant 路径缺陷及一个新增测试分支遮蔽问题也未修。
+3. 本轮独立复核和用户在 14:26 请求的同一复核续做都遭到平台风险阻断；后一次在 14:39:30 再次中断。没有有效最终 review.md、requirements-matrix.json 或最终 ACCEPTED 结论。已完成命令的结果仍可作为局部证据。
+4. 旧的 11:44 交接写“历史回放和资源清理未验证”，这是当时事实。本次只读核对已找到 14:38 的终结与清理记录，详见第五节；不能继续把这些命令写成仍未完成，也不能据此声称当前整个机器绝对没有运行进程。
+5. 用户在 14:45 另行授权把当前代码提交到 GitHub 的独立 handoff 分支供本地查看。最初因集成权限 403 被阻断，在用户补充授权后已复查可访问且有 admin 权限，正在准备发布。计划分支为 handoff/b-integration-20261003，但本文出具时远端分支与 commit 尚待验证，不能据此假定已发布。授权不包括 PR、merge、部署或新修复。
+6. 计划 GitHub 交付为经过筛查的 186 项产品文件，覆盖源码、测试、SQL、锁文件和可公开文档，并附安全传输清单；完整云端证据和控制记录不包含在此上传范围。它与原始 206 项候选清单并非完全相同的文件集合。仓库以前发布的工作流记录也不能代表当前执行状态。实际包含/排除项及 commit 以发布完成后的验证记录为准。
+
+二 精确版本和工作区
+
+仓库目录：
+/workspace/scratch/a7ac4a3b238b/restoration/restored/密码技术竞赛/agent-guard
+
+仓库地址：
+https://github.com/Qdcchh/agent-guard
+此地址是仓库定位。交接发布完成前，不能把该仓库现有 main 当作当前工作候选。
+
+Git 分支：main
+Git HEAD 基线：153f14e9be180a1eb26b0f0e0898048d45170569
+固定 B 来源提交：e521a461adb18d5fed89c8d1094647cb35eeff56
+首次 S1 实施前产品指纹：c7717215a416e340bd9d74274324fcde49cd0816cdba1b367aa59379db74ac21
+S4 v2 开始前的已停止候选：348739fae050449b0542ba349e56db167ff0ae7947b11ea440f78e30bae71cb1
+当前被测工作候选指纹：5a8f5a3be1e9021a0907d5aec3c8c48a4999d7ba0527e307450829f53b01f540
+
+注意：40 位 HEAD 是 Git commit；64 位当前候选是产品文件清单的 SHA-256 指纹，包含未提交产品文件，不是 commit SHA。只 checkout HEAD 得不到当前候选。
+
+2026-10-03 14:28:36 的 binding-retry-start.json 确认候选指纹一致，清单有 206 项，306 个只读文件、533 项保护记录和 644 项 freeze 检查无差异。S4 v2 在 38 个允许路径中改变了 16 个；累计 S4 改变 25 个。此次文档核对再次逐项读取这 206 个产品文件，其文件 SHA-256 全部与 candidate-retry-start.json 相符；未重新计算或冒充完整验收门。
+
+自 S1 实施前基线起的累计产品变化是 119 条：15 tracked、104 untracked、0 删除。精确逐路径 before/after hash、mode、state 在 interrupted-cumulative-source-delta.json。这个数量不包括所有工作流记录，也不把用户初始工作区已有未提交差异归为本次新工作。
+
+累计变化中的 15 个 tracked 产品路径：
+- .github/workflows/ci.yml
+- README.md
+- constraints.txt
+- pyproject.toml
+- src/agent_guard/__init__.py
+- src/agent_guard/contracts/__init__.py
+- src/agent_guard/contracts/execution.py
+- src/agent_guard/contracts/ledger.py
+- src/agent_guard/execution/service.py
+- src/agent_guard/ledger/migrate.py
+- src/agent_guard/ledger/service.py
+- tasks/A2-report.md
+- tests/fixtures/isolation.py
+- tests/integration/conftest.py
+- tests/integration/test_migrations.py
+
+当前 git status --short 还显示 HANDOFF.md、tasks/workflow/issues.md、tasks/workflow/state.json 有未提交修改，共 18 个 tracked 修改，均未暂存。还存在未跟踪的 B 模块、迁移、锁文件、测试、文档及工作流目录。不要覆盖、清理或把这些全部误称为本轮新增。
+
+interrupted-tracked-candidate-vs-HEAD.patch 只覆盖上述 15 个 tracked 路径相对 HEAD 的差异；它不含 104 个 untracked 产品路径，不是完整源码包，也不是相对用户初始工作区的纯新增补丁。
+
+历史 A001–006、B004–009 SQL，原始验收与原交付仍保留；旧 tasks/A2-report.md 字节另有归档。历史 SQL、已应用迁移记录和旧验收不能被重写。原 Mac 外部符号链接没有用于云端执行。
+
+三 已完成工作及责任归属
+
+S1 核心整合
+- 整合 A/B 迁移来源与共享契约。
+- 接通真实授权链、权限快照、证据绑定和 A 接受/执行路径。
+- 增加最终时刻状态检查及只读回执投影。
+
+S2 HTTP 边界
+- 修正 HTTP 边界拒绝分类，覆盖请求体、媒体类型、重复 header、认证、会话及角色边界。
+
+S3 私有文件
+- 使用绑定目录描述符的私有路径校验，非阻塞拒绝非普通文件；保留竞态和部分失败负例。
+
+S4 交付整合
+- 将目录描述符保护接入六次 CLI 私有写入。
+- 完成真实 CA/主机名校验 HTTPS 和默认 DID 解析验证。
+- 完善 CI、打包、手册、source/wheel 来源校验、真实 README 路径及互操作测试。
+- 当前范围仍是进程内 B→A 整合。A2.2 公开调用及最终动态查询、A2.3 持续签发/导出、A3 锚定和性能阶段没有启动。
+
+S4 v2 已实施的五项修复
+- DID 配置快照：build_app 时保存独立不可变字节，防止调用方后续修改别名或嵌套配置改变已构建运行时。来源是固定 B 的行为。
+- 离线回执时间一致性：验证一个共同可行的历史接受窗口，保留 proof 五秒偏差、所有 token/proof/key 约束；没有把 proof_iat 或迟延 receipt_iat 冒充实际 DB 接受时间，没有修改 wire 字段。来源是固定 B。
+- CRLF 旧迁移兼容：保留历史归一化 checksum，另存原始字节摘要用于执行前检查；不改旧 registry/hash/applied_at。原始字节与归一化校验冲突是此次整合回归。
+- 迁移 CLI：显式连接超时和固定脱敏错误输出。旧 CLI 风险在整合迁移入口中被保留，不能笼统归咎于 B 原作者。
+- check/run 配置一致性：共享组件校验，预期配置错误安全归类，真正的 RuntimeError 不被吞掉。来源是 B 配置/工厂/CLI 组合不一致。
+
+r2 的已保存 defects.json 已把上述五项记为 CLOSED_REVIEWED_R2，并有具体回归证据。这是单项关闭记录，不等于完整独立复核或阶段验收完成；实施报告中较早的 FIXED_PENDING_INDEPENDENT_REVIEW 描述应按时间理解。
+
+另需保留的归因
+- receipt_projection 的结果变体缺口和 lineage 的完成迁移下限问题，来自新增 S1 整合文件，固定 B 源中不存在这些文件。
+- applied_versions 的 A-view 问题来自 A/B 命名空间兼容改造；原 B 独立数字 registry 行为本身有其上下文。
+- 三个未批准的 A 缺陷继承自已接受 A2.1，相关缺陷逻辑/原测试字节未擅改。execution/service.py 在整合中存在其他已授权差异，并不等于其整个文件与 HEAD 一字不差；未改的是相应 A 缺陷逻辑。
+
+四 测试事实及不能混同的失败
+
+下述数量来自保存的 JUnit XML、同名 .exit/.log 和 argv；不同集合有重叠，不能相加成独立覆盖量。
+
+同一当前候选的全套测试
+- S4 v2 实施者 fresh source：2307 passed，0 failed/error/skipped，579.497 秒。
+- S4 v2 实施者 fresh noneditable wheel：2307 passed，0 failed/error/skipped，550.727 秒。
+- 独立 r2 source：2307 passed，0 failed/error/skipped，556.280 秒，exit 0。
+- 独立 r2 wheel：2307 passed，0 failed/error/skipped，577.967 秒，exit 0。
+- source/wheel 开始与结束清单绑定同一产品快照。wheel 在外部 harness 中运行，无 editable hook、无复制源码包或源码 shadow，父子进程安装来源有独立记录。
+
+当前独立失败探针
+- corrected-adversarial.xml：10 项，3 passed、7 failed、0 error/skipped。
+- 7 个失败分别是四个 non-read/read-shaped 结果分类反例、一个 257 项反例、两个 P13 oracle 反例。
+- receipt-duplicate-parent.xml 与 receipt-duplicate-pinned-full.xml：各有一个重复 grant 路径未拒绝的真实失败；一个针对当前候选，一个针对完整归档固定 B 来源。
+- 没有通过 xfail、skip 或删除断言隐藏这些失败。全套 2307 通过不能覆盖这些独立负例的失败事实。
+
+历史重放
+- A1 五项历史检查通过，原始历史用例保留。
+- 实施者 A2 历史集合：422 passed、2 failed；这不是当前独立续做集合的数量。
+- 独立 r2 retry-1 A2：482 项，480 passed、2 failed、0 error/skipped，114.478 秒，exit 1；14:30:58 开始，14:32:53 结束。
+- A2 两个失败为 test_r4_boundaries.py::test_outcome_typed_and_id_boundaries_keep_unknown[items-list-execute] 和 [items-list-query]。它们是已知旧断言与后来已接受的“结构相同 tuple→list quote 可接受”语义冲突；对应正控制仍通过。原断言未删除，不把结果写成全绿，也不把它们与七个当前 A 反例混为一谈。
+- 独立 retry-1 原始 B：224 项，204 passed、20 failed、0 error/skipped，217.411 秒，exit 1；14:32:53 至 14:36:31。
+- 独立 retry-1 B 等价适配副本：224 passed、0 failed/error/skipped，111.134 秒，exit 0；14:36:31 至 14:38:22。
+- 原 B 的 20 个失败集中在旧可重复双参与者 barrier 与当前真实 principal lock/final recheck 的交互。适配副本保留原业务断言和十轮，并保存 PID/锁等待/重检查证据。原始失败必须保留，不能声称原始 B 全绿。最终整体验收仍需明确认可这种等价性。
+- retry-1 final-witnesses-source：3 passed，2.231 秒，exit 0。
+- retry-1 final-witnesses-wheel：3 passed，2.738 秒，exit 0。
+
+实施与已有质量记录
+- Ruff check、Ruff format --check 和 git diff --check 均有 exit 0 记录。
+- README 的程序优先/CLI 优先、重复迁移、完整 bundle 和 B demo 在 source/wheel 中均实跑。
+- 保存了 TLS、默认 HTTPS DID、SM2/SM3 双向 OpenSSL 互操作、真实角色切换后权限拒绝、进程死亡/恢复及十轮竞态证据。
+- 当前普通 P13 测试通过不证明其异常 oracle 有效。最终 67 项要求及 60 项独立运行义务没有形成完整本轮终结矩阵；原 --require-accepted 未成功完成。
+
+五 中断时间线与资源状态
+
+11:44 的只读观察
+- 第二轮独立复核被平台阻断；当时同一任务的仅清理请求也被阻断。
+- 当时历史 A2 的 exit、wrapper 终结和最终清理尚未读到；postmaster.pid 存在不能证明进程仍活着，也不能证明已经清理。
+
+14:26 之后的已授权同一复核续做
+- 用户请求重试后，沿用同一复核者与同一候选，没有换路径规避限制。
+- binding-retry-start.json 在 14:28:36 确认快照一致。
+- resource-reconciliation.json 识别到上次中断遗留的专属 schema 和 downstream database；interrupted-owned-cleanup.json 记录只清理这些已确认自有遗留，remaining_schemas=[]。
+- 14:38:29 前，A2、原始 B、等价 B、source/wheel witnesses 和 final-resources 已有终结记录。
+- 14:39:30 再次遇到同类平台风险阻断，没有最终报告。
+
+本次交接只读补核得到的状态
+- retry-1/run-receipts.json 记录 final-resources 在 14:38:28.997423 开始、14:38:29.265200 结束，exit 0。
+- retry-1/final-resources.log 中 schemas=[]；数据库只余两套基础库和维护/模板库；连接记录仅检查命令自身的 active 连接。
+- retry-1/wrapper.exit=0，wrapper.log 明确记录 server stopped。
+- retry-1/resource-wrapper.exit=0，其日志也有 server stopped。
+- 因此“该次受控 wrapper 已终结，专属测试遗留清理与数据库停止有记录”已经可验证。旧交接中相应 UNVERIFIED 状态被这些较新记录补充。
+- 本次没有重新做跨执行 PID namespace 的实时进程检查，不能扩大为“当前不存在任何进程/资源”。下一位在开展任何新运行前仍需用受支持方式确认其实际资源状态与归属，不能按其他 namespace 的 PID 盲目操作。
+
+六 尚待处理的最小范围与批准边界
+
+B 离线回执重复 grant 路径
+- ID：BR-FINAL-RECEIPT-DUPLICATE，blocking。
+- 三个不同 DID/holder 的完整路径可有 root→middle→root 重复 grant ID，在真实临时受信密钥签名与摘要全部重算后通过离线验证，违反每节点一次的协议约束。
+- 这是受信签名者产生异常材料时的结构验证缺陷；不是签名伪造，也没有证明普通在线 AS/DB 能生成这种路径或发生在线预算绕过。正常 grant 主键/路径约束会阻止正常生成。
+- 最小已定位产品文件：src/agent_guard/evidence/receipt.py；应配真实签名的重复路径负例并保留相邻负/正控制。
+
+B 新增测试分支遮蔽
+- ID：BR-FINAL-RECEIPT-TEST-BRANCH，非 blocking 的测试覆盖问题。
+- future-token 分支被 startswith('future-') 先匹配，导致测试没有测到其名称所指条件。独立真实未来 token 探针能正确拒绝；不能据此另称实现存在新漏洞。
+- 两项 B 修复的 planning-r3 仅是草稿与 14 个拟议用例，尚无正式 plan/freeze/dispatch，不可直接按草稿开工。
+
+三个等待额外用户批准的继承 A 修复
+1. A21-R1-OUTCOME，HIGH/blocking。
+   最小源路径：src/agent_guard/execution/service.py。
+   non-read 工具收到匹配 read 形状的假成功结果时会错误终结、消耗额度且妨碍后续正常恢复；需要在终局前校验结果变体与工具一致。
+2. BR-FINAL-ITEM-LIMIT，HIGH/blocking。
+   最小源路径：src/agent_guard/tools/params.py。
+   256 项正控制通过，257 项在接受后被既有读取上限拒绝，留下预留和 review 状态；最小方向是在接受前拒绝超过 256 项。不能未经批准扩大所有上限或处理历史被困数据。
+3. BR-FINAL-P13-ORACLE，MEDIUM/blocking。
+   最小测试路径：tests/integration/test_execution_concurrency.py。
+   意外 RuntimeError 或不相关 ExecutionError 没有令原并发 oracle 正确失败；需要精确收集所有 worker 结果和允许错误，保留合法 UNKNOWN/恢复语义及竞态要求。
+
+批准和状态
+- 当前 handoff 文档与 GitHub 当前代码独立分支上传已获请求；集成授权问题已解决，发布结果尚待核验。
+- 三项 A 修复尚未获批。新 B 实施也须先有具体版本化方案、独立包审查及既定开工门，并受平台限制约束。
+- 未开始 A2.2/A2.3/A3。工程实施与复核阶段没有本轮新 commit/push/PR/merge/部署；后续仅新增获准的独立 handoff 分支发布，本文出具时尚未确认其 commit/push 完成。
+- 不能通过改写、换执行路径或替换复核者绕过平台拒绝。合法续做须先满足平台与实际权限条件，不能把交接文档当成新增授权。
+
+七 环境定位与复现证据
+
+已验证运行环境记录
+- Python 3.11.16，PostgreSQL 16.15。
+- 独立复核环境：/workspace/scratch/a7ac4a3b238b/br-environment/independent-review
+- source Python：上述目录 /venv/bin/python。
+- wheel Python：上述目录 /validation-r2/wheel-venv/bin/python。
+- 外部 wheel harness：上述目录 /validation-r2/wheel-harness。
+- 独立复核 PG owner 为 br_review，端口 55444；S4 实施者环境端口 55442，二者不能混用。
+- 18 个精确版本保存在该环境 requirements.freeze.txt 与仓库锁文件；包括 psycopg/psycopg-binary 3.2.13、pytest 8.3.5、tongsuopy 1.0.1、ruff 0.11.13、uvicorn 0.35.0。完整依赖以原文件为准。
+- 既有构建路径使用已审查 setuptools 80.9.0、uv 0.12.19 的 Linux wheel-only 构建；不是任意升级依赖或重建环境的批准。
+- 原生 Tongsuo/BabaSSL 报告 8.3.2；完整现时安全回补与精确 native wheel 构建 commit 未验证。OpenSSL 兼容字符串不能证明其未修补，也不能证明维护已充分验证。
+
+以下是已执行命令的审计入口，不是重试指令
+- 独立 source 的精确 argv、cwd：artifacts/workflow/br-final-independent-review-r2/source-full.argv.json。
+- 独立 wheel 的精确 argv、cwd：同目录 wheel-full.argv.json。
+- 最新历史回放、witnesses 和资源检查的 argv、起止 UTC、exit：同目录 retry-1/run-receipts.json。
+- source 命令入口是上述 source Python 的 -B -m pytest tests，并包含 no:cacheprovider、明确 basetemp、junitxml 和 junit_logging=all。
+- wheel 从外部 harness 用 wheel Python 执行，不可把源码 PYTHONPATH 注入后仍称 wheel 验证。
+- 这些绝对路径仅适用当前云端工作区；在本地不能原样假定存在。没有在本次交接时验证新的本地重现命令。
+
+安全的只读版本核对命令
+在前述仓库目录内运行 git rev-parse HEAD、git branch --show-current、git status --short 可核对基线与差异；这些命令本次实际执行并得到第二节结果。产品字节必须另与 candidate-retry-start.json 的 206 项清单逐项核对，不能只比 HEAD。
+
+八 证据索引
+
+以下路径均相对仓库根目录。保留原件，不要以新摘要覆盖原证据。
+
+E01 旧中断交接与绑定索引
+artifacts/workflow/br-cloud-controller/INTERRUPTED-HANDOFF-20261003.md
+artifacts/workflow/br-cloud-controller/interrupted-handoff-index.json
+该索引中的 15 个文件 SHA-256 本次全部复核一致；它只反映旧静态交接，未包含后来的 retry-1 记录。
+
+E02 累计产品变化与 tracked 补丁
+artifacts/workflow/br-cloud-controller/interrupted-cumulative-source-delta.json
+artifacts/workflow/br-cloud-controller/interrupted-tracked-candidate-vs-HEAD.patch
+
+E03 当前候选与续做绑定
+artifacts/workflow/br-final-independent-review-r2/candidate-retry-start.json
+artifacts/workflow/br-final-independent-review-r2/binding-retry-start.json
+artifacts/workflow/br-final-independent-review-r2/files-retry-start.json
+
+E04 最后完整实施报告与停止证据
+tasks/workflow/runs/B-remediation-integration/workers/integrator-1/implementation-cloud-r2.md
+artifacts/workflow/br-cloud-S4-integrate-integrator-1-r2/stopped-output.json
+artifacts/workflow/br-cloud-S4-integrate-integrator-1-r2/evidence-index.json
+artifacts/workflow/br-cloud-S4-integrate-integrator-1-r2/report-navigation-erratum.json
+artifacts/workflow/br-cloud-controller/ledger-s4-r2-transition.json
+
+E05 最后完整独立 NOT_ACCEPTED 结论
+artifacts/workflow/br-final-independent-review-r1/review.md
+artifacts/workflow/br-final-independent-review-r1/requirements-matrix.json
+artifacts/workflow/br-final-independent-review-r1/defects.json
+
+E06 当前独立 r2 的局部结果与仍缺终结
+artifacts/workflow/br-final-independent-review-r2/defects.json
+artifacts/workflow/br-final-independent-review-r2/source-full.xml
+artifacts/workflow/br-final-independent-review-r2/wheel-full.xml
+artifacts/workflow/br-final-independent-review-r2/corrected-adversarial.xml
+artifacts/workflow/br-final-independent-review-r2/receipt-duplicate-parent.xml
+artifacts/workflow/br-final-independent-review-r2/receipt-duplicate-pinned-full.xml
+同目录的最终 review.md 与 requirements-matrix.json 本次核对仍不存在。
+
+E07 最新续做完整命令结果和清理
+artifacts/workflow/br-final-independent-review-r2/retry-1/run-receipts.json
+artifacts/workflow/br-final-independent-review-r2/retry-1/historical-a2.xml
+artifacts/workflow/br-final-independent-review-r2/retry-1/historical-b-raw.xml
+artifacts/workflow/br-final-independent-review-r2/retry-1/historical-b-equivalent.xml
+artifacts/workflow/br-final-independent-review-r2/retry-1/final-witnesses-source.xml
+artifacts/workflow/br-final-independent-review-r2/retry-1/final-witnesses-wheel.xml
+artifacts/workflow/br-final-independent-review-r2/retry-1/interrupted-owned-cleanup.json
+artifacts/workflow/br-final-independent-review-r2/retry-1/final-resources.log
+artifacts/workflow/br-final-independent-review-r2/retry-1/final-resources.exit
+artifacts/workflow/br-final-independent-review-r2/retry-1/wrapper.log
+artifacts/workflow/br-final-independent-review-r2/retry-1/wrapper.exit
+
+E08 历史语义、归因与草案
+tasks/workflow/runs/A2.1-core/review-r7.md
+artifacts/workflow/br-cloud-controller/audit-origin-attribution.json
+artifacts/workflow/br-final-independent-review-r2/protocol-audit/duplicate-origin.json
+artifacts/workflow/br-cloud-S4-integrate-planning-r3/HOLD.md
+
+最新关键证据 SHA-256
+candidate-retry-start.json = 94b5f5c5a6916b1ca24f4afe6d4818cba2ed5e175920e3a108ae11a1aad1305c
+binding-retry-start.json = a6b9ffeee6a320794aa7869caa59ad5f188bf7b18efbe94b1f1d567f5e38d16f
+defects.json = 6a28dfd28e6a8a679ec25895e2a84b7efa7c975c25ea133766f733088ec6b999
+retry-1/run-receipts.json = ee134604b54a176f4bdb21d4132ab1812092be469dda9838ffb3cc779a82e749
+retry-1/historical-a2.xml = 966b64192717b188a0be163b7a0831501d6345defce67ea24d947e2ee66e2b92
+retry-1/historical-b-raw.xml = c25a1f63704e82efe38e8d236f0ad98509809fbf7443697103e7ca5d509291b8
+retry-1/historical-b-equivalent.xml = 4465ccb578f5f873cbb875875de9dce15279fed6631b3ea728153c8b8f3ac631
+retry-1/interrupted-owned-cleanup.json = de74d359539d0265640e073998b24b67deb8db599af7f672b5f002ddf02987f6
+retry-1/final-resources.log = ffaf874ade25e54c892863b2efa4f2031bb7507232e0c23a8d426cea993f8bcc
+retry-1/wrapper.log = 13bd440e6160594f06212f8d5d87ef18019cefaeb175665d2175fe88386c3390
+retry-1/wrapper.exit = 9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa
+这些简名的根目录是 artifacts/workflow/br-final-independent-review-r2/。
+
+九 下一位接手者检查单
+
+[ ] 先确认实际拿到的源码快照、HEAD、分支、未提交差异和 206 项文件字节；不可用主分支或单一 patch 冒充当前候选。
+[ ] 阅读 E04、E05、E06 与最新 E07；按证据时间更新理解，保留失败原件和历史归因，不重复已完成实施。
+[ ] 通过受支持方式核实当前执行环境、进程和资源归属；将“既有停止日志”与“实时不存在进程”分开，不误操作其他 owner 或 namespace。
+[ ] GitHub 集成授权已补齐；只按当前候选独立 handoff 分支范围发布。核实远端分支、commit 和传输清单后再交付链接；186 项筛查输出不包含完整云端证据，旧工作流不是当前状态。
+[ ] 三项 A 修复先取得具体批准；两项 B 收尾先完成正式版本化方案和既定审查/开工门。不得直接执行未冻结草案。
+[ ] 只有在平台允许、权限齐备且候选确定的情况下才能合法续做；补齐最终独立报告、67/60 要求矩阵、已知反例处理和验收门，不绕过平台限制。
+[ ] A2.2/A2.3/A3、PR/merge/部署另行明确授权和阶段条件；不要因测试总数通过自行推进。
+
+十 本交接附件的范围
+
+此 TXT 仅是可直接复制、搜索的 UTF-8 状态说明与证据导航，不内嵌完整源码、104 个未跟踪产品文件、全部测试、数据库、wheel 或完整证据目录。把它交给另一台机器或另一个接手者，仍需要交付对应源码快照和必要证据文件；仅此文档、仅 HEAD 或仅 tracked patch 都不足以重建当前候选。
+
+GitHub 交付应明确实际包含/排除内容，并核实敏感运行配置、测试临时密钥和环境数据未混入。当前筛查计划为 186 项产品文件及安全传输清单，完整云端证据/控制记录不上传；历史已发布工作流状态仍可能过时。请将发布完成后的实际分支和 commit 验证记录与本文配套使用。本文不承诺仅 clone 后即可无额外环境准备复现，也不提供平台限制规避或未经批准的重试步骤。
+
+
+公开代码交接范围补充（2026-10-03）
+本次仅传输当前产品代码、测试、SQL、配置、已筛查技术文档、此HANDOFF和产品SHA256清单。以下六个当前内部报告未获公开披露授权，完整排除：
+tasks/A2-report.md
+tasks/B-handoff.md
+tasks/B-integration-proposal.md
+tasks/B-interop.md
+tasks/B-progress.md
+tasks/B-remediation-report.md
+已在GitHub存在的A2-report与workflow控制文件保留旧版本，不代表当前候选状态；新B报告未上传，文档中指向它们或云端artifacts的链接可能不可用。本次不是完整云端项目/证据归档。已通过哈希验证的186项产品文件与冻结候选相应文件字节一致；HANDOFF是用户要求的新交接文档，不属于原冻结快照。当前状态仍为NOT_ACCEPTED/PARTIAL，上传不代表验收。

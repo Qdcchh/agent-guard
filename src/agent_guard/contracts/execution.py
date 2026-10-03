@@ -397,6 +397,7 @@ class VerifiedResultQuery:
     closed and nothing here may be treated as a confirmed B interface.
     """
 
+    subject: str
     profile: str
     tenant_id: str
     task_id: str

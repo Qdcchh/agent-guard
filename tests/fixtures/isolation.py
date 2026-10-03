@@ -39,6 +39,36 @@ MAINTENANCE_DBS = frozenset({"postgres", "template0", "template1"})
 #: Tables owned by the gateway ledger schema (schema-qualified for every wipe).
 #: 004 adds three more tables next to the seven A1 business tables; they are
 #: wiped together so a run never leaks execution state into the next test.
+RESET_TABLES = (
+    "ag_operation_evidence",
+    "ag_verified_evidence",
+    "ag_auth_events",
+    "ag_authorization_requests",
+    "ag_login_sessions",
+    "ag_login_csrf",
+    "ag_task_policies",
+    "ag_users",
+    "ag_grant_revocations",
+    "ag_tenant_admins",
+    "ag_task_revocations",
+    "ag_exchange_evidence",
+    "ag_delegations",
+    "ag_auth_evidence",
+    "ag_grant_tokens",
+    "ag_authorization_codes",
+    "ag_proofs",
+    "ag_ledger_event_nodes",
+    "ag_ledger_events",
+    "ag_operations",
+    "ag_grants",
+    "ag_tasks",
+    "ag_principals",
+    "ag_receipt_outbox",
+    "ag_execution_leases",
+    "ag_operation_review_flags",
+)
+
+# Preserve the original A read-only assertion helper's compatibility view.
 TABLES = (
     "ag_proofs",
     "ag_ledger_event_nodes",
@@ -161,9 +191,13 @@ def assert_owned(ns: Namespace) -> None:
 def reset_state(ns: Namespace) -> None:
     """Wipe ledger state inside the run's schema only, after ownership check."""
     assert_owned(ns)
-    targets = ", ".join(f'"{ns.schema}"."{table}"' for table in TABLES)
     with psycopg.connect(ns.base_dsn, connect_timeout=CONNECT_TIMEOUT_S) as conn:
         with conn.transaction():
+            bundle = conn.execute(
+                "SELECT to_regclass(%s)", (f'"{ns.schema}".ag_schema_migration_lineages',)
+            ).fetchone()[0]
+            tables = RESET_TABLES if bundle is not None else TABLES
+            targets = ", ".join(f'"{ns.schema}"."{table}"' for table in tables)
             conn.execute(f"TRUNCATE {targets} RESTART IDENTITY CASCADE")
 
 

@@ -31,9 +31,11 @@ PROFILE = "GM-MVP-1"
 
 #: Only purpose accepted by :meth:`ExecutionLedger.accept`.
 PURPOSE_INVOKE = "invoke"
+PURPOSE_RESULT_READ = "result-read"
 
 #: Fixed gateway audience/endpoint for tool invocations (no caller-supplied URLs).
 INVOKE_ENDPOINT = "https://gateway.agent-guard.test/v1/invocations"
+QUERY_ENDPOINT = "https://gateway.agent-guard.test/v1/operations/query"
 
 #: Fixed HTTP method bound by the future AG-Proof.
 INVOKE_METHOD = "POST"

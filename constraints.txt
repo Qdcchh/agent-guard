@@ -1,6 +1,19 @@
-# Reproducible install constraints for A1 runtime dependencies.
-# Apply with: python -m pip install -e '.[dev]' -c constraints.txt
-# Scope: only the packages introduced for the ledger (not a full local freeze;
-# local environments may run other Python versions, e.g. 3.14, while CI is 3.11).
+# Exact inherited B runtime/dev pins; no substitutions.
+cffi==2.1.1
+click==8.5.0
+h11==0.16.0
+pycparser==3.0
 psycopg==3.2.13
 psycopg-binary==3.2.13
+rfc8785==0.1.4
+tongsuopy==1.0.1
+typing_extensions==4.16.0
+tzdata==2026.4
+uvicorn==0.35.0
+colorama==0.4.6
+iniconfig==2.3.0
+packaging==26.3
+pluggy==1.6.0
+Pygments==2.21.0
+pytest==8.3.5
+ruff==0.11.13

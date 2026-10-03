@@ -1,5 +1,16 @@
 """Shared trusted in-process contracts (no crypto, no network entry point)."""
 
+from agent_guard.contracts.encoding import (
+    MAX_SAFE_INTEGER,
+    DuplicateKeyError,
+    EncodingError,
+    JsonObject,
+    JsonValue,
+    b64url_decode,
+    b64url_encode,
+    canonical_json_bytes,
+    load_strict_json,
+)
 from agent_guard.contracts.execution import (
     TERMINAL_STATUSES,
     DocumentReadParams,
@@ -30,6 +41,8 @@ from agent_guard.contracts.ledger import (
     MAX_SAFE_INT,
     PROFILE,
     PURPOSE_INVOKE,
+    PURPOSE_RESULT_READ,
+    QUERY_ENDPOINT,
     TOOL_VERSION,
     AcceptDisposition,
     AcceptResult,
@@ -40,6 +53,17 @@ from agent_guard.contracts.ledger import (
 )
 
 __all__ = [
+    "MAX_SAFE_INTEGER",
+    "DuplicateKeyError",
+    "EncodingError",
+    "JsonObject",
+    "JsonValue",
+    "b64url_decode",
+    "b64url_encode",
+    "canonical_json_bytes",
+    "load_strict_json",
+    "PURPOSE_RESULT_READ",
+    "QUERY_ENDPOINT",
     "CURRENCY",
     "INVOKE_ENDPOINT",
     "INVOKE_METHOD",

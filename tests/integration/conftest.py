@@ -17,7 +17,7 @@ from collections.abc import Iterator
 import psycopg
 import pytest
 
-from agent_guard.ledger import apply_migrations
+from agent_guard.ledger.lineage import apply_bundle_migrations
 from agent_guard.ledger.service import ExecutionLedger
 from tests.fixtures.execution import DOWNSTREAM_SECRET, A2Env, build_env
 from tests.fixtures.isolation import (
@@ -69,7 +69,7 @@ def dsn(namespace: Namespace) -> str:
 @pytest.fixture(scope="session")
 def migrated(namespace: Namespace) -> Namespace:
     with psycopg.connect(namespace.dsn, connect_timeout=5) as conn:
-        apply_migrations(conn)
+        apply_bundle_migrations(conn)
     return namespace
 
 
