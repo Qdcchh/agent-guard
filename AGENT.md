@@ -2,6 +2,8 @@
 
 适用于本仓库中的 AI 辅助开发和自动化修改。当前已有阶段实现，整体仍为 PARTIAL；不能将设计目标或未经正式验收的能力描述为已完成。
 
+当前角色与文档维护规则见 [现行工作流约定](tasks/workflow/current-policy.md)。每次修改同步修正过时、错误或无用的现行文档内容，并保护历史验收证据。
+
 ## 工作顺序
 
 1. 阅读 README、`docs/oauth-oidc-sm2-mvp.md`（当前方案与接口）、`docs/security-model.md`（安全与状态机）、`docs/acceptance.md`（验收）及相关模块测试。

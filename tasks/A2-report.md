@@ -1,8 +1,6 @@
 # A2 当前实现与验收索引
 
-更新：2026-10-04。**整体项目 PARTIAL；v1实施交付时五项补正 FIXED_PENDING_REVIEW。后续接受与合并结论以本轮 state 及主控正式报告为准。**
-
-本轮实施证据与67项完整矩阵：[implementation-r1](workflow/runs/local-remediation-20261004/implementation-r1.md)。后续验收和阶段状态：[本轮 state](workflow/runs/local-remediation-20261004/state.json)；问题状态：[台账](workflow/issues.md)。文档同步：[implementation-docs-r1](workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。实施自查不能代替 fresh reviewer 独立接受。
+更新：2026-10-04。**B 补正 ACCEPTED，PR #6 已合并 main（`d7e91c7`），整体项目 PARTIAL。** 当前证据：[完整独立复核](workflow/runs/local-remediation-20261004/review-r2.md)、[正式接受记录](workflow/runs/local-remediation-20261004/acceptance.md)、[当前上下文](workflow/context.md)。67 项／60 项独立运行完成，source/wheel 各 952＋1388 通过，远端 CI 同样通过。
 
 ## 版本与历史
 
@@ -16,7 +14,7 @@
 | 范围 | 当前说明 |
 | --- | --- |
 | A2.1 生命周期、四工具、可信报价、租约、全祖先预算、UNKNOWN恢复、outbox | 已有实现和历史验收；本轮修正成功结果变体与共享256项边界 |
-| B→A真实验签、权限快照、同事务原证据绑定、最终时刻检查 | 进程内候选，完整复验待fresh reviewer |
+| B→A真实验签、权限快照、同事务原证据绑定、最终时刻检查 | 进程内实现已通过完整独立复验；公开 HTTP 接入仍待 A2.2 |
 | 离线回执及规范投影SDK | 本轮拒绝非邻接重复grant，future-token真签名触发；不持续发布 |
 | P13测试效力 | 本轮有界全结果/异常收集、精确租约错误及有效失败负控 |
 | A2.2公开invoke与最终动态result-read | 未完成 |
@@ -27,4 +25,4 @@
 
 独占Linux amd64、Python3.11.17、非root UID501、原锁安装、真实PG16；源码挂载只读且自有逐字执行副本，独立非editable wheel。完整source/wheel非集成与PG、真实进程和10轮竞争、TLS/OpenSSL、README/demo、历史原件失败与等价diff、资源精确清理均以实施报告的实际命令/JUnit/哈希为准。
 
-v1实施交付时五个issue均为FIXED_PENDING_REVIEW，整体项目PARTIAL；后续issue结论见本轮state/台账。用户批准修复/完整复核/条件合并及本轮适配；worker停写后主控冻结并安排fresh reviewer，无验收不放行。
+原五项及新增超时负控问题均由 fresh r2 关闭；历史实施与失败报告保留原状态，不能替代当前接受记录。后续按现行工作流逐阶段批准。

@@ -1,6 +1,6 @@
 # 验收与实验矩阵
 
-本文是目标验收矩阵，不凭已有代码或测试数量推定通过。各项结论须绑定测试环境、候选版本、命令、样本规模及原始结果。本轮 v1 实施交付时五项修补均标记 FIXED_PENDING_REVIEW，产品自查不是正式接受；具体命令、原失败、JUnit 和67项/60运行义务见 [v1实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)。后续验收与合并结论以 [本轮控制状态](../tasks/workflow/runs/local-remediation-20261004/state.json) 及主控关联的正式报告为准；本文档同步证据见 [文档实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。整体项目仍 PARTIAL：A2.2公开调用/最终动态查询、A2.3持续签名发布、A3独立锚定/导出/完整采购演示/规模对照实验尚未完成，outbox保持 PENDING。
+本轮 B 补正已独立验收并通过 CI，经 [PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 合并 main。67 项验收、60 项独立运行完成；见 [正式接受记录](../tasks/workflow/runs/local-remediation-20261004/acceptance.md)及 [当前交接](../tasks/workflow/context.md)。整体项目仍 **PARTIAL**：A2.2 公开调用/最终动态查询、A2.3 持续签名发布、A3 独立锚定/完整演示与实验未完成；outbox 保持 PENDING。阶段通过不代表绝对无缺陷。
 
 本文是唯一验收清单；[实施方案](oauth-oidc-sm2-mvp.md)定义接口，[安全模型](security-model.md)定义事务与安全边界。M编号为初版里程碑；SEC/CON/REC/AUD/ENG为成熟版回归维度，两者可关联同一测试，不需重复编写两套脚本。
 

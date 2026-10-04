@@ -1,8 +1,8 @@
 # 独立审查：<review_kind>／<阶段 ID>／第 <轮次> 轮
 
-> 此模板由 fresh reviewer 完整填写并返回 Markdown。`PACKAGE_REVIEW` 保存为 `runs/<stage>/package-review-rN.md`；`IMPLEMENTATION_ACCEPTANCE` 保存为 `runs/<stage>/review-rN.md`。Reviewer不编辑受审源码、测试、需求或正式报告，只可写本轮自有 `artifacts/workflow/<run-id>/` 临时探针与证据。遵守 [独立阶段验收契约](../review-contract.md)，读取 [上下文](../context.md)、[状态](../state.json)、[实施契约](../implementation-contract.md)、[当前阶段](../stages/A2.1-core.md)，不得以实施报告替代实际文件或将既有日志核对称为本轮实跑。输出报告链接改成仓库绝对路径或与最终保存位置匹配的相对路径。
+> 此模板由 fresh reviewer 完整填写并返回 Markdown。`PACKAGE_REVIEW` 保存为 `runs/<stage>/package-review-rN.md`；`IMPLEMENTATION_ACCEPTANCE` 保存为 `runs/<stage>/review-rN.md`。Reviewer不编辑受审源码、测试、需求或正式报告，只可写本轮自有 `artifacts/workflow/<run-id>/` 临时探针与证据。遵守 [独立阶段验收契约](../review-contract.md)，读取 [上下文](../context.md)、当前阶段控制记录（由任务包指定；旧 state.json 仅作历史）、[实施契约](../implementation-contract.md)、本轮已批准阶段文档，不得以实施报告替代实际文件或将既有日志核对称为本轮实跑。输出报告链接改成仓库绝对路径或与最终保存位置匹配的相对路径。
 
-上方当前阶段链接及下文31项/专项只适用于初始`A2.1-core`。审查其他阶段时，改读与真实`state.current_stage`一致、经真人批准的正式阶段文档与版本化任务包，按其全部原始要求和`state.expected_requirement_ids`生成完整当段矩阵，继续阅读原A2任务全篇和前段完整acceptance，保留前段回归并增加本段义务。不能沿用或删减31项冒充后续完整验收；A2.2/A2.3 outline只是提案，不是开工包，也不能当成已有批准。
+下文31项/专项只适用于历史`A2.1-core`。审查其他阶段时，改读与真实`state.current_stage`一致、经真人批准的正式阶段文档与版本化任务包，按其全部原始要求和`state.expected_requirement_ids`生成完整当段矩阵，继续阅读原A2任务全篇和前段完整acceptance，保留前段回归并增加本段义务。不能沿用或删减31项冒充后续完整验收；A2.2/A2.3 outline只是提案，不是开工包，也不能当成已有批准。
 
 `PACKAGE_REVIEW`仅审需求完整性、方案、基线兼容、范围/所有权、依赖、验证与隔离计划以及授权边界，不要求尚未实施的A2行为实跑、不创建业务运行资源、不把未实现自动判阶段失败。下文第4/5节填写每项设计与计划检查；第6/7节写“包审未运行行为测试”及已有静态核对，不填虚假PASS/计数。只有`IMPLEMENTATION_ACCEPTANCE`必须完整独立实跑本阶段所有必需检查，不能用包审例外豁免。
 
@@ -11,7 +11,7 @@
 - 审查日期/时区：<实际时间，Asia/Shanghai>。
 - review_kind：<PACKAGE_REVIEW / IMPLEMENTATION_ACCEPTANCE，必填>。
 - 本轮结论：<包审：PACKAGE_READY / PACKAGE_CHANGES_REQUESTED / BLOCKED；实施验收：ACCEPTED / NOT_ACCEPTED / BLOCKED>。
-- 受验收阶段：<当前 A2.1-core／检查点二，任务路径、用户已批准的范围>。
+- 受验收阶段：<本轮已批准阶段 ID、任务包路径与版本、用户已批准的范围>。
 - 当前项目整体状态：<PARTIAL 等；包审不设置阶段ACCEPTED，阶段通过不等于完整 A2 或项目通过>。
 - 阻断项：<稳定 issue ID；若无写“无”，不得留模板占位>。
 - 未纳入当前阶段的真实 B 验签/HTTP/签名门槛：<具体项及后续阶段；不可写成已通过>。
@@ -24,8 +24,8 @@
 | --- | --- |
 | Reviewer session／Task ID、模型、推理档位 | <新子会话，Sol xhigh；无法获得的元数据明确注明> |
 | 仓库、阶段 ID、审查轮次 | <绝对路径与ID> |
-| 原始任务、最新门槛与计划 | <文件路径及内容SHA-256；当前最新门槛为 A2-review-ckpt1-r2.md> |
-| 真人授权 source_message | <包审可如实记PENDING且无实施批准；实施验收须主控已核原OpenCode真人消息的session/message引用与范围，worker/reviewer不得自填批准> |
+| 原始任务、最新门槛与计划 | <文件路径及内容SHA-256；填写本轮适用的前段接受记录、运行门与正式任务包，不默认历史检查点> |
+| 真人授权 source_message | <包审可如实记PENDING且无实施批准；实施验收须主控已核当前平台真实用户消息的可取得引用与范围（缺失ID不得编造），worker/reviewer不得自填批准> |
 | 分支／HEAD／比较基线 | <SHA与实际状态；未提交内容由清单绑定> |
 | 完整问题台账入口及指纹 | <路径、版本/指纹> |
 | Staged/unstaged diff | <入口及指纹，包含相对任务基线变化> |
@@ -105,4 +105,4 @@
 
 ## 10. 交主控的明确动作
 
-<PACKAGE_CHANGES_REQUESTED或包审BLOCKED：仅由主控补正包/处理方案依赖，重新冻结并fresh包审。PACKAGE_READY：包质量合格，不等实施授权/阶段验收；主控核真人审批后方可派MiMo，仍必须后续独立实跑验收。NOT_ACCEPTED：当前阶段委派实施补正，冻结后fresh实施验收，保留完整矩阵和台账。实施验收BLOCKED：记录解除条件，不伪放行或无进展重复。ACCEPTED：仅对本阶段/版本建议通过，主控核完整报告与原始证据后记阶段结果，停止等待下一大阶段人工批准。不自动进入A2.2/2.3/A3，不commit/push/PR。>
+<PACKAGE_CHANGES_REQUESTED或包审BLOCKED：仅由主控补正包/处理方案依赖，重新冻结并fresh包审。PACKAGE_READY：包质量合格，不等实施授权/阶段验收；主控核真人审批后方可派已配置 worker，仍必须后续独立实跑验收。NOT_ACCEPTED：当前阶段委派实施补正，冻结后fresh实施验收，保留完整矩阵和台账。实施验收BLOCKED：记录解除条件，不伪放行或无进展重复。ACCEPTED：仅对本阶段/版本建议通过，主控核完整报告与原始证据后记阶段结果，停止等待下一大阶段人工批准。不自动进入A2.2/2.3/A3，不commit/push/PR。>

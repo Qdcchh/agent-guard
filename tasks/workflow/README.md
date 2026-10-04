@@ -1,13 +1,13 @@
 # 分阶段实施与独立验收工作流
 
-更新：2026-10-04。当前入口采用 [Codex 补充契约](runs/setup/codex-astra-sol-v1/workflow-contract.md)；旧 OpenCode 启动命令和初始等待状态已移除。原实施/审查契约保留其安全、独立性和证据义务，角色/工具启动以补充契约为准。
+更新：2026-10-04。当前角色和交付以 [现行约定](current-policy.md) 为准；基础义务采用 [Codex 补充契约](runs/setup/codex-astra-sol-v1/workflow-contract.md)；旧 OpenCode 启动命令和初始等待状态已移除。原实施/审查契约保留其安全、独立性和证据义务，角色配置以现行约定为准，工具绑定遵循基础契约与本阶段明确获批的适配。
 
 ## 恢复顺序
 
 1. 阅读 [HANDOFF](../../HANDOFF.md)、[当前上下文](context.md)、[当前正式验收](runs/local-remediation-20261004/acceptance.md)、[问题台账](issues.md) 和真实 Git 状态。
 2. 阅读 [原 A2 任务](../A2-execution-gateway.md)、设计/安全/验收要求及相关实际实现/测试；历史完成记录不能替代当前证据。
-3. 当前 B 整合补正已通过 [fresh r2独立验收](runs/local-remediation-20261004/review-r2.md)，67项/60独立运行全部完成；Git合并另受远端CI和审核门约束。A2.1 已有 [历史验收](runs/A2.1-core/acceptance.md)，不得从“尚未实施”重新开工，也不得因旧 state.json 的 ACCEPTED 放行当前 B 分支。
-4. 本轮生效包为 [task-v1](runs/local-remediation-20261004/task-v1.md)，用户已明确批准 [运行适配](runs/local-remediation-20261004/runtime-addendum-proposal.md)，授权记录见 [authorization](runs/local-remediation-20261004/authorization.json)。[新独立包审](runs/local-remediation-20261004/package-review-r1.md) 为 PACKAGE_READY，当前状态见 [本轮 state](runs/local-remediation-20261004/state.json)。原五项与新增超时负控已由新独立完整验收关闭；失败轮与补正保留，不改旧状态或冒用旧会话。
+3. 当前 B 整合补正已通过 [fresh r2独立验收](runs/local-remediation-20261004/review-r2.md)，67项/60独立运行全部完成；PR #6 已合入 main（`d7e91c7`），CI 全通过；具体授权与交付见现行约定。A2.1 已有 [历史验收](runs/A2.1-core/acceptance.md)，不得从“尚未实施”重新开工，也不得因旧 state.json 的 ACCEPTED 放行当前 B 分支。
+4. 本轮生效包为 [task-v1](runs/local-remediation-20261004/task-v1.md)，用户已明确批准 [运行适配](runs/local-remediation-20261004/runtime-addendum-proposal.md)，授权记录见 [authorization](runs/local-remediation-20261004/authorization.json)。[新独立包审](runs/local-remediation-20261004/package-review-r1.md) 为 PACKAGE_READY，B 验收时控制记录见 [本轮 state](runs/local-remediation-20261004/state.json)。原五项与新增超时负控已由新独立完整验收关闭；失败轮与补正保留，不改旧状态或冒用旧会话。
 
 ## 阶段和停止点
 
@@ -46,3 +46,5 @@
 - 只运行与清理可核验自有资源，普通部署 DSN 不作为测试目标，不停无关容器，不绕过平台阻断。
 
 已被替代的 `runs/setup/20261001-setup.md` 配置记录已删除；其原件及旧启动说明可从 Git `2051b40` 追溯。历史包审中的该路径只是当时读取清单，不是当前运行依赖。
+
+换模型或新会话时使用 [逐阶段接续提示词](continue-prompt.md)。提示词必须由用户实际发送才形成授权，不能把仓库中的模板当成用户消息。

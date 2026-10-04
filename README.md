@@ -4,7 +4,7 @@
 
 目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
 
-> 本轮补正（2026-10-04）：结果变体与工具绑定、统一 256 项边界、离线完整路径 grant 唯一性、P13 线程 oracle 和 future-token 分支已实施；v1实施交付时五项均为 **FIXED_PENDING_REVIEW**。实施证据与完整自查见 [implementation-r1](tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)，后续验收状态见 [本轮控制状态](tasks/workflow/runs/local-remediation-20261004/state.json)。整体项目仍为 **PARTIAL**；后续接受与合并结论以本轮控制状态及主控关联的正式报告为准，须 fresh reviewer 完整复验后由主控决定。文档同步见 [implementation-docs-r1](tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。公开调用/最终动态查询（A2.2）、持续签名发布（A2.3）、独立锚定及完整演示（A3）尚未完成，outbox 保持 `PENDING`。局部测试通过不代表阶段验收。
+本轮 B 补正已独立验收并通过 CI，经 [PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 合并 main。67 项验收、60 项独立运行完成；见 [正式接受记录](tasks/workflow/runs/local-remediation-20261004/acceptance.md)及 [当前交接](tasks/workflow/context.md)。整体项目仍 **PARTIAL**：A2.2 公开调用/最终动态查询、A2.3 持续签名发布、A3 独立锚定/完整演示与实验未完成；outbox 保持 PENDING。阶段通过不代表绝对无缺陷。
 
 `product-manifest.json` 保留 2026-10-03 原始交付的 186 项文件哈希；本轮文档已更新，该清单仅用于核对历史传输快照，不是当前工作树清单。旧云端内部报告与原始证据没有随此分支完整交付，不能把旧工作流 `state.json` 的 A2.1 `ACCEPTED` 当作 B 整合放行。
 
@@ -437,6 +437,6 @@ A 负责可信执行与集成；B 负责密码授权及审计核心；C 在后�
 
 OAuth/OIDC、SM2/SM3、Agent间委托与DID的唯一当前设计见 [实施及接口契约](docs/oauth-oidc-sm2-mvp.md)。不再并行维护父holder直接签发子凭证的旧路线。老师是否要求实改liboauth2本体仍需确认，该问题影响实现选型，不允许绕开既定安全契约。
 
-从最新 `main` 创建短期任务分支，提交 PR，CI通过后Squash merge。队友PR须由CODEOWNERS指定的仓库负责人 `Qdcchh` 审核批准；负责人自己的PR免审批，但合并前仍须确认CI通过、分支最新且讨论解决。历史仓库配置曾通过管理员豁免实现负责人的免审批；发布时由主控核实实际保护规则。本轮按用户授权的正常Git门处理，不自批或管理员绕过。禁止强推或删除main。
+从最新 `main` 创建短期任务分支，按已授权范围提交 PR，必需 CI 与实际分支审核条件满足后 Squash merge。不得自批、强推或删除 main；管理员审核豁免必须另有明确授权，不因作者是负责人而自动使用。PR #6 已获本次具体豁免并合并，后续 PR 不自动继承；当前角色、授权和交付见 [现行工作流约定](tasks/workflow/current-policy.md)。
 
 修改前先阅读 [AGENT.md](AGENT.md)、[实施与接口](docs/oauth-oidc-sm2-mvp.md)、[安全模型](docs/security-model.md)和[验收矩阵](docs/acceptance.md)。设计文档不代表实现完成；选型和契约变更需先明确边界、更新测试与文档，再进入真实实现。
