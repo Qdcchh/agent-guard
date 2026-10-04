@@ -4,7 +4,7 @@
 
 目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
 
-本轮 B 补正已独立验收并通过 CI，经 [PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 合并 main。67 项验收、60 项独立运行完成；见 [正式接受记录](tasks/workflow/runs/local-remediation-20261004/acceptance.md)及 [当前交接](tasks/workflow/context.md)。整体项目仍 **PARTIAL**：A2.2 公开调用/最终动态查询、A2.3 持续签名发布、A3 独立锚定/完整演示与实验未完成；outbox 保持 PENDING。阶段通过不代表绝对无缺陷。
+本轮 B 补正已独立验收并通过 CI，经 [PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 合并 main。67 项验收、60 项独立运行完成；见 [正式接受记录](tasks/workflow/runs/local-remediation-20261004/acceptance.md)及 [当前交接](tasks/workflow/context.md)。整体项目仍 **PARTIAL**：A2.2 已完成95项/88运行义务的独立验收，A2.3 持续签名发布、A3 独立锚定/完整演示与实验未完成；outbox 保持 PENDING。阶段通过不代表绝对无缺陷。
 
 `product-manifest.json` 保留 2026-10-03 原始交付的 186 项文件哈希；本轮文档已更新，该清单仅用于核对历史传输快照，不是当前工作树清单。旧云端内部报告与原始证据没有随此分支完整交付，不能把旧工作流 `state.json` 的 A2.1 `ACCEPTED` 当作 B 整合放行。
 
@@ -86,7 +86,7 @@ constraints.txt              运行依赖可复现约束
 .github/workflows/ci.yml     lint + unit + 迁移 + 真实 PostgreSQL 集成测试
 ```
 
-已增加 `crypto/`、`authorization/`、`identity/`、`evidence/`、`server/`。其余网关、代理、审计与实验能力按后续范围实施，不以空目录充当实现。`VerifiedInvocation` / `TrustedPermissionSnapshot` 是**可信进程内输入**，由真实 B 验证适配器或可信初始化构造；不存在“已验权 JSON”直接入库的入口，也没有生产假验权开关。
+已增加 `crypto/`、`authorization/`、`identity/`、`evidence/`、`server/`、`gateway/`及`execution/query.py`。其余网关、代理、审计与实验能力按后续范围实施，不以空目录充当实现。`VerifiedInvocation` / `TrustedPermissionSnapshot` 是**可信进程内输入**，由真实 B 验证适配器或可信初始化构造；不存在“已验权 JSON”直接入库的入口，也没有生产假验权开关。
 
 文档按上述顺序阅读。旧通用凭证协议与重复架构文档已移除，可通过Git历史查看；威胁模型和执行状态机已合并。Markdown是唯一文档源，PDF仅作本地导出，不入库且需自行重新生成。
 
@@ -321,8 +321,7 @@ provenance、触发器损坏亦拒绝。先备份并验证恢复；没有无损�
 
 `tests.demo_b_flow` 是合成数据的授权演示，真实数据库/SM2 签名支持根、两级
 委托、盗用拒绝及撤销；不冒充完整采购 HTTP 演示。四工具真实签名接入与恢复
-在 `tests/integration/test_verified_execution.py` 验证。公开 HTTP 网关和动态
-operation 查询仍待 A2.2，连续发布和导出待 A2.3。
+在 `tests/integration/test_verified_execution.py` 验证。公开HTTP网关和动态operation查询已完成A2.2独立验收；连续发布和导出待A2.3。
 
 ### 私有配置与开发 HTTPS
 
@@ -367,6 +366,43 @@ exp 边界求一个共同可能的历史接受时刻，且不晚于已签 receip
 自定义 legacy SQL 继续使用历史通用换行归一化 checksum，已有 CRLF 登记重复
 执行保持原行（含 applied_at）；独立 raw digest 防止执行前换字节。canonical bundle
 仍校验原 SQL 字节。迁移 CLI 显式 connect_timeout=5，失败固定脱敏诊断和非零退出。
+
+### A2.2 网关配置与 HTTPS 启动
+
+本段仍待独立验收。网关只提供`POST /v1/invocations`与
+`POST /v1/operations/query`，使用规范中的固定HTTPS签名端点。
+Authorization须为`AGPoP <access-token>`，另带`AG-Proof`，body为严格JSON。
+invoke只原子接受并返回202，不自动调用下游；可信内部worker单独推进。
+query使用同一授权链的当前权限、当前key/撤销/时效及新proof，零业务金额/次数。
+未知或非本人operation统一403；终局前result为null，outbox始终PENDING且回执null。
+
+以下步骤可独立执行；所有路径/DSN由操作者自己的资源注入，不依赖artifacts。
+`init`生成合成公开信任与私有下游secret，AS/代理私钥不会写入网关目录。
+正式调用须把config里的issuer、AS公钥、历史身份登记、当前DID快照和catalog
+替换为批准的可信来源；AS及代理私钥由各自独立信任域保管。
+
+```bash
+export RUN_GATEWAY_CONFIG_DIR="$RUN_PRIVATE_PARENT/gateway-demo"
+(umask 022; python -m agent_guard.gateway init --out "$RUN_GATEWAY_CONFIG_DIR")
+python -m agent_guard.gateway check --config "$RUN_GATEWAY_CONFIG_DIR/config.json"
+# 使用独立的网关/下游数据库；管理员显式完成bundle/下游迁移和可信初始化。
+# factory/check/run不会reset、provision或隐式迁移数据库。
+export AG_GATEWAY_DATABASE_URL="$RUN_GATEWAY_DSN"
+export AG_GATEWAY_DOWNSTREAM_DATABASE_URL="$RUN_DOWNSTREAM_DSN"
+python -m agent_guard.gateway run --config "$RUN_GATEWAY_CONFIG_DIR/config.json" \
+  --host 127.0.0.1 --port 8444 --ssl-certfile "$TLS_CERT_FILE" --ssl-keyfile "$TLS_KEY_FILE"
+# Ctrl-C并等待退出；客户端以自己的可信CA校验TLS及gateway.agent-guard.test SAN。
+unset AG_GATEWAY_DATABASE_URL AG_GATEWAY_DOWNSTREAM_DATABASE_URL
+```
+
+没有默认DB或普通部署DSN回退，TLS证书/密钥必需，配置/私有文件失败关闭。
+请求最多65536字节、最多100个头且头累计65536字节；只接受JSON UTF-8。
+响应JSON沿用GM-MVP-1规范编码的65536字节上限，包含转义后的完整序列化大小；坏可信结果或超限
+返回503 TRUSTED_STATE_UNAVAILABLE。查询在提交前校验该上限，失败不消耗proof。
+同步DB工作在有界线程池执行，超时后容量直到真实线程退出才释放。
+已接受事务可在HTTP超时后完成，客户端用新proof和原业务幂等键重试。
+响应含服务生成的32位hex request_id，禁止缓存；401只声明AGPoP挑战。
+此私有GM-MVP-1协议不声明标准DPoP兼容。无新回执签名/发布/锚定接口。
 
 ### 非 editable wheel 复现
 

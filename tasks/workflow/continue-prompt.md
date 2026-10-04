@@ -1,21 +1,19 @@
 # 换模型后的接续提示词
 
-将下面整段发给新的主会话；主会话在界面选择 `gpt-6.1-sol / high`。这段文字只有用户实际发送后才构成本段授权，文件自身不是授权。
+在界面选择主会话 `gpt-6.1-sol/high`，发送下方代码块。文件自身不是真人授权；接续时核正式授权记录和最新真人限制。
 
 ```text
-请继续 Agent Guard 项目，仓库为 /Users/qdcc/Documents/ChatGPT/密码竞赛/agent-guard-handoff，不要误用父目录的另一个 Git 仓库。
+请继续 /Users/qdcc/Documents/ChatGPT/密码竞赛/agent-guard-handoff 项目，不误用父目录的另一个Git仓库。先读AGENTS.md/AGENT.md、HANDOFF.md、tasks/workflow/README.md/current-policy.md/context.md/issues.md、当前stage/state/正式任务包/完整需求矩阵/最新完整review和补正；再读原始A2任务、接口、安全、验收文档和受影响真实代码/测试。检查真实Git分支/HEAD/改动/远端，保留所有既有提交和未提交内容，不reset/clean。
 
-先读取 AGENTS.md、AGENT.md、HANDOFF.md、tasks/workflow/README.md、tasks/workflow/current-policy.md、tasks/workflow/context.md、tasks/workflow/issues.md、tasks/workflow/stages/A2.2-integration.md、tasks/workflow/stages/A2.3-receipts.md，以及 tasks/A2-execution-gateway.md、docs/oauth-oidc-sm2-mvp.md、docs/security-model.md、docs/acceptance.md和相关实现测试；检查真实 Git 分支、工作区改动及远端状态。不要依赖上一个模型的上下文，也不要覆盖已有未提交文档。B 补正已通过独立验收并由 PR #6 合入 main，产品基线 d7e91c75014d1097c822936a16559229e2b4906a。历史报告是证据，不是当前待办。
+按已记录真人连续授权：A2.2补正与fresh完整复验通过后处理合并，无论合并是否可行都继续A2.3并完整验收A2，再按A3四段计划持续到全部A3完成。不要把历史r3或r4自查通过当当前接受，也不要因旧模板单段停止点重复询问已获批准的范围。每个小段必须先版本化规划包、精确文件与依赖所有权、完整原始需求/断言矩阵和自有资源方案，经fresh独立PACKAGE_READY后实施；停写全冻结后fresh独立完整验收，失败同段补正再换新reviewer全复验。
 
-本次只授权继续下一个尚未完成的大阶段：若 A2.2 尚未正式接受就做 A2.2；只有 A2.2 已正式接受才做 A2.3。若两段都已正式接受，请先汇报并提出 A3 任务包，不自动开展 A3。先简要说明本次阶段、交付目标和已存在的能力，再按工作流推进；不要重复开发已验收部分。
+主控gpt-6.1-sol/high，worker gpt-6.1-sol/medium，每轮新reviewer gpt-6.1-sol/xhigh；请求参数及原生回执真实记录，有效后台metadata未知记UNKNOWN。各段保存具体有限适配和既有持续真人批准来源；同类缺模型元数据/旧门绑定按已批准实证方式继续，不重复确认，不降低标准、不造metadata、不改旧门或分支保护。
 
-主 agent 使用 gpt-6.1-sol/high；实施 worker 使用 gpt-6.1-sol/medium；每次包审和每轮实现验收使用新的独立 gpt-6.1-sol/xhigh reviewer。实际后台配置无法核实就记 UNKNOWN，不伪造元数据。主控先建立完整版本化任务包、精确文件范围、需求/断言矩阵与独占资源方案，独立包审通过后才实施。原本轮有限运行适配不自动继承；如果原生运行门仍有缺口，先写出适用于本阶段的具体适配方案并向我确认，这不影响已经明确授权的阅读和建包。
+保留真实SM2/SM3、真实PG/TLS/独立事务、10轮有效竞态、真进程恢复、source/wheel、全部前段/历史/原探针与等价探针、完整矩阵和原始脱敏证据。适合多agent协作的worker任务按独立文件/资源分工开合适数量子agent；共享迁移/类型/锁序/fixtures先串行冻结，再并行独立部分，整合后完整自查与fresh验收。
 
-在本次获批阶段内持续完成实施、自查、停写冻结、独立完整验收、缺陷补正和新 reviewer 复验。保留真实签名、真实 PostgreSQL、并发/进程恢复、source/wheel 及前段回归等完整要求；不跳过、不降低断言，不用历史日志代替独立实跑。每次只完成这一大阶段，通过后停止，向我说明验收证据、局限和下一段建议，不自动进入下一阶段或部署。
+过时、错误、重复或无用的现行文档内容随任务修改或删除并修复引用；历史授权/任务/失败/验收/原始证据/迁移和依赖锁保留，当前状态如实维护。只清理自己核实owner/ID的资源，不连接或修改既有无关容器。
 
-发现过时、错误、重复或无用的现行文档内容，应随任务修改或删除并修复引用。历史授权、失败/验收记录、原始证据、迁移与依赖锁不得因“过时”删除或改写事实。交接状态以当前事实为准。
-
-本次也授权通过验收后的 commit、push 和创建 PR；合并仍需 CI 和仓库审核条件满足。PR #6 的管理员审核豁免仅限那一次，不自动复用；如再次需要例外，先提供可审 PR 和通过的 CI，再询问我。任何真正阻塞、范围变更或需我决定的问题及时提出，其余在已有授权范围内继续推进。
+通过验收后的commit/push/PR已有授权，创建PR后附到本聊天。合并须实际CI和审核条件；PR6管理员例外不继承，需要新例外时先准备具体PR及通过CI再询问，等待时继续已授权的后段工作。本地可复现部署/演示/实验属于A3，对外生产发布不推定。遇到确需我决定的问题及时提出，其余按已有授权持续完成；最终汇报实际代码、验收、Git交付和局限，不声称绝对无缺陷。
 ```
 
-每段结束后再发送同一提示词，会依据正式接受状态选择 A2.2 或 A2.3；A3 必须另外明确批准。可以在最后追加本轮时间、资源或交付限制。切换模型前后都保留当前 checkout；新会话先读 Git 状态，不要重置文档改动。
+若只想完成一个小段，可追加“本次只推进<阶段ID>，完成实施/独立复核/补正后停下”；该新的明确限制优先。当前全范围持续授权见 [A3授权](runs/A3-closure-20261004/authorization.json)。

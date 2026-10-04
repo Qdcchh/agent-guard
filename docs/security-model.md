@@ -1,6 +1,6 @@
 # 安全模型与执行状态
 
-状态：GM-MVP-1的规范性安全要求，不是全部要求均已实现或验收的声明。本轮 v1 实施交付时五项修补均标记 FIXED_PENDING_REVIEW，产品自查不是正式接受；具体命令、原失败、JUnit 和67项/60运行义务见 [v1实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)。后续验收与合并结论以 [本轮控制状态](../tasks/workflow/runs/local-remediation-20261004/state.json) 及主控关联的正式报告为准；本文档同步证据见 [文档实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。整体项目仍 PARTIAL：A2.2公开调用/最终动态查询、A2.3持续签名发布、A3独立锚定/导出/完整采购演示/规模对照实验尚未完成，outbox保持 PENDING。 消息接口以 [实施方案](oauth-oidc-sm2-mvp.md) 为准，测试统一在 [验收矩阵](acceptance.md) 维护。
+状态：GM-MVP-1的规范性安全要求，不是全部要求均已实现或验收的声明。B补正已完成独立验收并合并；[正式接受记录](../tasks/workflow/runs/local-remediation-20261004/acceptance.md)保留67项/60运行义务及原失败证据。A2.2本轮已完成95项/88运行义务的独立验收，见[任务包](../tasks/workflow/runs/A2.2-integration-20261004/task-v1.md)。整体项目仍PARTIAL：A2.3持续签名发布、A3独立锚定/导出/完整采购演示/规模对照实验尚未完成，outbox保持 PENDING。 消息接口以 [实施方案](oauth-oidc-sm2-mvp.md) 为准，测试统一在 [验收矩阵](acceptance.md) 维护。
 
 ## 1. 威胁模型
 
@@ -63,6 +63,10 @@ calls_settled + calls_reserved <= call_limit
 （6）提交后才调用下游；提交前崩溃不得产生业务效果。回滚不得保留半份账本变动。
 
 同根串行化优先保证正确性，性能报告应计入其成本，不提前引入分布式锁。换码、委托交换和结果读取也须在各自决定事务内复核新鲜性并登记proof，结果读取不扣业务额度。重放状态仅在覆盖证明有效窗口和时钟偏差后清理。
+
+A2.2授权查询沿用principals排序→task→root至leaf→operation固定锁序。query bundle的签名权限源、原操作ownership及不可变原件在同一事务复核；只关联新proof，不新增业务账本/事件/outbox/lease。所有证据、proof INSERT/link及deferred约束完成后重读已锁key/祖先，最终DBclock检查时效才提交。响应规范编码与byte上限65536；坏可信响应/超限失败503，查询proof亦回滚。HTTP超时不杀同步线程，容量直到线程真实完成才归还；已接受事务可能已提交，外部新proof/原幂等键重试。
+
+首次原件的完整context从已绑定不可变operation摘要的原token/proof、原请求及完整权限源重建，逐字比对身份、资源意图、祖先、摘要和原时间字段。同形状错值也属于坏可信材料，查询失败503；不会重新报价或用当前请求补造原件。原invoke proof过期本身不妨碍合法查询，查询使用新的result-read proof，并复核当前授权时效。
 
 ## 5. 状态迁移与恢复
 

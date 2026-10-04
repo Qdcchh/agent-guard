@@ -1,5 +1,15 @@
 # 问题与独立复验账本
 
+## 2026-10-05 当前 A2.2：fresh r2 ACCEPTED
+
+[review-r2](runs/A2.2-integration-20261004/review-r2.md)及[主控接受](runs/A2.2-integration-20261004/acceptance.md)：95 PASS/88独立运行，source/wheel各1022＋1930正式通过，最终1072独立增强通过；原生COMPLETED、完整285与Git无漂移、owner余留0，619原始证据经主控读回。
+
+- **A22-R1-RESULT-ERROR / P2 / CLOSED_REVIEWED_R2**：真实持久结果损坏503、未知typed/runtime500、同proof修复200→409及全业务/DS3零变化独立通过。
+- **A22-R1-SHORT-WINDOW / P2 / CLOSED_REVIEWED_R2**：真AS父子安全收窄、真实跨秒、四窗口正负每组10轮及目标DB deadline/全四计数独立通过。
+- **A22-CTX-FIRST-BINDING / CLOSED_REVIEWED_R1，REGRESSION_VERIFIED_R2**：16同形字段拒绝及过期原proof合法新query保持。
+
+没有本轮新增已确认阻断产品缺陷。下方为对应历史版本的当时状态，不覆盖本节；所有失败、中断、适配与历史报告保留。A2.3及A3仍须各自正式包审和fresh完整验收，Git/main以实际CI与审核为准。
+
 ## 2026-10-04 当前权威闭环：fresh r2 ACCEPTED
 
 [完整review-r2](runs/local-remediation-20261004/review-r2.md)和[主控接受记录](runs/local-remediation-20261004/acceptance.md)：67项全PASS、60项独立运行，247项候选首尾一致，303证据hash经主控读回；声明范围内已知阻断清零，整体PARTIAL。以下旧轮记录保留当时状态，不覆盖本段。
@@ -193,3 +203,25 @@ MiMo已停写，完整implementation-r5.md（hash fd264c1b34cfb0bc5821ab4da7e6bb
 **仍保留的非阻断历史风险/边界**：r5旧一次无code LedgerError不可追溯原因（不声称TTL解释）；合法list曾有过严probe，r8仅修改自有probe为完整成功后置断言且保原失败，非删弱要求；旧升级probe硬编码002依旧记录fail，当前动态8升级组等价更强。B/真实HTTP/真签名/独立锚定/远程CI尚未本stage完成，不能把它们当PASS。后续新回归可重开已闭项，原触发/失败/修复证据与所有报告保留。
 
 保留issue ID、requirement ID、严重性、真实位置、触发、影响、证据、修正包/实际变更、有效回归探针、新review session及独立复验结果。实施者完成只能标FIXED_PENDING_REVIEW；只有新review实证和主控核查后才能CLOSED_REVIEWED。非阻断意见保留理由和后续范围，不能悄悄消失。历史失败轮与证据不覆盖、不删除。
+
+
+## A2.2 r3 自查补正（历史状态，现已由r1独立复核闭合）
+
+- **A22-CTX-FIRST-BINDING / P2 / FIXED_PENDING_REVIEW**：`execution/query.py::_original`原先只校验原context形状及部分字段，16个同形错误值在真实PG探针中返回200，违反原件一致性失败关闭要求；当前ownership检查仍有效，未证明跨身份绕过。已由immutable operation的摘要绑定token/proof/request及完整PermissionSource重建全部VerifiedInvocation并比较canonical context；正式16拒例和历史原proof过期/新query proof合法正例已自查通过。必须由fresh reviewer独立触发、核失败query proof回滚/零业务效果及完整95/88矩阵后才关闭。证据/变更/实际命令见[implementation-r3](runs/A2.2-integration-20261004/implementation-r3.md)，不以worker成功声明关闭。
+- **证据限制（保留）**：r3首次双conftest collection exit2原XML被后续exit1误覆盖，无法恢复；原exit2完整log/command仍在且registry无XML、cases为空，现存19项XML只绑定exit1，最终19通过有独立文件。3份失败JUnit中的自有运行密码精确脱敏，原/后SHA及case结构状态不变有记录；未发生已证明的公开HTTP密码泄露。catalog JSON直接文本脱敏损坏后从未改正式测试AST逐字重建，实际为跨转义quote URI前缀误匹配，完整DSN替换数0；损坏件及失败保留。后续reviewer独立实跑，不以这些历史失败XML冒充成功。
+
+## A2.2 独立 r1（2026-10-05记录）
+
+[完整review-r1](runs/A2.2-integration-20261004/review-r1.md)结论NOT_ACCEPTED。95项86 PASS/9 FAIL，两个P2导致；主控已核518原始证据哈希、115命令及JUnit与280项冻结。
+
+| issue | 状态 | 触发与补正 |
+| --- | --- | --- |
+| A22-R1-RESULT-ERROR | FIXED_PENDING_REVIEW / P2 | 真实持久结果wrong operation/read形状/[]返回500，契约要求503；限终态可信投影上下文转换typed DOWNSTREAM_INCONSISTENT，保留未知错误500。复验完整状态零变化、修复同proof成功及重放409。 |
+| A22-R1-SHORT-WINDOW | FIXED_PENDING_REVIEW / P2 | 真AS父根3秒且子固定ttl3跨秒即超父期限，source/wheel各PG同一失败；按真实父exp/当前时间安全收窄，正式10轮强制跨秒，保留原查询锁后窗口负控及完整真实签名。 |
+| A22-CTX-FIRST-BINDING | CLOSED_REVIEWED_R1 | fresh source/wheel各16字段变体及原proof过期新query正控通过；不是整段接受。 |
+
+按[correction-r1](runs/A2.2-integration-20261004/correction-r1.md)同范围补正，再新reviewer全95/88独立复验。原harness失败、隐私脱敏前后哈希和历史报告全部保留。
+
+## A2.2 r4补正自查与主控停写核验
+
+[完整implementation-r4](runs/A2.2-integration-20261004/implementation-r4.md)已原生COMPLETED，source/wheel各1022普通+1930 PG及独立增强335全通过；两项P2只标FIXED_PENDING_REVIEW。主控核558证据/110命令JUnit、764函数及7761case refs、284项候选/只读范围与实际owner容器/network余留0；HEAD、分支、语义index和staged diff未变。最终wheel增强独占重跑，原共享cache轮/历史适配失败/隐私封存失败保留。下一步fresh r2全95/88独立验收，不能以本自查关闭或合并。

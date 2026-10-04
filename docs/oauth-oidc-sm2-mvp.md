@@ -4,7 +4,7 @@
 
 状态：实施设计草案，不是已有功能或标准兼容认证。面向 A、B 两人开发；C 不承担初版关键路径。本文中的域名、令牌和密钥均为示意，不含可用凭据。
 
-阅读顺序：第1—4节理解技术，第5—7节确定实现与分工，第8—10节据此联调。事务、状态机及安全边界统一在 [安全模型](security-model.md) 维护；测试清单统一在 [验收矩阵](acceptance.md) 维护。当前只保留GM-MVP-1一条设计路线。A1/A2.1 和 B 整合已有代码；本文接口示意及日程仍是目标设计，不代表全部已验收。本轮 v1 实施交付时五项修补均标记 FIXED_PENDING_REVIEW，产品自查不是正式接受；具体命令、原失败、JUnit 和67项/60运行义务见 [v1实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)。后续验收与合并结论以 [本轮控制状态](../tasks/workflow/runs/local-remediation-20261004/state.json) 及主控关联的正式报告为准；本文档同步证据见 [文档实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。整体项目仍 PARTIAL：A2.2公开调用/最终动态查询、A2.3持续签名发布、A3独立锚定/导出/完整采购演示/规模对照实验尚未完成，outbox保持 PENDING。 修补前问题保留在 [历史本地质量复核](../tasks/workflow/runs/local-quality-20261004/review.md)。
+阅读顺序：第1—4节理解技术，第5—7节确定实现与分工，第8—10节据此联调。事务、状态机及安全边界统一在 [安全模型](security-model.md) 维护；测试清单统一在 [验收矩阵](acceptance.md) 维护。当前只保留GM-MVP-1一条设计路线。A1/A2.1 和 B 整合已有代码；本文接口示意及日程仍是目标设计，不代表全部已验收。B补正已完成独立验收并合并；[正式接受记录](../tasks/workflow/runs/local-remediation-20261004/acceptance.md)保留67项/60运行义务及原失败证据。A2.2本轮已授权实施、仍待独立验收，见[任务包](../tasks/workflow/runs/A2.2-integration-20261004/task-v1.md)。整体项目仍PARTIAL：A2.3持续签名发布、A3独立锚定/导出/完整采购演示/规模对照实验尚未完成，outbox保持 PENDING。 修补前问题保留在 [历史本地质量复核](../tasks/workflow/runs/local-quality-20261004/review.md)。
 
 ## 1. 先说明结论
 
@@ -487,7 +487,7 @@ Content-Type: application/json
 
 所有tool_version固定字符串 `1`。可信服务按已绑定报价计算金额，禁止代理提供权威总价。只读及通知金额成本为0，新操作次数成本为1。
 
-接受返回202：`{operation_id, status:"RESERVED", receipt_status:"PENDING"}`。同键同意图重试返回原操作，不二次预留。业务键作用域为租户/任务/tool_id/key；意图绑定grant_id、holder、tool_version和规范params，不含proof的jti与时间。相同任务不同令牌jti若对应同一不可变grant无需改变业务意图；换授权节点则视为冲突，初版不提供换链接管。
+接受返回202：`{operation_id, status, receipt_status:"PENDING"}`。首次为RESERVED；同键同意图重试返回原操作的真实当前状态（包括终态），不二次预留。业务键作用域为租户/任务/tool_id/key；意图绑定grant_id、holder、tool_version和规范params，不含proof的jti与时间。相同任务不同令牌jti若对应同一不可变grant无需改变业务意图；换授权节点则视为冲突，初版不提供换链接管。
 
 查询用 `POST /v1/operations/query`，相同AGPoP+AG-Proof，purpose为result-read，body为 `{profile, task_id, operation_id}`。只允许原授权节点/holder且当前权限有效，结果读取不再次扣业务次数。返回 `{operation_id, status, receipt_status, result, receipt_jws}`；无最终回执时receipt_jws为null，UNKNOWN不伪装成FAILED。
 
@@ -528,7 +528,7 @@ OAuth端点保持OAuth风格：`{"error":"invalid_request","ag_error":"DELEGATIO
 
 ## 10. Python模块接口与联调夹具
 
-以下是目标接口，不是已有可调用代码。B输出共享包，A不得复制一份密码实现到网关。
+以下伪接口保留原设计语义，不作为当前调用API。实际A2.2入口为`InvocationVerifier.verify_bundle`→`VerifiedExecution.accept`，以及`InvocationVerifier.verify_query_bundle`→`AuthorizedQuery.query`；后者用冻结`VerifiedQueryBundle`保留`VerifiedResultQuery`、真实`PermissionSource`和opaque evidenceRef。同事务复核原ownership/原材料/当前权限，按principals→task→root至leaf→operation锁序，全部晚依赖和约束flush后用最终DBclock检查新鲜性。B输出共享实现，网关不复制密码算法。响应沿用规范编码65536字节上限，坏可信材料/超限503且query proof回滚。两公开POST入口及显式公钥配置/TLS启动见README；回执持续发布、导出仍为后段目标。
 
 ```python
 class CryptoProvider:

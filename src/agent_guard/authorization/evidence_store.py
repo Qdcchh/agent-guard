@@ -140,3 +140,33 @@ class EvidenceStore:
             )
 
         return bind
+
+    def query_binding(self, bundle):
+        from agent_guard.contracts.verification import VerifiedQueryBundle
+
+        if type(bundle) is not VerifiedQueryBundle or (
+            bundle.permissions != bundle.source.snapshot
+            or bundle.evidence_ref != bundle.query.evidence_ref
+        ):
+            raise EvidenceError("verified query bundle required")
+
+        def bind(conn):
+            v = bundle.query
+            PermissionSnapshotProvider.revalidate(conn, bundle.source)
+            row = conn.execute(
+                "SELECT token_bytes,proof_bytes,body_bytes,token_sm3,proof_sm3,"
+                "body_sm3,context_json,chain_json FROM ag_verified_evidence WHERE evidence_ref=%s",
+                (bundle.evidence_ref,),
+            ).fetchone()
+            if row is None or (
+                sm3_b64url(bytes(row[0])) != row[3]
+                or row[3] != v.token_digest
+                or sm3_b64url(bytes(row[1])) != row[4]
+                or row[4] != v.proof_digest
+                or sm3_b64url(bytes(row[2])) != row[5]
+                or bytes(row[6]) != context_bytes(v)
+                or bytes(row[7]) != bundle.source.material()
+            ):
+                raise EvidenceError("query evidence does not bind this verified request")
+
+        return bind
