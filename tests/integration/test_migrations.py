@@ -242,3 +242,148 @@ def test_p13_cli_prefers_ordinary_dsn_when_set(namespace, monkeypatch):
     finally:
         drop_scratch_database(namespace.base_dsn, ordinary)
         drop_scratch_database(namespace.base_dsn, test_target)
+
+
+@pytest.mark.parametrize("newline", [b"\n", b"\r\n"])
+def test_custom_legacy_normalized_checksum_and_repeat(scratch, tmp_path, newline):
+    import hashlib
+
+    sql = b"CREATE TABLE custom_data (value integer);\nINSERT INTO custom_data VALUES (7);\n"
+    path = tmp_path / "001_custom.sql"
+    path.write_bytes(sql.replace(b"\n", newline))
+    with psycopg.connect(scratch.dsn, connect_timeout=5) as conn:
+        assert apply_migrations(conn, tmp_path) == ["001"]
+        rows = conn.execute("SELECT * FROM ag_schema_migrations ORDER BY version").fetchall()
+        assert rows[0][2] == hashlib.sha256(sql).hexdigest()
+        assert apply_migrations(conn, tmp_path) == []
+        assert (
+            conn.execute("SELECT * FROM ag_schema_migrations ORDER BY version").fetchall() == rows
+        )
+        assert conn.execute("SELECT * FROM custom_data").fetchall() == [(7,)]
+    path.write_bytes(path.read_bytes() + b"-- genuine content modification\n")
+    with psycopg.connect(scratch.dsn, connect_timeout=5) as conn:
+        with pytest.raises(MigrationError, match="changed after"):
+            apply_migrations(conn, tmp_path)
+        assert (
+            conn.execute("SELECT * FROM ag_schema_migrations ORDER BY version").fetchall() == rows
+        )
+        assert conn.execute("SELECT * FROM custom_data").fetchall() == [(7,)]
+
+
+def test_old_crlf_normalized_registry_remains_exact_noop(scratch, tmp_path):
+    import hashlib
+
+    from agent_guard.ledger.migrate import _ensure_registry
+
+    sql = "CREATE TABLE old_crlf (value integer);\nINSERT INTO old_crlf VALUES (9);\n"
+    path = tmp_path / "001_old.sql"
+    path.write_bytes(sql.replace("\n", "\r\n").encode())
+    with psycopg.connect(scratch.dsn, connect_timeout=5) as conn:
+        _ensure_registry(conn)
+        conn.execute(sql)
+        conn.execute(
+            "INSERT INTO ag_schema_migrations(version,filename,checksum,applied_at) "
+            "VALUES (%s,%s,%s,'2001-02-03T04:05:06Z')",
+            ("001", path.name, hashlib.sha256(sql.encode()).hexdigest()),
+        )
+    with psycopg.connect(scratch.dsn, connect_timeout=5) as conn:
+        before = conn.execute("SELECT * FROM ag_schema_migrations").fetchall()
+        assert apply_migrations(conn, tmp_path) == []
+        assert conn.execute("SELECT * FROM ag_schema_migrations").fetchall() == before
+        assert conn.execute("SELECT * FROM old_crlf").fetchall() == [(9,)]
+
+
+@pytest.mark.parametrize("change", ["lf-to-crlf", "crlf-to-lf", "content"])
+def test_custom_discovery_raw_byte_race_rolls_back(scratch, tmp_path, monkeypatch, change):
+    from agent_guard.ledger import migrate
+
+    sql = b"CREATE TABLE race_data (value integer);\n"
+    path = tmp_path / "001_race.sql"
+    path.write_bytes(sql.replace(b"\n", b"\r\n") if change == "crlf-to-lf" else sql)
+    discover = migrate._discover
+
+    def replace_after_snapshot(directory):
+        found = discover(directory)
+        replacement = sql.replace(b"\n", b"\r\n") if change == "lf-to-crlf" else sql
+        if change == "content":
+            replacement += b"INSERT INTO race_data VALUES (4);\n"
+        path.write_bytes(replacement)
+        return found
+
+    monkeypatch.setattr(migrate, "_discover", replace_after_snapshot)
+    with psycopg.connect(scratch.dsn, connect_timeout=5) as conn:
+        before = conn.execute(
+            "SELECT relname,relkind FROM pg_class WHERE relnamespace='public'::regnamespace "
+            "ORDER BY relname"
+        ).fetchall()
+        with pytest.raises(MigrationError, match="changed before execution"):
+            apply_migrations(conn, tmp_path)
+        assert (
+            conn.execute(
+                "SELECT relname,relkind FROM pg_class WHERE relnamespace='public'::regnamespace "
+                "ORDER BY relname"
+            ).fetchall()
+            == before
+        )
+        assert conn.execute("SELECT to_regclass('ag_schema_migrations')").fetchone() == (None,)
+        assert conn.execute("SELECT to_regclass('race_data')").fetchone() == (None,)
+
+
+@pytest.mark.parametrize("kind", ["malformed", "unreachable"])
+def test_migration_cli_errors_are_bounded_and_redacted(kind):
+    import os
+    import socket
+    import subprocess
+    import sys
+
+    canary = "synthetic-migration-password-canary"
+    with socket.socket() as target:
+        target.bind(("127.0.0.1", 0))  # owned non-listening port, never a third-party endpoint
+        dsn = (
+            canary
+            if kind == "malformed"
+            else f"postgresql://synthetic:{canary}@127.0.0.1:{target.getsockname()[1]}/unused"
+        )
+        env = {
+            k: v
+            for k, v in os.environ.items()
+            if not k.startswith("PG") and "DATABASE_URL" not in k
+        }
+        env["AGENT_GUARD_TEST_DATABASE_URL"] = dsn
+        done = subprocess.run(
+            [sys.executable, "-B", "-m", "agent_guard.ledger.migrate", "--bundle"],
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+    assert done.returncode == 1 and done.stdout == ""
+    message = "migration failed: configuration, connection or migration rejected\n"
+    # The existing ledger package imports migrate before runpy executes -m.
+    # Accept only that fixed, secret-free warning, never arbitrary diagnostics.
+    warning = (
+        "<frozen runpy>:128: RuntimeWarning: 'agent_guard.ledger.migrate' found in "
+        "sys.modules after import of package 'agent_guard.ledger', but prior to "
+        "execution of 'agent_guard.ledger.migrate'; this may result in unpredictable behaviour\n"
+    )
+    assert done.stderr in {message, warning + message}
+    assert canary not in done.stderr and dsn not in done.stderr and "Traceback" not in done.stderr
+
+
+def test_migration_cli_connection_deadline_and_exception_redaction(monkeypatch, capsys):
+    from agent_guard.ledger import migrate
+
+    canary = "synthetic-injected-operational-error"
+    observed = []
+
+    def reject(dsn, **kwargs):
+        observed.append(kwargs)
+        raise psycopg.OperationalError(canary)
+
+    monkeypatch.setenv("AGENT_GUARD_DATABASE_URL", "synthetic-dsn")
+    monkeypatch.setattr(migrate.psycopg, "connect", reject)
+    assert migrate.main(["--bundle"]) == 1
+    assert observed == [{"connect_timeout": 5}]
+    output = capsys.readouterr()
+    assert not output.out and canary not in output.err and "Traceback" not in output.err
+    assert output.err == "migration failed: configuration, connection or migration rejected\n"

@@ -1,81 +1,48 @@
 # 分阶段实施与独立验收工作流
 
-这套入口保留原有 agent 和会话。主控 `orchestrator-auto` 使用 GPT 6.1 Sol medium；实施子 agent `mimo-implementer` 使用 MiMo 2.6 Pro；每轮新的 `reviewer-auto` 使用 GPT 6.1 Sol xhigh。配置在用户的 OpenCode agents 目录，所有项目任务和验收要求继续保存在本目录 Markdown 中。`subagent_depth=1`，不加显式 steps，不启用 Flash 并行或嵌套委托。
+更新：2026-10-04。当前入口采用 [Codex 补充契约](runs/setup/codex-astra-sol-v1/workflow-contract.md)；旧 OpenCode 启动命令和初始等待状态已移除。原实施/审查契约保留其安全、独立性和证据义务，角色/工具启动以补充契约为准。
 
-## 当前切换点
+## 恢复顺序
 
-检查点一补正复验已通过，依据 `../A2-review-ckpt1-r2.md`。这仅达到 A2.1 主体开工的技术门槛；A2.1 核心尚未实现/验收。新工作流初始 `current_stage=A2.1-core`、`status=AWAITING_USER_APPROVAL`、`authorization.status=PENDING`。本次配置授权不等于实施授权。首先读 `context.md`、`state.json` 和 `stages/A2.1-core.md`，向用户展示将实施的范围，等用户批准。
+1. 阅读 [HANDOFF](../../HANDOFF.md)、[当前上下文](context.md)、[当前正式验收](runs/local-remediation-20261004/acceptance.md)、[问题台账](issues.md) 和真实 Git 状态。
+2. 阅读 [原 A2 任务](../A2-execution-gateway.md)、设计/安全/验收要求及相关实际实现/测试；历史完成记录不能替代当前证据。
+3. 当前 B 整合补正已通过 [fresh r2独立验收](runs/local-remediation-20261004/review-r2.md)，67项/60独立运行全部完成；Git合并另受远端CI和审核门约束。A2.1 已有 [历史验收](runs/A2.1-core/acceptance.md)，不得从“尚未实施”重新开工，也不得因旧 state.json 的 ACCEPTED 放行当前 B 分支。
+4. 本轮生效包为 [task-v1](runs/local-remediation-20261004/task-v1.md)，用户已明确批准 [运行适配](runs/local-remediation-20261004/runtime-addendum-proposal.md)，授权记录见 [authorization](runs/local-remediation-20261004/authorization.json)。[新独立包审](runs/local-remediation-20261004/package-review-r1.md) 为 PACKAGE_READY，当前状态见 [本轮 state](runs/local-remediation-20261004/state.json)。原五项与新增超时负控已由新独立完整验收关闭；失败轮与补正保留，不改旧状态或冒用旧会话。
 
-## 大阶段与人审批
+## 阶段和停止点
 
-| 阶段 | 本阶段收尾 | 必须停下的位置 |
-| --- | --- | --- |
-| A2.1-core | 检查点二；独立于 B 的执行/恢复核心；核心验收通过，完整 A2 仍 PARTIAL | 独立复验、补正、再复验全部完成后，停等用户批准 A2.2 |
-| A2.2-integration | 已确认且验收的 B 验证器/权限/证据与真实 HTTP、result-read | 本阶段独立复验通过后，停等用户批准 A2.3 |
-| A2.3-receipts | 真实 SM2 回执及完整 A2 联合验收 | 完整 A2 验收通过后停等用户；不自动进入 A3或Git集成 |
+| 阶段 | 范围和停止点 |
+| --- | --- |
+| A2.1-core | 执行/恢复核心有历史验收；新发现继承缺陷仍需按明确范围补正 |
+| B-remediation-integration | 本轮ACCEPTED；67项/60独立运行全通过，整体项目仍PARTIAL |
+| A2.2-integration | 真实公开 HTTP 调用与最终动态查询；另行批准并建立正式包 |
+| A2.3-receipts | 持续真实签名发布、故障恢复、完整 A2 联合验收；另行批准 |
+| A3 | 锚定、导出、完整演示和实验；不得自动进入 |
 
-同一已批准阶段内部的详细复核、所有针对性补正及再复核自动推进，不每个小修复都问用户。实现存在缺陷时不因“实现者完成”停止，而是交回 MiMo 修到满足要求；外部依赖、需要更改需求或反复无新进展时明确 BLOCKED 并停下。
+每一大阶段结束保存完整结论并停给用户查看。用户已单独授权本轮验收通过后的 Git 发布及条件合并；后续开发阶段和部署未获授权。
 
-每个大阶段结束都保留当前阶段及其 ACCEPTED 记录，向用户报告实际结果、限制、证据和下一阶段提案。不得自动将 state 切到下一阶段，不先写其业务代码、不先拉入 B、不提前为下一阶段开资源。原任务中的“可以继续已确认的 B 对接”是技术条件，本工作流的新用户要求额外规定阶段间必须人审批。
+## 正式闭环
 
-## 正式开始和恢复
+1. 主控核对真实用户授权、范围和完整要求，按 [任务模板](templates/task.md) 冻结版本化包、精确文件所有权、只读依赖哈希、资源及测试矩阵。
+2. 新 reviewer 做 PACKAGE_REVIEW；PACKAGE_READY 不是实现验收，也不授实施权限。
+3. 在授权、包审、运行绑定和门要求均满足后派发。共享接口/迁移/依赖/fixtures 串行；其余仅在无文件冲突时并行，不消费同批半成品。
+4. worker 自查、提交 [完整报告](templates/implementation-report.md) 和日志/JUnit/输出哈希后停写；主控核实全部 writer/进程停止、范围和资源归属，再冻结候选。
+5. 新 reviewer 按 [审查契约](review-contract.md) 做 IMPLEMENTATION_ACCEPTANCE：完整本段矩阵、历史失败、前段回归、独立真实 PG/并发/进程/故障与负控、起止指纹。旧日志、替身和局部通过不能代替。
+6. 按 [补正模板](templates/correction.md) 保留稳定 issue ID、失败轮和证据，实施者只能标 FIXED_PENDING_REVIEW；新独立复验才能关闭。范围/需求改变重新审包。
+7. 主控核对原始证据和全矩阵，无阻断且正式门有效通过后才接受；缺资料/绑定/必需实跑时 NOT_ACCEPTED/BLOCKED。
 
-1. 原 Go-Main 停止写入，检查工作区；不覆盖既有修改。已备份旧配置和 OpenCode 历史，但备份不是回退当前代码的指令。
-2. 重启 OpenCode 后，从原 Orchestrator 会话分叉并显式选择 `orchestrator-auto`，保留规划历史；原 Go-Main/旧 reviewer 历史保留作参考。分叉不克隆原子会话树，旧 task_id 不能续用为新流程子会话。
-3. 在原启动目录使用下面的命令（配置已经落盘；该命令由用户选择何时运行，配置过程没有替用户分叉会话）：
+## 门与状态的边界
 
-```zsh
-cd /Users/qdcc/code/密码技术竞赛
-setproxy
-opencode --session ses_f0e893afcffeMRWvuS4UsK3x20 --fork --agent orchestrator-auto --model openai/gpt-6.1-sol
-```
+`tools/workflow_gate.py` 保留原样；[state-guide](state-guide.md) 描述旧结构。`state.json` 是 A2.1 历史验收记录，包含旧项目路径和未随 Git 交付的证据引用，当前分支对它运行 require-accepted 会失败。不要通过更新旧授权、删除要求或重写哈希制造通过。
 
-启动后第一条指令可以是：
+[67 项恢复目录](runs/local-quality-20261004/requirements-matrix.json) 仅记录修补前当时的部分查证/未完成项，不是正式验收矩阵、新阶段 state 或机器门移植。本轮采用用户明确批准的有限人工与工具证据适配，保持67/60义务，不宣称已迁移通用机器门；JSON 声明不证明真实模型、权限或停止状态。
 
-> 请读取 agent-guard/tasks/workflow/README.md、context.md、state.json 和 stages/A2.1-core.md，恢复已通过检查点一的上下文。现在只核对状态、汇报下一阶段范围，等待我批准，不开始实现。
+## 文档和资源
 
-明确批准某阶段时可以发送：
+- [context.md](context.md)：当前状态及下一步；[issues.md](issues.md)：历史和当前缺陷生命周期。
+- [implementation-contract.md](implementation-contract.md)、[review-contract.md](review-contract.md)：实施和独立复核义务。
+- runs：正式任务包、实施/审查/失败/验收历史；本轮有限质量报告单独保存，不冒充正式验收。
+- artifacts/workflow：脱敏原始命令、日志/JUnit、探针、指纹与资源证据，Git 忽略；不存可用凭据。
+- 只运行与清理可核验自有资源，普通部署 DSN 不作为测试目标，不停无关容器，不绕过平台阻断。
 
-> 批准 A2.1-core，按已冻结的 Markdown 任务包完成主体、详细独立复核、所有补正和再复核。核心通过后停下来给我查看与审批，不进入 A2.2，不 commit/push/PR/合并。
-
-主控必须保存此条**真实用户消息**的 session_id、message_id、role=user和原文，核对实际角色及范围后才能将 authorization 改为 GRANTED。旧 assistant 放行、reviewer建议、“继续”但指代不明、Task转述和JSON状态都不是新阶段授权。配置审批只允许工作流配置/验证，不允许主体开工。
-
-## 阶段内自动闭环
-
-1. **授权与任务包。** 读取真实授权、最新代码和需求；按 `templates/task.md` 创建 `runs/<stage>/task-v1.md`，包含固定需求ID、范围、版本、文件所有权、验证及依赖。根要求来自原 A2 任务和检查点复验，不能因 worker 的偏好删项。首次实施前新 reviewer 按 `review_kind=PACKAGE_REVIEW` 审任务包，设计问题先闭合；此时核对需求、边界和验证设计，未实现行为记为计划，不要求提前跑通，也不能判阶段 ACCEPTED。报告单独保存为 `package-review-rN.md`。
-2. **实施。** 授权检查通过后新建 MiMo 子会话。首次不传旧 task_id；同阶段返修可续新实施会话。MiMo负责足够完整的一大段，不拆成每个机械编辑都返工的碎片。阶段实施完成自查并交证据，标 READY_FOR_REVIEW后停止写入。
-3. **冻结与复核。** 主控核对全部 tracked/untracked/deleted 内容，记录代码和任务契约指纹。没有 active writer 后，新 reviewer 按 `review_kind=IMPLEMENTATION_ACCEPTANCE` 独立核查代码、需求和实际证据，独立跑本阶段测试与额外反例，使用自建隔离资源。实施报告仅为索引；包审不能替代这里的实际验收。
-4. **补正。** 主控完整保存 reviewer 返回到 `runs/<stage>/review-rN.md`，维护 `issues.md`；按 `templates/correction.md` 写每条缺陷、触发、修复要求、回归探针与证据，交回 MiMo。任何需要放宽标准或越界的修正先停下请求用户决策。
-5. **再复核。** 修正后重新冻结快照，用新 reviewer复验原缺陷、绕过变体、相关不变量和最终整段回归。未关闭的阻断项或必需测试未实跑时继续补正或BLOCKED。不把“无新意见”当历史问题全部关闭。
-6. **主控接受与停下。** 保存完整验收Markdown/证据，填写 state.review（只能用实施验收，不能用包审）。在 READY_FOR_REVIEW 状态运行 require-accepted 并确认 can_accept=true；主控读回真实日志/JUnit、逐项需求及issue，确认后才写 ACCEPTED。向用户报告，等待下一阶段审批。
-
-## 门检查器
-
-在仓库根目录运行；默认只读，不会改状态、代码、会话或数据库：
-
-```bash
-python3 tools/workflow_gate.py snapshot --root .
-python3 tools/workflow_gate.py verify --root . --state tasks/workflow/state.json
-python3 tools/workflow_gate.py verify --root . --state tasks/workflow/state.json --require-authorized
-python3 tools/workflow_gate.py verify --root . --state tasks/workflow/state.json --require-accepted
-```
-
-普通 verify 能检查等待状态，输出 can_start=false；require-authorized必须有本阶段GRANTED、完整真人消息引用，且状态为 IN_PROGRESS 或 CHANGES_REQUESTED，才允许开工。必须同时确认退出码0和can_start=true。它只检查授权结构，**主控还必须查真实用户消息，不能用脚本自己授权**。
-
-snapshot包含受审代码、测试、配置、依赖、普通文档以及本目录契约/阶段/模板的内容、跟踪状态及删除，不只看 HEAD；`.git`、依赖环境、缓存、artifacts，以及工作流 state.json、issues.md 和 runs 运行报告目录排除。规范和本阶段已批准任务包另列在 `contract_files` 复核哈希；运行报告和证据分别核哈希。所有相对路径限制在仓库内。
-
-require-accepted检查原始 expected_requirement_ids不漏/不重复、必需项全部PASS、运行类项有独立执行证据、证据/完整review报告存在且SHA256一致、无阻断项、当前代码和契约与review所验版本一致。review自己的 snapshot_fingerprint与contract_files_sha256不得仅随state刷新；变更必须重新review。contract_files摘要规则由脚本规定，使用排序后的规范JSON SHA256。
-
-状态字段的完整用法见 `state-guide.md`。A2.2/A2.3 文件目前是提案，不能直接执行：获用户批准后，主控须将其补为正式完整阶段包，从原 A2 要求构建当段全部需求ID/验证矩阵，再审包。不得用 A2.1 的31项代替后段真实验权、HTTP和回执验收。
-
-它能阻止漏项、旧证据、改版后沿用旧review等常见错误；不能替代独立语义审查，也不能证明JSON里声称的测试真实执行过。不可用checker通过替代查看日志/JUnit、实际工具结果和真人授权。每条证据标 independent_run、inspection或historical_log，日志核对不算本轮独立实跑。
-
-## 上下文与证据保存
-
-- `context.md`：最新已验收基线、范围、依赖、原会话索引、下一步；不复制大量原始日志进主上下文。
-- `state.json`：当前大阶段、真实授权、必需需求、快照、review/证据索引；所有模型都不能自授权下一阶段。
-- `issues.md`：未关闭问题、修正和独立复验记录；不能在新review或压缩后丢掉。
-- `runs/<stage>/`：版本化任务包、完整实施报告、每轮完整review、补正包和最终acceptance；不覆盖历史失败轮。
-- `artifacts/workflow/<unique-run>/`：脱敏原始日志/JUnit/独立探针/资源所有权和清理证据；不记录密钥、DSN或真实业务数据。
-
-网络/额度故障或进程重启后，先读state、任务包、issues、实际工作区和资源，再恢复同阶段新流程实施子会话；先确认旧writer是否仍活跃，禁止重复写入。原会话不能自动知道新工作区状态，回到旧入口前须交接期间变化。切换入口不需要恢复旧数据库或reset业务代码。
+已被替代的 `runs/setup/20261001-setup.md` 配置记录已删除；其原件及旧启动说明可从 Git `2051b40` 追溯。历史包审中的该路径只是当时读取清单，不是当前运行依赖。

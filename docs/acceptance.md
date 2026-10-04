@@ -1,6 +1,6 @@
 # 验收与实验矩阵
 
-当前所有功能项均待实现；骨架测试仅证明包可安装导入。后续测试需标记测试环境、提交 SHA、运行命令、样本规模及结果。
+本文是目标验收矩阵，不凭已有代码或测试数量推定通过。各项结论须绑定测试环境、候选版本、命令、样本规模及原始结果。本轮 v1 实施交付时五项修补均标记 FIXED_PENDING_REVIEW，产品自查不是正式接受；具体命令、原失败、JUnit 和67项/60运行义务见 [v1实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)。后续验收与合并结论以 [本轮控制状态](../tasks/workflow/runs/local-remediation-20261004/state.json) 及主控关联的正式报告为准；本文档同步证据见 [文档实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。整体项目仍 PARTIAL：A2.2公开调用/最终动态查询、A2.3持续签名发布、A3独立锚定/导出/完整采购演示/规模对照实验尚未完成，outbox保持 PENDING。
 
 本文是唯一验收清单；[实施方案](oauth-oidc-sm2-mvp.md)定义接口，[安全模型](security-model.md)定义事务与安全边界。M编号为初版里程碑；SEC/CON/REC/AUD/ENG为成熟版回归维度，两者可关联同一测试，不需重复编写两套脚本。
 
@@ -59,3 +59,44 @@ M1覆盖OIDC代码流，M2—M5/M8覆盖授权安全，M6/M7/M11—M13覆盖预�
 ## 4. 最终交付
 
 设计与威胁分析、源码与依赖说明、公开测试和原始实验数据（无秘密）、可独立验证的合成证据包、部署复现说明、演示脚本/视频、技术报告和已知限制。10月20日前固定版本；所有材料与该版本保持一致。
+
+## 5. 本段证据与后段责任（30项目标逐项保留）
+
+下表关联本段67项矩阵中的实际测试函数，不另作正式PASS。每行具体断言、source/wheel参数化节点、命令退出码、XML与SHA见 [v1实施报告的完整矩阵索引](../tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)；选定函数与断言绑定见 [文档实施报告的逐项目标索引](../tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。v1的全部自查须由fresh reviewer独立完整复验；该复验与后段开发是两项责任。
+
+| 原目标 | 本段67ID | 具体测试入口 | 本段观察与后段责任 |
+| --- | --- | --- | --- |
+| M1 | B-06-CODE-OIDC / B-10-HTTP-TLS | [`test_full_login_authorize_consent_and_redeem`](../tests/integration/test_login_consent.py) | 本段AS正常/负例：v1 SELF_CHECK；完整采购入口待A2.2；本段须fresh完整复验 |
+| M2 | B-04-TOKEN-POLICY / B-08-DELEGATION / BR-06-REAL-PERMISSIONS | [`test_two_levels_are_as_signed_and_idempotent`](../tests/integration/test_exchange_service.py) | 真AS两级委托/三个holder：v1 SELF_CHECK；本段须fresh完整复验 |
+| M3 | B-03-IDENTITY / B-13-ROTATION-INTEROP / BR-11-CLEAN-CANDIDATE | [`test_historical_registration_is_keyed_by_exact_identity`](../tests/test_permission_snapshot.py) | 默认did:web真TLS与登记/用途/SPKI拒绝：v1 SELF_CHECK；本段须fresh完整复验 |
+| M4 | B-05-INVOKE-PROOF / BR-06-REAL-PERMISSIONS | [`test_static_verifier_rejects_tampering_and_does_not_stage`](../tests/test_authorization.py) | 盗token无私钥拒绝：v1 SELF_CHECK；公开invoke待A2.2；本段须fresh完整复验 |
+| M5 | B-05-INVOKE-PROOF / A2-P15-CORE | [`test_proof_signing_helper_interoperates_with_static_verifier`](../tests/test_authorization.py) | 精确签名/参数/proof绑定：v1 SELF_CHECK；本段须fresh完整复验 |
+| M6 | A2-P13 / B-15-CONCURRENCY-TEST-EFFICACY | [`test_p13_two_draws_race_for_the_root_budget`](../tests/integration/test_execution_concurrency.py) | 祖先预算/两个700元并发10轮：v1 SELF_CHECK，分层fixture不冒充全HTTP；本段须fresh完整复验 |
+| M7 | A2-P05 / A2-P06 | [`test_p05_response_lost_keeps_budget_then_settles_same_order`](../tests/integration/test_execution_core.py) | 真实下游+响应丢失port替身和真进程恢复：v1 SELF_CHECK；本段须fresh完整复验 |
+| M8 | A2-P10 / B-09-DYNAMIC-STATE | [`test_p10_revocation_commits_first_then_accept_rejects`](../tests/integration/test_state_checks.py) | 撤销先提交拒绝与接受后内部恢复：v1 SELF_CHECK；本段须fresh完整复验 |
+| M9 | B-12-EVIDENCE-RECEIPT / BR-09-RECEIPT-PROJECTION | [`test_authentic_nonadjacent_duplicate_grant_rejected`](../tests/test_receipt_paths.py) | 真签名SDK和UNANCHORED关联：v1 SELF_CHECK；持续发布/锚定待A2.3/A3；本段须fresh完整复验 |
+| M10 | B-23-HANDOFF-REPRODUCIBILITY / BR-11-CLEAN-CANDIDATE | [`test_tls_server_runs_the_full_as_flow`](../tests/integration/test_server_tls.py) | 无模型API source/wheel/README/demo：v1 SELF_CHECK；完整演示和导出待A3；本段须fresh完整复验 |
+| M11 | B-07-ROOT-ISSUANCE / B-06-CODE-OIDC | [`test_two_codes_one_task_real_principal_lock_race`](../tests/integration/test_code_service.py) | 永久唯一根/双code10轮：v1 SELF_CHECK；本段须fresh完整复验 |
+| M12 | A2-P15-CORE / B-04-TOKEN-POLICY | [`test_item_bound_is_enforced_before_accept_and_full_256_recovers`](../tests/integration/test_execution_final_boundaries.py) | 重复/空缺集合/报价关联/256边界：v1 SELF_CHECK；本段须fresh完整复验 |
+| M13 | BR-01-CONSENT-FINAL / B-09-DYNAMIC-STATE | [`test_final_consent_after_late_dependencies`](../tests/integration/test_consent_final_decision.py) | 晚锁窗口及失效重试：v1 SELF_CHECK；本段须fresh完整复验 |
+| SEC-01 | B-01-CRYPTO | [`test_sm2_published_verification_vector`](../tests/test_crypto_profile.py) | 标准向量/OpenSSL双向：v1 SELF_CHECK；本段须fresh完整复验 |
+| SEC-02 | B-02-ENCODING | [`test_strict_json_and_rfc8785_canonicalization`](../tests/test_encoding.py) | 严格编码全入口：v1 SELF_CHECK；本段须fresh完整复验 |
+| SEC-03 | BR-06-REAL-PERMISSIONS | [`test_signed_chain_all_four_tools_and_real_receipt`](../tests/integration/test_verified_execution.py) | 真授权根/两级/三holder：v1 SELF_CHECK；本段须fresh完整复验 |
+| SEC-04 | B-05-INVOKE-PROOF | [`test_static_verifier_rejects_tampering_and_does_not_stage`](../tests/test_authorization.py) | tenant/task/工具/holder精确绑定：v1 SELF_CHECK；本段须fresh完整复验 |
+| SEC-05 | A2-P14 / B-08-DELEGATION | [`test_p14_same_key_same_intent_replays_one_order`](../tests/integration/test_downstream.py) | proof重放/业务键/效果幂等：v1 SELF_CHECK；本段须fresh完整复验 |
+| SEC-06 | A2-P10 / B-09-DYNAMIC-STATE | [`test_p10_revocation_commits_first_then_accept_rejects`](../tests/integration/test_state_checks.py) | 全祖先撤销竞态：v1 SELF_CHECK；本段须fresh完整复验 |
+| SEC-07 | A2-P14 / BR-03-PRIVATE-PATHS / BR-08-EVIDENCE-BINDING | [`test_valid_read_modes_path_and_context`](../tests/test_private_file_primitives.py) | 下游服务凭据、通知目标、DB拒绝角色：v1 SELF_CHECK；完整部署权限待联合验收；本段须fresh完整复验 |
+| CON-01 | A2-P13 | [`test_p13_two_draws_race_for_the_root_budget`](../tests/integration/test_execution_concurrency.py) | 根预算并发：v1 SELF_CHECK；本段须fresh完整复验 |
+| CON-02 | A2-P13 | [`test_p13_intermediate_ancestor_budget_binds_under_concurrency`](../tests/integration/test_execution_concurrency.py) | 中间祖先不足：v1 SELF_CHECK；本段须fresh完整复验 |
+| CON-03 | A2-P03 / A2-P13 | [`test_p03_zero_amount_read_settles_calls`](../tests/integration/test_execution_core.py) | 零金额次数/未知预算保留：v1 SELF_CHECK；本段须fresh完整复验 |
+| REC-01 | A2-P04 / A2-P05 / A2-P06 / A2-P07 / A2-P08 / A2-P09 / B-14-DB-FAILURES | [`test_p06_recovery_after_terminal_window_has_no_duplicate_effect`](../tests/integration/test_execution_core.py) | 本段故障矩阵：v1 SELF_CHECK；公开发布故障待A2.3；本段须fresh完整复验 |
+| REC-02 | A2-P08 / A2-P09 | [`test_p09_two_recoverers_race_one_terminal_and_one_outbox`](../tests/integration/test_execution_recovery.py) | 迟到效果/双恢复者/fencing：v1 SELF_CHECK；本段须fresh完整复验 |
+| REC-03 | A2-P11 / A2-P12 | [`test_p11_existing_intent_survives_quote_edit_and_delete`](../tests/integration/test_execution_quotes.py) | 原报价快照/不一致UNKNOWN：v1 SELF_CHECK；本段须fresh完整复验 |
+| AUD-01 | B-12-EVIDENCE-RECEIPT / BR-09-RECEIPT-PROJECTION | [`test_authenticated_path_mutations_rejected`](../tests/test_receipt_paths.py) | 未锚定签验与改链/结果/delta拒绝：v1 SELF_CHECK；锚定删除/回滚检测待A3；本段须fresh完整复验 |
+| AUD-02 | B-12-EVIDENCE-RECEIPT | [`test_valid_unanchored_receipt`](../tests/test_receipt.py) | UNANCHORED报告边界：v1 SELF_CHECK；独立最新锚点待A3；本段须fresh完整复验 |
+| E2E-01 | B-23-HANDOFF-REPRODUCIBILITY / BR-06-REAL-PERMISSIONS | [`test_signed_chain_all_four_tools_and_real_receipt`](../tests/integration/test_verified_execution.py) | 合成AS演示/进程内四工具：v1 SELF_CHECK；三代理四工具公开采购闭环待A2.2/A2.3/A3；本段须fresh完整复验 |
+| ENG-01 | B-17-B-SUITE-QUALITY / BR-11-CLEAN-CANDIDATE | [`test_init_creates_exclusive_private_tree`](../tests/test_server_private_files.py) | 锁安装/迁移/测试/README：v1 SELF_CHECK；完整证据导出待A3；本段须fresh完整复验 |
+
+后段归属：A负责A2.2公开invoke/最终动态result-read；A/B负责A2.3持续签名发布与联合验收；A/B联合完成A3独立锚定、证据导出与完整三代理四工具HTTP采购闭环，材料/复现参与者负责独立复现、规模实验与公平对照。已有SDK签验/投影、AS TLS演示、README片段和故障测试不能替代这些交付。50客户端/10,000调用仍为目标，未计作本段性能实测。未锚定尾部、缺最新独立锚点和固定密码依赖维护不确定性仍须在最终报告说明。
+
+原始矩阵与逐函数断言仅保存在本地、Git忽略的 `artifacts/workflow/local-remediation-20261004/worker-r1/requirements-matrix.json` 和 `artifacts/workflow/local-remediation-20261004/worker-docs-r1/goal-map.json`；干净克隆不包含这些原始日志，不以文件缺失或索引代替正式验收。

@@ -27,6 +27,7 @@ from dataclasses import asdict, dataclass
 from typing import Iterable
 
 from agent_guard.contracts.execution import (
+    MAX_ORDER_ITEMS,
     ExecutionError,
     ExecutionErrorCode,
     QuoteItem,
@@ -97,7 +98,7 @@ _SNAPSHOT_FIELDS = frozenset(
 _ITEM_FIELDS = frozenset({"sku", "quantity", "unit_price_fen"})
 #: Serialized form is always produced by :func:`snapshot_to_bytes`, so the
 #: currency key is present and fixed.
-_SNAPSHOT_MAX_ITEMS = 256
+_SNAPSHOT_MAX_ITEMS = MAX_ORDER_ITEMS
 _SNAPSHOT_MAX_BYTES = 65536
 _SNAPSHOT_MAX_DEPTH = 8
 #: Resource identifiers are plain ASCII only: no URL, path, control or escape
@@ -132,7 +133,8 @@ def _reject_constant(name: str) -> None:
 def _strict_str(name: str, value: object) -> str:
     if not isinstance(value, str) or value == "":
         raise ExecutionError(
-            ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID, f"{name} must be a non-empty string"
+            ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID,
+            f"{name} must be a non-empty string",
         )
     return value
 
@@ -170,7 +172,8 @@ def _strict_version(value: object) -> str:
 def _bounded_depth(value: object, depth: int = 0) -> None:
     if depth > _SNAPSHOT_MAX_DEPTH:
         raise ExecutionError(
-            ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID, "quote snapshot is nested too deeply"
+            ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID,
+            "quote snapshot is nested too deeply",
         )
     if isinstance(value, dict):
         for entry in value.values():
@@ -232,12 +235,14 @@ def snapshot_from_bytes(raw: bytes | None) -> TrustedQuoteSnapshot | None:
         raise
     except (UnicodeDecodeError, ValueError, RecursionError) as exc:
         raise ExecutionError(
-            ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID, "quote snapshot is not valid JSON"
+            ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID,
+            "quote snapshot is not valid JSON",
         ) from exc
     _bounded_depth(decoded)
     if not isinstance(decoded, dict):
         raise ExecutionError(
-            ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID, "quote snapshot must be an object"
+            ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID,
+            "quote snapshot must be an object",
         )
 
     missing = _SNAPSHOT_FIELDS - set(decoded)
@@ -261,7 +266,8 @@ def snapshot_from_bytes(raw: bytes | None) -> TrustedQuoteSnapshot | None:
         )
     if len(items_raw) > _SNAPSHOT_MAX_ITEMS:
         raise ExecutionError(
-            ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID, "quote snapshot has too many items"
+            ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID,
+            "quote snapshot has too many items",
         )
 
     items: list[QuoteItem] = []
@@ -292,7 +298,10 @@ def snapshot_from_bytes(raw: bytes | None) -> TrustedQuoteSnapshot | None:
             )
         seen_skus.add(sku)
         quantity = _strict_int(
-            f"items[{index}].quantity", entry["quantity"], minimum=1, maximum=MAX_SAFE_INT
+            f"items[{index}].quantity",
+            entry["quantity"],
+            minimum=1,
+            maximum=MAX_SAFE_INT,
         )
         unit_price_fen = _strict_int(
             f"items[{index}].unit_price_fen",
@@ -468,7 +477,8 @@ class TrustedCatalog:
         request = self._requests.get(request_id)
         if request is None:
             raise ExecutionError(
-                ExecutionErrorCode.RESOURCE_NOT_FOUND, f"unknown request_id: {request_id}"
+                ExecutionErrorCode.RESOURCE_NOT_FOUND,
+                f"unknown request_id: {request_id}",
             )
         if request.tenant_id != tenant_id or request.task_id != task_id:
             raise ExecutionError(
@@ -491,7 +501,8 @@ class TrustedCatalog:
         delivery = self._deliveries.get(delivery_id)
         if delivery is None:
             raise ExecutionError(
-                ExecutionErrorCode.RESOURCE_NOT_FOUND, f"unknown delivery_id: {delivery_id}"
+                ExecutionErrorCode.RESOURCE_NOT_FOUND,
+                f"unknown delivery_id: {delivery_id}",
             )
         if delivery.tenant_id != tenant_id or delivery.request_id != request_id:
             raise ExecutionError(
@@ -509,7 +520,8 @@ class TrustedCatalog:
             line = offered.get(sku)
             if line is None:
                 raise ExecutionError(
-                    ExecutionErrorCode.QUOTE_INVALID, f"SKU not offered by this quote: {sku}"
+                    ExecutionErrorCode.QUOTE_INVALID,
+                    f"SKU not offered by this quote: {sku}",
                 )
             if quantity > line.quantity:
                 raise ExecutionError(
@@ -523,7 +535,8 @@ class TrustedCatalog:
             total += quantity * line.unit_price_fen
             if total > MAX_SAFE_INT:
                 raise ExecutionError(
-                    ExecutionErrorCode.QUOTE_INVALID, "order total exceeds the safe range"
+                    ExecutionErrorCode.QUOTE_INVALID,
+                    "order total exceeds the safe range",
                 )
             snapshot_items.append(
                 QuoteItem(sku=sku, quantity=quantity, unit_price_fen=line.unit_price_fen)

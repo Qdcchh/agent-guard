@@ -1,0 +1,566 @@
+{
+  "schema_version": 1,
+  "kind": "recovery_inventory_not_formal_acceptance",
+  "status": "BLOCKED",
+  "candidate_head": "2051b402c99a3d400d8f12749287075e23a9a521",
+  "source_status": "PLANNED_NOT_ACTIVE_ROOT_STATE",
+  "source_file": "/Users/qdcc/code/密码技术竞赛/agent-guard/tasks/workflow/runs/B-remediation-integration/requirements-v1.json",
+  "source_sha256": "e627e57dcd837dffcad8a2f24c21164386284f7ded44ccfe587afcb46f6dd2da",
+  "expected_requirement_count": 67,
+  "independent_run_requirement_count": 60,
+  "requirements": [
+    {
+      "id": "A2-P01",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P02",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P03",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P04",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P05",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P06",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P07",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P08",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P09",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P10",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P11",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P12",
+      "independent_run_required": true,
+      "status": "NOT_ACCEPTED",
+      "open_findings": [
+        "A21-R1-OUTCOME"
+      ],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P13",
+      "independent_run_required": true,
+      "status": "NOT_ACCEPTED",
+      "open_findings": [
+        "BR-FINAL-P13-ORACLE"
+      ],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P14",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P15-CORE",
+      "independent_run_required": true,
+      "status": "NOT_ACCEPTED",
+      "open_findings": [
+        "BR-FINAL-ITEM-LIMIT"
+      ],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P19",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-P20",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-CKPT1-OBL01",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-CKPT1-OBL02",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-CKPT1-OBL03",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-CKPT1-OBL04",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-CKPT1-OBL05",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "A2-CKPT1-OBL06",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "WF-A1-REGRESSION",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "WF-INDEPENDENT-PROBES",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "WF-QUALITY-CHECKS",
+      "independent_run_required": true,
+      "status": "NOT_ACCEPTED",
+      "open_findings": [
+        "A21-R1-OUTCOME",
+        "BR-FINAL-ITEM-LIMIT"
+      ],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "WF-PY311-ENV",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "WF-RESOURCE-ISOLATION",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "WF-IMMUTABLE-BASELINE",
+      "independent_run_required": false,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "WF-DOCS-REPORT",
+      "independent_run_required": false,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "WF-SNAPSHOT-COVERAGE",
+      "independent_run_required": false,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-01-CRYPTO",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-02-ENCODING",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-03-IDENTITY",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-04-TOKEN-POLICY",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-05-INVOKE-PROOF",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-06-CODE-OIDC",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-07-ROOT-ISSUANCE",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-08-DELEGATION",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-09-DYNAMIC-STATE",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-10-HTTP-TLS",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-11-RESULT-READ",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-12-EVIDENCE-RECEIPT",
+      "independent_run_required": true,
+      "status": "NOT_ACCEPTED",
+      "open_findings": [
+        "BR-FINAL-RECEIPT-DUPLICATE"
+      ],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-13-ROTATION-INTEROP",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-14-DB-FAILURES",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-15-CONCURRENCY-TEST-EFFICACY",
+      "independent_run_required": true,
+      "status": "NOT_ACCEPTED",
+      "open_findings": [
+        "BR-FINAL-P13-ORACLE"
+      ],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-16-A1-REGRESSION",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-17-B-SUITE-QUALITY",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-18-RESOURCE-ISOLATION",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-19-CONTRACT-MERGE",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-20-MIGRATION-MERGE",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-21-SHARED-FILE-MERGE",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-22-ORIGINAL-GOAL",
+      "independent_run_required": false,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-23-HANDOFF-REPRODUCIBILITY",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "B-24-FINAL-BINDING",
+      "independent_run_required": false,
+      "status": "NOT_ACCEPTED",
+      "open_findings": [
+        "LOCAL-WORKFLOW-EVIDENCE"
+      ],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "BR-01-CONSENT-FINAL",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "BR-02-HTTP-REJECTION",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "BR-03-PRIVATE-PATHS",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "BR-04-LINEAGE-HISTORY",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "BR-05-LINEAGE-ATOMIC",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "BR-06-REAL-PERMISSIONS",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "BR-07-QUERY-DTO",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "BR-08-EVIDENCE-BINDING",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "BR-09-RECEIPT-PROJECTION",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "BR-10-IMPORT-PROVENANCE",
+      "independent_run_required": false,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "BR-11-CLEAN-CANDIDATE",
+      "independent_run_required": true,
+      "status": "BLOCKED",
+      "open_findings": [],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    },
+    {
+      "id": "BR-12-WORKFLOW-BARRIER",
+      "independent_run_required": false,
+      "status": "NOT_ACCEPTED",
+      "open_findings": [
+        "LOCAL-WORKFLOW-EVIDENCE"
+      ],
+      "evidence_scope": "See review.md; only bounded static inspection and controller diagnostics, not formal independent acceptance.",
+      "reason": "Confirmed issue or missing formal evidence; no inherited PASS and no scope removal."
+    }
+  ]
+}

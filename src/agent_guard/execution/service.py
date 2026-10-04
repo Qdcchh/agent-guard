@@ -194,7 +194,11 @@ class ExecutionService:
     # ------------------------------------------------------------- accept
 
     def accept_invocation(
-        self, verified: VerifiedInvocation, snapshot: TrustedPermissionSnapshot
+        self,
+        verified: VerifiedInvocation,
+        snapshot: TrustedPermissionSnapshot,
+        *,
+        binding=None,
     ) -> AcceptResult:
         """Reserve budget for one invocation through the full A2 accept flow."""
         tool = parse_tool_id(verified.tool_id)
@@ -221,7 +225,7 @@ class ExecutionService:
         # (2) read-only candidate lookup; the row is an immutable accept fact.
         existing = self._find_candidate(verified)
         if existing is not None:
-            return self._accept_from_candidate(verified, existing, db_path)
+            return self._accept_from_candidate(verified, existing, db_path, binding=binding)
 
         # (3) only a new intent resolves the current trusted quote.
         try:
@@ -242,17 +246,19 @@ class ExecutionService:
             existing = self._find_candidate(verified)
             if existing is None:
                 raise
-            return self._accept_from_candidate(verified, existing, db_path)
+            return self._accept_from_candidate(verified, existing, db_path, binding=binding)
 
         # A concurrent accept may have committed this business key while the
         # quote was being resolved. The check therefore belongs *inside* the
         # accept transaction, not in another non-locking lookup afterwards.
-        return self._accept_checked(verified, self._cost_for_new(quote_snapshot))
+        return self._accept_checked(verified, self._cost_for_new(quote_snapshot), binding=binding)
 
     def _read_path_ids(self, grant_id: str) -> tuple[str, ...]:
         with self._read() as conn:
             try:
                 path = ledger_store.load_path(conn, grant_id)
+            except psycopg.Error:
+                raise
             except Exception:
                 # A missing/unknown grant is rejected by A1 accept with
                 # INVALID_CONTEXT; do not leak anything about the path here.
@@ -264,7 +270,13 @@ class ExecutionService:
             row = exec_store.fetch_operation(conn, operation_id)
         if row is None:
             return None
-        return (row.tenant_id, row.task_id, row.grant_id, row.holder_client_id, row.holder_kid)
+        return (
+            row.tenant_id,
+            row.task_id,
+            row.grant_id,
+            row.holder_client_id,
+            row.holder_kid,
+        )
 
     def _find_candidate(self, verified: VerifiedInvocation):
         with self._read() as conn:
@@ -276,7 +288,7 @@ class ExecutionService:
                 verified.idempotency_key,
             )
 
-    def _accept_from_candidate(self, verified, row, db_path) -> AcceptResult:
+    def _accept_from_candidate(self, verified, row, db_path, *, binding=None) -> AcceptResult:
         """Use the persisted accept facts and still go through A1 accept.
 
         The complete accept material is verified automatically on this path
@@ -296,9 +308,9 @@ class ExecutionService:
             quote_version=row.quote_version,
             quote_snapshot=row.quote_snapshot,
         )
-        return self._accept_checked(verified, cost)
+        return self._accept_checked(verified, cost, binding=binding)
 
-    def _accept_checked(self, verified, cost: TrustedCost) -> AcceptResult:
+    def _accept_checked(self, verified, cost: TrustedCost, *, binding=None) -> AcceptResult:
         """Enter the accept transaction with an atomic existing-material check.
 
         The validator is created per call and closed over a local holder, so
@@ -319,12 +331,18 @@ class ExecutionService:
                 path_ids = tuple(
                     g.grant_id for g in ledger_store.load_path(conn, existing.grant_id)
                 )
+            except psycopg.Error:
+                raise
             except Exception:  # noqa: BLE001 - an unreadable path is unusable material
                 path_ids = ()
             events = exec_store.fetch_event_nodes(conn, existing.operation_id)
             verify_accept_facts(existing, events, db_path=path_ids)
 
         try:
+            if binding is not None:
+                return self._ledger.accept_bound(
+                    verified, cost, existing_validator=validator, binding=binding
+                )
             return self._ledger.accept_checked(verified, cost, existing_validator=validator)
         except ExecutionError as exc:
             # only material refusals are converted into a durable quarantine;
@@ -381,6 +399,8 @@ class ExecutionService:
                     db_path = tuple(
                         g.grant_id for g in ledger_store.load_path(conn, operation.grant_id)
                     )
+                except psycopg.Error:
+                    raise
                 except Exception:
                     db_path = ()
             events = exec_store.fetch_event_nodes(conn, operation_id)
@@ -500,7 +520,8 @@ class ExecutionService:
                     or task.root_grant_id != path[0].grant_id
                 ):
                     raise ExecutionError(
-                        ExecutionErrorCode.ILLEGAL_TRANSITION, "operation path root mismatch"
+                        ExecutionErrorCode.ILLEGAL_TRANSITION,
+                        "operation path root mismatch",
                     )
                 # lock-after re-check of the immutable location
                 locked = exec_store.lock_operation(conn, operation_id)
@@ -623,7 +644,10 @@ class ExecutionService:
         if effect_id is None:
             if outcome.effect_ref is not None:
                 return None
-            if not isinstance(record, results.ReadResult):
+            if not isinstance(record, results.ReadResult) or outcome.tool_id not in (
+                ToolId.REQUEST_READ,
+                ToolId.DOCUMENT_READ,
+            ):
                 return None
         else:
             if outcome.effect_ref != effect_id:
@@ -691,7 +715,8 @@ class ExecutionService:
                 grants = ledger_store.lock_grants_root_to_leaf(conn, [g.grant_id for g in path])
                 if task.root_grant_id != grants[0].grant_id:
                     raise ExecutionError(
-                        ExecutionErrorCode.ILLEGAL_TRANSITION, "operation path root mismatch"
+                        ExecutionErrorCode.ILLEGAL_TRANSITION,
+                        "operation path root mismatch",
                     )
                 current = exec_store.assert_terminal_write_allowed(
                     conn,
@@ -883,7 +908,14 @@ def strict_snapshots_equal(left, right) -> bool:
         return left is right
     if type(left) is not type(right):
         return False
-    for name in ("quote_id", "quote_version", "supplier_id", "currency", "total_fen", "items"):
+    for name in (
+        "quote_id",
+        "quote_version",
+        "supplier_id",
+        "currency",
+        "total_fen",
+        "items",
+    ):
         if not hasattr(left, name) or not hasattr(right, name):
             return False
     if type(left.total_fen) is not int or isinstance(left.total_fen, bool):
@@ -904,7 +936,11 @@ def strict_snapshots_equal(left, right) -> bool:
     if len(left.items) != len(right.items):
         return False
     for a, b in zip(left.items, right.items, strict=False):
-        if (a.sku, a.quantity, a.unit_price_fen) != (b.sku, b.quantity, b.unit_price_fen):
+        if (a.sku, a.quantity, a.unit_price_fen) != (
+            b.sku,
+            b.quantity,
+            b.unit_price_fen,
+        ):
             return False
     return True
 
@@ -955,7 +991,14 @@ def verify_accept_facts(operation, events, *, db_path: tuple[str, ...]) -> None:
         quote_snapshot = snapshot_from_bytes(operation.quote_snapshot)
     except ExecutionError as exc:
         raise ExecutionError(fail, f"accepted material is not usable: {exc.code.value}") from exc
-    except (RecursionError, ValueError, TypeError, AttributeError, KeyError, OverflowError) as exc:
+    except (
+        RecursionError,
+        ValueError,
+        TypeError,
+        AttributeError,
+        KeyError,
+        OverflowError,
+    ) as exc:
         raise ExecutionError(
             fail, f"accepted material is not decodable: {type(exc).__name__}"
         ) from exc
@@ -1031,5 +1074,6 @@ def verify_accept_facts(operation, events, *, db_path: tuple[str, ...]) -> None:
             )
             if got != want:
                 raise ExecutionError(
-                    fail, f"{event.phase} event node deltas do not match the accepted cost"
+                    fail,
+                    f"{event.phase} event node deltas do not match the accepted cost",
                 )

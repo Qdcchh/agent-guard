@@ -10,11 +10,16 @@ negative.
 from __future__ import annotations
 
 import threading
+import time
 
 import psycopg
 import pytest
 
-from agent_guard.contracts.execution import ExecutionError, OperationStatus
+from agent_guard.contracts.execution import (
+    ExecutionError,
+    ExecutionErrorCode,
+    OperationStatus,
+)
 from agent_guard.contracts.ledger import AcceptDisposition, ErrorCode, LedgerError
 from tests.fixtures.dbstate import fetch_counters, fetch_counts
 from tests.fixtures.execution import (
@@ -44,7 +49,12 @@ class _Grant:
 def assert_within_limits(dsn, grants):
     for grant in grants:
         counters = fetch_counters(dsn, grant.grant_id)
-        for key in ("amount_reserved", "amount_settled", "calls_reserved", "calls_settled"):
+        for key in (
+            "amount_reserved",
+            "amount_settled",
+            "calls_reserved",
+            "calls_settled",
+        ):
             assert counters[key] >= 0, f"{grant.grant_id}.{key} = {counters[key]}"
         assert counters["amount_reserved"] + counters["amount_settled"] <= grant.amount_limit, (
             f"{grant.grant_id} amount over limit: {counters}"
@@ -66,27 +76,46 @@ def make_env(a2, tree):
     )
 
 
-def _race(callables):
-    barrier = threading.Barrier(len(callables))
-    results: list[tuple[str, object]] = []
+def _race(callables, *, timeout=30):
+    """Collect every racer; fail in the main thread on unexpected errors or timeout."""
+    assert callables, "race needs participants"
+    barrier = threading.Barrier(len(callables), timeout=timeout)
+    results = [None] * len(callables)
     lock = threading.Lock()
 
-    def runner(fn):
-        barrier.wait()
+    def runner(index, fn):
         try:
-            value = fn()
-            with lock:
-                results.append(("ok", value))
-        except (ExecutionError, LedgerError) as exc:
-            with lock:
-                results.append(("err", exc))
+            barrier.wait()
+            entry = ("ok", fn())
+        except BaseException as exc:
+            entry = ("err", exc)
+        with lock:
+            results[index] = entry
 
-    threads = [threading.Thread(target=runner, args=(fn,)) for fn in callables]
+    threads = [
+        threading.Thread(target=runner, args=(index, fn), daemon=True)
+        for index, fn in enumerate(callables)
+    ]
+    deadline = time.monotonic() + timeout
     for thread in threads:
         thread.start()
     for thread in threads:
-        thread.join()
+        thread.join(max(0, deadline - time.monotonic()))
+    assert not any(thread.is_alive() for thread in threads), "race workers timed out"
+    assert all(entry is not None for entry in results), "race worker did not report completion"
+    for kind, value in results:
+        if kind == "err" and not isinstance(value, (ExecutionError, LedgerError)):
+            raise AssertionError("unexpected race worker exception") from value
     return results
+
+
+def _assert_lease_contention(results):
+    errors = [value for kind, value in results if kind == "err"]
+    assert len(errors) <= 1, results
+    for error in errors:
+        assert isinstance(error, ExecutionError), results
+        assert error.code is ExecutionErrorCode.LEASE_LOST, results
+        assert error.detail == "operation is leased by another live owner", results
 
 
 # --------------------------------------------------- root budget contention
@@ -349,16 +378,20 @@ def test_p13_concurrent_accept_settle_and_recovery(a2, namespace):
             return call
 
         results = _race([accept_new(), settle_first(), recover_first()])
-        errors = [r for kind, r in results if kind == "err"]
-        # only lease contention may refuse one of the two workers
-        assert len(errors) <= 1, results
+        _assert_lease_contention(results)
+        successes = [r for kind, r in results if kind == "ok"]
+        assert len(successes) in (2, 3), results
+        assert any(getattr(r, "disposition", None) is AcceptDisposition.CREATED for r in successes)
         assert_within_limits(a2.gateway_dsn, grants)
 
         # the race may legitimately end in UNKNOWN (the query-only worker won
         # the lease before anything was executed); either way there is never a
         # second effect and never a negative counter.
         status = a2.service.operation_status(first.operation_id)
-        assert status in (OperationStatus.SUCCEEDED.value, OperationStatus.UNKNOWN.value)
+        assert status in (
+            OperationStatus.SUCCEEDED.value,
+            OperationStatus.UNKNOWN.value,
+        )
         assert fetch_counts(a2.gateway_dsn)["ag_operations"] == 2
 
         if status != OperationStatus.SUCCEEDED.value:
@@ -371,5 +404,22 @@ def test_p13_concurrent_accept_settle_and_recovery(a2, namespace):
             assert final.status == OperationStatus.SUCCEEDED.value
 
         assert fetch_counts(a2.gateway_dsn)["ag_receipt_outbox"] == 1
-        assert fetch_counters(a2.gateway_dsn, tree.leaf_id)["amount_settled"] == 70000
+        for grant in grants:
+            assert fetch_counters(a2.gateway_dsn, grant.grant_id) == {
+                "amount_reserved": 70000,
+                "amount_settled": 70000,
+                "calls_reserved": 1,
+                "calls_settled": 1,
+            }
+        with psycopg.connect(a2.gateway_dsn) as conn:
+            assert conn.execute(
+                "SELECT phase,count(*) FROM ag_ledger_events WHERE operation_id=%s "
+                "GROUP BY phase ORDER BY phase",
+                (first.operation_id,),
+            ).fetchall() == [("RESERVE", 1), ("SETTLE", 1)]
+        with psycopg.connect(a2.downstream_dsn) as conn:
+            assert conn.execute(
+                "SELECT count(*) FROM ds_orders WHERE operation_id=%s",
+                (first.operation_id,),
+            ).fetchone() == (1,)
         assert_within_limits(a2.gateway_dsn, grants)

@@ -4,7 +4,9 @@
 
 目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
 
-> 当前状态：A1 执行账本已实现并通过阶段验收（版本化迁移、原子接受、共享预算、抗重放、业务幂等、撤销/时效复核、根生命周期防护、并发与回滚用例均跑在真实 PostgreSQL 上）。2026-09-30 本地正式套件 146 项及独立探针 5 项通过，条件与边界见 [A1最终验收记录](tasks/A1-review-r4.md)。A2.1-core 执行/恢复核心（004 迁移、可信资源报价、四工具严格参数、独立事务域模拟下游、执行/结算/释放/UNKNOWN 恢复、租约与待签 outbox）已实施，等待独立验收；完整 A2 仍为 PARTIAL。**真实验签/HTTP 网关/SM2/SM3/DID/签名回执/审计检查点与前端均尚未实现**；验收矩阵 M/SEC/CON 各项不得视为已通过。
+> 本轮补正（2026-10-04）：结果变体与工具绑定、统一 256 项边界、离线完整路径 grant 唯一性、P13 线程 oracle 和 future-token 分支已实施；v1实施交付时五项均为 **FIXED_PENDING_REVIEW**。实施证据与完整自查见 [implementation-r1](tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)，后续验收状态见 [本轮控制状态](tasks/workflow/runs/local-remediation-20261004/state.json)。整体项目仍为 **PARTIAL**；后续接受与合并结论以本轮控制状态及主控关联的正式报告为准，须 fresh reviewer 完整复验后由主控决定。文档同步见 [implementation-docs-r1](tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。公开调用/最终动态查询（A2.2）、持续签名发布（A2.3）、独立锚定及完整演示（A3）尚未完成，outbox 保持 `PENDING`。局部测试通过不代表阶段验收。
+
+`product-manifest.json` 保留 2026-10-03 原始交付的 186 项文件哈希；本轮文档已更新，该清单仅用于核对历史传输快照，不是当前工作树清单。旧云端内部报告与原始证据没有随此分支完整交付，不能把旧工作流 `state.json` 的 A2.1 `ACCEPTED` 当作 B 整合放行。
 
 ## 1. 项目目标
 
@@ -32,7 +34,7 @@
 | `procurement.order.create` | 按可信报价创建模拟订单 |
 | `notification.template.send` | 向批准接收方发送固定模板模拟通知 |
 
-首版固定 CNY 币种、商品与报价数据、收货对象；金额为整数分。采购金额由可信服务依据报价版本和数量计算，不信任代理申报金额。
+首版固定 CNY 币种、商品与报价数据、收货对象；金额为整数分。订单参数、持久报价快照和结果共用最多 256 项边界，超过该上限在接受前拒绝。采购金额由可信服务依据报价版本和数量计算，不信任代理申报金额。
 
 退款仅作为主线稳定后的可选轻量适配。不会接入真实支付、训练大模型、自研密码算法、构建完整采购平台或引入区块链。模型接口可替换，无模型 API 时使用确定性代理进行复现。
 
@@ -53,7 +55,7 @@
                  结算 / 签名回执 / 独立审计锚定
 ```
 
-当前设计统一采用 GM-MVP-1：OAuth/OIDC流程、AS统一签发、SM2/SM3、DID绑定及私有AGPoP请求证明。规划采用 Python 3.11、FastAPI网关、PostgreSQL、成熟密码/OAuth库及 Docker Compose；AS框架适配须先做可行性验证。当前只安装基础开发工具，密码库选型须先完成测试向量、签名格式、SM2 用户标识和互操作验证。该国密profile不是完整标准OIDC/DPoP互通声明。
+当前设计统一采用 GM-MVP-1：OAuth/OIDC流程、AS统一签发、SM2/SM3、DID绑定及私有AGPoP请求证明。规划采用 Python 3.11、FastAPI网关、PostgreSQL、成熟密码/OAuth库及 Docker Compose；AS框架适配须先做可行性验证。当前使用固定 tongsuopy 1.0.1 的 SM2/SM3 与原生 ASGI/uvicorn 装配；固定向量及 OpenSSL 互验属于现有测试，维护与跨平台限制见 [密码配置](docs/crypto-profile-v1.md)。该国密profile不是完整标准OIDC/DPoP互通声明。
 
 代理不得持有下游管理凭据或可信状态库访问凭据。单仓库不意味着共享密钥、数据库权限或信任域。网关与下游之间不假定存在分布式事务。
 
@@ -84,7 +86,7 @@ constraints.txt              运行依赖可复现约束
 .github/workflows/ci.yml     lint + unit + 迁移 + 真实 PostgreSQL 集成测试
 ```
 
-后续按需增加 `crypto/`、`authorization/`、`gateway/`、`agents/`、`audit/`、`benchmarks/`。不以空目录或占位接口充当实现。`VerifiedInvocation` / `TrustedPermissionSnapshot` 是**可信进程内输入**，只能由未来 B 的验证器与可信初始化构造；不存在“已验权 JSON”直接入库的入口，也没有生产假验权开关。
+已增加 `crypto/`、`authorization/`、`identity/`、`evidence/`、`server/`。其余网关、代理、审计与实验能力按后续范围实施，不以空目录充当实现。`VerifiedInvocation` / `TrustedPermissionSnapshot` 是**可信进程内输入**，由真实 B 验证适配器或可信初始化构造；不存在“已验权 JSON”直接入库的入口，也没有生产假验权开关。
 
 文档按上述顺序阅读。旧通用凭证协议与重复架构文档已移除，可通过Git历史查看；威胁模型和执行状态机已合并。Markdown是唯一文档源，PDF仅作本地导出，不入库且需自行重新生成。
 
@@ -95,10 +97,12 @@ constraints.txt              运行依赖可复现约束
 ```bash
 python3.11 -m venv .venv
 source .venv/bin/activate
-python -m pip install -e '.[dev]' -c constraints.txt
+python -m pip install -r requirements-dev.lock
+python -m pip install --no-deps -e .
+python -m pip check
 python -m ruff check .
 python -m ruff format --check .
-python -m pytest tests/unit tests/test_scaffold.py tests/test_docs.py
+python -m pytest tests --ignore=tests/integration
 ```
 
 ### A1 账本：数据库、迁移与集成测试
@@ -111,8 +115,8 @@ docker compose -f compose.test.yaml up -d --wait
 export AGENT_GUARD_TEST_PG_PASSWORD="${AGENT_GUARD_TEST_PG_PASSWORD:-agent-guard-test-only-pw}"
 export AGENT_GUARD_TEST_DATABASE_URL="postgresql://agent_guard_test:${AGENT_GUARD_TEST_PG_PASSWORD}@127.0.0.1:55432/agent_guard_test"
 
-# 3) 执行版本化迁移（幂等，可重复运行）
-python -m agent_guard.ledger.migrate
+# 3) 设置下述 test-only 拒绝探针角色，再执行完整 bundle 迁移
+python -m agent_guard.ledger.migrate --bundle
 
 # 4) 集成测试（真实 PostgreSQL；缺库时报错退出，不会静默跳过）
 python -m pytest tests/integration
@@ -280,7 +284,127 @@ python -m pytest tests/integration
 docker rm -f agent-guard-a21c-pg
 ```
 
-下游认证只认独立的网关服务 secret（`AG_WORKER_SERVICE_SECRET` / `DownstreamPort(service_secret=...)`）；代理自身的凭据一律拒绝，认证失败不执行、不返回结果。**B 的真实验证器与签名尚未交付，服务装配不得用测试替身冒充生产验权**：`contracts/execution.py` 的可信类型只能由可信初始化/测试夹具构造，任何试图把“已验权 JSON”接进生产的路径都应失败关闭。回执 outbox 保持 `PENDING`、`receipt_jws` 为 NULL，直到 A2.3 用真实 SM2 签名。
+下游认证只认独立的网关服务 secret（`AG_WORKER_SERVICE_SECRET` / `DownstreamPort(service_secret=...)`）；代理自身的凭据一律拒绝，认证失败不执行、不返回结果。**上面的 A2.1 示例是可信初始化驱动的底层执行演示，不是浏览器到采购的端到端链路**。真实 B 入口为 `InvocationVerifier.verify_bundle` 加 `VerifiedExecution.accept`；不能用测试回调或“已验权 JSON”绕过该适配器。回执 outbox 保持 `PENDING`、`receipt_jws` 为 NULL，直到 A2.3 用真实 SM2 签名。
+
+### 完整 B→A 测试、角色与 bundle 升级
+
+完整测试需 PostgreSQL 16、OpenSSL CLI 和仅属于本轮的测试数据库角色/资源。
+测试角色需要在自有数据库创建 schema、在同一实例创建随机测试数据库；生产数据库
+不适合作为测试目标。下面 SQL **只由隔离测试实例的管理员执行一次**，把
+`agent_guard_test` 替换为本轮测试连接角色；不得授予受保护业务表访问权限：
+
+```sql
+CREATE ROLE br_s1_untrusted NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE
+  NOINHERIT NOREPLICATION NOBYPASSRLS;
+GRANT br_s1_untrusted TO agent_guard_test
+  WITH ADMIN FALSE, INHERIT FALSE, SET TRUE;
+```
+
+证据拒绝测试先成功 `SET LOCAL ROLE` 并断言 `current_user`，再要求保护表读取
+真实返回 `42501`；角色切换失败不会算作通过。CI 在一次性 PostgreSQL 容器里
+创建相同角色，不触及生产授权。
+
+```bash
+unset AGENT_GUARD_DATABASE_URL
+python -m agent_guard.ledger.migrate --bundle
+python -m agent_guard.ledger.migrate --bundle  # 第二次无写入
+python -m pytest tests --ignore=tests/integration
+python -m pytest tests/integration
+python -m tests.demo_b_flow
+```
+
+`--bundle` 保留原 A001–006/B004–009 的固定字节与所有旧 registry 行，识别合法
+common/A/B 前缀并在单一事务中追加命名空间 lineage 和证据表。旧 A 入口保留
+六版本兼容视图；尚未升级的 B 历史不能伪装成 A004–006。既有 v2 sidecar
+缺少原始 14 个完成条目中的任一条时拒绝，不重建已丢失证据。目录、校验和、
+provenance、触发器损坏亦拒绝。先备份并验证恢复；没有无损降级承诺。
+
+`tests.demo_b_flow` 是合成数据的授权演示，真实数据库/SM2 签名支持根、两级
+委托、盗用拒绝及撤销；不冒充完整采购 HTTP 演示。四工具真实签名接入与恢复
+在 `tests/integration/test_verified_execution.py` 验证。公开 HTTP 网关和动态
+operation 查询仍待 A2.2，连续发布和导出待 A2.3。
+
+### 私有配置与开发 HTTPS
+
+`init` 只创建**不存在**的目录，保持一个目录描述符贯穿 AS key、三个 agent
+key、config 与 secrets 六次写入。新目录0700、文件0600；读取只接受0400/0600。
+不修复现有目录权限、不覆盖已有文件，不支持安全原语的平台失败关闭。
+最终私有目录必须由当前有效 UID 拥有且模式0700。各级祖先只信任 root 或当前
+UID；group/other 可写祖先必须带 sticky 位，且选中子项须由当前 UID 拥有、
+不可 group/other 写。禁止路径链接，不允许直接在 /tmp 放私有文件。
+该边界不抵御 root/当前 UID 被攻陷，也不承诺函数返回后的路径永不改变。
+普通 umask022/077 都可用；umask0777 在写入秘密之前失败，可能留下空目录。
+中途失败可能留下私有的部分文件；自行确认归属后清理，不自动删除可能被替换
+的路径。CLI 拒绝以固定非零错误退出，不输出 traceback 或秘密。
+
+```bash
+# RUN_PRIVATE_PARENT 必须是自己拥有的安全0700父目录；RUN_CONFIG_DIR 尚不存在。
+export RUN_CONFIG_DIR="$RUN_PRIVATE_PARENT/as-demo"
+(umask 022; python -m agent_guard.server init --out "$RUN_CONFIG_DIR")
+python -m agent_guard.server check --config "$RUN_CONFIG_DIR/config.json"
+# 从自己的测试资源注入数据库连接串，不打印到日志。
+export AGENT_GUARD_DATABASE_URL="$AGENT_GUARD_TEST_DATABASE_URL"
+python -m agent_guard.server run --config "$RUN_CONFIG_DIR/config.json" \
+  --host 127.0.0.1 --port 8443 --ssl-certfile "$TLS_CERT_FILE" --ssl-keyfile "$TLS_KEY_FILE"
+# 本终端 Ctrl-C 后确认进程退出；客户端须指定测试CA并校验对应DNS/SAN。
+unset AGENT_GUARD_DATABASE_URL
+```
+
+生成的密钥/口令仅用于合成开发数据，不可提交或当作部署身份。factory 使用
+`did_documents` 在 build_app 时一次序列化为私有不可变字节快照；嵌套列表、
+整份文档和原 mapping 的后续修改均不能改变已构建 runtime，新建 runtime 才读取新配置。
+`check` 与 `run` 使用相同组件装配校验，check 不连接数据库或启动服务。factory 不执行
+实时 DID 网络获取。单独的 `IdentityResolver` 默认 fetch 路径支持受批准
+`did:web` 的 HTTPS；集成测试用受控测试 DNS、合成 CA 和实际 TLS 服务器验证
+CA/hostname、重定向、目标、用途、controller、SPKI 与停用/轮换拒绝。
+这两种配置不能混同，测试 DNS 也不是部署 DNS 安全保证。
+
+离线回执验证按所有祖先 token 的 iat/nbf/exp 与 proof 的原 +5 秒未来偏差和排他
+exp 边界求一个共同可能的历史接受时刻，且不晚于已签 receipt iat。终局/恢复可
+晚于 token/proof 到期。该格式没有独立签入精确接受时间，结论仍依赖受信 GW
+终局声明；不会改写原 token/proof/receipt 时间，也不放宽在线验权。
+
+自定义 legacy SQL 继续使用历史通用换行归一化 checksum，已有 CRLF 登记重复
+执行保持原行（含 applied_at）；独立 raw digest 防止执行前换字节。canonical bundle
+仍校验原 SQL 字节。迁移 CLI 显式 connect_timeout=5，失败固定脱敏诊断和非零退出。
+
+### 非 editable wheel 复现
+
+构建后端固定 `setuptools==80.9.0`，仅构建 wheel。先从官方 PyPI 核对版本、
+许可与 SHA256；以下为 uv 前端的隔离 PEP517 复现示例，v1实际构建和安装
+命令以实施报告为准。示例中的目录均应为自有独占的新目录：
+
+```bash
+uv build --wheel --python python3.11 --out-dir "$RUN_WHEEL_DIR" .
+uv venv --python python3.11 "$RUN_WHEEL_VENV"
+uv pip install --python "$RUN_WHEEL_VENV/bin/python" -r requirements-dev.lock
+uv pip install --python "$RUN_WHEEL_VENV/bin/python" --no-deps "$RUN_WHEEL_DIR"/agent_guard-*.whl
+uv pip check --python "$RUN_WHEEL_VENV/bin/python"
+```
+
+以下是源码模式复现示例；v1交付的实际命令与普通非editable安装方式以实施报告为准。
+源码模式在新建锁定venv安装wheel提供发行元数据，再显式选择 `src`。这是源码测试，不计入非 editable wheel 的隔离验证：
+
+```bash
+uv venv --python python3.11 "$RUN_SOURCE_VENV"
+uv pip install --python "$RUN_SOURCE_VENV/bin/python" -r requirements-dev.lock
+uv pip install --python "$RUN_SOURCE_VENV/bin/python" --no-deps "$RUN_WHEEL_DIR"/agent_guard-*.whl
+uv pip check --python "$RUN_SOURCE_VENV/bin/python"
+export PYTHONPATH="$PWD/src"
+"$RUN_SOURCE_VENV/bin/python" -m pytest tests
+unset PYTHONPATH
+```
+
+实际复核将精确测试副本放到源码树外，移除 `PYTHONPATH` 和 editable hooks，
+该目录不含 `src` 或复制的 `agent_guard` 包，父进程及每个 Python 子进程都须
+证明从安装的 wheel 导入。wheel 包含全部 common/A/B/lineage SQL；可通过
+`AGENT_GUARD_MIGRATIONS_DIR` 指定可信完整迁移目录，不从任意 cwd 猜目录。
+具体构建输入、依赖元数据、wheel成员/哈希、实跑命令和结果见 [本轮实施报告](tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)。
+
+setuptools 80.9.0 的官方元数据列出 CVE-2026-59890：macOS 非 ASCII 文件名
+规范化差异可能绕过 sdist 的 MANIFEST 排除。本轮在 Linux 从明确干净输入构建
+wheel 并检查全部成员，不构建/发布 sdist；这不是 macOS sdist 风险已修复的声明。
+密码版本不升级，Tongsuo/BabaSSL 8.3.2 的维护不确定性见密码配置。
 
 ## 6. 实施计划
 
@@ -313,6 +437,6 @@ A 负责可信执行与集成；B 负责密码授权及审计核心；C 在后�
 
 OAuth/OIDC、SM2/SM3、Agent间委托与DID的唯一当前设计见 [实施及接口契约](docs/oauth-oidc-sm2-mvp.md)。不再并行维护父holder直接签发子凭证的旧路线。老师是否要求实改liboauth2本体仍需确认，该问题影响实现选型，不允许绕开既定安全契约。
 
-从最新 `main` 创建短期任务分支，提交 PR，CI通过后Squash merge。队友PR须由CODEOWNERS指定的仓库负责人 `Qdcchh` 审核批准；负责人自己的PR免审批，但合并前仍须确认CI通过、分支最新且讨论解决。当前通过管理员豁免实现负责人的免审批，队友仅有Write权限；若未来增加其他管理员，该豁免同样适用，须重新审视权限策略。禁止强推或删除main。
+从最新 `main` 创建短期任务分支，提交 PR，CI通过后Squash merge。队友PR须由CODEOWNERS指定的仓库负责人 `Qdcchh` 审核批准；负责人自己的PR免审批，但合并前仍须确认CI通过、分支最新且讨论解决。历史仓库配置曾通过管理员豁免实现负责人的免审批；发布时由主控核实实际保护规则。本轮按用户授权的正常Git门处理，不自批或管理员绕过。禁止强推或删除main。
 
 修改前先阅读 [AGENT.md](AGENT.md)、[实施与接口](docs/oauth-oidc-sm2-mvp.md)、[安全模型](docs/security-model.md)和[验收矩阵](docs/acceptance.md)。设计文档不代表实现完成；选型和契约变更需先明确边界、更新测试与文档，再进入真实实现。

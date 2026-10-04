@@ -66,6 +66,7 @@ MAX_TX_RETRIES = 3
 #: Raising rolls the whole request back — including this request's proof
 #: registration — so an unusable candidate never consumes a proof.
 ExistingMaterialValidator = Callable[[psycopg.Connection, "store.OperationRow"], None]
+AcceptBinding = Callable[[psycopg.Connection, "store.OperationRow", AcceptDisposition], None]
 
 #: Upper bounds for connect/lock waiting and statement execution (fail closed).
 DEFAULT_CONNECT_TIMEOUT_S = 5
@@ -165,12 +166,28 @@ class ExecutionLedger:
             raise ValueError("existing_validator must be callable")
         return self._accept_with(verified, cost, existing_validator=existing_validator)
 
+    def accept_bound(
+        self,
+        verified: VerifiedInvocation,
+        cost: TrustedCost,
+        *,
+        existing_validator: ExistingMaterialValidator,
+        binding: AcceptBinding,
+    ):
+        """Checked acceptance plus a per-call atomic evidence binding and final clock."""
+        if not callable(existing_validator) or not callable(binding):
+            raise ValueError("existing validator and binding must be callable")
+        return self._accept_with(
+            verified, cost, existing_validator=existing_validator, binding=binding
+        )
+
     def _accept_with(
         self,
         verified: VerifiedInvocation,
         cost: TrustedCost,
         *,
         existing_validator: ExistingMaterialValidator | None,
+        binding: AcceptBinding | None = None,
     ) -> AcceptResult:
         validate_invocation(verified)
         validate_cost(cost)
@@ -181,7 +198,11 @@ class ExecutionLedger:
                 with self._connect() as conn:
                     with conn.transaction():
                         return self._accept_tx(
-                            conn, verified, cost, existing_validator=existing_validator
+                            conn,
+                            verified,
+                            cost,
+                            existing_validator=existing_validator,
+                            binding=binding,
                         )
             except (psycopg.errors.DeadlockDetected, psycopg.errors.SerializationFailure) as exc:
                 last_error = exc
@@ -221,6 +242,7 @@ class ExecutionLedger:
         cost: TrustedCost,
         *,
         existing_validator: ExistingMaterialValidator | None = None,
+        binding: AcceptBinding | None = None,
     ) -> AcceptResult:
         # (1) trusted path discovery — database parent chain is authoritative.
         path = store.load_path(conn, verified.grant_id)
@@ -266,6 +288,8 @@ class ExecutionLedger:
             # new proof) back; the caller persists the quarantine afterwards.
             if existing_validator is not None:
                 existing_validator(conn, existing)
+            if binding is not None:
+                binding(conn, existing, AcceptDisposition.EXISTING)
             store.link_proof_to_operation(
                 conn,
                 holder_kid=verified.holder_kid,
@@ -274,6 +298,8 @@ class ExecutionLedger:
                 proof_jti=verified.proof_jti,
                 operation_id=existing.operation_id,
             )
+            if binding is not None:
+                self._final_bound_check(conn, grants, keys, verified)
             return AcceptResult(
                 operation_id=existing.operation_id,
                 grant_id=existing.grant_id,
@@ -322,6 +348,8 @@ class ExecutionLedger:
                 for position, grant in enumerate(grants)
             ],
         )
+        if binding is not None:
+            binding(conn, inserted, AcceptDisposition.CREATED)
         store.link_proof_to_operation(
             conn,
             holder_kid=verified.holder_kid,
@@ -330,6 +358,8 @@ class ExecutionLedger:
             proof_jti=verified.proof_jti,
             operation_id=operation_id,
         )
+        if binding is not None:
+            self._final_bound_check(conn, grants, keys, verified)
         return AcceptResult(
             operation_id=operation_id,
             grant_id=verified.grant_id,
@@ -339,6 +369,15 @@ class ExecutionLedger:
             cost=cost,
             accepted_at=_utc(inserted.accepted_at),
         )
+
+    def _final_bound_check(self, conn, grants, keys, verified):
+        # Flush deferred trigger/FK work before the authorization clock, then
+        # reload rows already locked by this transaction (no external I/O).
+        conn.execute("SET CONSTRAINTS ALL IMMEDIATE")
+        principals = store.lock_principals(conn, keys)
+        current = store.lock_grants_root_to_leaf(conn, [g.grant_id for g in grants])
+        self._check_path(current, verified)
+        self._check_freshness(current, principals, verified, store.db_now_epoch(conn))
 
     # ------------------------------------------------------------------ checks
 

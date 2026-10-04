@@ -42,12 +42,17 @@ import json
 import re
 from dataclasses import dataclass
 
-from agent_guard.contracts.execution import ExecutionError, ExecutionErrorCode
+from agent_guard.contracts.execution import (
+    MAX_ORDER_ITEMS,
+    ExecutionError,
+    ExecutionErrorCode,
+    ToolId,
+)
 
 #: Hard bounds so a hostile payload cannot exhaust the parser.
 MAX_RESULT_BYTES = 65536
 MAX_RESULT_DEPTH = 8
-MAX_RESULT_ITEMS = 256
+MAX_RESULT_ITEMS = MAX_ORDER_ITEMS
 MAX_RESULT_STR = 512
 
 #: Resource identifiers: plain ASCII, no URL/path/control/escape material.
@@ -214,7 +219,10 @@ def parse_result(raw: bytes) -> ResultRecord:
                 raise _fail("result.items has a duplicate SKU")
             seen.add(sku)
             quantity = _int_field(
-                f"items[{index}].quantity", entry["quantity"], minimum=1, maximum=_MAX_SAFE
+                f"items[{index}].quantity",
+                entry["quantity"],
+                minimum=1,
+                maximum=_MAX_SAFE,
             )
             price = _int_field(
                 f"items[{index}].unit_price_fen",
@@ -306,7 +314,12 @@ def bind_result(record: ResultRecord, *, operation_id: str, tool_id: str) -> str
         if tool_id != "notification.template.send":
             raise _fail("notification result returned for another tool")
         return record.notification_id
-    # ReadResult
+    # A read-shaped success must also be a read operation.
+    if not isinstance(record, ReadResult) or tool_id not in (
+        ToolId.REQUEST_READ.value,
+        ToolId.DOCUMENT_READ.value,
+    ):
+        raise _fail("read result returned for a non-read tool")
     if record.tool_id != tool_id:
         raise _fail("read result is for another tool")
     return None

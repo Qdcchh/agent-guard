@@ -154,6 +154,10 @@ class TrustedPermissionSnapshot:
     chain_grant_ids: tuple[str, ...]  # root-first grant node each chain layer describes
 
 
+#: Shared request/snapshot/result cardinality bound for one order.
+MAX_ORDER_ITEMS = 256
+
+
 # ------------------------------------------------------------ tool params
 
 
@@ -397,6 +401,7 @@ class VerifiedResultQuery:
     closed and nothing here may be treated as a confirmed B interface.
     """
 
+    subject: str
     profile: str
     tenant_id: str
     task_id: str

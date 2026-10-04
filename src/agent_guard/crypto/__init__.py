@@ -1,0 +1,41 @@
+"""GM-MVP-1 SM2/SM3 primitives and Compact JWS codec."""
+
+from agent_guard.crypto.sm import (
+    JWS_ALG,
+    JWS_TYPES,
+    PUBLIC_KEY_ENCODING,
+    SIGNATURE_ENCODING,
+    SM2_CURVE,
+    SM2_USER_ID,
+    InvalidSm2PublicKey,
+    InvalidSm2Signature,
+    generate_sm2_private_key,
+    load_sm2_public_key,
+    serialize_sm2_public_key,
+    sign_compact_jws,
+    sign_sm2_message,
+    sm3_b64url,
+    sm3_digest,
+    verify_compact_jws,
+    verify_sm2_message,
+)
+
+__all__ = [
+    "JWS_ALG",
+    "JWS_TYPES",
+    "PUBLIC_KEY_ENCODING",
+    "SIGNATURE_ENCODING",
+    "SM2_CURVE",
+    "SM2_USER_ID",
+    "InvalidSm2PublicKey",
+    "InvalidSm2Signature",
+    "generate_sm2_private_key",
+    "load_sm2_public_key",
+    "serialize_sm2_public_key",
+    "sign_sm2_message",
+    "sign_compact_jws",
+    "sm3_b64url",
+    "sm3_digest",
+    "verify_compact_jws",
+    "verify_sm2_message",
+]

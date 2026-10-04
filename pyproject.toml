@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68,<81"]
+requires = ["setuptools==80.9.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,7 +8,12 @@ version = "0.0.1"
 description = "Scaffold for verifiable delegation and controlled agent execution"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = ["psycopg[binary]>=3.2,<3.3"]
+dependencies = [
+    "psycopg[binary]>=3.2,<3.3",
+    "rfc8785==0.1.4",
+    "tongsuopy==1.0.1",
+    "uvicorn>=0.35,<0.36",
+]
 
 [project.optional-dependencies]
 dev = ["pytest==8.3.5", "ruff==0.11.13"]
@@ -30,3 +35,8 @@ line-length = 100
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B"]
+
+[tool.setuptools.data-files]
+"share/agent-guard/migrations" = ["migrations/001_init.sql", "migrations/002_root_invariants.sql", "migrations/003_root_delete_guard.sql", "migrations/004_execution_lifecycle.sql", "migrations/005_event_node_seal.sql", "migrations/006_event_seal.sql"]
+"share/agent-guard/migrations/b" = ["migrations/b/004_authorization_code.sql", "migrations/b/005_delegation.sql", "migrations/b/006_task_revocation.sql", "migrations/b/007_admin_grant_revocation.sql", "migrations/b/008_login_consent.sql", "migrations/b/009_consent_policy_snapshot.sql", "migrations/b/010_evidence_store.sql"]
+"share/agent-guard/migrations/lineage" = ["migrations/lineage/001_registry.sql"]
