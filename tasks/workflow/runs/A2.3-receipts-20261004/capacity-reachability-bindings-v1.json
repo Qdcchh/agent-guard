@@ -1,0 +1,52 @@
+{
+  "kind": "BOUNDARY_EVIDENCE_INTERPRETATION_PENDING_NEW_PACKAGE_REVIEW",
+  "utc": "2026-10-05T03:52:30.797693+00:00",
+  "not_stage_acceptance": true,
+  "original_parent_behaviors_flags_and_assertions": "PRESERVED_VERBATIM",
+  "original_limits": {
+    "public_canonical_envelope": 65536,
+    "component_canonical_JSON": 65536,
+    "component_depth": 64,
+    "component_nodes": 4096,
+    "component_cumulative_string_bytes": 65536,
+    "ASCII_JWS": 16384,
+    "ancestors_min": 1,
+    "ancestors_max": 3,
+    "SDK_outer": 1048576
+  },
+  "actual_stopped_worker_bounds": "artifacts/workflow/A2.3-receipts-20261004/core-quality-r1/public-envelope-bounds-final-r1.json",
+  "actual_stopped_worker_bounds_sha256": "6d76d1578e84a088ca25b28484beea5cee39218de1906ace61d723df0db73aa0",
+  "actual_bounds_script": "artifacts/workflow/A2.3-receipts-20261004/core-quality-r1/bounds_final.py",
+  "actual_bounds_script_sha256": "dceba4896b4d41a3d8c268da61f096d8bdedb254acc6324b5129b1d184c32644",
+  "actual_guard_source_sha256": {
+    "src/agent_guard/contracts/encoding.py": "aaa89677f767844f6a8c2e88c0be1f131b993964119b8c701ba3be0d6d9406ba",
+    "src/agent_guard/contracts/ledger_changes.py": "d813e554f2acba560130c45269272521148ee4612bd12630a3a057084ff82fab",
+    "src/agent_guard/crypto/sm.py": "2b00b5df65f741ccae706d89a6549027d30fc76cf5abbd3a838c3b83fbeddd79",
+    "src/agent_guard/tools/results.py": "8e9243ab9aeed8d73198fbaafc73e84e93adc0f1359a6df1758b42614b7aeccc",
+    "src/agent_guard/execution/service.py": "5bd596722f99cc078cf3b5cacb6e91213062e73cbad99468979ec122079c4642",
+    "src/agent_guard/execution/query.py": "9763ac130ebd0c7f87130f11be3ec64d3beb5a14edf722879a64d205c0d86ac5",
+    "src/agent_guard/execution/receipt_publication.py": "5ff868e408af6270a287b605b555cf239163634adff6f764e8e99d1679d5612f",
+    "src/agent_guard/evidence/receipt.py": "50bc7b6aba7a6cb8cc89880dc44ef00d716cea8e8914d6c5bf42195e36868ed5"
+  },
+  "actual_controller_readback": "artifacts/workflow/A2.3-receipts-20261004/controller/core-quality-r1-controller-readback.json",
+  "actual_controller_readback_sha256": "3868e26498663750afc2b779242cb9bd965a51576a6beb84c38e35a6fd5c820b",
+  "N021": {
+    "exact_codec_points_retained": [
+      65536,
+      65537
+    ],
+    "legal_public_boundary": "Proposed unreachable under current strict four-tool/refusal result and actual receipt schema/JWS envelope bounds; fresh reviewers must independently verify every premise. Historical SDK64KiB aggregate cancellation bound is obsolete after actual fix",
+    "READY_conservative_upper_bytes": 54872,
+    "PENDING": "No receipt JWS; strict schema bound separately verified, not arbitrary padded result",
+    "mandatory_runtime": "Actual source/wheel legal256 positive plus complete wrong-trust/binding/material and oversized fault-injection rejection with proof/link rollback/full ag and DS effects; distinguish layer actually refusing"
+  },
+  "N031": {
+    "exact_outer_points_retained": [
+      1048576,
+      1048577
+    ],
+    "legal_outer_boundary": "Proposed unreachable under strict9-field exact outer, each original component<=65536 including signed-delta ledger: nine components plus exact keys/colon/commas remain below1MiB; no historical nonledger64KiB aggregate premise after fix",
+    "mandatory_evidence": "Actual codec/component exact boundary/depth/node/JWS tests and malformed padded bundle rejection, explicitly earlier component refusal; no legal 1MiB positive claimed"
+  },
+  "decision": "OPEN_PENDING_FRESH_PACKAGE_REVIEW; no limit increase, new SDK write grant, assertion removal or controller-only issue closure"
+}

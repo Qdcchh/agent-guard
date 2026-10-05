@@ -1,0 +1,34 @@
+{
+  "stage": "A2.3-receipts/full-A2",
+  "kind": "SAME_HUMAN_RESUMED_REMEDIATION_FINITE_RUNTIME_NO_STANDARD_CHANGE",
+  "human_record": "tasks/workflow/runs/A2.3-receipts-20261004/user-resume-20261005.md",
+  "human_sha256": "a0ec71337a062633fafa85415df83479b0ced635496ec104e94f4c85c94f6369",
+  "old_resume_binding": {
+    "path": "tasks/workflow/runs/A2.3-receipts-20261004/runtime-binding-resume-r1.json",
+    "sha256": "1169bc1591bfb624cb75a80eed1d116cd706ac3d4b2db7b15e49f1bb29814aa9"
+  },
+  "task": "tasks/workflow/runs/A2.3-receipts-20261004/task-remediation-r2.md",
+  "task_sha256": "04c4edee30e717a08c7937d9794c8f658d33309bfb590d988e36426a0f2d7223",
+  "requested_roles": {
+    "controller": "gpt-6-astra/UNKNOWN",
+    "worker": "gpt-6.1-sol/medium",
+    "each_new_reviewer": "gpt-6-astra/medium"
+  },
+  "effective_metadata": "UNKNOWN",
+  "authorization": "ACTUAL_HUMAN_GRANTED_SAME_STAGE_A2_REMEDIATION",
+  "counts": {
+    "requirements": 119,
+    "runtime_obligations": 112,
+    "local_nodes": 41,
+    "local_atoms": 88
+  },
+  "requirements_sha256": "3821d592d6e66834cee070a356f0a1e721079b5f0a170e9e84fb59ab7f7d4fd6",
+  "r1_conclusion": "NOT_ACCEPTED_CONFIRMED_P2",
+  "initial_failures": "ALL_PRESERVED_SOURCE_WHOLE_NOT_GREEN",
+  "no_old_gate_changes": true,
+  "adaptations_allowed": "fresh owned amd64 Linux3.11 exact locks/PG16, ordinaryDSN cleared; native /proc PID observer; precreate own temp parents/exact least role/real premint alignment v2 with original TTL and clocks/assertions unchanged",
+  "A3": "NOT_IMPLEMENTED_THIS_ROUND",
+  "Git": "NOT_STARTED_PENDING_NEW_COMPLETE_ACCEPTANCE_AND_ACTUAL_CI_REVIEWS",
+  "admin_exception": "NONE",
+  "latest_human_role_instruction": "我把主模型换成astra了，请把reviewer也换成astra中，请继续"
+}

@@ -1,0 +1,575 @@
+{
+  "status": "CONSUMER_PACKAGE_REVIEW_PENDING",
+  "baseline": "138c08a3496eefb6ef2ceca0d694290dcb95c642",
+  "candidate_status": "Actual stopped core selfcheck plus accepted A22 history; full A2 NOT_ACCEPTED",
+  "api_actual_recheck": "Actual stopped core source/API bound in core-api-bindings-v1.json; independent consumer package reviews required",
+  "readonly_dependency_sha": "baseline-manifest-v3.json exact current full candidate; complete ignored consumer freeze includes self/state/Git/raw",
+  "runtime": "APPROVED_FINITE_ADAPTATION_EFFECTIVE_METADATA_UNKNOWN",
+  "independent_review": "Plan author may not serve as independent PACKAGE_REVIEW or IMPLEMENTATION_ACCEPTANCE reviewer",
+  "groups": [
+    {
+      "phase": "core",
+      "exact_writable_paths": [
+        "src/agent_guard/execution/receipt_publication.py",
+        "src/agent_guard/execution/original_material.py",
+        "src/agent_guard/execution/receipts.py",
+        "src/agent_guard/execution/query.py",
+        "src/agent_guard/execution/verified.py",
+        "src/agent_guard/execution/store.py",
+        "src/agent_guard/gateway/config.py",
+        "src/agent_guard/gateway/factory.py",
+        "src/agent_guard/gateway/endpoint.py",
+        "tests/fixtures/receipts.py",
+        "tests/unit/test_receipt_publication.py",
+        "tests/integration/test_receipt_publication.py",
+        "tests/integration/test_gateway_receipt_query.py",
+        "src/agent_guard/authorization/permission_snapshot.py",
+        "src/agent_guard/evidence/receipt.py"
+      ],
+      "count": 15,
+      "resource_owner": "a23-core-quality-r1-20261005",
+      "evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-quality-r1",
+      "resources_status": "ACTUAL_OWNED0_AFTER_STOP",
+      "exclusive_resources": [
+        "Linux Python3.11 source-copy",
+        "noneditable-wheel isolated-copy",
+        "venv cache and TESTDSN",
+        "PG16 fullID owner-label",
+        "network fullID owner-label",
+        "gateway TEST DB",
+        "downstream independent TEST DB/transaction",
+        "ports CA private-config and all parent/child PIDs"
+      ],
+      "readonly_dependency_binding": "Actual stopped cumulative core15 SHA bound by core-api-bindings-v1 and full consumer baseline; no peer half-product consumption",
+      "native_stop_required": true,
+      "ownership_interpretation": "Cumulative stopped API union, not a new worker15-path grant; original14 and conditional5 actual scopes separately bound",
+      "native_status": "ACTUAL_COMPLETED_STOP_ROOT_VERIFIED"
+    },
+    {
+      "phase": "cli_config",
+      "exact_writable_paths": [
+        "src/agent_guard/gateway/receipt_config.py",
+        "src/agent_guard/gateway/receipt_worker.py",
+        "tests/unit/test_receipt_worker_config.py",
+        "tests/integration/test_receipt_worker_process.py"
+      ],
+      "count": 4,
+      "resource_owner": "a23-cli-r1-20261005",
+      "evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/cli_config-r1/",
+      "resources_status": "NOT_CREATED",
+      "exclusive_resources": [
+        "Linux Python3.11 source-copy",
+        "noneditable-wheel isolated-copy",
+        "venv cache and TESTDSN",
+        "PG16 fullID owner-label",
+        "network fullID owner-label",
+        "gateway TEST DB",
+        "downstream independent TEST DB/transaction",
+        "ports CA private-config and all parent/child PIDs"
+      ],
+      "readonly_dependency_binding": "Actual stopped cumulative core15 SHA bound by core-api-bindings-v1 and full consumer baseline; no peer half-product consumption",
+      "native_stop_required": true
+    },
+    {
+      "phase": "https_fixture_demo",
+      "exact_writable_paths": [
+        "tests/fixtures/a23_https.py",
+        "tests/integration/test_gateway_receipt_https.py",
+        "tools/a2_receipt_demo.py"
+      ],
+      "count": 3,
+      "resource_owner": "a23-https-r1-20261005",
+      "evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/https_fixture_demo-r1/",
+      "resources_status": "NOT_CREATED",
+      "exclusive_resources": [
+        "Linux Python3.11 source-copy",
+        "noneditable-wheel isolated-copy",
+        "venv cache and TESTDSN",
+        "PG16 fullID owner-label",
+        "network fullID owner-label",
+        "gateway TEST DB",
+        "downstream independent TEST DB/transaction",
+        "ports CA private-config and all parent/child PIDs"
+      ],
+      "readonly_dependency_binding": "Actual stopped cumulative core15 SHA bound by core-api-bindings-v1 and full consumer baseline; no peer half-product consumption",
+      "native_stop_required": true
+    },
+    {
+      "phase": "integrator_docs",
+      "exact_writable_paths": [
+        "README.md",
+        "HANDOFF.md",
+        "docs/oauth-oidc-sm2-mvp.md",
+        "docs/security-model.md",
+        "docs/acceptance.md",
+        "tasks/A2-report.md",
+        "tasks/workflow/stages/A2.3-receipts.md"
+      ],
+      "count": 7,
+      "resource_owner": "a23-integrator-r1-20261005",
+      "evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/integrator_docs-r1/",
+      "resources_status": "NOT_CREATED",
+      "exclusive_resources": [
+        "Linux Python3.11 source-copy",
+        "noneditable-wheel isolated-copy",
+        "venv cache and TESTDSN",
+        "PG16 fullID owner-label",
+        "network fullID owner-label",
+        "gateway TEST DB",
+        "downstream independent TEST DB/transaction",
+        "ports CA private-config and all parent/child PIDs"
+      ],
+      "readonly_dependency_binding": "Actual stopped cumulative core15 SHA bound by core-api-bindings-v1 and full consumer baseline; no peer half-product consumption",
+      "native_stop_required": true
+    }
+  ],
+  "exact_basic_path_count": 29,
+  "conditional_path": {
+    "path": "src/agent_guard/evidence/receipt.py",
+    "writer": "core",
+    "count_if_formally_included": 29,
+    "status": "ACTUAL_NEW_PACKAGE_REVIEW_GRANTED_IMPLEMENTED_STOP_ROOT_VERIFIED",
+    "gate": "Only actual legal AS256 full-path aggregate early rejection can trigger exact path29 evidence/receipt.py expansion by controller and NEW independent PACKAGE_REVIEW; retain original failures. DTO/blob arithmetic is not reachability.",
+    "scope_after_fresh_review": "strict AG-EVIDENCE-1 exact outer fields, each component old canonical profile; ledger dedicated signed-delta codec; exact outer=2+sum(len(canonical key)+1+len(canonical value))+(field_count-1)<=1048576. Ancestors1..3/JWS16384/globalJSON/signature/all17/typ unchanged; public envelope65536 unchanged, oversize503 proof rollback."
+  },
+  "phases": [
+    "core14 serial implementation/selfcheck/native stop/resource cleanup/scope verify; controller frozen actual API",
+    "fresh dependency PACKAGE_REVIEW then CLI4 vs HTTPS3 parallel; neither consumes sibling unclosed sources",
+    "all writer native stop/cleanup then controller transfers exact28 union (conditional29 only if allowed) to one integrator",
+    "integrator single-writer full selfcheck/native stop; controller full candidate freeze; fresh independent reviewer all119/112"
+  ],
+  "controller_only": [
+    "tasks/workflow/runs/A2.3-receipts-20261004/task-v3.md",
+    "tasks/workflow/runs/A2.3-receipts-20261004/requirements-v3.json",
+    "tasks/workflow/runs/A2.3-receipts-20261004/state.json",
+    "tasks/workflow/runs/A2.3-receipts-20261004/authorization.json",
+    "tasks/workflow/issues.md",
+    "tasks/workflow/context.md",
+    "tasks/workflow/current-policy.md",
+    "tasks/workflow/runs/A2.3-receipts-20261004/ownership-v3.json",
+    "tasks/workflow/runs/A2.3-receipts-20261004/node-bindings-v3.json",
+    "tasks/workflow/runs/A2.3-receipts-20261004/inherited-bindings-v1.json",
+    "tasks/workflow/runs/A2.3-receipts-20261004/runtime-binding-v3.json",
+    "tasks/workflow/runs/A2.3-receipts-20261004/baseline-manifest-v3.json",
+    "tasks/workflow/runs/A2.3-receipts-20261004/core-api-bindings-v1.json",
+    "tasks/workflow/runs/A2.3-receipts-20261004/capacity-reachability-bindings-v1.json",
+    "tasks/workflow/runs/A2.3-receipts-20261004/task-cli-v1.md",
+    "tasks/workflow/runs/A2.3-receipts-20261004/task-https-v1.md"
+  ],
+  "default_readonly": true,
+  "no_new_SQL_or_dependencies": true,
+  "old_four_plan_artifacts_immutable_sha256": {
+    "design.md": "3b989d65e430372d24a1cf5965960525d3e35b54eb2f2bafacc3a271a32d1586",
+    "requirements-additions.json": "b8bdf7e2c3e7525787ea841c3144be27f7f52139ecd232ee1c101274f001e761",
+    "write-ownership.json": "9e440ada4b4fe2a81425046cc3d43cfe77c3aaed18110265a992948b4f222a56",
+    "source-read-manifest.json": "d6f7cb97fabfda880011063536afb3b71faaf04527a53f2ddb6b7cfe083ca8b2"
+  },
+  "shared_decision_path": "artifacts/workflow/A2.3-receipts-20261004/controller/permission-source-shared-interface-decision.md",
+  "shared_decision_snapshot_sha256": "5db6d960a13fcc08c90884ccbe817133496e0c20aef5f8eedafc3e508e081c0c",
+  "version": "formal-v3",
+  "verifier_binding": {
+    "permission_source": "PermissionSnapshotProvider.load_tx(conn, token, *, grant_id, now) -> PermissionSource; private _from_records(records, token, now) single original validation body; original load connection closes before validation exactly as before",
+    "receipt_verifier_proposed_constructor": "ReceiptVerifier(*, issuer, as_keys, gateway_keys, registrations: Mapping[tuple[str,str,str], RegisteredIdentity], permission_provider: PermissionSnapshotProvider)",
+    "scoped_trust_tx_proposed": "scoped_trust_tx(conn, operation_id, *, issuer, as_keys, gateway_keys, registrations, permission_provider) -> ReceiptTrust",
+    "implementation_paths": [
+      "src/agent_guard/execution/receipt_publication.py",
+      "src/agent_guard/execution/original_material.py",
+      "src/agent_guard/authorization/permission_snapshot.py"
+    ],
+    "trust_rules": [
+      "Keep the factory/provider trusted historical registry keyed by exact (tenant,client,kid). Clarify kid collision rejection means new gateway signing-role conflict or invalid chain mapping, not preexisting cross-operation holder aliases.",
+      "Freeze a verifier/builder input that retains this tuple registry rather than assuming one global ReceiptTrust contains all holder registrations. On the same operation connection, derive selectors only from independently verified full AS signed chain plus immutable DB binding and SDK-compatible historical window; verify trusted registration DID/SPKI/key binding.",
+      "Build a new operation-scoped ReceiptTrust for the complete chain using the already trusted exact registrations; within a valid chain the existing actor-DID uniqueness makes the selected kid mapping unambiguous. Then call the existing verify_receipt_bundle and compare all17 DB-projected claims. Do not duplicate policy/signature validation or change the SDK API/protocol.",
+      "Never use unverified self-reported source as trust, choose current DID keys for history, silently overwrite a kid entry, add a global unique-kid migration/config constraint, or mutate shared verifier instance trust across concurrent operations.",
+      "Formal task/shared API/matrix/public builder and minimal core tests must agree. Existing core14 write union covers this correction; evidence/receipt.py remains conditional capacity-only.",
+      "Original_material helper scoped_trust_tx(conn, operation_id, *, issuer, as_keys, gateway_keys, registrations, permission_provider) returns a per-call ReceiptTrust only after independently verified entire AS chain, immutable DB grant/operation binding, complete original first context, and SDK-compatible common historical time. DB exact tuples plus validated chain choose registrations; raw claims cannot establish trust. Both query/current source and publisher/load_tx share original private validation, never clone authorization/crypto/SDK policy.",
+      "Gateway signing new kid/SPKI role separation remains mandatory, while distinct preexisting holder tuples with shared DID/kid/SPKI across unrelated operations are legal. No whole-table kid flatten, last-wins, global uniqueness restriction, shared mutable instance trust, or current DID history fallback."
+    ],
+    "actual_API_status": "NOT_FROZEN; actual core API/interface/SHA must be rebound after native stop before fresh consumer package review"
+  },
+  "phase_fault_binding": {
+    "core": "real independent direct InternalPublisher subprocess; no CLI/HTTPS peer imports",
+    "cli_config": "actual frozen receipt_worker PID sign→commit and commit→reply loss",
+    "integrator": "exclusive S2 complete P18 source/wheel and all119/112"
+  },
+  "capacity_nodes": [
+    {
+      "node_binding_ref": "N032",
+      "phase": "core"
+    },
+    {
+      "node_binding_ref": "N033",
+      "phase": "https_fixture_demo"
+    }
+  ],
+  "read_manifest": "baseline-manifest-v3.json",
+  "per_exact_path_ownership": [
+    {
+      "path": "src/agent_guard/execution/receipt_publication.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CORE_STOP",
+      "subsequent_quality_owner": "a23-core-quality-r1-20261005",
+      "subsequent_quality_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-quality-r1",
+      "subsequent_quality_native_status": "ACTUAL_COMPLETED_STOP_ROOT_VERIFIED"
+    },
+    {
+      "path": "src/agent_guard/execution/original_material.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CORE_STOP"
+    },
+    {
+      "path": "src/agent_guard/execution/receipts.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CORE_STOP"
+    },
+    {
+      "path": "src/agent_guard/execution/query.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CORE_STOP"
+    },
+    {
+      "path": "src/agent_guard/execution/verified.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CORE_STOP",
+      "subsequent_quality_owner": "a23-core-quality-r1-20261005",
+      "subsequent_quality_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-quality-r1",
+      "subsequent_quality_native_status": "ACTUAL_COMPLETED_STOP_ROOT_VERIFIED"
+    },
+    {
+      "path": "src/agent_guard/execution/store.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CORE_STOP"
+    },
+    {
+      "path": "src/agent_guard/gateway/config.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CORE_STOP"
+    },
+    {
+      "path": "src/agent_guard/gateway/factory.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CORE_STOP",
+      "subsequent_quality_owner": "a23-core-quality-r1-20261005",
+      "subsequent_quality_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-quality-r1",
+      "subsequent_quality_native_status": "ACTUAL_COMPLETED_STOP_ROOT_VERIFIED"
+    },
+    {
+      "path": "src/agent_guard/gateway/endpoint.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CORE_STOP"
+    },
+    {
+      "path": "tests/fixtures/receipts.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CORE_STOP",
+      "subsequent_conditional_owner": "a23-core-capacity-r1-20261005",
+      "subsequent_conditional_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-capacity-r1/",
+      "subsequent_conditional_native_status": "ACTUAL_COMPLETED_STOP_ROOT_VERIFIED",
+      "subsequent_quality_owner": "a23-core-quality-r1-20261005",
+      "subsequent_quality_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-quality-r1",
+      "subsequent_quality_native_status": "ACTUAL_COMPLETED_STOP_ROOT_VERIFIED"
+    },
+    {
+      "path": "tests/unit/test_receipt_publication.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CORE_STOP",
+      "subsequent_conditional_owner": "a23-core-capacity-r1-20261005",
+      "subsequent_conditional_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-capacity-r1/",
+      "subsequent_conditional_native_status": "ACTUAL_COMPLETED_STOP_ROOT_VERIFIED",
+      "subsequent_quality_owner": "a23-core-quality-r1-20261005",
+      "subsequent_quality_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-quality-r1",
+      "subsequent_quality_native_status": "ACTUAL_COMPLETED_STOP_ROOT_VERIFIED"
+    },
+    {
+      "path": "tests/integration/test_receipt_publication.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CORE_STOP",
+      "subsequent_conditional_owner": "a23-core-capacity-r1-20261005",
+      "subsequent_conditional_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-capacity-r1/",
+      "subsequent_conditional_native_status": "ACTUAL_COMPLETED_STOP_ROOT_VERIFIED",
+      "subsequent_quality_owner": "a23-core-quality-r1-20261005",
+      "subsequent_quality_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-quality-r1",
+      "subsequent_quality_native_status": "ACTUAL_COMPLETED_STOP_ROOT_VERIFIED"
+    },
+    {
+      "path": "tests/integration/test_gateway_receipt_query.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CORE_STOP",
+      "subsequent_conditional_owner": "a23-core-capacity-r1-20261005",
+      "subsequent_conditional_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-capacity-r1/",
+      "subsequent_conditional_native_status": "ACTUAL_COMPLETED_STOP_ROOT_VERIFIED",
+      "subsequent_quality_owner": "a23-core-quality-r1-20261005",
+      "subsequent_quality_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-quality-r1",
+      "subsequent_quality_native_status": "ACTUAL_COMPLETED_STOP_ROOT_VERIFIED"
+    },
+    {
+      "path": "src/agent_guard/authorization/permission_snapshot.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CORE_STOP"
+    },
+    {
+      "path": "src/agent_guard/gateway/receipt_config.py",
+      "phase": "cli_config",
+      "initial_exclusive_owner": "a23-cli-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/cli_config-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "NOT_CREATED"
+    },
+    {
+      "path": "src/agent_guard/gateway/receipt_worker.py",
+      "phase": "cli_config",
+      "initial_exclusive_owner": "a23-cli-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/cli_config-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "NOT_CREATED"
+    },
+    {
+      "path": "tests/unit/test_receipt_worker_config.py",
+      "phase": "cli_config",
+      "initial_exclusive_owner": "a23-cli-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/cli_config-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "NOT_CREATED"
+    },
+    {
+      "path": "tests/integration/test_receipt_worker_process.py",
+      "phase": "cli_config",
+      "initial_exclusive_owner": "a23-cli-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/cli_config-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "NOT_CREATED"
+    },
+    {
+      "path": "tests/fixtures/a23_https.py",
+      "phase": "https_fixture_demo",
+      "initial_exclusive_owner": "a23-https-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/https_fixture_demo-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "NOT_CREATED"
+    },
+    {
+      "path": "tests/integration/test_gateway_receipt_https.py",
+      "phase": "https_fixture_demo",
+      "initial_exclusive_owner": "a23-https-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/https_fixture_demo-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "NOT_CREATED"
+    },
+    {
+      "path": "tools/a2_receipt_demo.py",
+      "phase": "https_fixture_demo",
+      "initial_exclusive_owner": "a23-https-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/https_fixture_demo-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "NOT_CREATED"
+    },
+    {
+      "path": "README.md",
+      "phase": "integrator_docs",
+      "initial_exclusive_owner": "a23-integrator-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/integrator_docs-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "NOT_CREATED"
+    },
+    {
+      "path": "HANDOFF.md",
+      "phase": "integrator_docs",
+      "initial_exclusive_owner": "a23-integrator-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/integrator_docs-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "NOT_CREATED"
+    },
+    {
+      "path": "docs/oauth-oidc-sm2-mvp.md",
+      "phase": "integrator_docs",
+      "initial_exclusive_owner": "a23-integrator-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/integrator_docs-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "NOT_CREATED"
+    },
+    {
+      "path": "docs/security-model.md",
+      "phase": "integrator_docs",
+      "initial_exclusive_owner": "a23-integrator-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/integrator_docs-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "NOT_CREATED"
+    },
+    {
+      "path": "docs/acceptance.md",
+      "phase": "integrator_docs",
+      "initial_exclusive_owner": "a23-integrator-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/integrator_docs-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "NOT_CREATED"
+    },
+    {
+      "path": "tasks/A2-report.md",
+      "phase": "integrator_docs",
+      "initial_exclusive_owner": "a23-integrator-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/integrator_docs-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "NOT_CREATED"
+    },
+    {
+      "path": "tasks/workflow/stages/A2.3-receipts.md",
+      "phase": "integrator_docs",
+      "initial_exclusive_owner": "a23-integrator-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/integrator_docs-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "NOT_CREATED"
+    },
+    {
+      "path": "src/agent_guard/evidence/receipt.py",
+      "phase": "core",
+      "initial_exclusive_owner": "a23-core-capacity-r1-20261005",
+      "initial_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-capacity-r1/",
+      "transfer_after_all_native_stop": "sole integrator owns exact union only after controller transfer; docs remain integrator initially",
+      "read_dependencies": "core-api-bindings-v1 actual source + baseline-manifest-v3; peer unavailable until native STOP",
+      "resources_status": "ACTUAL_OWNED0_AFTER_CONDITIONAL_STOP",
+      "subsequent_quality_owner": "a23-core-quality-r1-20261005",
+      "subsequent_quality_evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-quality-r1",
+      "subsequent_quality_native_status": "ACTUAL_COMPLETED_STOP_ROOT_VERIFIED"
+    }
+  ],
+  "actual_accepted_A22_binding": {
+    "accepted_commit": "8e4e7a3eba6a3e3f0a6a3eb9c3745e2cf7f17d40",
+    "accepted_report": "tasks/workflow/runs/A2.2-integration-20261004/review-r2.md",
+    "report_sha256": "b9ae21a2c6537d0097e6d9a4e2b4da701953a24c496396b0aa2f1e77728cee13",
+    "acceptance_record": "tasks/workflow/runs/A2.2-integration-20261004/acceptance.md",
+    "native_status": "COMPLETED_ACTUAL_PARENT_EVENT_AND_CONTROLLER_READBACK",
+    "requirement_count": 95,
+    "run_obligations": 88,
+    "accepted_actual_collection": "tasks/workflow/runs/A2.3-receipts-20261004/inherited-bindings-v1.json",
+    "accepted_actual_collection_sha256": "5964bea169f07496ed3eb72e1ace1811af9b7a9bb8ae138094bf5a3f31acc917",
+    "current_source_APIs": "Actual accepted APIs below and full baseline manifest SHA; proposed new core APIs remain NOT_IMPLEMENTED until worker STOP/API freeze",
+    "effective_model_metadata": "UNKNOWN",
+    "A23_business": "NOT_RUN"
+  },
+  "shared_API": {
+    "load_tx": "PermissionSnapshotProvider.load_tx(conn, token, *, grant_id, now) -> PermissionSource",
+    "single_body": "_from_records(records, token, now) one original complete validation body",
+    "old_load": "Original load bounded own connection reads _chain_rows, CLOSES it, then calls shared validation. Preserve errors/timeout/returns/lifecycle.",
+    "scoped_trust_tx": "scoped_trust_tx(conn, operation_id, *, issuer, as_keys, gateway_keys, registrations, permission_provider) -> ReceiptTrust",
+    "ReceiptVerifier": "ReceiptVerifier(*, issuer, as_keys, gateway_keys, registrations: Mapping[tuple[str,str,str], RegisteredIdentity], permission_provider: PermissionSnapshotProvider)",
+    "same_transaction": "Publisher holds only outbox row; load_tx/scoped trust/full original context/projected17 on same conn. Query current real PermissionSource plus unchanged first context.",
+    "historical_window": "Only independently genuinely verified token/proof claims: earliest=max(0,proof_iat-5,all AS iat/nbf), latest=min(receipt_iat,proof_exp-1,all AS exp-1), earliest<=latest mandatory; original SDK predicates. No unverified raw time or current authorization substitution.",
+    "tuple_trust": "Keep exact (tenant,client,kid) registry. Independently verified full AS chain+immutable DB binding selects exact tuples/DID/SPKI; per-operation/per-call ReceiptTrust + original SDK/all17. Legal cross-operation shared holder DID/kid/SPKI preserved; no global flatten/last-wins/global unique-kid/current DID fallback/shared mutable trust.",
+    "freeze": "Actual API/fixtures/content+SHA and dependencies controller-frozen only after core native STOP/owned0; each consumer fresh PACKAGE_REVIEW. Any API change stops consumers then refreeze/review."
+  },
+  "integrator_transfer_gate": "All core/conditional/CLI/HTTPS writers native STOP, owned0 and exact scope/read-only fingerprints verified; controller explicit cumulative exact29 transfer to sole integrator. Original14 and subsequent5 grants remain distinct history. Consumers cannot continue writes.",
+  "formal_package_kind": "PACKAGE_REVIEW_NOT_IMPLEMENTATION_ACCEPTANCE",
+  "same_chain_kid_precheck": {
+    "conclusion": "NO_NEW_CONFIRMED_PLANNING_GAP",
+    "review_sha256": "2359d6f9772327e00579e1e4dd3246b4a7d8c4b0821e419bcde36b0ce0660799",
+    "fact": "Actual AS/IdentityResolver enforces kid DID# prefix; DID has no #; GrantPolicy/parse_actor reject duplicateDID inside chain. Same full kid within legal actual AS chain impossible; cross-operation same DID/kid/SPKI remains legal and operation-scoped trust mandatory. SDK path29 capacity-only."
+  },
+  "actual_reviewed_CI_binding": {
+    "accepted_business_commit": "8e4e7a3eba6a3e3f0a6a3eb9c3745e2cf7f17d40",
+    "accepted_CI_only_commit": "138c08a3496eefb6ef2ceca0d694290dcb95c642",
+    "only_product_delta": ".github/workflows/ci.yml timeout-minutes 25 to45; no code/test/SQL/dependency change",
+    "review_report": "tasks/workflow/runs/A2.2-integration-20261004/ci-timeout-review-r1.md",
+    "review_sha256": "14410e9780f946a5ae6da76e483e57bded8a03c3a1051735e812cafa5f15ef95",
+    "required_remote_CI": "ACTUAL_SUCCESS_37235233187_HEAD138c08a",
+    "admin_exception": "NONE"
+  },
+  "formal_package_status": "PENDING_NEW_CONSUMER_PACKAGE_REVIEWS",
+  "actual_core_API_binding": "core-api-bindings-v1.json",
+  "actual_core_API_binding_sha256": "2bd9a6acbd8b615fb5feff5254bb5576d336e040fef5fc2c6c03b64e44a3d93e",
+  "latest_human_scope_limit": "tasks/workflow/runs/A3-closure-20261004/authorization-limit-20261005.json",
+  "latest_human_scope_limit_sha256": "efc2e374c90090421d0b0c01699f3a3079b35e30d1a7b1483a8b39ed07efb90e",
+  "A3_current_scope": "PLAN_ONLY_STOP_AFTER_FULL_A2_ACCEPTANCE_AND_A3_PLAN",
+  "core_phase_stop_history": [
+    "controller/core-r1-controller-readback.json",
+    "controller/core-capacity-r1-controller-readback.json",
+    "controller/core-quality-r1-controller-readback.json"
+  ],
+  "actual_API_freeze": {
+    "src/agent_guard/evidence/receipt.py": "50bc7b6aba7a6cb8cc89880dc44ef00d716cea8e8914d6c5bf42195e36868ed5",
+    "src/agent_guard/execution/receipt_publication.py": "5ff868e408af6270a287b605b555cf239163634adff6f764e8e99d1679d5612f",
+    "src/agent_guard/execution/original_material.py": "1c781bd0f6f43855df48214f4859a878a8d2eb17efae1823b62b74355793407f",
+    "src/agent_guard/execution/receipts.py": "32367393ac80a9defe222b314710b11987c767aa05bd046180ced7fc9ff61aff",
+    "src/agent_guard/execution/query.py": "9763ac130ebd0c7f87130f11be3ec64d3beb5a14edf722879a64d205c0d86ac5",
+    "src/agent_guard/execution/verified.py": "5db603b6cfae2c1dce0b02c7899557fbbb02c78c8cfed660fb53a6c9306762be",
+    "src/agent_guard/execution/store.py": "42b95254488b5c43028efd9284a7726dc8589182cdb32e67fbeafd9741d9e504",
+    "src/agent_guard/gateway/config.py": "e0a5554d0d7eef8da870528d18278255a7f9e345d486c927725a623060c9dbe9",
+    "src/agent_guard/gateway/factory.py": "46aba9b666ccaec48736b3ea20956775e58eb795c6bf61d86d1a137832dfc74f",
+    "src/agent_guard/gateway/endpoint.py": "dd14776c3a709138e04fae76611971b6875246267be2965aadc1a5aa3726e403",
+    "src/agent_guard/authorization/permission_snapshot.py": "6e0bfb89d0cc460c3d12c1d253a063623d9d843f5acf098873cd2f8443aea3de",
+    "tests/fixtures/receipts.py": "f02df7ea97b06bb168af36949327b70293e34477342b196b8fb8c517bd99bd40",
+    "tests/unit/test_receipt_publication.py": "efada4e89ce59f6dcc4b1af451d8d29352e24492e8f8065131fa44b027f73c6a",
+    "tests/integration/test_receipt_publication.py": "090704411e84f8207205b554721755113e205d9d5cfaf718ae83e488a9df509c",
+    "tests/integration/test_gateway_receipt_query.py": "e11bc44d1f68fe3d5e80840a2c0237213e6ffe9637b164e5e2247b531fddc831"
+  },
+  "cumulative_core_ownership_note": "Original14 owned core-r1 STOP/NEEDS_REPLAN; conditional5 owned core-capacity-r1 STOP/NEEDS_REPLAN with legalwide selfchecks; subsequentquality8 owned core-quality-r1 STOP. Cumulative15 API snapshot is not a retroactive15-path grant."
+}

@@ -1,0 +1,52 @@
+{
+  "stage": "A2.3-receipts/full-A2",
+  "version": "resumed-full-acceptance-r1",
+  "utc": "2026-10-05T08:17:57.178814+00:00",
+  "kind": "EXISTING_APPROVED_FINITE_RUNTIME_REBINDING_NO_STANDARD_CHANGE",
+  "latest_human_record": "tasks/workflow/runs/A2.3-receipts-20261004/user-resume-20261005.md",
+  "latest_human_record_sha256": "a0ec71337a062633fafa85415df83479b0ced635496ec104e94f4c85c94f6369",
+  "historical_stop_effective": false,
+  "old_runtime_v3_preserved_sha256": "e1bb32defbfec7a1f45bd54f315e2835f8d18d34064f2523feb9f57276cc9e10",
+  "old_pending_and_A3_fields": "HISTORICAL_THIS_RECORD_AND_REAL_HUMAN_RESUME_ARE_CURRENT",
+  "implementation_authorization": "ACTUAL_HUMAN_GRANTED_FULL_A2_RESUME",
+  "requested_roles": {
+    "controller": "gpt-6.1-sol/high",
+    "worker": "gpt-6.1-sol/medium",
+    "new_reviewers": "gpt-6.1-sol/xhigh"
+  },
+  "effective_metadata": "UNKNOWN",
+  "complete_requirements": {
+    "path": "tasks/workflow/runs/A2.3-receipts-20261004/requirements-v3.json",
+    "sha256": "3821d592d6e66834cee070a356f0a1e721079b5f0a170e9e84fb59ab7f7d4fd6",
+    "count": 119,
+    "runtime_obligations": 112
+  },
+  "business_package": "UNCHANGED_V3_WITH_ACTUAL_READY_CONSUMER_REVIEW",
+  "consumer_package_review_sha256": "11149fdff96c4289ce1cd7ae367c3977df6330cb0795de60aca552debcd13f41",
+  "all_candidate_writers": "ACTUAL_NATIVE_STOP_AND_OWNED_PROCESS_RESOURCE_ZERO",
+  "integrator_original_report_sha256": "eb73e06a8453da6e89a3408f2a8c5ee51d6f8dece49c9a8ad16a08f98e3a9fb7",
+  "CI_only_change": {
+    "path": ".github/workflows/ci.yml",
+    "change": "timeout-minutes45to75",
+    "review": "tasks/workflow/runs/A2.3-receipts-20261004/package-review-ci-runtime-resume-r1.md",
+    "review_sha256": "9238474235b5dd851c7b7ff7e0eb0dc66f3005f2162dd2654db31553b29e72f3",
+    "native_review_STOP": true,
+    "current_CI_sha256": "f30187ff12c1bdfef273f58d7d096a801581eb2a8dc40758492815292309537c",
+    "actual_remote_new_HEAD_CI": "NOT_RUN_PENDING_GIT_DELIVERY"
+  },
+  "unchanged": [
+    "real SM2/SM3",
+    "LinuxPython3.11",
+    "realPG16/TLS",
+    "source and noneditable wheel",
+    "all budgets/revocations/deadlines/assertions/10rounds",
+    "real process recovery",
+    "historical/equivalent probes and raw evidence",
+    "immutable SQL and dependency locks",
+    "old machine gates",
+    "required checks/approvals/CODEOWNERS/protection"
+  ],
+  "admin_exception": "NONE",
+  "A3": "NOT_IMPLEMENTED_NOT_AUTHORIZED_THIS_ROUND",
+  "full_A2_acceptance": "NOT_ACCEPTED_PENDING_NEW_COMPLETE_REVIEW"
+}

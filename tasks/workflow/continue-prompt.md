@@ -1,19 +1,7 @@
-# 换模型后的接续提示词
+# A2 接续入口
 
-在界面选择主会话 `gpt-6.1-sol/high`，发送下方代码块。文件自身不是真人授权；接续时核正式授权记录和最新真人限制。
+当前恢复检查点：NEW完整A2独立reviewer r1已原生FINAL STOP、自有资源0，主控完整读回；结论 **NOT_ACCEPTED**。P2 `A23-R1-PUBLISH-QUOTE-ARITHMETIC` 为OPEN_CONFIRMED：损坏quote/result一致却算术错误仍签READY，正常SQL不可变保护有效。原source完整2798P/1F/exit1、wheel2799P/exit0及中断/失败全保留。正式原文见 tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md；当前补正 task-remediation-r2 与13文件所有权已由新 Astra medium 独立包审 PACKAGE_READY，报告见 tasks/workflow/runs/A2.3-receipts-20261004/package-review-remediation-r2.md；主控已核原生 FINAL STOP/完整指纹/资源0，正调度唯一 Sol medium worker。补正后完整自查与全新reviewer119/112必须重做；本次不实施A3，不提交/发布未接受候选。以下旧冻结前措辞属于该时点记录，不能替代当前真实执行。
 
-```text
-请继续 /Users/qdcc/Documents/ChatGPT/密码竞赛/agent-guard-handoff 项目，不误用父目录的另一个Git仓库。先读AGENTS.md/AGENT.md、HANDOFF.md、tasks/workflow/README.md/current-policy.md/context.md/issues.md、当前stage/state/正式任务包/完整需求矩阵/最新完整review和补正；再读原始A2任务、接口、安全、验收文档和受影响真实代码/测试。检查真实Git分支/HEAD/改动/远端，保留所有既有提交和未提交内容，不reset/clean。
+2026-10-05真人已[恢复A2](runs/A2.3-receipts-20261004/user-resume-20261005.md)。先核真实Git/PR、HANDOFF、context/state/issues、v3完整包与最新原生证据。承接既有成果，sole29联合整合与完整自查已原生STOP、自有资源0；核正式报告及已完成的CI预算独立审查，完整冻结后，NEW独立119/112 source/wheel验收及必要补正，正式接受后提交推送PR，实际CI/审核满足后合并main，交接后停止。不实施A3、不继承PR #6例外、不reset/clean。
 
-按已记录真人连续授权：A2.2补正与fresh完整复验通过后处理合并，无论合并是否可行都继续A2.3并完整验收A2，再按A3四段计划持续到全部A3完成。不要把历史r3或r4自查通过当当前接受，也不要因旧模板单段停止点重复询问已获批准的范围。每个小段必须先版本化规划包、精确文件与依赖所有权、完整原始需求/断言矩阵和自有资源方案，经fresh独立PACKAGE_READY后实施；停写全冻结后fresh独立完整验收，失败同段补正再换新reviewer全复验。
-
-主控gpt-6.1-sol/high，worker gpt-6.1-sol/medium，每轮新reviewer gpt-6.1-sol/xhigh；请求参数及原生回执真实记录，有效后台metadata未知记UNKNOWN。各段保存具体有限适配和既有持续真人批准来源；同类缺模型元数据/旧门绑定按已批准实证方式继续，不重复确认，不降低标准、不造metadata、不改旧门或分支保护。
-
-保留真实SM2/SM3、真实PG/TLS/独立事务、10轮有效竞态、真进程恢复、source/wheel、全部前段/历史/原探针与等价探针、完整矩阵和原始脱敏证据。适合多agent协作的worker任务按独立文件/资源分工开合适数量子agent；共享迁移/类型/锁序/fixtures先串行冻结，再并行独立部分，整合后完整自查与fresh验收。
-
-过时、错误、重复或无用的现行文档内容随任务修改或删除并修复引用；历史授权/任务/失败/验收/原始证据/迁移和依赖锁保留，当前状态如实维护。只清理自己核实owner/ID的资源，不连接或修改既有无关容器。
-
-通过验收后的commit/push/PR已有授权，创建PR后附到本聊天。合并须实际CI和审核条件；PR6管理员例外不继承，需要新例外时先准备具体PR及通过CI再询问，等待时继续已授权的后段工作。本地可复现部署/演示/实验属于A3，对外生产发布不推定。遇到确需我决定的问题及时提出，其余按已有授权持续完成；最终汇报实际代码、验收、Git交付和局限，不声称绝对无缺陷。
-```
-
-若只想完成一个小段，可追加“本次只推进<阶段ID>，完成实施/独立复核/补正后停下”；该新的明确限制优先。当前全范围持续授权见 [A3授权](runs/A3-closure-20261004/authorization.json)。
+本文件是接续提示而非新真人授权；现行授权、真实状态及历史停止/失败/验收记录分别保留。新会话不得凭本提示伪造已运行或已接受。

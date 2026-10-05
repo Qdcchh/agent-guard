@@ -1,6 +1,6 @@
 # 验收与实验矩阵
 
-本轮 B 补正已独立验收并通过 CI，经 [PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 合并 main。67 项验收、60 项独立运行完成；见 [正式接受记录](../tasks/workflow/runs/local-remediation-20261004/acceptance.md)及 [当前交接](../tasks/workflow/context.md)。整体项目仍 **PARTIAL**：A2.2 已完成95项/88运行义务的独立验收，A2.3 持续签名发布、A3 独立锚定/完整演示与实验未完成；outbox 保持 PENDING。阶段通过不代表绝对无缺陷。
+本轮 B 补正已独立验收并通过 CI，经 [PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 合并 main。67 项验收、60 项独立运行完成；见 [正式接受记录](../tasks/workflow/runs/local-remediation-20261004/acceptance.md)及 [当前交接](../tasks/workflow/context.md)。整体项目仍 **PARTIAL**：A2.2 已完成95项/88运行义务的独立验收，A2.3候选已实现内部持续签名发布与真实HTTPS联合流程，完整联合自查完成后按真人指令停止，本轮补正后的新独立复验未执行、完整A2未接受、原r1否决保留；A3独立锚定/导出/交付演示与实验未完成；旧无回执公钥配置保持PENDING兼容。阶段通过不代表绝对无缺陷。
 
 本文是唯一验收清单；[实施方案](oauth-oidc-sm2-mvp.md)定义接口，[安全模型](security-model.md)定义事务与安全边界。M编号为初版里程碑；SEC/CON/REC/AUD/ENG为成熟版回归维度，两者可关联同一测试，不需重复编写两套脚本。
 
@@ -66,7 +66,7 @@ M1覆盖OIDC代码流，M2—M5/M8覆盖授权安全，M6/M7/M11—M13覆盖预�
 
 | 原目标 | 本段67ID | 具体测试入口 | 本段观察与后段责任 |
 | --- | --- | --- | --- |
-| M1 | B-06-CODE-OIDC / B-10-HTTP-TLS | [`test_full_login_authorize_consent_and_redeem`](../tests/integration/test_login_consent.py) | 本段AS正常/负例：B补正ACCEPTED；公开四工具invoke/query已由A2.2独立接受，持续签名待A2.3；A2.2保留全部回归义务 |
+| M1 | B-06-CODE-OIDC / B-10-HTTP-TLS | [`test_full_login_authorize_consent_and_redeem`](../tests/integration/test_login_consent.py) | 本段AS正常/负例：B补正ACCEPTED；公开四工具invoke/query已由A2.2独立接受，A2.3候选已有持续发布与真实联合HTTPS链，本轮补正后的新独立复验未执行、完整A2未接受，本轮自查收尾后按真人指令停止、原r1否决保留；A2.2保留全部回归义务 |
 | M2 | B-04-TOKEN-POLICY / B-08-DELEGATION / BR-06-REAL-PERMISSIONS | [`test_two_levels_are_as_signed_and_idempotent`](../tests/integration/test_exchange_service.py) | 真AS两级委托/三个holder：B补正ACCEPTED；A2.2保留全部回归义务 |
 | M3 | B-03-IDENTITY / B-13-ROTATION-INTEROP / BR-11-CLEAN-CANDIDATE | [`test_historical_registration_is_keyed_by_exact_identity`](../tests/test_permission_snapshot.py) | 默认did:web真TLS与登记/用途/SPKI拒绝：B补正ACCEPTED；A2.2保留全部回归义务 |
 | M4 | B-05-INVOKE-PROOF / BR-06-REAL-PERMISSIONS | [`test_static_verifier_rejects_tampering_and_does_not_stage`](../tests/test_authorization.py) | 盗token无私钥拒绝：B补正ACCEPTED；公开invoke已由A2.2独立接受；A2.2保留全部回归义务 |
@@ -74,7 +74,7 @@ M1覆盖OIDC代码流，M2—M5/M8覆盖授权安全，M6/M7/M11—M13覆盖预�
 | M6 | A2-P13 / B-15-CONCURRENCY-TEST-EFFICACY | [`test_p13_two_draws_race_for_the_root_budget`](../tests/integration/test_execution_concurrency.py) | 祖先预算/两个700元并发10轮：B补正ACCEPTED，分层fixture不冒充全HTTP；A2.2保留全部回归义务 |
 | M7 | A2-P05 / A2-P06 | [`test_p05_response_lost_keeps_budget_then_settles_same_order`](../tests/integration/test_execution_core.py) | 真实下游+响应丢失port替身和真进程恢复：B补正ACCEPTED；A2.2保留全部回归义务 |
 | M8 | A2-P10 / B-09-DYNAMIC-STATE | [`test_p10_revocation_commits_first_then_accept_rejects`](../tests/integration/test_state_checks.py) | 撤销先提交拒绝与接受后内部恢复：B补正ACCEPTED；A2.2保留全部回归义务 |
-| M9 | B-12-EVIDENCE-RECEIPT / BR-09-RECEIPT-PROJECTION | [`test_authentic_nonadjacent_duplicate_grant_rejected`](../tests/test_receipt_paths.py) | 真签名SDK和UNANCHORED关联：B补正ACCEPTED；持续发布/锚定待A2.3/A3；A2.2保留全部回归义务 |
+| M9 | B-12-EVIDENCE-RECEIPT / BR-09-RECEIPT-PROJECTION | [`test_authentic_nonadjacent_duplicate_grant_rejected`](../tests/test_receipt_paths.py) | 真签名SDK和UNANCHORED关联：B补正ACCEPTED；A2.3候选已有持续发布；独立锚定/导出留A3；A2.2保留全部回归义务 |
 | M10 | B-23-HANDOFF-REPRODUCIBILITY / BR-11-CLEAN-CANDIDATE | [`test_tls_server_runs_the_full_as_flow`](../tests/integration/test_server_tls.py) | 无模型API source/wheel/README/demo：B补正ACCEPTED；完整演示和导出待A3；A2.2保留全部回归义务 |
 | M11 | B-07-ROOT-ISSUANCE / B-06-CODE-OIDC | [`test_two_codes_one_task_real_principal_lock_race`](../tests/integration/test_code_service.py) | 永久唯一根/双code10轮：B补正ACCEPTED；A2.2保留全部回归义务 |
 | M12 | A2-P15-CORE / B-04-TOKEN-POLICY | [`test_item_bound_is_enforced_before_accept_and_full_256_recovers`](../tests/integration/test_execution_final_boundaries.py) | 重复/空缺集合/报价关联/256边界：B补正ACCEPTED；A2.2保留全部回归义务 |
@@ -89,14 +89,23 @@ M1覆盖OIDC代码流，M2—M5/M8覆盖授权安全，M6/M7/M11—M13覆盖预�
 | CON-01 | A2-P13 | [`test_p13_two_draws_race_for_the_root_budget`](../tests/integration/test_execution_concurrency.py) | 根预算并发：B补正ACCEPTED；A2.2保留全部回归义务 |
 | CON-02 | A2-P13 | [`test_p13_intermediate_ancestor_budget_binds_under_concurrency`](../tests/integration/test_execution_concurrency.py) | 中间祖先不足：B补正ACCEPTED；A2.2保留全部回归义务 |
 | CON-03 | A2-P03 / A2-P13 | [`test_p03_zero_amount_read_settles_calls`](../tests/integration/test_execution_core.py) | 零金额次数/未知预算保留：B补正ACCEPTED；A2.2保留全部回归义务 |
-| REC-01 | A2-P04 / A2-P05 / A2-P06 / A2-P07 / A2-P08 / A2-P09 / B-14-DB-FAILURES | [`test_p06_recovery_after_terminal_window_has_no_duplicate_effect`](../tests/integration/test_execution_core.py) | 本段故障矩阵：B补正ACCEPTED；公开发布故障待A2.3；A2.2保留全部回归义务 |
+| REC-01 | A2-P04 / A2-P05 / A2-P06 / A2-P07 / A2-P08 / A2-P09 / B-14-DB-FAILURES | [`test_p06_recovery_after_terminal_window_has_no_duplicate_effect`](../tests/integration/test_execution_core.py) | 本段故障矩阵：B补正ACCEPTED；A2.3候选覆盖内部发布真进程故障，本轮补正后的新独立复验未执行、完整A2未接受，本轮自查收尾后按真人指令停止、原r1否决保留；A2.2保留全部回归义务 |
 | REC-02 | A2-P08 / A2-P09 | [`test_p09_two_recoverers_race_one_terminal_and_one_outbox`](../tests/integration/test_execution_recovery.py) | 迟到效果/双恢复者/fencing：B补正ACCEPTED；A2.2保留全部回归义务 |
 | REC-03 | A2-P11 / A2-P12 | [`test_p11_existing_intent_survives_quote_edit_and_delete`](../tests/integration/test_execution_quotes.py) | 原报价快照/不一致UNKNOWN：B补正ACCEPTED；A2.2保留全部回归义务 |
 | AUD-01 | B-12-EVIDENCE-RECEIPT / BR-09-RECEIPT-PROJECTION | [`test_authenticated_path_mutations_rejected`](../tests/test_receipt_paths.py) | 未锚定签验与改链/结果/delta拒绝：B补正ACCEPTED；锚定删除/回滚检测待A3；A2.2保留全部回归义务 |
 | AUD-02 | B-12-EVIDENCE-RECEIPT | [`test_valid_unanchored_receipt`](../tests/test_receipt.py) | UNANCHORED报告边界：B补正ACCEPTED；独立最新锚点待A3；A2.2保留全部回归义务 |
-| E2E-01 | B-23-HANDOFF-REPRODUCIBILITY / BR-06-REAL-PERMISSIONS | [`test_signed_chain_all_four_tools_and_real_receipt`](../tests/integration/test_verified_execution.py) | 合成AS演示/进程内四工具：B补正ACCEPTED；三代理四工具公开采购闭环待A2.2/A2.3/A3；A2.2保留全部回归义务 |
+| E2E-01 | B-23-HANDOFF-REPRODUCIBILITY / BR-06-REAL-PERMISSIONS | [`test_signed_chain_all_four_tools_and_real_receipt`](../tests/integration/test_verified_execution.py) | 合成AS演示/进程内四工具：B补正ACCEPTED；A2.3候选已有真实AS/GW四工具发布/query闭环；部署与三代理编排演示留A3.3；A2.2保留全部回归义务 |
 | ENG-01 | B-17-B-SUITE-QUALITY / BR-11-CLEAN-CANDIDATE | [`test_init_creates_exclusive_private_tree`](../tests/test_server_private_files.py) | 锁安装/迁移/测试/README：B补正ACCEPTED；完整证据导出待A3；A2.2保留全部回归义务 |
+
+A2.3候选的新增当前证据另由[`test_p21_https_login_consent_pkce_two_exchanges_four_tools_publish_query_offline`](../tests/integration/test_gateway_receipt_https.py)绑定M1/E2E-01真实协议链，[真实CLI崩溃窗口](../tests/integration/test_receipt_worker_process.py)绑定REC-01发布故障，[原材料/路径/结果与独立SDK验证](../tests/integration/test_receipt_publication.py)补充M9/AUD-01。以上为候选自查覆盖；本轮收尾后按真人指令停止，本轮补正后的新独立复验未执行、完整A2未接受、原r1否决保留，且不改变AUD-02独立锚点、ENG-01导出和E2E部署编排的A3责任。
 
 后段归属：A负责A2.2公开invoke/最终动态result-read；A/B负责A2.3持续签名发布与联合验收；A/B联合完成A3独立锚定、证据导出与完整三代理四工具HTTP采购闭环，材料/复现参与者负责独立复现、规模实验与公平对照。已有SDK签验/投影、AS TLS演示、README片段和故障测试不能替代这些交付。50客户端/10,000调用仍为目标，未计作本段性能实测。未锚定尾部、缺最新独立锚点和固定密码依赖维护不确定性仍须在最终报告说明。
 
 原始矩阵与逐函数断言仅保存在本地、Git忽略的 `artifacts/workflow/local-remediation-20261004/worker-r1/requirements-matrix.json` 和 `artifacts/workflow/local-remediation-20261004/worker-docs-r1/goal-map.json`；干净克隆不包含这些原始日志，不以文件缺失或索引代替正式验收。
+
+
+A2.3补正候选在真实签名/READY前复用原接受事实校验：对不可变报价执行精确总额、数量/原请求及cost currency/calls检查，并逐事件核对历史验真的完整root→leaf路径和四种delta。两列quote/result相互一致不能替代上述约束。校验读取均先于query最终DB时刻，不引入当前报价、下游结果或当前撤销/到期条件；合法零价及迟延终局仍可历史发布。失败保留PENDING/null及原ID/iat，当前query失败回滚proof/link，仅允许原契约的隔离STAGED证据。
+
+容量域分列：当前canonical producer的订单公开响应保守包含上界为58168字节；兼容有效原始签名JWS（含非canonical JSON空白）的单JWS仍可到16384字节，不能套用canonical JWS上界。原接受事实要求q≥1、p≥0、每项q*p及Σq*p≤MAX_SAFE；p>0时digits(q)+digits(p)≥18会使最小乘积≥10^16>MAX_SAFE，p=0时至多16+1位。因此每项联合数字宽度≤17，256项比松Cartesian32位省3840字节，得到兼容域公开响应保守上界64695字节。两者均不是实际合法最大值；组件64KiB/JWS16KiB、公开65536和外层1MiB守卫保持不变，真实边界/非法组件探针仍独立保留。补正自查不代表正式接受；本轮按真人指令在自查、证据和资源清理后停止，本轮补正后的新独立复验未执行、完整A2未接受，原r1 NOT_ACCEPTED保留，P2仅标FIXED_PENDING_REVIEW。
+
+本轮完整自查报告：`../tasks/workflow/runs/A2.3-receipts-20261004/implementation-remediation-r2.md`；最新真人停止指令：`../tasks/workflow/runs/A2.3-receipts-20261004/user-stop-after-selfcheck-20261005.md`。本轮补正后的新独立复验未执行；完整A2未接受，原[r1否决](../tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md)保留。

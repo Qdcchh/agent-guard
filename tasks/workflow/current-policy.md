@@ -4,9 +4,11 @@
 
 | 角色 | 请求模型与推理档位 | 职责 |
 | --- | --- | --- |
-| 主 agent | `gpt-6.1-sol / high` | 授权、任务包、调度、冻结、证据核对、状态与交付 |
+| 主 agent | `gpt-6-astra / UNKNOWN` | 授权、任务包、调度、冻结、证据核对、状态与交付 |
 | worker | `gpt-6.1-sol / medium` | 已批准范围的实施和补正，保持原配置 |
-| reviewer | `gpt-6.1-sol / xhigh` | 每轮新独立子任务；包审与实施验收分离 |
+| reviewer | `gpt-6-astra / medium` | 每轮新独立子任务；包审与实施验收分离 |
+
+2026-10-05 最新真人指令：“我把主模型换成astra了，请把reviewer也换成astra中，请继续”。从本轮后续调度生效；主会话推理档位未明确，记 UNKNOWN，worker 保持 Sol medium；历史请求配置与报告不追改。
 
 这是调度要求，不会自动切换当前主会话设置；用户在界面同步调整。子任务创建时显式请求上述配置，记录原生回执；工具未暴露的有效模型/档位仍记 UNKNOWN，不把请求值当后台证明。保留 [原补充契约](runs/setup/codex-astra-sol-v1/workflow-contract.md) 的独立性、停写、资源隔离、证据与完整验收义务。
 
@@ -14,7 +16,7 @@
 
 [PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 已于 2026-10-04 合并，main 产品基线为 `d7e91c75014d1097c822936a16559229e2b4906a`；候选 `361ec117f538ddd4b50a7f236adf80aab44408db` 的 CI 为 SUCCESS（952 普通测试、1388 PostgreSQL 集成测试）。用户在确认作者同时为唯一 CODEOWNER 的具体阻碍后明确回复“合并吧”，授权本次现有管理员审核豁免；未修改保护，也没有自批。
 
-该例外仅用于 PR #6，不自动适用于未来 PR。新发布遵循必需 CI 与审核条件，确需例外须有明确授权。用户先授权只推进 A2.2 及本阶段有限适配，现又明确要求 A2.2 独立复核通过后合并，并无论能否合并都继续 A2.3、完整验收 A2；这覆盖之前的 A2.2 单段停止点。最新[授权扩展记录](runs/A2.2-integration-20261004/authorization-expansion-20261004.json)保留真人原话。完整A2接受后全部A3及本地复现部署/演示/实验已获[最新真人授权](runs/A3-closure-20261004/authorization.json)，按[四段计划](stages/A3-closure.md)持续闭环；A2.3有限适配已另获[明确批准](runs/A2.3-receipts-20261004/authorization.json)，业务实施仍须A2.2接受及本段PACKAGE_READY。当前任务见 [A2.2 包](runs/A2.2-integration-20261004/task-v1.md) 与 [授权记录](runs/A2.2-integration-20261004/authorization.json)。
+该例外仅用于 PR #6，不自动适用于未来 PR。新发布遵循必需 CI 与审核条件，确需例外须有明确授权。用户先授权只推进 A2.2 及本阶段有限适配，现又明确要求 A2.2 独立复核通过后合并，并无论能否合并都继续 A2.3、完整验收 A2；这覆盖之前的 A2.2 单段停止点。最新[授权扩展记录](runs/A2.2-integration-20261004/authorization-expansion-20261004.json)保留真人原话。2026-10-05真人现已明确恢复此前取消的A2剩余整合与完整独立验收，并授权必要补正、提交/推送/PR及在实际CI和审核满足后合并main，见[本次恢复授权](runs/A2.3-receipts-20261004/user-resume-20261005.md)。本次不实施A3，交接完成后停止。[旧停止记录](runs/A2.3-receipts-20261004/user-stop-20261005.md)保留为历史，不再控制本次剩余A2工作。119项/112运行义务及独立性不减，PR #6管理员例外不继承。
 
 前段B补正的 [有限运行适配](runs/local-remediation-20261004/runtime-addendum-proposal.md) 只适用于已完成的 B 补正，不能自动延长到下一阶段。下一阶段建包时先核原生运行证据/门能力，保存具体适配及下述持续真人授权来源；不同性质或降低标准的适配仍须另行批准；不能让旧 state 或 UNKNOWN 字段自动放行。旧机器门与历史 state 保持原样。
 

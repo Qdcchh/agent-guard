@@ -5,7 +5,11 @@ from dataclasses import dataclass
 
 from agent_guard.contracts.encoding import canonical_json_bytes, load_strict_json
 from agent_guard.crypto.sm import serialize_sm2_public_key
-from agent_guard.identity.resolver import IdentityResolver, RegisteredIdentity, did_web_url
+from agent_guard.identity.resolver import (
+    IdentityResolver,
+    RegisteredIdentity,
+    did_web_url,
+)
 from agent_guard.server.config import ConfigError, _https_url, _string, secret_sha256
 from agent_guard.server.factory import _load_public_key
 from agent_guard.tools import catalog
@@ -22,7 +26,10 @@ _FIELDS = {
     "max_workers",
 }
 _CATALOG = {
-    "requests": (catalog.CatalogRequest, {"request_id", "tenant_id", "task_id", "status"}),
+    "requests": (
+        catalog.CatalogRequest,
+        {"request_id", "tenant_id", "task_id", "status"},
+    ),
     "documents": (catalog.CatalogDocument, {"document_id", "request_id", "body"}),
     "quotes": (
         catalog.CatalogQuote,
@@ -151,7 +158,11 @@ def trusted_inputs(value):
                 r"[1-9][0-9]{0,17}", row["quote_version"]
             ):
                 raise ConfigError("invalid quote version")
-            if "status" in row and row["status"] not in ("APPROVED", "REJECTED", "PENDING"):
+            if "status" in row and row["status"] not in (
+                "APPROVED",
+                "REJECTED",
+                "PENDING",
+            ):
                 raise ConfigError("invalid catalog status")
             if identity in seen:
                 raise ConfigError("duplicate catalog record")
@@ -162,7 +173,11 @@ def trusted_inputs(value):
                     raise ConfigError("bounded quote lines required")
                 skus = set()
                 for line in lines:
-                    if type(line) is not dict or set(line) != {"sku", "quantity", "unit_price_fen"}:
+                    if type(line) is not dict or set(line) != {
+                        "sku",
+                        "quantity",
+                        "unit_price_fen",
+                    }:
                         raise ConfigError("invalid quote line fields")
                     _string(line["sku"], "sku")
                     if line["sku"] in skus or any(
@@ -174,13 +189,17 @@ def trusted_inputs(value):
                 row["lines"] = tuple(catalog.CatalogQuoteLine(**v) for v in lines)
             built.append(kind(**row))
         seed[collection] = built
+    receipt_public_keys(value, as_keys=as_keys, registrations=registrations)
     return as_keys, resolver, registrations, catalog.TrustedCatalog(**seed)
 
 
 def load_gateway_config(raw: bytes):
     try:
         value = load_strict_json(raw)
-        if type(value) is not dict or set(value) != _FIELDS:
+        if type(value) is not dict or set(value) not in (
+            _FIELDS,
+            _FIELDS | {"receipt_keys"},
+        ):
             raise ConfigError("exact gateway fields required")
         _string(value["secrets_path"], "secrets_path")
         for name, upper in (("request_timeout_seconds", 60), ("max_workers", 32)):
@@ -190,3 +209,23 @@ def load_gateway_config(raw: bytes):
         return GatewayConfig(canonical_json_bytes(value))
     except (ValueError, TypeError, KeyError, UnicodeError) as exc:
         raise ConfigError("invalid gateway configuration") from exc
+
+
+def receipt_public_keys(value, *, as_keys, registrations):
+    """Optional public receipt trust; canonical SPKI keeps roles independent."""
+    if "receipt_keys" not in value:
+        return None
+    keys = value["receipt_keys"]
+    if type(keys) is not dict or not keys:
+        raise ConfigError("nonempty gateway receipt public keys required")
+    reserved_kids = set(as_keys) | {r.kid for r in registrations.values()}
+    reserved_spki = {serialize_sm2_public_key(key) for key in as_keys.values()}
+    reserved_spki.update(r.spki_der for r in registrations.values())
+    result = {}
+    for kid, pem in keys.items():
+        _string(kid, "receipt kid")
+        key = _load_public_key(pem, "receipt public trust")
+        if kid in reserved_kids or serialize_sm2_public_key(key) in reserved_spki:
+            raise ConfigError("receipt signing key must have an independent role")
+        result[kid] = key
+    return result

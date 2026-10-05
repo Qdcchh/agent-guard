@@ -1,6 +1,6 @@
 # 安全模型与执行状态
 
-状态：GM-MVP-1的规范性安全要求，不是全部要求均已实现或验收的声明。B补正已完成独立验收并合并；[正式接受记录](../tasks/workflow/runs/local-remediation-20261004/acceptance.md)保留67项/60运行义务及原失败证据。A2.2本轮已完成95项/88运行义务的独立验收，见[任务包](../tasks/workflow/runs/A2.2-integration-20261004/task-v1.md)。整体项目仍PARTIAL：A2.3持续签名发布、A3独立锚定/导出/完整采购演示/规模对照实验尚未完成，outbox保持 PENDING。 消息接口以 [实施方案](oauth-oidc-sm2-mvp.md) 为准，测试统一在 [验收矩阵](acceptance.md) 维护。
+状态：GM-MVP-1的规范性安全要求，不是全部要求均已实现或验收的声明。B补正已完成独立验收并合并；[正式接受记录](../tasks/workflow/runs/local-remediation-20261004/acceptance.md)保留67项/60运行义务及原失败证据。A2.2本轮已完成95项/88运行义务的独立验收，见[任务包](../tasks/workflow/runs/A2.2-integration-20261004/task-v1.md)。整体项目仍PARTIAL：A2.3候选已实现内部持续签名发布与真实HTTPS联合流程，本轮补正后的新独立复验未执行、完整A2未接受，本轮完整自查收尾后按真人指令停止、原r1否决保留；A3独立锚定/导出/交付演示/规模对照实验尚未完成，旧无回执公钥配置保持PENDING兼容。 消息接口以 [实施方案](oauth-oidc-sm2-mvp.md) 为准，测试统一在 [验收矩阵](acceptance.md) 维护。
 
 ## 1. 威胁模型
 
@@ -111,6 +111,17 @@ RESERVED中断可恢复原意图；EXECUTING租约失效后查询下游，不直
 
 初版若仅完成回执签名而无独立检查点，导出标注UNANCHORED，不声称能检测完整日志回滚。不得把网关自己保存的哈希链当作独立信任域。
 
+A2.3候选的内部publisher只锁既有outbox行，用有界同一PG事务验证首次token/proof/request、完整签名链与DB绑定、结果和全部账本节点后执行真实SM2签名。条件PENDING→READY只写receipt_status、receipt_jws、signed_at；提交前死亡保持PENDING，提交后失响应重启返回原JWS与signed_at。不得再次执行业务、补造终态或替换首次材料。
+
+历史信任登记保留精确(tenant,client,kid)元组。独立验签完整AS链后，按不可变DB绑定和SDK共同历史窗口为每次操作构造独立ReceiptTrust；不同操作既有holder别名合法，不全表flatten/last-wins或使用当前DID解释旧key。新的网关签名kid/SPKI仍必须与AS/holder角色分离；HTTP仅加载可信公开快照，不打开signer私钥。持久READY的当前query须完成全部材料/密码/SQL/约束工作后再最终DBclock；invoke状态也在接受事务的每次调用私有闭包内捕获，提交后不补做DB读取。旧无回执公钥配置仅支持PENDING兼容。UNANCHORED局限仍适用。
+
 ## 9. 故障验证边界
 
 至少覆盖：预留提交后中断、下游成功但响应丢失、结算前中断、结算后回执生成失败、回执返回丢失、查无结果后的迟到成功、多恢复者竞争、恢复期间撤销及锁等待超过proof TTL。检查订单/通知效果、每层金额和次数账本、终态、证据关联及检查点；不只检查HTTP响应。具体用例编号统一在验收矩阵维护。
+
+
+A2.3补正候选在真实签名/READY前复用原接受事实校验：对不可变报价执行精确总额、数量/原请求及cost currency/calls检查，并逐事件核对历史验真的完整root→leaf路径和四种delta。两列quote/result相互一致不能替代上述约束。校验读取均先于query最终DB时刻，不引入当前报价、下游结果或当前撤销/到期条件；合法零价及迟延终局仍可历史发布。失败保留PENDING/null及原ID/iat，当前query失败回滚proof/link，仅允许原契约的隔离STAGED证据。
+
+容量域分列：当前canonical producer的订单公开响应保守包含上界为58168字节；兼容有效原始签名JWS（含非canonical JSON空白）的单JWS仍可到16384字节，不能套用canonical JWS上界。原接受事实要求q≥1、p≥0、每项q*p及Σq*p≤MAX_SAFE；p>0时digits(q)+digits(p)≥18会使最小乘积≥10^16>MAX_SAFE，p=0时至多16+1位。因此每项联合数字宽度≤17，256项比松Cartesian32位省3840字节，得到兼容域公开响应保守上界64695字节。两者均不是实际合法最大值；组件64KiB/JWS16KiB、公开65536和外层1MiB守卫保持不变，真实边界/非法组件探针仍独立保留。补正自查不代表正式接受；本轮按真人指令在自查、证据和资源清理后停止，本轮补正后的新独立复验未执行、完整A2未接受，原r1 NOT_ACCEPTED保留，P2仅标FIXED_PENDING_REVIEW。
+
+本轮完整自查报告：`../tasks/workflow/runs/A2.3-receipts-20261004/implementation-remediation-r2.md`；最新真人停止指令：`../tasks/workflow/runs/A2.3-receipts-20261004/user-stop-after-selfcheck-20261005.md`。本轮补正后的新独立复验未执行；完整A2未接受，原[r1否决](../tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md)保留。

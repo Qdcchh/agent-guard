@@ -1,5 +1,27 @@
 # 问题与独立复验账本
 
+## 当前：完整A2 r1 NOT_ACCEPTED，补正r2包审待执行
+
+- **A23-R1-PUBLISH-QUOTE-ARITHMETIC / P2 / OPEN_CONFIRMED**：正常SQL immutable UPDATE被拒；仅在自有CorruptRow故障fixture同时改变quote/result单位价、保留原total/首次证据/params/ledger/DS，source/wheel真实publisher仍签并commitREADY、SDK接受而当前query503/新proof登记回滚。完整state证明仅publication三列变化；恢复原材料同proof200→409。触发/原件/补正要求见正式review-r1.md（原样保存）。新补正包待独立PACKAGE_REVIEW，worker不自闭；必须新完整119/112 reviewer复验。
+- **A23-R1-SOURCE-FULL-GREEN / REQUIRED_COVERAGE_GAP / OPEN_NOT_RUN_COMPLETE_GREEN_SOURCE**：本轮source完整未全绿（2798P1F真实短proof跨秒；中断r4/r5原件保留），wheel完整2799P不能替代source。所有新候选必须source/wheel完整实跑。原容量/格式项在整体未接受期间继续FIXED_PENDING_FULL_REVIEW，独立r1观察不冒称全A2接受。
+
+- **A23-R1-STALE-HISTORICAL-COMMENTS / P3 / OPEN_NONBLOCKING**：CODEOWNERS旧管理员例外注释、execution旧B缺失/PENDING-only docstring及crypto-profile-v1历史交付/current header；仅准确说明与引用补正，有效CODEOWNER规则/其余AST/规范密码参数保持。
+
+以下为各时点历史记录。
+
+## 2026-10-05 本次恢复A2
+
+真人[恢复授权](runs/A2.3-receipts-20261004/user-resume-20261005.md)覆盖旧停止。现行容量/格式仍FIXED_PENDING_FULL_REVIEW，上界标签待本轮独立核闭；[sole29联合整合与完整自查](runs/A2.3-receipts-20261004/implementation-resume-r1.md)已完成并原生STOP，CI预算45→75已另经独立小包审查并应用；NEW119/112独立验收尚未执行，不据分段自查关闭。下方各轮历史状态保留，不覆盖当前state。A3本次不实施。
+
+## 2026-10-05 A2.3 包审文档补正
+
+[v1包审](runs/A2.3-receipts-20261004/package-review-r1.md) PACKAGE_READY，无阻断；[新r2包审](runs/A2.3-receipts-20261004/package-review-r2.md)完整119/112 PACKAGE_READY；无阻断。CURRENT-DOC-STATE实质错误CLOSED_REVIEWED_R2；STALE-PLANNING与PROVENANCE-LABEL在该历史r2时PARTIALLY_FIXED_OPEN_NONBLOCKING_R2，后由capacity-r1独立核证补正CLOSED_REVIEWED_CAPACITY_R1，完整残余位置见报告§8，coreSTOP后的新消费者包补正并由新reviewer核验。不得虚闭。
+
+- A23-PKG-R1-STALE-PLANNING：正式owner和已接受A22节点绑定替代过时占位说明。
+- A23-PKG-R1-PROVENANCE-LABEL：v3历史来源哈希保留并明确标历史，v2现行来源重新哈希。
+- A23-PKG-R1-CURRENT-DOC-STATE：README/接口/交接/上下文显示A22实际接受、CI-only新提交与A23仅规划的真实状态。
+
+
 ## 2026-10-05 当前 A2.2：fresh r2 ACCEPTED
 
 [review-r2](runs/A2.2-integration-20261004/review-r2.md)及[主控接受](runs/A2.2-integration-20261004/acceptance.md)：95 PASS/88独立运行，source/wheel各1022＋1930正式通过，最终1072独立增强通过；原生COMPLETED、完整285与Git无漂移、owner余留0，619原始证据经主控读回。
@@ -8,7 +30,7 @@
 - **A22-R1-SHORT-WINDOW / P2 / CLOSED_REVIEWED_R2**：真AS父子安全收窄、真实跨秒、四窗口正负每组10轮及目标DB deadline/全四计数独立通过。
 - **A22-CTX-FIRST-BINDING / CLOSED_REVIEWED_R1，REGRESSION_VERIFIED_R2**：16同形字段拒绝及过期原proof合法新query保持。
 
-没有本轮新增已确认阻断产品缺陷。下方为对应历史版本的当时状态，不覆盖本节；所有失败、中断、适配与历史报告保留。A2.3及A3仍须各自正式包审和fresh完整验收，Git/main以实际CI与审核为准。
+没有本轮新增已确认阻断产品缺陷。下方为对应历史版本的当时状态，不覆盖本节；所有失败、中断、适配与历史报告保留。A2.3仍须最终fresh完整验收，A3本次仅规划，Git/main以实际CI与审核为准。
 
 ## 2026-10-04 当前权威闭环：fresh r2 ACCEPTED
 
@@ -225,3 +247,27 @@ MiMo已停写，完整implementation-r5.md（hash fd264c1b34cfb0bc5821ab4da7e6bb
 ## A2.2 r4补正自查与主控停写核验
 
 [完整implementation-r4](runs/A2.2-integration-20261004/implementation-r4.md)已原生COMPLETED，source/wheel各1022普通+1930 PG及独立增强335全通过；两项P2只标FIXED_PENDING_REVIEW。主控核558证据/110命令JUnit、764函数及7761case refs、284项候选/只读范围与实际owner容器/network余留0；HEAD、分支、语义index和staged diff未变。最终wheel增强独占重跑，原共享cache轮/历史适配失败/隐私封存失败保留。下一步fresh r2全95/88独立验收，不能以本自查关闭或合并。
+
+## A2.3 core-r1 原生 STOP / NEEDS_REPLAN（历史停止与当前补正基础）
+
+- **A23-CORE-R1-AGGREGATE-CAPACITY / P2 / OPEN_CONFIRMED**：真实AS root及两次exchange、public202、独立DS终局后的256唯一SKU宽16/17、qty35184372088831、unit1各原component合法，SDK非ledger聚合67058/68938被默认64KiB codec提前拒。历史SDK未修改；直接publisher再次确认异常链与所有ag/DS行SHA不变、三祖先预算正确保留、outboxPENDING/null。详见[完整停止报告](runs/A2.3-receipts-20261004/implementation-core-r1.md)。新精确SDK1+四测试文件包审后实施，保每component原限额/签名语义，精确outer1MiB；最新完整source/wheel、自查和fresh完整119/112验收后才可能关闭。
+- core14实际范围/311源/262原始证据/29局部绑定/15JUnit runs已读回，own0；861只是收集数，旧partial PASS/FAIL、签名debug139、原wheel143、最新测试NOT_RUN全部保留，不据此释放消费者。r2两个元数据P3留给新包独立核补正，不由主控自行关闭。
+- A2.2两项P2已由fresh r2 CLOSED_REVIEWED_R2，见[正式接受](runs/A2.2-integration-20261004/acceptance.md)；上述历史r1/r4段落不是当前待接受。PR7 head138c08a CI SUCCESS，仅正常审核条件未满足。
+
+## A2.3 capacity-v1 新独立包审（历史范围放行）
+
+[完整package-review-capacity-r1](runs/A2.3-receipts-20261004/package-review-capacity-r1.md)已原生FINAL STOP/独立PACKAGE_READY，主控完整119/112、41节点/88原子、674来源、318候选/266raw/21自有产物及Git起止全核无漂移。仅精确SDK1+既有四fixture/test文件补正被激活，不授旧core14完整写权；业务未修、完整A2 NOT_ACCEPTED。
+
+- A23-PKG-R1-STALE-PLANNING、A23-PKG-R1-PROVENANCE-LABEL：CLOSED_REVIEWED_CAPACITY_R1，仅各原具体metadata静态义务，不是业务通过。
+- A23-CORE-R1-AGGREGATE-CAPACITY：P2 OPEN_CONFIRMED，按已审包实施，最终fresh完整119/112 sourcewheel验收前不关闭。
+- A23-CAPACITY-PKG-R1-BOUND-LABEL：P3 OPEN_NONBLOCKING_NEW_BOUND_RECOMPUTATION_REQUIRED，历史notification局部3359低2bytes；当前保守3361、全局54873仍覆盖四tool，历史65235移除旧聚合限额后失效。worker新逐tool/refusal/真实status/kid/UUID/claims/源码SHA重算，保exact codec边界和真实超限503/proof rollback，后续NEW完整验收核闭。
+
+## A2.3 capacity-r1实际STOP与quality-v1（当前）
+
+容量缺陷：FIXED_PENDING_FULL_REVIEW，源/wheel宽12/16/17及短256各4PASS，unit/原SDK各61PASS；完整core NOT_RUN，原失败保留。新逐工具上界已实际重算54872/3361/2947/2949、PENDING52155及outer589964，最终fresh完整验收再核闭。
+
+**A23-CORE-QUALITY-FORMAT / P2 / OPEN_CONFIRMED**：完整ruff42→owned补正后3FAIL；receipt_publication.py E501、verified.py I001、factory.py I001在旧5只读范围。format通过不豁免ruff。quality-v1精确原5+format3已由NEW reviewer核包PACKAGE_READY，原119/112不减；下一步实施；纯格式和完整最终core源轮一次，自有0与新消费者包审/最终独立验收仍必需。
+
+## quality-r1实际STOP（当前）
+
+A23-CORE-QUALITY-FORMAT已实施且全ruff/format通过，标FIXED_PENDING_FULL_REVIEW；容量P2同样待最终fresh验收。A2.3 quality-r1已原生STOP/READY_FOR_CONSUMERS：source/wheel各核心882、普通1078、受影响旧回归813全部通过，主控核327候选/精确6-of-8范围、489历史原件、1565证据和18433环境成员、29局部断言绑定/真实来源与资源0。首轮失败和partial396中断保留。这是核心自查，不是完整A2接受；下一步一个NEW独立reviewer完整审v3和CLI4/HTTPS3两个子包，分别放行后并行接入；allSTOP后sole29整合自查和NEW独立完整119项/112运行义务验收。 最新真人要求“验收完A2规划完A3就停吧，太慢了实在是”：本次完成完整A2验收和A3可接续分段计划后停止，不实施A3；此前连续实施全部A3的授权由本次限制覆盖。

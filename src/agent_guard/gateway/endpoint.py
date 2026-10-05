@@ -3,12 +3,20 @@
 import time
 
 from agent_guard.authorization.verifier import InvocationVerifier
-from agent_guard.contracts.encoding import EncodingError, canonical_json_bytes, load_strict_json
+from agent_guard.contracts.encoding import (
+    EncodingError,
+    canonical_json_bytes,
+    load_strict_json,
+)
 from agent_guard.contracts.ledger import INVOKE_ENDPOINT, QUERY_ENDPOINT
 from agent_guard.execution.query import AuthorizedQuery
 from agent_guard.execution.verified import VerifiedExecution
 from agent_guard.gateway.errors import GatewayError
-from agent_guard.tools.params import parse_tool_id, parse_tool_params, parse_tool_version
+from agent_guard.tools.params import (
+    parse_tool_id,
+    parse_tool_params,
+    parse_tool_version,
+)
 
 
 class GatewayEndpoint:
@@ -18,6 +26,7 @@ class GatewayEndpoint:
         verifier: InvocationVerifier,
         execution: VerifiedExecution,
         queries: AuthorizedQuery,
+        receipt_verifier=None,
     ):
         if (
             type(verifier) is not InvocationVerifier
@@ -25,6 +34,7 @@ class GatewayEndpoint:
             or type(queries) is not AuthorizedQuery
         ):
             raise ValueError("real gateway services required")
+        self._receipt_verifier = receipt_verifier
         self._verifier = verifier
         self._execution = execution
         self._queries = queries
@@ -36,7 +46,14 @@ class GatewayEndpoint:
             fields = (
                 {"profile", "task_id", "operation_id"}
                 if query
-                else {"profile", "task_id", "tool_id", "tool_version", "idempotency_key", "params"}
+                else {
+                    "profile",
+                    "task_id",
+                    "tool_id",
+                    "tool_version",
+                    "idempotency_key",
+                    "params",
+                }
             )
             if type(value) is not dict or set(value) != fields or value["profile"] != "GM-MVP-1":
                 raise GatewayError("INVALID_SCHEMA")
@@ -66,9 +83,4 @@ class GatewayEndpoint:
         bundle = self._verifier.verify_bundle(
             token, proof, endpoint=INVOKE_ENDPOINT, body=body, now=int(time.time())
         )
-        accepted = self._execution.accept(bundle)
-        return 202, {
-            "operation_id": accepted.operation_id,
-            "status": accepted.status,
-            "receipt_status": "PENDING",
-        }
+        return 202, self._execution.accept_response(bundle, receipt_verifier=self._receipt_verifier)

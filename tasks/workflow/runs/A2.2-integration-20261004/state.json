@@ -144,7 +144,18 @@
     ],
     "controller_integrity": "artifacts/workflow/A2.2-integration-20261004/controller/review-r2-controller-integrity.json"
   },
-  "git_publication": "PREPARING_NOT_PUBLISHED",
+  "git_publication": {
+    "commit": "138c08a3496eefb6ef2ceca0d694290dcb95c642",
+    "branch": "codex/a2.2-integration",
+    "pr": "https://github.com/Qdcchh/agent-guard/pull/7",
+    "status": "PUSHED_PR_CREATED_ATTACHED",
+    "ci": "SUCCESS_RUN_37235233187_1022_1930",
+    "review": "REVIEW_REQUIRED",
+    "main_merge": "NOT_MERGED",
+    "admin_exception": "NOT_GRANTED_FOR_PR7",
+    "accepted_business_commit": "8e4e7a3eba6a3e3f0a6a3eb9c3745e2cf7f17d40",
+    "ci_only_review": "tasks/workflow/runs/A2.2-integration-20261004/ci-timeout-review-r1.md"
+  },
   "limitations": [
     "Old machine gate not migrated; effective backend model metadata UNKNOWN under approved finite adaptations",
     "A2.3 and A3 require their own PACKAGE_READY and complete independent acceptance",
@@ -240,7 +251,7 @@
     "implementation_authorization": "GRANTED",
     "full_A2_acceptance_authorization": "GRANTED",
     "runtime_adaptation": "GRANTED",
-    "package_review": "NOT_STARTED",
+    "package_review": "v2 PACKAGE_READY by NEW r2; core14 next",
     "merge_block_does_not_prevent_continuation": true,
     "authorization_record": "tasks/workflow/runs/A2.3-receipts-20261004/authorization.json"
   },
@@ -261,7 +272,7 @@
     "status": "SELF_CHECK_COMPLETE_NATIVE_STOPPED",
     "issue_status": "CLOSED_REVIEWED_R2"
   },
-  "current_action": "PREPARE_GIT_PUBLICATION_AND_A23_PACKAGE_REVIEW",
+  "current_action": "A23_V2_PACKAGE_REVIEW_PREPARATION",
   "next_implementation_review": {
     "task": "/root/a22_acceptance_r2",
     "native_status": "COMPLETED",

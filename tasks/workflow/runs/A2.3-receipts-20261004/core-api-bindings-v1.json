@@ -1,0 +1,1495 @@
+{
+  "kind": "ACTUAL_CORE_STOP_API_SOURCE_BINDING_NOT_STAGE_ACCEPTANCE",
+  "utc": "2026-10-05T03:52:30.797693+00:00",
+  "head": "138c08a3496eefb6ef2ceca0d694290dcb95c642",
+  "root_core_readback_sha256": "3868e26498663750afc2b779242cb9bd965a51576a6beb84c38e35a6fd5c820b",
+  "initial_core_NEEDS_REPLAN_readback_sha256": "51c26cdfadaef46661e94434baa12d22d4107163d458074f3615affe2ed63ce2",
+  "implementation_report": "tasks/workflow/runs/A2.3-receipts-20261004/implementation-quality-r1.md",
+  "implementation_report_sha256": "4b9540b328442574f7914fa83087f8bdb8e751df4c67cd4dd5335f3902039d15",
+  "core_path_sha256": {
+    "src/agent_guard/evidence/receipt.py": "50bc7b6aba7a6cb8cc89880dc44ef00d716cea8e8914d6c5bf42195e36868ed5",
+    "src/agent_guard/execution/receipt_publication.py": "5ff868e408af6270a287b605b555cf239163634adff6f764e8e99d1679d5612f",
+    "src/agent_guard/execution/original_material.py": "1c781bd0f6f43855df48214f4859a878a8d2eb17efae1823b62b74355793407f",
+    "src/agent_guard/execution/receipts.py": "32367393ac80a9defe222b314710b11987c767aa05bd046180ced7fc9ff61aff",
+    "src/agent_guard/execution/query.py": "9763ac130ebd0c7f87130f11be3ec64d3beb5a14edf722879a64d205c0d86ac5",
+    "src/agent_guard/execution/verified.py": "5db603b6cfae2c1dce0b02c7899557fbbb02c78c8cfed660fb53a6c9306762be",
+    "src/agent_guard/execution/store.py": "42b95254488b5c43028efd9284a7726dc8589182cdb32e67fbeafd9741d9e504",
+    "src/agent_guard/gateway/config.py": "e0a5554d0d7eef8da870528d18278255a7f9e345d486c927725a623060c9dbe9",
+    "src/agent_guard/gateway/factory.py": "46aba9b666ccaec48736b3ea20956775e58eb795c6bf61d86d1a137832dfc74f",
+    "src/agent_guard/gateway/endpoint.py": "dd14776c3a709138e04fae76611971b6875246267be2965aadc1a5aa3726e403",
+    "src/agent_guard/authorization/permission_snapshot.py": "6e0bfb89d0cc460c3d12c1d253a063623d9d843f5acf098873cd2f8443aea3de",
+    "tests/fixtures/receipts.py": "f02df7ea97b06bb168af36949327b70293e34477342b196b8fb8c517bd99bd40",
+    "tests/unit/test_receipt_publication.py": "efada4e89ce59f6dcc4b1af451d8d29352e24492e8f8065131fa44b027f73c6a",
+    "tests/integration/test_receipt_publication.py": "090704411e84f8207205b554721755113e205d9d5cfaf718ae83e488a9df509c",
+    "tests/integration/test_gateway_receipt_query.py": "e11bc44d1f68fe3d5e80840a2c0237213e6ffe9637b164e5e2247b531fddc831"
+  },
+  "local_assertion_binding": "artifacts/workflow/A2.3-receipts-20261004/core-quality-r1/core29-local-bindings-final-r1.json",
+  "core_selfcheck": "READY_FOR_CONSUMERS_NOT_FULL_A2_ACCEPTANCE",
+  "effective_runtime_metadata": "UNKNOWN",
+  "source_AST": {
+    "src/agent_guard/execution/receipt_publication.py": [
+      {
+        "name": "ReceiptPublication",
+        "kind": "ClassDef",
+        "line": 29,
+        "end_line": 34
+      },
+      {
+        "name": "evidence_bundle",
+        "kind": "FunctionDef",
+        "line": 37,
+        "end_line": 49,
+        "arguments": "projection, receipt_jws",
+        "returns": null
+      },
+      {
+        "name": "ReceiptVerifier",
+        "kind": "ClassDef",
+        "line": 52,
+        "end_line": 160
+      },
+      {
+        "name": "InternalPublisher",
+        "kind": "ClassDef",
+        "line": 163,
+        "end_line": 268
+      },
+      {
+        "name": "__init__",
+        "kind": "FunctionDef",
+        "line": 53,
+        "end_line": 92,
+        "arguments": "self, *, issuer, as_keys, gateway_keys, registrations: Mapping[tuple[str, str, str], RegisteredIdentity], permission_provider: PermissionSnapshotProvider",
+        "returns": null
+      },
+      {
+        "name": "_trust_tx",
+        "kind": "FunctionDef",
+        "line": 94,
+        "end_line": 103,
+        "arguments": "self, conn, operation_id",
+        "returns": null
+      },
+      {
+        "name": "verify_tx",
+        "kind": "FunctionDef",
+        "line": 105,
+        "end_line": 119,
+        "arguments": "self, conn, operation_id, receipt_jws",
+        "returns": null
+      },
+      {
+        "name": "read_tx",
+        "kind": "FunctionDef",
+        "line": 121,
+        "end_line": 160,
+        "arguments": "self, conn, operation_id",
+        "returns": "ReceiptPublication"
+      },
+      {
+        "name": "__init__",
+        "kind": "FunctionDef",
+        "line": 164,
+        "end_line": 198,
+        "arguments": "self, dsn, *, private_key, signing_kid, verifier, connect_timeout=5, lock_timeout_ms=10000, statement_timeout_ms=15000",
+        "returns": null
+      },
+      {
+        "name": "_connect",
+        "kind": "FunctionDef",
+        "line": 200,
+        "end_line": 214,
+        "arguments": "self",
+        "returns": null
+      },
+      {
+        "name": "publish",
+        "kind": "FunctionDef",
+        "line": 216,
+        "end_line": 250,
+        "arguments": "self, operation_id",
+        "returns": "ReceiptPublication"
+      },
+      {
+        "name": "pending_page",
+        "kind": "FunctionDef",
+        "line": 252,
+        "end_line": 268,
+        "arguments": "self, *, after_operation_id, limit",
+        "returns": null
+      }
+    ],
+    "src/agent_guard/execution/original_material.py": [
+      {
+        "name": "validate_original_tx",
+        "kind": "FunctionDef",
+        "line": 21,
+        "end_line": 146,
+        "arguments": "conn, op, source",
+        "returns": null
+      },
+      {
+        "name": "scoped_trust_tx",
+        "kind": "FunctionDef",
+        "line": 149,
+        "end_line": 221,
+        "arguments": "conn, operation_id, *, issuer, as_keys, gateway_keys, registrations, permission_provider",
+        "returns": null
+      },
+      {
+        "name": "payload",
+        "kind": "FunctionDef",
+        "line": 83,
+        "end_line": 90,
+        "arguments": "raw",
+        "returns": null
+      }
+    ],
+    "src/agent_guard/execution/receipts.py": [
+      {
+        "name": "receipt_id_for",
+        "kind": "FunctionDef",
+        "line": 35,
+        "end_line": 37,
+        "arguments": "operation_id: str",
+        "returns": "str"
+      },
+      {
+        "name": "receipt_iat",
+        "kind": "FunctionDef",
+        "line": 40,
+        "end_line": 45,
+        "arguments": "created_at: datetime",
+        "returns": "int"
+      },
+      {
+        "name": "_node_payload",
+        "kind": "FunctionDef",
+        "line": 48,
+        "end_line": 55,
+        "arguments": "node: EventNodeDelta",
+        "returns": "dict"
+      },
+      {
+        "name": "ledger_changes_bytes",
+        "kind": "FunctionDef",
+        "line": 58,
+        "end_line": 88,
+        "arguments": "*, operation_id: str, reserve_event: LedgerEvent, terminal_nodes: tuple[EventNodeDelta, ...], terminal_action: TerminalAction",
+        "returns": "bytes"
+      },
+      {
+        "name": "build_pending_receipt",
+        "kind": "FunctionDef",
+        "line": 91,
+        "end_line": 126,
+        "arguments": "*, operation, action: TerminalAction, root_grant_id: str, result_bytes: bytes, ledger_changes: bytes, created_at: datetime",
+        "returns": "PendingReceipt"
+      }
+    ],
+    "src/agent_guard/execution/query.py": [
+      {
+        "name": "AuthorizedQuery",
+        "kind": "ClassDef",
+        "line": 39,
+        "end_line": 242
+      },
+      {
+        "name": "__init__",
+        "kind": "FunctionDef",
+        "line": 42,
+        "end_line": 50,
+        "arguments": "self, dsn: str, *, evidence_store: EvidenceStore, receipt_verifier=None",
+        "returns": null
+      },
+      {
+        "name": "_validate",
+        "kind": "FunctionDef",
+        "line": 53,
+        "end_line": 87,
+        "arguments": "bundle",
+        "returns": null
+      },
+      {
+        "name": "_path",
+        "kind": "FunctionDef",
+        "line": 90,
+        "end_line": 117,
+        "arguments": "path, q, source",
+        "returns": null
+      },
+      {
+        "name": "query",
+        "kind": "FunctionDef",
+        "line": 119,
+        "end_line": 127,
+        "arguments": "self, bundle",
+        "returns": null
+      },
+      {
+        "name": "_query_tx",
+        "kind": "FunctionDef",
+        "line": 129,
+        "end_line": 240,
+        "arguments": "self, conn, bundle, binding",
+        "returns": null
+      }
+    ],
+    "src/agent_guard/execution/verified.py": [
+      {
+        "name": "VerifiedExecution",
+        "kind": "ClassDef",
+        "line": 13,
+        "end_line": 72
+      },
+      {
+        "name": "__init__",
+        "kind": "FunctionDef",
+        "line": 14,
+        "end_line": 18,
+        "arguments": "self, service: ExecutionService, *, evidence_store: EvidenceStore",
+        "returns": null
+      },
+      {
+        "name": "accept",
+        "kind": "FunctionDef",
+        "line": 20,
+        "end_line": 27,
+        "arguments": "self, bundle: VerifiedInvocationBundle",
+        "returns": null
+      },
+      {
+        "name": "accept_response",
+        "kind": "FunctionDef",
+        "line": 29,
+        "end_line": 72,
+        "arguments": "self, bundle: VerifiedInvocationBundle, *, receipt_verifier",
+        "returns": "dict"
+      },
+      {
+        "name": "binding",
+        "kind": "FunctionDef",
+        "line": 38,
+        "end_line": 65,
+        "arguments": "conn, operation, disposition",
+        "returns": null
+      }
+    ],
+    "src/agent_guard/execution/store.py": [
+      {
+        "name": "EventNodeDelta",
+        "kind": "ClassDef",
+        "line": 46,
+        "end_line": 54
+      },
+      {
+        "name": "LedgerEvent",
+        "kind": "ClassDef",
+        "line": 58,
+        "end_line": 61
+      },
+      {
+        "name": "ClaimResult",
+        "kind": "ClassDef",
+        "line": 65,
+        "end_line": 70
+      },
+      {
+        "name": "_utc",
+        "kind": "FunctionDef",
+        "line": 73,
+        "end_line": 74,
+        "arguments": "ts: datetime",
+        "returns": "datetime"
+      },
+      {
+        "name": "fetch_operation",
+        "kind": "FunctionDef",
+        "line": 80,
+        "end_line": 87,
+        "arguments": "conn: psycopg.Connection, operation_id: str",
+        "returns": "ledger_store.OperationRow | None"
+      },
+      {
+        "name": "lock_operation",
+        "kind": "FunctionDef",
+        "line": 90,
+        "end_line": 96,
+        "arguments": "conn: psycopg.Connection, operation_id: str",
+        "returns": "ledger_store.OperationRow | None"
+      },
+      {
+        "name": "lock_lease",
+        "kind": "FunctionDef",
+        "line": 99,
+        "end_line": 106,
+        "arguments": "conn: psycopg.Connection, operation_id: str",
+        "returns": "tuple[str, int, datetime] | None"
+      },
+      {
+        "name": "fetch_path",
+        "kind": "FunctionDef",
+        "line": 109,
+        "end_line": 110,
+        "arguments": "conn: psycopg.Connection, grant_id: str",
+        "returns": "list[ledger_store.GrantRow]"
+      },
+      {
+        "name": "fetch_event_nodes",
+        "kind": "FunctionDef",
+        "line": 113,
+        "end_line": 135,
+        "arguments": "conn: psycopg.Connection, operation_id: str",
+        "returns": "list[LedgerEvent]"
+      },
+      {
+        "name": "fetch_lease",
+        "kind": "FunctionDef",
+        "line": 138,
+        "end_line": 144,
+        "arguments": "conn: psycopg.Connection, operation_id: str",
+        "returns": "tuple[str, int, datetime] | None"
+      },
+      {
+        "name": "fetch_outbox",
+        "kind": "FunctionDef",
+        "line": 147,
+        "end_line": 167,
+        "arguments": "conn: psycopg.Connection, operation_id: str",
+        "returns": "dict | None"
+      },
+      {
+        "name": "fetch_review_flag",
+        "kind": "FunctionDef",
+        "line": 170,
+        "end_line": 184,
+        "arguments": "conn: psycopg.Connection, operation_id: str",
+        "returns": "dict | None"
+      },
+      {
+        "name": "is_quarantined",
+        "kind": "FunctionDef",
+        "line": 187,
+        "end_line": 192,
+        "arguments": "conn: psycopg.Connection, operation_id: str",
+        "returns": "bool"
+      },
+      {
+        "name": "claim_lease",
+        "kind": "FunctionDef",
+        "line": 198,
+        "end_line": 290,
+        "arguments": "conn: psycopg.Connection, *, operation_id: str, owner_token: str, lease_ttl_seconds: int",
+        "returns": "ClaimResult"
+      },
+      {
+        "name": "transition_status",
+        "kind": "FunctionDef",
+        "line": 296,
+        "end_line": 314,
+        "arguments": "conn: psycopg.Connection, *, operation_id: str, from_status: str, to_status: str",
+        "returns": "ledger_store.OperationRow"
+      },
+      {
+        "name": "assert_terminal_write_allowed",
+        "kind": "FunctionDef",
+        "line": 317,
+        "end_line": 351,
+        "arguments": "conn: psycopg.Connection, *, operation_id: str, owner_token: str, fencing_version: int",
+        "returns": "ledger_store.OperationRow"
+      },
+      {
+        "name": "terminal_node_deltas",
+        "kind": "FunctionDef",
+        "line": 357,
+        "end_line": 388,
+        "arguments": "grants: list[ledger_store.GrantRow], action: TerminalAction, amount_fen: int, calls: int",
+        "returns": "tuple[EventNodeDelta, ...]"
+      },
+      {
+        "name": "apply_terminal_counters",
+        "kind": "FunctionDef",
+        "line": 391,
+        "end_line": 416,
+        "arguments": "conn: psycopg.Connection, nodes: tuple[EventNodeDelta, ...]",
+        "returns": "None"
+      },
+      {
+        "name": "insert_terminal_event",
+        "kind": "FunctionDef",
+        "line": 419,
+        "end_line": 457,
+        "arguments": "conn: psycopg.Connection, *, operation_id: str, action: TerminalAction, nodes: tuple[EventNodeDelta, ...]",
+        "returns": "int"
+      },
+      {
+        "name": "insert_pending_receipt",
+        "kind": "FunctionDef",
+        "line": 460,
+        "end_line": 494,
+        "arguments": "conn: psycopg.Connection, material: PendingReceipt",
+        "returns": "None"
+      },
+      {
+        "name": "flag_operation",
+        "kind": "FunctionDef",
+        "line": 497,
+        "end_line": 511,
+        "arguments": "conn: psycopg.Connection, *, operation_id: str, reason: str, detail: dict",
+        "returns": "None"
+      },
+      {
+        "name": "lease_deadline",
+        "kind": "FunctionDef",
+        "line": 514,
+        "end_line": 517,
+        "arguments": "ttl_seconds: int, *, now: datetime | None=None",
+        "returns": "datetime"
+      }
+    ],
+    "src/agent_guard/gateway/config.py": [
+      {
+        "name": "GatewayConfig",
+        "kind": "ClassDef",
+        "line": 45,
+        "end_line": 48
+      },
+      {
+        "name": "GatewaySecrets",
+        "kind": "ClassDef",
+        "line": 52,
+        "end_line": 53
+      },
+      {
+        "name": "load_gateway_secrets",
+        "kind": "FunctionDef",
+        "line": 56,
+        "end_line": 65,
+        "arguments": "raw: bytes",
+        "returns": null
+      },
+      {
+        "name": "trusted_inputs",
+        "kind": "FunctionDef",
+        "line": 68,
+        "end_line": 193,
+        "arguments": "value",
+        "returns": null
+      },
+      {
+        "name": "load_gateway_config",
+        "kind": "FunctionDef",
+        "line": 196,
+        "end_line": 211,
+        "arguments": "raw: bytes",
+        "returns": null
+      },
+      {
+        "name": "receipt_public_keys",
+        "kind": "FunctionDef",
+        "line": 214,
+        "end_line": 231,
+        "arguments": "value, *, as_keys, registrations",
+        "returns": null
+      }
+    ],
+    "src/agent_guard/gateway/factory.py": [
+      {
+        "name": "build_app",
+        "kind": "FunctionDef",
+        "line": 24,
+        "end_line": 84,
+        "arguments": "config: GatewayConfig, secrets: GatewaySecrets, *, gateway_dsn: str, downstream_dsn: str",
+        "returns": null
+      }
+    ],
+    "src/agent_guard/gateway/endpoint.py": [
+      {
+        "name": "GatewayEndpoint",
+        "kind": "ClassDef",
+        "line": 22,
+        "end_line": 86
+      },
+      {
+        "name": "__init__",
+        "kind": "FunctionDef",
+        "line": 23,
+        "end_line": 40,
+        "arguments": "self, *, verifier: InvocationVerifier, execution: VerifiedExecution, queries: AuthorizedQuery, receipt_verifier=None",
+        "returns": null
+      },
+      {
+        "name": "schema",
+        "kind": "FunctionDef",
+        "line": 43,
+        "end_line": 73,
+        "arguments": "body: bytes, *, query: bool",
+        "returns": null
+      },
+      {
+        "name": "handle",
+        "kind": "FunctionDef",
+        "line": 75,
+        "end_line": 86,
+        "arguments": "self, path: str, token: str, proof: str, body: bytes",
+        "returns": null
+      }
+    ],
+    "tests/fixtures/receipts.py": [
+      {
+        "name": "receipt_services",
+        "kind": "FunctionDef",
+        "line": 26,
+        "end_line": 46,
+        "arguments": "env, dsn, *, gateway_key=None, signing_kid='gw-receipt-1'",
+        "returns": null
+      },
+      {
+        "name": "real_login_capacity_env",
+        "kind": "FunctionDef",
+        "line": 49,
+        "end_line": 140,
+        "arguments": "dsn, downstream_dsn, *, sku_width=4, quantity=1, unit_price=1, budget=None",
+        "returns": null
+      },
+      {
+        "name": "full_state",
+        "kind": "FunctionDef",
+        "line": 143,
+        "end_line": 164,
+        "arguments": "dsn, downstream_dsn",
+        "returns": null
+      },
+      {
+        "name": "CorruptRow",
+        "kind": "ClassDef",
+        "line": 167,
+        "end_line": 217
+      },
+      {
+        "name": "publication_only",
+        "kind": "FunctionDef",
+        "line": 220,
+        "end_line": 235,
+        "arguments": "before, after",
+        "returns": null
+      },
+      {
+        "name": "staged_only",
+        "kind": "FunctionDef",
+        "line": 238,
+        "end_line": 249,
+        "arguments": "before, after, *, proof_jti, purpose='result-read'",
+        "returns": null
+      },
+      {
+        "name": "legal_shared_operations",
+        "kind": "FunctionDef",
+        "line": 252,
+        "end_line": 428,
+        "arguments": "dsn, downstream_dsn, *, failed=False, public=False",
+        "returns": null
+      },
+      {
+        "name": "accept_retry_only",
+        "kind": "FunctionDef",
+        "line": 431,
+        "end_line": 467,
+        "arguments": "before, after, *, evidence_ref, proof_jti, operation_id, publication=False, staging=False",
+        "returns": null
+      },
+      {
+        "name": "result_read_only",
+        "kind": "FunctionDef",
+        "line": 470,
+        "end_line": 494,
+        "arguments": "before, after, *, evidence_ref, proof_jti, operation_id, staging=False, publication=False",
+        "returns": null
+      },
+      {
+        "name": "collect_futures",
+        "kind": "FunctionDef",
+        "line": 497,
+        "end_line": 509,
+        "arguments": "futures, *, timeout=10",
+        "returns": null
+      },
+      {
+        "name": "__init__",
+        "kind": "FunctionDef",
+        "line": 170,
+        "end_line": 171,
+        "arguments": "self, dsn, table, where, values",
+        "returns": null
+      },
+      {
+        "name": "_write",
+        "kind": "FunctionDef",
+        "line": 173,
+        "end_line": 196,
+        "arguments": "self, values",
+        "returns": null
+      },
+      {
+        "name": "__enter__",
+        "kind": "FunctionDef",
+        "line": 198,
+        "end_line": 214,
+        "arguments": "self",
+        "returns": null
+      },
+      {
+        "name": "__exit__",
+        "kind": "FunctionDef",
+        "line": 216,
+        "end_line": 217,
+        "arguments": "self, *args",
+        "returns": null
+      },
+      {
+        "name": "identities",
+        "kind": "FunctionDef",
+        "line": 275,
+        "end_line": 293,
+        "arguments": "*, label=label, client=client, tenant=tenant",
+        "returns": null
+      },
+      {
+        "name": "register",
+        "kind": "FunctionDef",
+        "line": 60,
+        "end_line": 62,
+        "arguments": "conn, **kwargs",
+        "returns": null
+      }
+    ],
+    "tests/unit/test_receipt_publication.py": [
+      {
+        "name": "trusts",
+        "kind": "FunctionDef",
+        "line": 12,
+        "end_line": 34,
+        "arguments": "",
+        "returns": null
+      },
+      {
+        "name": "test_scoped_receipt_trust_preserves_exact_legal_registration_tuples",
+        "kind": "FunctionDef",
+        "line": 37,
+        "end_line": 60,
+        "arguments": "",
+        "returns": null
+      },
+      {
+        "name": "test_gateway_key_roles_and_private_match",
+        "kind": "FunctionDef",
+        "line": 66,
+        "end_line": 97,
+        "arguments": "role",
+        "returns": null
+      },
+      {
+        "name": "test_component_limits_and_precise_outer_encoded_size",
+        "kind": "FunctionDef",
+        "line": 101,
+        "end_line": 119,
+        "arguments": "bytes_count, allowed",
+        "returns": null
+      },
+      {
+        "name": "test_offline_all_binding_mutations_and_unanchored_limits",
+        "kind": "FunctionDef",
+        "line": 144,
+        "end_line": 166,
+        "arguments": "field",
+        "returns": null
+      },
+      {
+        "name": "test_original_component_depth_unchanged",
+        "kind": "FunctionDef",
+        "line": 170,
+        "end_line": 178,
+        "arguments": "depth, allowed",
+        "returns": null
+      },
+      {
+        "name": "test_original_component_node_limit_unchanged",
+        "kind": "FunctionDef",
+        "line": 182,
+        "end_line": 188,
+        "arguments": "nodes, allowed",
+        "returns": null
+      },
+      {
+        "name": "test_real_sm2_profile_typ_and_exact_payload",
+        "kind": "FunctionDef",
+        "line": 217,
+        "end_line": 277,
+        "arguments": "monkeypatch, case",
+        "returns": null
+      },
+      {
+        "name": "test_original_jws_component_length_codec_unchanged",
+        "kind": "FunctionDef",
+        "line": 281,
+        "end_line": 289,
+        "arguments": "length, allowed",
+        "returns": null
+      },
+      {
+        "name": "test_outer_size_arithmetic_and_illegal_component_guard",
+        "kind": "FunctionDef",
+        "line": 293,
+        "end_line": 311,
+        "arguments": "target",
+        "returns": null
+      },
+      {
+        "name": "test_original_four_ancestor_path_refused",
+        "kind": "FunctionDef",
+        "line": 316,
+        "end_line": 326,
+        "arguments": "",
+        "returns": null
+      }
+    ],
+    "tests/integration/test_receipt_publication.py": [
+      {
+        "name": "test_real_as_public_256_sku_capacity_publish_query_offline",
+        "kind": "FunctionDef",
+        "line": 42,
+        "end_line": 143,
+        "arguments": "ledger, dsn, downstream_dsn",
+        "returns": null
+      },
+      {
+        "name": "final_env",
+        "kind": "FunctionDef",
+        "line": 146,
+        "end_line": 159,
+        "arguments": "dsn, downstream_dsn, *, failed=False, tool='procurement.order.create'",
+        "returns": null
+      },
+      {
+        "name": "test_p18_sign_failure_then_same_material_recovers",
+        "kind": "FunctionDef",
+        "line": 163,
+        "end_line": 209,
+        "arguments": "ledger, dsn, downstream_dsn, monkeypatch, fault",
+        "returns": null
+      },
+      {
+        "name": "child_publish",
+        "kind": "FunctionDef",
+        "line": 212,
+        "end_line": 244,
+        "arguments": "publisher, op, pipe, hold=False",
+        "returns": null
+      },
+      {
+        "name": "test_p18_real_sigkill_after_sign_before_commit",
+        "kind": "FunctionDef",
+        "line": 247,
+        "end_line": 303,
+        "arguments": "ledger, dsn, downstream_dsn",
+        "returns": null
+      },
+      {
+        "name": "test_p18_committed_ready_reply_lost_new_process_returns_original",
+        "kind": "FunctionDef",
+        "line": 306,
+        "end_line": 338,
+        "arguments": "ledger, dsn, downstream_dsn",
+        "returns": null
+      },
+      {
+        "name": "test_p18_publishers_same_operation_ten_rounds",
+        "kind": "FunctionDef",
+        "line": 342,
+        "end_line": 403,
+        "arguments": "ledger, dsn, downstream_dsn, monkeypatch, round",
+        "returns": null
+      },
+      {
+        "name": "test_ready_update_only_three_fields_atomic_no_business_changes",
+        "kind": "FunctionDef",
+        "line": 407,
+        "end_line": 417,
+        "arguments": "ledger, dsn, downstream_dsn, failed",
+        "returns": null
+      },
+      {
+        "name": "test_original_receipt_id_iat_and_seventeen_claims_stable",
+        "kind": "FunctionDef",
+        "line": 420,
+        "end_line": 434,
+        "arguments": "ledger, dsn, downstream_dsn",
+        "returns": null
+      },
+      {
+        "name": "test_nonterminal_no_final_receipt_or_publication",
+        "kind": "FunctionDef",
+        "line": 438,
+        "end_line": 458,
+        "arguments": "ledger, dsn, downstream_dsn, state",
+        "returns": null
+      },
+      {
+        "name": "test_real_signer_publication_and_independent_sdk_rejection",
+        "kind": "FunctionDef",
+        "line": 461,
+        "end_line": 490,
+        "arguments": "ledger, dsn, downstream_dsn",
+        "returns": null
+      },
+      {
+        "name": "test_all_first_context_source_quote_result_event_mutations_refuse",
+        "kind": "FunctionDef",
+        "line": 545,
+        "end_line": 625,
+        "arguments": "ledger, dsn, downstream_dsn, mutation",
+        "returns": null
+      },
+      {
+        "name": "test_old_ready_key_rotation_stays_byte_identical",
+        "kind": "FunctionDef",
+        "line": 628,
+        "end_line": 658,
+        "arguments": "ledger, dsn, downstream_dsn",
+        "returns": null
+      },
+      {
+        "name": "test_publish_after_ancestor_expiry_revocation_holder_disable",
+        "kind": "FunctionDef",
+        "line": 663,
+        "end_line": 681,
+        "arguments": "ledger, dsn, downstream_dsn, ancestor, change",
+        "returns": null
+      },
+      {
+        "name": "test_two_legal_operations_shared_holder_kid_publish_independently",
+        "kind": "FunctionDef",
+        "line": 687,
+        "end_line": 716,
+        "arguments": "ledger, dsn, downstream_dsn, failed, order, round",
+        "returns": null
+      },
+      {
+        "name": "test_signing_and_real_database_faults_keep_pending",
+        "kind": "FunctionDef",
+        "line": 720,
+        "end_line": 766,
+        "arguments": "ledger, dsn, downstream_dsn, fault",
+        "returns": null
+      },
+      {
+        "name": "test_publish_query_retry_recovery_races_ten_rounds",
+        "kind": "FunctionDef",
+        "line": 771,
+        "end_line": 821,
+        "arguments": "ledger, dsn, downstream_dsn, group, round",
+        "returns": null
+      },
+      {
+        "name": "test_zero_amount_terminal_publication_only_three_fields",
+        "kind": "FunctionDef",
+        "line": 825,
+        "end_line": 848,
+        "arguments": "ledger, dsn, downstream_dsn, tool",
+        "returns": null
+      },
+      {
+        "name": "test_pending_nonnull_timestamp_fails_closed",
+        "kind": "FunctionDef",
+        "line": 851,
+        "end_line": 860,
+        "arguments": "ledger, dsn, downstream_dsn",
+        "returns": null
+      },
+      {
+        "name": "test_ready_original_bytes_are_protected_by_real_pg_trigger",
+        "kind": "FunctionDef",
+        "line": 874,
+        "end_line": 896,
+        "arguments": "ledger, dsn, downstream_dsn, column",
+        "returns": null
+      },
+      {
+        "name": "test_each_persisted_ancestor_original_material_is_required",
+        "kind": "FunctionDef",
+        "line": 901,
+        "end_line": 922,
+        "arguments": "ledger, dsn, downstream_dsn, ancestor, mutation",
+        "returns": null
+      },
+      {
+        "name": "test_internal_publication_after_actual_expiry_preserves_external_denial",
+        "kind": "FunctionDef",
+        "line": 925,
+        "end_line": 948,
+        "arguments": "ledger, dsn, downstream_dsn",
+        "returns": null
+      },
+      {
+        "name": "test_nonterminal_with_illegal_final_outbox_fails_closed",
+        "kind": "FunctionDef",
+        "line": 953,
+        "end_line": 966,
+        "arguments": "ledger, dsn, downstream_dsn, state, publication",
+        "returns": null
+      },
+      {
+        "name": "test_ready_external_mutation_races_follow_actual_lock_order",
+        "kind": "FunctionDef",
+        "line": 972,
+        "end_line": 1085,
+        "arguments": "ledger, dsn, downstream_dsn, monkeypatch, group, winner, round",
+        "returns": null
+      },
+      {
+        "name": "test_two_signed_recoverers_and_stale_fenced_owner_then_single_publication",
+        "kind": "FunctionDef",
+        "line": 1089,
+        "end_line": 1146,
+        "arguments": "ledger, dsn, downstream_dsn, round",
+        "returns": null
+      },
+      {
+        "name": "test_real_as_bounded_capacity_preflight",
+        "kind": "FunctionDef",
+        "line": 1150,
+        "end_line": 1327,
+        "arguments": "ledger, dsn, downstream_dsn, sku_width",
+        "returns": null
+      },
+      {
+        "name": "test_rotation_new_pending_and_bundle_self_key_never_supply_trust",
+        "kind": "FunctionDef",
+        "line": 1330,
+        "end_line": 1383,
+        "arguments": "ledger, dsn, downstream_dsn",
+        "returns": null
+      },
+      {
+        "name": "connect",
+        "kind": "FunctionDef",
+        "line": 350,
+        "end_line": 354,
+        "arguments": "",
+        "returns": null
+      },
+      {
+        "name": "run",
+        "kind": "FunctionDef",
+        "line": 358,
+        "end_line": 360,
+        "arguments": "",
+        "returns": null
+      },
+      {
+        "name": "publish",
+        "kind": "FunctionDef",
+        "line": 698,
+        "end_line": 700,
+        "arguments": "item",
+        "returns": null
+      },
+      {
+        "name": "publish",
+        "kind": "FunctionDef",
+        "line": 777,
+        "end_line": 779,
+        "arguments": "",
+        "returns": null
+      },
+      {
+        "name": "public",
+        "kind": "FunctionDef",
+        "line": 781,
+        "end_line": 789,
+        "arguments": "",
+        "returns": null
+      },
+      {
+        "name": "mutate",
+        "kind": "FunctionDef",
+        "line": 983,
+        "end_line": 988,
+        "arguments": "conn",
+        "returns": null
+      },
+      {
+        "name": "authorize",
+        "kind": "FunctionDef",
+        "line": 990,
+        "end_line": 997,
+        "arguments": "",
+        "returns": null
+      },
+      {
+        "name": "hold",
+        "kind": "FunctionDef",
+        "line": 1099,
+        "end_line": 1101,
+        "arguments": "claim, outcome",
+        "returns": null
+      },
+      {
+        "name": "recover",
+        "kind": "FunctionDef",
+        "line": 1109,
+        "end_line": 1111,
+        "arguments": "owner",
+        "returns": null
+      },
+      {
+        "name": "record",
+        "kind": "FunctionDef",
+        "line": 1166,
+        "end_line": 1172,
+        "arguments": "",
+        "returns": null
+      },
+      {
+        "name": "UnavailableDigest",
+        "kind": "ClassDef",
+        "line": 173,
+        "end_line": 176
+      },
+      {
+        "name": "backend_unavailable",
+        "kind": "FunctionDef",
+        "line": 181,
+        "end_line": 187,
+        "arguments": "message, algorithm",
+        "returns": null
+      },
+      {
+        "name": "mutate_other",
+        "kind": "FunctionDef",
+        "line": 1022,
+        "end_line": 1025,
+        "arguments": "",
+        "returns": null
+      },
+      {
+        "name": "held",
+        "kind": "FunctionDef",
+        "line": 1027,
+        "end_line": 1036,
+        "arguments": "conn, operation",
+        "returns": null
+      },
+      {
+        "name": "blocked_authorize",
+        "kind": "FunctionDef",
+        "line": 1004,
+        "end_line": 1006,
+        "arguments": "",
+        "returns": null
+      }
+    ],
+    "tests/integration/test_gateway_receipt_query.py": [
+      {
+        "name": "app",
+        "kind": "FunctionDef",
+        "line": 24,
+        "end_line": 32,
+        "arguments": "env, dsn, verifier",
+        "returns": null
+      },
+      {
+        "name": "query_http",
+        "kind": "FunctionDef",
+        "line": 35,
+        "end_line": 46,
+        "arguments": "application, dsn, bundle",
+        "returns": null
+      },
+      {
+        "name": "test_pending_compatibility_ready_verified_current_query",
+        "kind": "FunctionDef",
+        "line": 49,
+        "end_line": 61,
+        "arguments": "ledger, dsn, downstream_dsn",
+        "returns": null
+      },
+      {
+        "name": "test_ready_corruption_rolls_back_query_proof_then_same_proof_succeeds",
+        "kind": "FunctionDef",
+        "line": 92,
+        "end_line": 124,
+        "arguments": "ledger, dsn, downstream_dsn, mutation",
+        "returns": null
+      },
+      {
+        "name": "verify_compact_payload",
+        "kind": "FunctionDef",
+        "line": 127,
+        "end_line": 130,
+        "arguments": "jws",
+        "returns": null
+      },
+      {
+        "name": "test_http_factory_public_keys_only_never_opens_signer_private_file",
+        "kind": "FunctionDef",
+        "line": 133,
+        "end_line": 172,
+        "arguments": "ledger, dsn, downstream_dsn, monkeypatch, tmp_path",
+        "returns": null
+      },
+      {
+        "name": "test_invoke_terminal_ready_state_collected_before_accept_final_clock",
+        "kind": "FunctionDef",
+        "line": 175,
+        "end_line": 188,
+        "arguments": "ledger, dsn, downstream_dsn",
+        "returns": null
+      },
+      {
+        "name": "test_shared_holder_kid_current_query_and_offline_use_operation_scope",
+        "kind": "FunctionDef",
+        "line": 191,
+        "end_line": 226,
+        "arguments": "ledger, dsn, downstream_dsn",
+        "returns": null
+      },
+      {
+        "name": "test_all_added_late_dependencies_before_final_clock",
+        "kind": "FunctionDef",
+        "line": 235,
+        "end_line": 426,
+        "arguments": "ledger, dsn, downstream_dsn, monkeypatch, dependency, expired, deadline_kind, round",
+        "returns": null
+      },
+      {
+        "name": "test_unknown_receipt_runtime_error_stays_http500",
+        "kind": "FunctionDef",
+        "line": 429,
+        "end_line": 440,
+        "arguments": "ledger, dsn, downstream_dsn, monkeypatch",
+        "returns": null
+      },
+      {
+        "name": "test_accept_response_two_successful_calls_have_independent_status",
+        "kind": "FunctionDef",
+        "line": 444,
+        "end_line": 476,
+        "arguments": "ledger, dsn, downstream_dsn, round",
+        "returns": null
+      },
+      {
+        "name": "test_accept_response_per_call_closures_never_cross_talk",
+        "kind": "FunctionDef",
+        "line": 480,
+        "end_line": 517,
+        "arguments": "ledger, dsn, downstream_dsn, round",
+        "returns": null
+      },
+      {
+        "name": "test_bad_historical_registration_rolls_back_then_original_proof_recovers",
+        "kind": "FunctionDef",
+        "line": 521,
+        "end_line": 553,
+        "arguments": "ledger, dsn, downstream_dsn, mutation",
+        "returns": null
+      },
+      {
+        "name": "test_accept_response_real_serialization_retry_discards_pending_capture",
+        "kind": "FunctionDef",
+        "line": 557,
+        "end_line": 621,
+        "arguments": "ledger, dsn, downstream_dsn, monkeypatch, round",
+        "returns": null
+      },
+      {
+        "name": "test_accept_response_publication_wait_precedes_final_actual_proof_clock",
+        "kind": "FunctionDef",
+        "line": 626,
+        "end_line": 708,
+        "arguments": "ledger, dsn, downstream_dsn, monkeypatch, expired, round",
+        "returns": null
+      },
+      {
+        "name": "test_shared_kid_concurrent_current_query_cross_owner_and_trust_repair",
+        "kind": "FunctionDef",
+        "line": 713,
+        "end_line": 911,
+        "arguments": "ledger, dsn, downstream_dsn, monkeypatch, order, round",
+        "returns": null
+      },
+      {
+        "name": "guarded_open",
+        "kind": "FunctionDef",
+        "line": 154,
+        "end_line": 156,
+        "arguments": "file, *args, **kwargs",
+        "returns": null
+      },
+      {
+        "name": "gate",
+        "kind": "FunctionDef",
+        "line": 283,
+        "end_line": 295,
+        "arguments": "*args, **kwargs",
+        "returns": null
+      },
+      {
+        "name": "unknown",
+        "kind": "FunctionDef",
+        "line": 435,
+        "end_line": 436,
+        "arguments": "*args",
+        "returns": null
+      },
+      {
+        "name": "accept",
+        "kind": "FunctionDef",
+        "line": 460,
+        "end_line": 462,
+        "arguments": "bundle",
+        "returns": null
+      },
+      {
+        "name": "accept",
+        "kind": "FunctionDef",
+        "line": 493,
+        "end_line": 495,
+        "arguments": "bundle",
+        "returns": null
+      },
+      {
+        "name": "read",
+        "kind": "FunctionDef",
+        "line": 574,
+        "end_line": 578,
+        "arguments": "conn, operation",
+        "returns": null
+      },
+      {
+        "name": "final",
+        "kind": "FunctionDef",
+        "line": 580,
+        "end_line": 589,
+        "arguments": "conn, *args",
+        "returns": null
+      },
+      {
+        "name": "connect",
+        "kind": "FunctionDef",
+        "line": 592,
+        "end_line": 603,
+        "arguments": "",
+        "returns": null
+      },
+      {
+        "name": "gate",
+        "kind": "FunctionDef",
+        "line": 642,
+        "end_line": 646,
+        "arguments": "conn, operation",
+        "returns": null
+      },
+      {
+        "name": "bundle_for",
+        "kind": "FunctionDef",
+        "line": 749,
+        "end_line": 763,
+        "arguments": "item, op",
+        "returns": null
+      },
+      {
+        "name": "application",
+        "kind": "FunctionDef",
+        "line": 823,
+        "end_line": 833,
+        "arguments": "item, trusted",
+        "returns": null
+      },
+      {
+        "name": "record",
+        "kind": "FunctionDef",
+        "line": 335,
+        "end_line": 345,
+        "arguments": "",
+        "returns": null
+      },
+      {
+        "name": "connect",
+        "kind": "FunctionDef",
+        "line": 777,
+        "end_line": 782,
+        "arguments": "original=original",
+        "returns": null
+      }
+    ],
+    "src/agent_guard/authorization/permission_snapshot.py": [
+      {
+        "name": "PermissionSnapshotError",
+        "kind": "ClassDef",
+        "line": 18,
+        "end_line": 19
+      },
+      {
+        "name": "PermissionSource",
+        "kind": "ClassDef",
+        "line": 23,
+        "end_line": 42
+      },
+      {
+        "name": "_chain_rows",
+        "kind": "FunctionDef",
+        "line": 45,
+        "end_line": 59,
+        "arguments": "conn, grant_id",
+        "returns": null
+      },
+      {
+        "name": "_binding",
+        "kind": "FunctionDef",
+        "line": 62,
+        "end_line": 89,
+        "arguments": "records",
+        "returns": null
+      },
+      {
+        "name": "PermissionSnapshotProvider",
+        "kind": "ClassDef",
+        "line": 92,
+        "end_line": 198
+      },
+      {
+        "name": "material",
+        "kind": "FunctionDef",
+        "line": 28,
+        "end_line": 42,
+        "arguments": "self",
+        "returns": "bytes"
+      },
+      {
+        "name": "__init__",
+        "kind": "FunctionDef",
+        "line": 99,
+        "end_line": 119,
+        "arguments": "self, dsn: str, *, issuer: str, as_keys: Mapping, registrations: Mapping[tuple[str, str, str], RegisteredIdentity]",
+        "returns": null
+      },
+      {
+        "name": "load",
+        "kind": "FunctionDef",
+        "line": 121,
+        "end_line": 126,
+        "arguments": "self, token: str, *, grant_id: str, now: int",
+        "returns": "PermissionSource"
+      },
+      {
+        "name": "load_tx",
+        "kind": "FunctionDef",
+        "line": 128,
+        "end_line": 130,
+        "arguments": "self, conn, token: str, *, grant_id: str, now: int",
+        "returns": "PermissionSource"
+      },
+      {
+        "name": "_from_records",
+        "kind": "FunctionDef",
+        "line": 132,
+        "end_line": 192,
+        "arguments": "self, records, token: str, now: int",
+        "returns": "PermissionSource"
+      },
+      {
+        "name": "revalidate",
+        "kind": "FunctionDef",
+        "line": 195,
+        "end_line": 198,
+        "arguments": "conn, source: PermissionSource",
+        "returns": "None"
+      },
+      {
+        "name": "arrays",
+        "kind": "FunctionDef",
+        "line": 29,
+        "end_line": 34,
+        "arguments": "value",
+        "returns": null
+      }
+    ],
+    "src/agent_guard/evidence/receipt.py": [
+      {
+        "name": "ReceiptVerificationError",
+        "kind": "ClassDef",
+        "line": 77,
+        "end_line": 78
+      },
+      {
+        "name": "ReceiptTrust",
+        "kind": "ClassDef",
+        "line": 82,
+        "end_line": 87
+      },
+      {
+        "name": "VerifiedReceipt",
+        "kind": "ClassDef",
+        "line": 91,
+        "end_line": 95
+      },
+      {
+        "name": "_object",
+        "kind": "FunctionDef",
+        "line": 98,
+        "end_line": 101,
+        "arguments": "value: object, fields: set[str], name: str",
+        "returns": "dict"
+      },
+      {
+        "name": "_text",
+        "kind": "FunctionDef",
+        "line": 104,
+        "end_line": 112,
+        "arguments": "value: object, name: str",
+        "returns": "str"
+      },
+      {
+        "name": "_integer",
+        "kind": "FunctionDef",
+        "line": 115,
+        "end_line": 121,
+        "arguments": "value: object, name: str, *, signed: bool=False",
+        "returns": "int"
+      },
+      {
+        "name": "_ascii_jws",
+        "kind": "FunctionDef",
+        "line": 124,
+        "end_line": 127,
+        "arguments": "value: object, name: str",
+        "returns": "str"
+      },
+      {
+        "name": "_verify_ledger",
+        "kind": "FunctionDef",
+        "line": 130,
+        "end_line": 178,
+        "arguments": "ledger: object, path: list[dict], receipt: dict",
+        "returns": "None"
+      },
+      {
+        "name": "_outer_encoded_size",
+        "kind": "FunctionDef",
+        "line": 181,
+        "end_line": 189,
+        "arguments": "components: Mapping[str, bytes]",
+        "returns": "int"
+      },
+      {
+        "name": "verify_receipt_bundle",
+        "kind": "FunctionDef",
+        "line": 192,
+        "end_line": 362,
+        "arguments": "bundle: object, *, trust: ReceiptTrust",
+        "returns": "VerifiedReceipt"
+      }
+    ]
+  }
+}

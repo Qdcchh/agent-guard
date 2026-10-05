@@ -4,7 +4,7 @@
 
 目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
 
-本轮 B 补正已独立验收并通过 CI，经 [PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 合并 main。67 项验收、60 项独立运行完成；见 [正式接受记录](tasks/workflow/runs/local-remediation-20261004/acceptance.md)及 [当前交接](tasks/workflow/context.md)。整体项目仍 **PARTIAL**：A2.2 已完成95项/88运行义务的独立验收，A2.3 持续签名发布、A3 独立锚定/完整演示与实验未完成；outbox 保持 PENDING。阶段通过不代表绝对无缺陷。
+本轮 B 补正已独立验收并通过 CI，经 [PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 合并 main。67 项验收、60 项独立运行完成；见 [正式接受记录](tasks/workflow/runs/local-remediation-20261004/acceptance.md)及 [当前交接](tasks/workflow/context.md)。整体项目仍 **PARTIAL**：A2.2 已完成95项/88运行义务的独立验收，A2.3候选已实现内部持续签名发布与真实HTTPS联合流程，完整联合自查完成后按真人指令停止，本轮补正后的新独立复验未执行、完整A2未接受、原r1否决保留；A3独立锚定/导出/交付演示与实验未完成；旧无回执公钥配置保持PENDING兼容。阶段通过不代表绝对无缺陷。
 
 `product-manifest.json` 保留 2026-10-03 原始交付的 186 项文件哈希；本轮文档已更新，该清单仅用于核对历史传输快照，不是当前工作树清单。旧云端内部报告与原始证据没有随此分支完整交付，不能把旧工作流 `state.json` 的 A2.1 `ACCEPTED` 当作 B 整合放行。
 
@@ -284,7 +284,7 @@ python -m pytest tests/integration
 docker rm -f agent-guard-a21c-pg
 ```
 
-下游认证只认独立的网关服务 secret（`AG_WORKER_SERVICE_SECRET` / `DownstreamPort(service_secret=...)`）；代理自身的凭据一律拒绝，认证失败不执行、不返回结果。**上面的 A2.1 示例是可信初始化驱动的底层执行演示，不是浏览器到采购的端到端链路**。真实 B 入口为 `InvocationVerifier.verify_bundle` 加 `VerifiedExecution.accept`；不能用测试回调或“已验权 JSON”绕过该适配器。回执 outbox 保持 `PENDING`、`receipt_jws` 为 NULL，直到 A2.3 用真实 SM2 签名。
+下游认证只认独立的网关服务 secret（`AG_WORKER_SERVICE_SECRET` / `DownstreamPort(service_secret=...)`）；代理自身的凭据一律拒绝，认证失败不执行、不返回结果。**上面的 A2.1 示例是可信初始化驱动的底层执行演示，不是浏览器到采购的端到端链路**。真实 B 入口为 `InvocationVerifier.verify_bundle` 加 `VerifiedExecution.accept`；不能用测试回调或“已验权 JSON”绕过该适配器。回执 outbox 保持 `PENDING`、`receipt_jws` 为 NULL，此底层示例没有配置A2.3回执信任；新内部发布流程见下文。
 
 ### 完整 B→A 测试、角色与 bundle 升级
 
@@ -321,7 +321,7 @@ provenance、触发器损坏亦拒绝。先备份并验证恢复；没有无损�
 
 `tests.demo_b_flow` 是合成数据的授权演示，真实数据库/SM2 签名支持根、两级
 委托、盗用拒绝及撤销；不冒充完整采购 HTTP 演示。四工具真实签名接入与恢复
-在 `tests/integration/test_verified_execution.py` 验证。公开HTTP网关和动态operation查询已完成A2.2独立验收；连续发布和导出待A2.3。
+在 `tests/integration/test_verified_execution.py` 验证。公开HTTP网关和动态operation查询已完成A2.2独立验收；候选内部连续发布见A2.3流程，独立审计导出待A3.2。
 
 ### 私有配置与开发 HTTPS
 
@@ -369,12 +369,12 @@ exp 边界求一个共同可能的历史接受时刻，且不晚于已签 receip
 
 ### A2.2 网关配置与 HTTPS 启动
 
-本段仍待独立验收。网关只提供`POST /v1/invocations`与
+本段已完成95项/88运行义务的独立验收，见[接受记录](tasks/workflow/runs/A2.2-integration-20261004/acceptance.md)。网关只提供`POST /v1/invocations`与
 `POST /v1/operations/query`，使用规范中的固定HTTPS签名端点。
 Authorization须为`AGPoP <access-token>`，另带`AG-Proof`，body为严格JSON。
 invoke只原子接受并返回202，不自动调用下游；可信内部worker单独推进。
 query使用同一授权链的当前权限、当前key/撤销/时效及新proof，零业务金额/次数。
-未知或非本人operation统一403；终局前result为null，outbox始终PENDING且回执null。
+未知或非本人operation统一403；终局前result为null，未配置receipt_keys的旧query仅兼容已有PENDING且回执null；持久READY需要可信回执公钥，否则query返回503；配置独立回执公钥后返回经过同事务原件/17claims验签的当前PENDING或READY，READY含原持久JWS。
 
 以下步骤可独立执行；所有路径/DSN由操作者自己的资源注入，不依赖artifacts。
 `init`生成合成公开信任与私有下游secret，AS/代理私钥不会写入网关目录。
@@ -402,7 +402,27 @@ unset AG_GATEWAY_DATABASE_URL AG_GATEWAY_DOWNSTREAM_DATABASE_URL
 同步DB工作在有界线程池执行，超时后容量直到真实线程退出才释放。
 已接受事务可在HTTP超时后完成，客户端用新proof和原业务幂等键重试。
 响应含服务生成的32位hex request_id，禁止缓存；401只声明AGPoP挑战。
-此私有GM-MVP-1协议不声明标准DPoP兼容。无新回执签名/发布/锚定接口。
+此私有GM-MVP-1协议不声明标准DPoP兼容。公开HTTP只保留两条POST路径；内部签名发布使用独立receipt_worker CLI，独立锚定仍留A3。
+
+### A2.3 内部回执发布与真实 HTTPS 联合演示
+
+Use a current-owned 0700 parent with trusted ancestors. The old gateway config and its downstream secret remain private regular 0400/0600 files. `init` reads only public gateway configuration; it checks secret-reference metadata and never opens or copies the secret contents. It creates one new 0700 directory, three 0600 files, an independent CSPRNG SM2 key, and a gateway public copy preserving historical receipt keys. Existing paths or signing kids fail closed. An extreme umask may safely leave an empty inaccessible leaf; use a new target after operator cleanup.
+
+```sh
+python -m agent_guard.gateway.receipt_worker init --gateway-config "$PRIVATE/gateway/config.json" --out "$PRIVATE/receipt" --signing-kid gw-receipt-1
+python -m agent_guard.gateway.receipt_worker check --config "$PRIVATE/receipt/config.json"
+AG_RECEIPT_DATABASE_URL="$OWNED_TEST_DSN" python -m agent_guard.gateway.receipt_worker run --config "$PRIVATE/receipt/config.json"
+```
+
+Use `$PRIVATE/receipt/gateway-public.json` as the gateway's public configuration copy. This contains no signing private key. Receipt worker config contains public historical AS/holder/GW trust and the receipt signer path, with exact bounded integer settings. `check` uses the same loader and builder offline. `run` only accepts `AG_RECEIPT_DATABASE_URL`, never provisions or migrates a database, and publishes already committed terminal outbox rows. Poll/batch and SQL waits are bounded; corrupt rows stay PENDING while keyset rotation reaches later rows. Restart reads committed READY JWS/signed_at unchanged. `run --once` handles one page; `run --operation-id ID` internally returns the persistent publication for one operation. No public signing/recovery HTTP route is added. UNANCHORED receipts verify association and signature; full audit completeness remains A3.
+
+真实合成联合演示需要两条自有可丢弃TEST DSN：网关与下游分属独立数据库/事务。演示生成临时AS/GW/三holder密钥、CA和SAN证书，运行真实登录同意、PKCE、两次exchange、四工具、内部发布、当前query与独立SDK验签；退出回收临时配置和进程，结果为UNANCHORED。
+
+```bash
+AGENT_GUARD_TEST_DATABASE_URL="$RUN_GATEWAY_TEST_DSN" AGENT_GUARD_TEST_DOWNSTREAM_DATABASE_URL="$RUN_DOWNSTREAM_TEST_DSN" python -m tools.a2_receipt_demo
+```
+
+本轮source/noneditable-wheel完整自查覆盖119项/112运行义务，收尾后按真人指令停止；本轮补正后的新独立复验未执行、完整A2未接受，原r1 NOT_ACCEPTED保留，局部演示或自查不构成接受。真实HTTPS联合演示展示协议与业务链；部署、三代理编排及独立审计导出仍属A3。
 
 ### 非 editable wheel 复现
 
@@ -476,3 +496,10 @@ OAuth/OIDC、SM2/SM3、Agent间委托与DID的唯一当前设计见 [实施及�
 从最新 `main` 创建短期任务分支，按已授权范围提交 PR，必需 CI 与实际分支审核条件满足后 Squash merge。不得自批、强推或删除 main；管理员审核豁免必须另有明确授权，不因作者是负责人而自动使用。PR #6 已获本次具体豁免并合并，后续 PR 不自动继承；当前角色、授权和交付见 [现行工作流约定](tasks/workflow/current-policy.md)。
 
 修改前先阅读 [AGENT.md](AGENT.md)、[实施与接口](docs/oauth-oidc-sm2-mvp.md)、[安全模型](docs/security-model.md)和[验收矩阵](docs/acceptance.md)。设计文档不代表实现完成；选型和契约变更需先明确边界、更新测试与文档，再进入真实实现。
+
+
+A2.3补正候选在真实签名/READY前复用原接受事实校验：对不可变报价执行精确总额、数量/原请求及cost currency/calls检查，并逐事件核对历史验真的完整root→leaf路径和四种delta。两列quote/result相互一致不能替代上述约束。校验读取均先于query最终DB时刻，不引入当前报价、下游结果或当前撤销/到期条件；合法零价及迟延终局仍可历史发布。失败保留PENDING/null及原ID/iat，当前query失败回滚proof/link，仅允许原契约的隔离STAGED证据。
+
+容量域分列：当前canonical producer的订单公开响应保守包含上界为58168字节；兼容有效原始签名JWS（含非canonical JSON空白）的单JWS仍可到16384字节，不能套用canonical JWS上界。原接受事实要求q≥1、p≥0、每项q*p及Σq*p≤MAX_SAFE；p>0时digits(q)+digits(p)≥18会使最小乘积≥10^16>MAX_SAFE，p=0时至多16+1位。因此每项联合数字宽度≤17，256项比松Cartesian32位省3840字节，得到兼容域公开响应保守上界64695字节。两者均不是实际合法最大值；组件64KiB/JWS16KiB、公开65536和外层1MiB守卫保持不变，真实边界/非法组件探针仍独立保留。补正自查不代表正式接受；本轮按真人指令在自查、证据和资源清理后停止，本轮补正后的新独立复验未执行、完整A2未接受，原r1 NOT_ACCEPTED保留，P2仅标FIXED_PENDING_REVIEW。
+
+本轮完整自查报告：`tasks/workflow/runs/A2.3-receipts-20261004/implementation-remediation-r2.md`；最新真人停止指令：`tasks/workflow/runs/A2.3-receipts-20261004/user-stop-after-selfcheck-20261005.md`。本轮补正后的新独立复验未执行；完整A2未接受，原[r1否决](tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md)保留。

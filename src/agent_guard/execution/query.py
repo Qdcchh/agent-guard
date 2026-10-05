@@ -3,14 +3,12 @@
 from __future__ import annotations
 
 import re
-from dataclasses import fields
 
 import psycopg
 
-from agent_guard.authorization.evidence_store import EvidenceError, EvidenceStore, context_bytes
+from agent_guard.authorization.evidence_store import EvidenceError, EvidenceStore
 from agent_guard.contracts.encoding import (
     EncodingError,
-    b64url_decode,
     canonical_json_bytes,
     load_strict_json,
 )
@@ -25,12 +23,12 @@ from agent_guard.contracts.ledger import (
     QUERY_ENDPOINT,
     ErrorCode,
     LedgerError,
-    VerifiedInvocation,
 )
 from agent_guard.contracts.verification import VerifiedQueryBundle
-from agent_guard.crypto.sm import sm3_b64url
 from agent_guard.execution import store
+from agent_guard.execution.original_material import validate_original_tx
 from agent_guard.execution.receipt_projection import project_receipt
+from agent_guard.execution.receipt_publication import ReceiptVerifier
 from agent_guard.execution.service import verify_accept_facts
 from agent_guard.ledger import store as ledger_store
 from agent_guard.ledger.service import ExecutionLedger
@@ -41,9 +39,12 @@ from agent_guard.tools.params import parse_tool_id, parse_tool_params
 class AuthorizedQuery:
     """No downstream, catalog pricing, budget write or lease acquisition."""
 
-    def __init__(self, dsn: str, *, evidence_store: EvidenceStore):
+    def __init__(self, dsn: str, *, evidence_store: EvidenceStore, receipt_verifier=None):
         if type(dsn) is not str or not dsn or type(evidence_store) is not EvidenceStore:
             raise ValueError("real database and evidence store required")
+        if receipt_verifier is not None and type(receipt_verifier) is not ReceiptVerifier:
+            raise ValueError("real receipt verifier required")
+        self._receipt_verifier = receipt_verifier
         self._dsn = dsn
         self._evidence = evidence_store
         self._ledger = ExecutionLedger(dsn)
@@ -98,7 +99,14 @@ class AuthorizedQuery:
         ):
             raise LedgerError(ErrorCode.INVALID_CONTEXT)
         for i, g in enumerate(path):
-            if (g.tenant_id, g.task_id, g.subject, g.root_grant_id, g.depth, g.parent_grant_id) != (
+            if (
+                g.tenant_id,
+                g.task_id,
+                g.subject,
+                g.root_grant_id,
+                g.depth,
+                g.parent_grant_id,
+            ) != (
                 q.tenant_id,
                 q.task_id,
                 q.subject,
@@ -134,7 +142,13 @@ class AuthorizedQuery:
         policy.check_operation_access(
             None
             if op is None
-            else (op.tenant_id, op.task_id, op.grant_id, op.holder_client_id, op.holder_kid),
+            else (
+                op.tenant_id,
+                op.task_id,
+                op.grant_id,
+                op.holder_client_id,
+                op.holder_kid,
+            ),
             tenant_id=q.tenant_id,
             task_id=q.task_id,
             grant_id=q.grant_id,
@@ -189,16 +203,26 @@ class AuthorizedQuery:
                 raise EvidenceError("unusable persisted final result") from exc
             except (ValueError, TypeError, KeyError) as exc:
                 raise EvidenceError("unusable persisted final material") from exc
-            if out is None or out["receipt_status"] != "PENDING" or out["receipt_jws"] is not None:
+            if self._receipt_verifier is None and (
+                out is None
+                or out["receipt_status"] != "PENDING"
+                or out["receipt_jws"] is not None
+                or out["signed_at"] is not None
+            ):
                 raise EvidenceError("unsupported receipt publication state")
         elif op.status not in ("RESERVED", "EXECUTING", "UNKNOWN") or out is not None:
             raise EvidenceError("inconsistent operation state")
+        publication = (
+            self._receipt_verifier.read_tx(conn, op.operation_id)
+            if self._receipt_verifier is not None
+            else None
+        )
         response = {
             "operation_id": op.operation_id,
             "status": op.status,
-            "receipt_status": "PENDING",
+            "receipt_status": publication.receipt_status if publication else "PENDING",
             "result": result,
-            "receipt_jws": None,
+            "receipt_jws": publication.receipt_jws if publication else None,
         }
         try:
             response_bytes = canonical_json_bytes(response)
@@ -215,118 +239,4 @@ class AuthorizedQuery:
         self._ledger._check_freshness(current, principals, q, ledger_store.db_now_epoch(conn))
         return response
 
-    @staticmethod
-    def _original(conn, op, source):
-        row = conn.execute(
-            "SELECT e.token_bytes,e.proof_bytes,e.body_bytes,e.token_sm3,e.proof_sm3,e.body_sm3 "
-            " ,e.context_json,e.chain_json FROM ag_operation_evidence l JOIN "
-            "ag_verified_evidence e USING(evidence_ref) "
-            "WHERE l.operation_id=%s AND l.kind='first' AND l.evidence_ref=%s",
-            (op.operation_id, op.evidence_ref),
-        ).fetchone()
-        if row is None or tuple(sm3_b64url(bytes(v)) for v in row[:3]) != tuple(row[3:6]):
-            raise EvidenceError("missing original signed material")
-        request = load_strict_json(bytes(row[2]))
-        context = load_strict_json(bytes(row[6]))
-        if (
-            type(request) is not dict
-            or set(request)
-            != {"profile", "task_id", "tool_id", "tool_version", "idempotency_key", "params"}
-            or request["profile"] != "GM-MVP-1"
-            or type(request["params"]) is not dict
-            or type(context) is not dict
-            or set(context)
-            != {field.name for field in fields(VerifiedInvocation)} - {"evidence_ref"}
-        ):
-            raise EvidenceError("invalid original material schema")
-        if bytes(row[7]) != source.material() or (
-            context.get("purpose") != "invoke"
-            or context.get("endpoint") != "https://gateway.agent-guard.test/v1/invocations"
-            or context.get("method") != "POST"
-            or context.get("grant_id") != op.grant_id
-            or context.get("holder_client_id") != op.holder_client_id
-            or context.get("holder_kid") != op.holder_kid
-            or context.get("subject") != source.snapshot.subject
-        ):
-            raise EvidenceError("original evidence context/source mismatch")
-        if (row[3], row[4], sm3_b64url(canonical_json_bytes(request))) != (
-            op.token_digest,
-            op.proof_digest,
-            op.intent_digest,
-        ) or (
-            request.get("task_id"),
-            request.get("tool_id"),
-            request.get("tool_version"),
-            request.get("idempotency_key"),
-            canonical_json_bytes(request.get("params")),
-        ) != (op.task_id, op.tool_id, op.tool_version, op.idempotency_key, op.canonical_params):
-            raise ExecutionError(ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID)
-
-        # The raw first token/proof have already been digest-bound to the
-        # immutable accepted operation. Decode those exact bytes to reconstruct
-        # every context field; the original proof need not still be fresh.
-        # Freshness belongs to this query's new proof and current grant path.
-        def payload(raw):
-            parts = bytes(raw).decode("ascii").split(".")
-            if len(parts) != 3:
-                raise EvidenceError("invalid original compact material")
-            value = load_strict_json(b64url_decode(parts[1]))
-            if type(value) is not dict:
-                raise EvidenceError("invalid original compact payload")
-            return value
-
-        token, proof = payload(row[0]), payload(row[1])
-        if (
-            any(type(v) is not int or v < 0 for v in (token["exp"], proof["iat"], proof["exp"]))
-            or type(proof["jti"]) is not str
-            or proof["profile"] != "GM-MVP-1"
-            or proof["purpose"] != "invoke"
-            or proof["client_id"] != op.holder_client_id
-            or proof["htm"] != "POST"
-            or proof["htu"] != "https://gateway.agent-guard.test/v1/invocations"
-            or proof["token_sm3"] != op.token_digest
-            or proof["body_sm3"] != op.intent_digest
-            or (
-                token["sub"],
-                token["ag_tenant_id"],
-                token["ag_task_id"],
-                token["ag_grant_id"],
-                token["ag_root_id"],
-                token["client_id"],
-                token["ag_cnf"]["kid"],
-            )
-            != (
-                source.snapshot.subject,
-                op.tenant_id,
-                op.task_id,
-                op.grant_id,
-                source.snapshot.root_id,
-                op.holder_client_id,
-                op.holder_kid,
-            )
-        ):
-            raise EvidenceError("invalid original token/proof binding")
-        expected = VerifiedInvocation(
-            subject=source.snapshot.subject,
-            tenant_id=op.tenant_id,
-            task_id=op.task_id,
-            grant_id=op.grant_id,
-            root_id=source.snapshot.root_id,
-            holder_client_id=op.holder_client_id,
-            holder_kid=op.holder_kid,
-            tool_id=op.tool_id,
-            tool_version=op.tool_version,
-            idempotency_key=op.idempotency_key,
-            canonical_params=op.canonical_params,
-            token_exp=token["exp"],
-            proof_iat=proof["iat"],
-            proof_exp=proof["exp"],
-            proof_jti=proof["jti"],
-            token_digest=op.token_digest,
-            proof_digest=op.proof_digest,
-            intent_digest=op.intent_digest,
-            evidence_ref=op.evidence_ref,
-            ancestor_ids=source.snapshot.chain_grant_ids[:-1],
-        )
-        if bytes(row[6]) != context_bytes(expected):
-            raise EvidenceError("original context does not match accepted signed facts")
+    _original = staticmethod(validate_original_tx)

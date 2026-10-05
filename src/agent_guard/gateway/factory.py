@@ -5,9 +5,15 @@ from agent_guard.authorization.permission_snapshot import PermissionSnapshotProv
 from agent_guard.authorization.verifier import InvocationVerifier
 from agent_guard.contracts.encoding import load_strict_json
 from agent_guard.execution.query import AuthorizedQuery
+from agent_guard.execution.receipt_publication import ReceiptVerifier
 from agent_guard.execution.service import ExecutionService
 from agent_guard.execution.verified import VerifiedExecution
-from agent_guard.gateway.config import GatewayConfig, GatewaySecrets, trusted_inputs
+from agent_guard.gateway.config import (
+    GatewayConfig,
+    GatewaySecrets,
+    receipt_public_keys,
+    trusted_inputs,
+)
 from agent_guard.gateway.endpoint import GatewayEndpoint
 from agent_guard.gateway.http_app import GatewayHttpApp
 from agent_guard.ledger.service import ExecutionLedger
@@ -16,7 +22,11 @@ from agent_guard.tools.downstream import MockDownstream
 
 
 def build_app(
-    config: GatewayConfig, secrets: GatewaySecrets, *, gateway_dsn: str, downstream_dsn: str
+    config: GatewayConfig,
+    secrets: GatewaySecrets,
+    *,
+    gateway_dsn: str,
+    downstream_dsn: str,
 ):
     if type(config) is not GatewayConfig or type(secrets) is not GatewaySecrets:
         raise ConfigError("validated gateway configuration required")
@@ -31,6 +41,18 @@ def build_app(
     evidence = EvidenceStore(gateway_dsn)
     provider = PermissionSnapshotProvider(
         gateway_dsn, issuer=value["issuer"], as_keys=keys, registrations=registrations
+    )
+    public_keys = receipt_public_keys(value, as_keys=keys, registrations=registrations)
+    receipt_verifier = (
+        ReceiptVerifier(
+            issuer=value["issuer"],
+            as_keys=keys,
+            gateway_keys=public_keys,
+            registrations=registrations,
+            permission_provider=provider,
+        )
+        if public_keys is not None
+        else None
     )
     verifier = InvocationVerifier(
         issuer=value["issuer"],
@@ -50,8 +72,13 @@ def build_app(
     endpoint = GatewayEndpoint(
         verifier=verifier,
         execution=VerifiedExecution(service, evidence_store=evidence),
-        queries=AuthorizedQuery(gateway_dsn, evidence_store=evidence),
+        queries=AuthorizedQuery(
+            gateway_dsn, evidence_store=evidence, receipt_verifier=receipt_verifier
+        ),
+        receipt_verifier=receipt_verifier,
     )
     return GatewayHttpApp(
-        endpoint, timeout_seconds=value["request_timeout_seconds"], max_workers=value["max_workers"]
+        endpoint,
+        timeout_seconds=value["request_timeout_seconds"],
+        max_workers=value["max_workers"],
     )

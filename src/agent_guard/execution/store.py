@@ -147,7 +147,7 @@ def fetch_lease(conn: psycopg.Connection, operation_id: str) -> tuple[str, int, 
 def fetch_outbox(conn: psycopg.Connection, operation_id: str) -> dict | None:
     row = conn.execute(
         "SELECT operation_id, receipt_id, status, amount_fen, receipt_status, "
-        "receipt_jws, created_at, ledger_changes_json, result_bytes "
+        "receipt_jws, created_at, ledger_changes_json, result_bytes, signed_at "
         "FROM ag_receipt_outbox WHERE operation_id = %s",
         (operation_id,),
     ).fetchone()
@@ -163,6 +163,7 @@ def fetch_outbox(conn: psycopg.Connection, operation_id: str) -> dict | None:
         "created_at": _utc(row[6]),
         "ledger_changes_json": bytes(row[7]),
         "result_bytes": bytes(row[8]),
+        "signed_at": _utc(row[9]) if row[9] is not None else None,
     }
 
 
@@ -185,7 +186,8 @@ def fetch_review_flag(conn: psycopg.Connection, operation_id: str) -> dict | Non
 
 def is_quarantined(conn: psycopg.Connection, operation_id: str) -> bool:
     row = conn.execute(
-        "SELECT 1 FROM ag_operation_review_flags WHERE operation_id = %s", (operation_id,)
+        "SELECT 1 FROM ag_operation_review_flags WHERE operation_id = %s",
+        (operation_id,),
     ).fetchone()
     return row is not None
 
@@ -238,7 +240,8 @@ def claim_lease(
         now = ledger_store.db_now_epoch(conn)
         if current_owner != owner_token and now < expires_at.timestamp():
             raise ExecutionError(
-                ExecutionErrorCode.LEASE_LOST, "operation is leased by another live owner"
+                ExecutionErrorCode.LEASE_LOST,
+                "operation is leased by another live owner",
             )
         fencing = current_version + 1
         updated = conn.execute(
@@ -265,11 +268,16 @@ def claim_lease(
         changed = conn.execute(
             "UPDATE ag_operations SET status = %s WHERE operation_id = %s AND status = %s "
             "RETURNING " + OPERATION_COLUMNS,
-            (OperationStatus.EXECUTING.value, operation_id, OperationStatus.RESERVED.value),
+            (
+                OperationStatus.EXECUTING.value,
+                operation_id,
+                OperationStatus.RESERVED.value,
+            ),
         ).fetchone()
         if changed is None:
             raise ExecutionError(
-                ExecutionErrorCode.ILLEGAL_TRANSITION, "operation left RESERVED while claiming"
+                ExecutionErrorCode.ILLEGAL_TRANSITION,
+                "operation left RESERVED while claiming",
             )
         operation = ledger_store.OperationRow(*changed)
 
@@ -428,7 +436,8 @@ def insert_terminal_event(
         ) from exc
     except psycopg.errors.CheckViolation as exc:
         raise ExecutionError(
-            ExecutionErrorCode.ILLEGAL_TRANSITION, "terminal event violates phase/seq binding"
+            ExecutionErrorCode.ILLEGAL_TRANSITION,
+            "terminal event violates phase/seq binding",
         ) from exc
     for node in nodes:
         conn.execute(

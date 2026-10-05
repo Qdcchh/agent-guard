@@ -178,6 +178,17 @@ def _verify_ledger(ledger: object, path: list[dict], receipt: dict) -> None:
         raise ReceiptVerificationError("receipt amount does not match ledger")
 
 
+def _outer_encoded_size(components: Mapping[str, bytes]) -> int:
+    """Exact RFC8785 object size from already validated canonical components."""
+    return (
+        2
+        + sum(
+            len(canonical_json_bytes(name)) + 1 + len(value) for name, value in components.items()
+        )
+        + max(0, len(components) - 1)
+    )
+
+
 def verify_receipt_bundle(bundle: object, *, trust: ReceiptTrust) -> VerifiedReceipt:
     """Verify one version-1 unanchored package against independently supplied trust."""
     if (
@@ -193,10 +204,11 @@ def verify_receipt_bundle(bundle: object, *, trust: ReceiptTrust) -> VerifiedRec
         if data["manifest_version"] != "AG-EVIDENCE-1" or data["anchoring_status"] != "UNANCHORED":
             raise ReceiptVerificationError("unsupported evidence manifest or anchoring claim")
         ledger_bytes = canonical_ledger_changes_bytes(data["ledger_changes"])
-        other_bytes = canonical_json_bytes(
-            {name: value for name, value in data.items() if name != "ledger_changes"}
-        )
-        if len(ledger_bytes) + len(other_bytes) > 1_048_576:
+        components = {
+            name: ledger_bytes if name == "ledger_changes" else canonical_json_bytes(value)
+            for name, value in data.items()
+        }
+        if _outer_encoded_size(components) > 1_048_576:
             raise ReceiptVerificationError("evidence bundle too large")
         receipt_jws = _ascii_jws(data["receipt_jws"], "receipt_jws")
         receipt = _object(
