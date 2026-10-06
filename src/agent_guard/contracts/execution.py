@@ -2,7 +2,7 @@
 
 Continuation of GM-MVP-1 on top of the accepted A1 ledger. Same trust rules as
 ``contracts.ledger``: every type here is a *trusted in-process* object. Only
-B's future verifiers may construct the verification contexts, and only
+B's real verifiers construct the verification contexts, and only
 trusted initialization may seed resources. There is no "already verified
 JSON" network entry, no client-declared cost, and no signature claim in this
 module — SM3/JWS are produced by B's CryptoProvider at A2.3 signing time.
@@ -156,6 +156,10 @@ class TrustedPermissionSnapshot:
 
 #: Shared request/snapshot/result cardinality bound for one order.
 MAX_ORDER_ITEMS = 256
+
+# The existing GM-MVP-1 canonical encoder bounds the entire encoded JSON at
+# 65536 bytes, including escaping. The HTTP/result boundary uses the same cap.
+MAX_GATEWAY_RESPONSE_BYTES = 65536
 
 
 # ------------------------------------------------------------ tool params
@@ -384,21 +388,23 @@ class VerifiedResultQuery:
 
     Purpose is fixed to ``result-read`` and this type is *not* accepted by
     ``ExecutionLedger.accept``: result reads have their own contract and
-    verification path (A2.2) and never carry tool/idempotency fields. Only B's
-    future verifier constructs it; result reads do not consume business calls.
+    verification path (A2.2) and never carry tool/idempotency fields.
+    ``InvocationVerifier.verify_query_bundle`` constructs it together with
+    the signed PermissionSource; result reads do not consume business calls.
 
     ``evidence_ref`` is mandatory here because the result-read path registers
     its fresh proof in ``ag_proofs`` whose ``evidence_ref`` column is NOT NULL
     (A1 schema), and each query proof must be traceable to staged evidence.
 
-    Trusted-source note (A2.2 dependency): ``subject``/``grant_id``/``root_id``
+    Trusted-source note: ``subject``/``grant_id``/``root_id``
     and the ancestor path must come from B's verification plus the immutable
     database path — never from request claims. :class:`GrantConstraints` is
     only the seven resource sets plus ``max_quantity``; it is **not** the full
     permission snapshot, which additionally binds scope, the grant/token
-    identity and the complete ancestor narrowing chain. That binding contract
-    is still pending with B; until it exists the production query path fails
-    closed and nothing here may be treated as a confirmed B interface.
+    identity and the complete ancestor narrowing chain. ``VerifiedQueryBundle``
+    retains that source and opaque evidence reference. ``AuthorizedQuery``
+    rechecks source/material, ownership, current permissions, dynamic state and
+    fresh proof in one locked transaction; this DTO alone authorizes no read.
     """
 
     subject: str

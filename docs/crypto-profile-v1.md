@@ -1,8 +1,8 @@
 # GM-MVP-1 密码与编码配置
 
-状态：SM2/SM3 与 Compact JWS 基础 SDK、部分业务 claims 模式、DID只读解析、静态调用验权、委托收窄及授权码/Token Exchange请求预校验、ID Token/PKCE辅助函数、进程内一次性授权码及唯一根签发、事务性子委托签发、任务与租户管理员的撤销事务及撤销 HTTP 路由、登录/同意与会话 CSRF、开发 TLS 装配、密钥轮换历史公钥、OpenSSL CLI 独立实现固定向量互验均已实现；真实 B→A 进程内执行与只读回执投影已接入；公开调用/最终动态查询、持续发布、独立审计检查点及生产密钥托管尚未完成。本配置遵循 [当前接口契约](oauth-oidc-sm2-mvp.md)，不使用历史能力凭证 v1 的签名信封或域前缀。
+状态：SM2/SM3 与 Compact JWS 基础 SDK、部分业务 claims 模式、DID只读解析、静态调用验权、委托收窄及授权码/Token Exchange请求预校验、ID Token/PKCE辅助函数、进程内一次性授权码及唯一根签发、事务性子委托签发、任务与租户管理员的撤销事务及撤销 HTTP 路由、登录/同意与会话 CSRF、开发 TLS 装配、密钥轮换历史公钥、OpenSSL CLI 独立实现固定向量互验均已实现；真实 B→A 进程内执行与只读回执投影已接入；公开调用/最终动态查询已由A2.2独立接受，A2.3持续发布候选已实现并完整119项/112运行义务独立复验已正式接受，原r1否决保留为历史，独立锚定和导出仍待A3；独立审计检查点及生产密钥托管尚未完成。本配置遵循 [当前接口契约](oauth-oidc-sm2-mvp.md)，不使用历史能力凭证 v1 的签名信封或域前缀。
 
-本轮 v1 实施交付时五项修补均标记 FIXED_PENDING_REVIEW，产品自查不是正式接受；具体命令、原失败、JUnit 和67项/60运行义务见 [v1实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)。后续验收与合并结论以 [本轮控制状态](../tasks/workflow/runs/local-remediation-20261004/state.json) 及主控关联的正式报告为准；本文档同步证据见 [文档实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。整体项目仍 PARTIAL：A2.2公开调用/最终动态查询、A2.3持续签名发布、A3独立锚定/导出/完整采购演示/规模对照实验尚未完成，outbox保持 PENDING。
+历史 v1 实施交付时五项修补均标记 FIXED_PENDING_REVIEW，产品自查不是正式接受；具体命令、原失败、JUnit 和67项/60运行义务见 [v1实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)。后续验收与合并结论以 [本轮控制状态](../tasks/workflow/runs/local-remediation-20261004/state.json) 及主控关联的正式报告为准；本文档同步证据见 [文档实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。整体项目仍 PARTIAL：A2.2公开调用/最终动态查询已独立接受；A2.3持续签名发布候选已实现，完整119项/112运行义务独立复验已正式接受，原r1否决保留为历史，独立锚定和导出仍待A3；A3独立锚定/导出/完整采购演示/规模对照实验尚未完成。旧无回执公钥配置保持 PENDING 兼容。见[本轮补正任务](../tasks/workflow/runs/A2.3-receipts-20261004/task-remediation-r2.md)及[原独立否决记录](../tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md)。
 
 ## 固定参数
 
@@ -60,7 +60,7 @@ opaque 首次证据不能用新 token 补造。STAGED 状态记录本身不可�
 `execution.receipt_projection.project_receipt` 从数据库读取不可变终局材料，核对
 phase/seq/完整路径/delta/结果/真实首次证据之后，使用唯一 B 规范编码与真实 SM3
 投影 GM-MVP-1 v1 材料。它不签发、不发布、不把 outbox 改为 READY。测试的临时
-独立 GW 签名只用于互验，A2.3 持续签名发布尚未实现。
+独立 GW 签名用于互验；A2.3候选另由内部 `receipt_worker` 持续发布，完整119项/112运行义务独立复验已正式接受，原r1否决保留为历史，独立锚定和导出仍待A3。
 
 离线验证从已认证 token/proof 字段求共同可能接受窗口：所有祖先 iat/nbf ≤ t < exp，
 proof iat ≤ t+5 且 t < proof exp，t ≤ signed receipt iat。仍调用原 claims/child/proof
@@ -115,3 +115,5 @@ h11 0.16.0 为 MIT。完整实际发行版元数据随本轮验证证据保存�
 `distid=1234567812345678`。SDK 不开放自定义 SM2 用户标识，标准默认值由向量
 锁定。具体本轮执行命令、版本、计数、失败修正与剩余范围见实施报告和原始日志；
 旧本机/历史 CI 记录不冒充本轮执行。用户已授权完整复核和条件合并；v1 worker未触发远程CI（NOT_RUN），不能写为通过。后续远程CI与正常Git门由主控按授权处理。
+
+本轮完整自查报告：`../tasks/workflow/runs/A2.3-receipts-20261004/implementation-remediation-r2.md`；最新真人停止指令：`../tasks/workflow/runs/A2.3-receipts-20261004/user-stop-after-selfcheck-20261005.md`。本轮补正后的新独立复验未执行；完整A2未接受，原[r1否决](../tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md)保留。

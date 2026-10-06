@@ -1,3 +1,5 @@
+> 历史工具说明：本文对应旧 A2.1 state/schema，不是当前 Codex 运行适配器。当前阶段、模型与授权先读 [现行约定](current-policy.md) 和 [context](context.md)；不得直接复制旧运行字段放行新阶段。
+
 # 状态与验收索引填写规则
 
 本文件供主控维护 `state.json`；实施者与 reviewer 不修改控制状态。JSON仅是索引，实际授权、行为、独立性、日志与语义仍须直接核实。所有 artifact/contract/report 路径相对仓库根，禁止 `../`、绝对路径和越界符号链接。CLI相对 `--state` 同样以 `--root` 解析。

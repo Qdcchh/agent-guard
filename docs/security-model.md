@@ -1,6 +1,6 @@
 # 安全模型与执行状态
 
-状态：GM-MVP-1的规范性安全要求，不是全部要求均已实现或验收的声明。本轮 v1 实施交付时五项修补均标记 FIXED_PENDING_REVIEW，产品自查不是正式接受；具体命令、原失败、JUnit 和67项/60运行义务见 [v1实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)。后续验收与合并结论以 [本轮控制状态](../tasks/workflow/runs/local-remediation-20261004/state.json) 及主控关联的正式报告为准；本文档同步证据见 [文档实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。整体项目仍 PARTIAL：A2.2公开调用/最终动态查询、A2.3持续签名发布、A3独立锚定/导出/完整采购演示/规模对照实验尚未完成，outbox保持 PENDING。 消息接口以 [实施方案](oauth-oidc-sm2-mvp.md) 为准，测试统一在 [验收矩阵](acceptance.md) 维护。
+状态：GM-MVP-1的规范性安全要求，不是全部要求均已实现或验收的声明。B补正已完成独立验收并合并；[正式接受记录](../tasks/workflow/runs/local-remediation-20261004/acceptance.md)保留67项/60运行义务及原失败证据。A2.2本轮已完成95项/88运行义务的独立验收，见[任务包](../tasks/workflow/runs/A2.2-integration-20261004/task-v1.md)。整体项目仍PARTIAL：A2.3内部持续签名发布与真实HTTPS联合流程已完成完整119项/112运行义务独立复验并[正式接受](../tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，原r1否决保留为历史；A3独立锚定/导出/交付演示/规模对照实验尚未完成，旧无回执公钥配置保持PENDING兼容。 消息接口以 [实施方案](oauth-oidc-sm2-mvp.md) 为准，测试统一在 [验收矩阵](acceptance.md) 维护。
 
 ## 1. 威胁模型
 
@@ -64,6 +64,10 @@ calls_settled + calls_reserved <= call_limit
 
 同根串行化优先保证正确性，性能报告应计入其成本，不提前引入分布式锁。换码、委托交换和结果读取也须在各自决定事务内复核新鲜性并登记proof，结果读取不扣业务额度。重放状态仅在覆盖证明有效窗口和时钟偏差后清理。
 
+A2.2授权查询沿用principals排序→task→root至leaf→operation固定锁序。query bundle的签名权限源、原操作ownership及不可变原件在同一事务复核；只关联新proof，不新增业务账本/事件/outbox/lease。所有证据、proof INSERT/link及deferred约束完成后重读已锁key/祖先，最终DBclock检查时效才提交。响应规范编码与byte上限65536；坏可信响应/超限失败503，查询proof亦回滚。HTTP超时不杀同步线程，容量直到线程真实完成才归还；已接受事务可能已提交，外部新proof/原幂等键重试。
+
+首次原件的完整context从已绑定不可变operation摘要的原token/proof、原请求及完整权限源重建，逐字比对身份、资源意图、祖先、摘要和原时间字段。同形状错值也属于坏可信材料，查询失败503；不会重新报价或用当前请求补造原件。原invoke proof过期本身不妨碍合法查询，查询使用新的result-read proof，并复核当前授权时效。
+
 ## 5. 状态迁移与恢复
 
 | 当前状态 | 条件 | 下一状态 | 账本变化 |
@@ -107,6 +111,17 @@ RESERVED中断可恢复原意图；EXECUTING租约失效后查询下游，不直
 
 初版若仅完成回执签名而无独立检查点，导出标注UNANCHORED，不声称能检测完整日志回滚。不得把网关自己保存的哈希链当作独立信任域。
 
+A2.3候选的内部publisher只锁既有outbox行，用有界同一PG事务验证首次token/proof/request、完整签名链与DB绑定、结果和全部账本节点后执行真实SM2签名。条件PENDING→READY只写receipt_status、receipt_jws、signed_at；提交前死亡保持PENDING，提交后失响应重启返回原JWS与signed_at。不得再次执行业务、补造终态或替换首次材料。
+
+历史信任登记保留精确(tenant,client,kid)元组。独立验签完整AS链后，按不可变DB绑定和SDK共同历史窗口为每次操作构造独立ReceiptTrust；不同操作既有holder别名合法，不全表flatten/last-wins或使用当前DID解释旧key。新的网关签名kid/SPKI仍必须与AS/holder角色分离；HTTP仅加载可信公开快照，不打开signer私钥。持久READY的当前query须完成全部材料/密码/SQL/约束工作后再最终DBclock；invoke状态也在接受事务的每次调用私有闭包内捕获，提交后不补做DB读取。旧无回执公钥配置仅支持PENDING兼容。UNANCHORED局限仍适用。
+
 ## 9. 故障验证边界
 
 至少覆盖：预留提交后中断、下游成功但响应丢失、结算前中断、结算后回执生成失败、回执返回丢失、查无结果后的迟到成功、多恢复者竞争、恢复期间撤销及锁等待超过proof TTL。检查订单/通知效果、每层金额和次数账本、终态、证据关联及检查点；不只检查HTTP响应。具体用例编号统一在验收矩阵维护。
+
+
+A2.3补正候选在真实签名/READY前复用原接受事实校验：对不可变报价执行精确总额、数量/原请求及cost currency/calls检查，并逐事件核对历史验真的完整root→leaf路径和四种delta。两列quote/result相互一致不能替代上述约束。校验读取均先于query最终DB时刻，不引入当前报价、下游结果或当前撤销/到期条件；合法零价及迟延终局仍可历史发布。失败保留PENDING/null及原ID/iat，当前query失败回滚proof/link，仅允许原契约的隔离STAGED证据。
+
+容量域分列：本轮独立依据实际validator、q≥1/p≥0/Σq*p≤MAX_SAFE及标识符长度推导，canonical producer订单公开响应包含上界为48187＋2724＋124＝51035字节；兼容真实有效非canonical raw JWS仍可到16384，公开包含上界为48187＋16384＋124＝64695。两者均非共同可达合法最大值。正price的digits(q)＋digits(p)≤17，zero price≤16＋1；旧58168为较松Cartesian/标识符公式，仅历史比较。九个各≤65536组件的outer保守上界589964；1MiB/+1纯codec点并非保留组件profile的合法SDK bundle。组件64KiB、JWS16KiB、公开65536和外壳1MiB守卫不变；真实256 SKU、原边界/故障/回滚探针及范围分类见[完整独立review-r2](../tasks/workflow/runs/A2.3-receipts-20261004/review-r2.md)。本候选完整A2已[正式接受](../tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，原r1否决保留。
+
+最新结论：[正式接受](../tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)与[完整独立review-r2](../tasks/workflow/runs/A2.3-receipts-20261004/review-r2.md)，原[r1否决](../tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md)及[实施自查](../tasks/workflow/runs/A2.3-receipts-20261004/implementation-remediation-r2.md)保留为历史。本轮依据[真人恢复](../tasks/workflow/runs/A2.3-receipts-20261004/user-resume-sol-20261006.md)完成完整复核与接受；最新真人要求协作发布并交接全部A3。当前协作版本通过PR #7交付，暂不合并，A3未实施；CI/审核以PR当前实际head为准。

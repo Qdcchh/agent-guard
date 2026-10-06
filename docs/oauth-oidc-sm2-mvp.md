@@ -4,7 +4,7 @@
 
 状态：实施设计草案，不是已有功能或标准兼容认证。面向 A、B 两人开发；C 不承担初版关键路径。本文中的域名、令牌和密钥均为示意，不含可用凭据。
 
-阅读顺序：第1—4节理解技术，第5—7节确定实现与分工，第8—10节据此联调。事务、状态机及安全边界统一在 [安全模型](security-model.md) 维护；测试清单统一在 [验收矩阵](acceptance.md) 维护。当前只保留GM-MVP-1一条设计路线。A1/A2.1 和 B 整合已有代码；本文接口示意及日程仍是目标设计，不代表全部已验收。本轮 v1 实施交付时五项修补均标记 FIXED_PENDING_REVIEW，产品自查不是正式接受；具体命令、原失败、JUnit 和67项/60运行义务见 [v1实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)。后续验收与合并结论以 [本轮控制状态](../tasks/workflow/runs/local-remediation-20261004/state.json) 及主控关联的正式报告为准；本文档同步证据见 [文档实施报告](../tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。整体项目仍 PARTIAL：A2.2公开调用/最终动态查询、A2.3持续签名发布、A3独立锚定/导出/完整采购演示/规模对照实验尚未完成，outbox保持 PENDING。 修补前问题保留在 [历史本地质量复核](../tasks/workflow/runs/local-quality-20261004/review.md)。
+阅读顺序：第1—4节理解技术，第5—7节确定实现与分工，第8—10节据此联调。事务、状态机及安全边界统一在 [安全模型](security-model.md) 维护；测试清单统一在 [验收矩阵](acceptance.md) 维护。当前只保留GM-MVP-1一条设计路线。A1/A2.1 和 B 整合已有代码；本文接口示意及日程仍是目标设计，不代表全部已验收。B补正已完成独立验收并合并；[正式接受记录](../tasks/workflow/runs/local-remediation-20261004/acceptance.md)保留67项/60运行义务及原失败证据。A2.2已完成独立验收，见[接受记录](../tasks/workflow/runs/A2.2-integration-20261004/acceptance.md)。整体项目仍PARTIAL：A2.3内部持续签名发布与真实HTTPS联合流程已完成完整119项/112运行义务独立复验并[正式接受](../tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，原r1否决保留为历史；A3独立锚定/导出/交付演示/规模对照实验尚未完成，旧无回执公钥配置保持PENDING兼容。 修补前问题保留在 [历史本地质量复核](../tasks/workflow/runs/local-quality-20261004/review.md)。
 
 ## 1. 先说明结论
 
@@ -487,7 +487,7 @@ Content-Type: application/json
 
 所有tool_version固定字符串 `1`。可信服务按已绑定报价计算金额，禁止代理提供权威总价。只读及通知金额成本为0，新操作次数成本为1。
 
-接受返回202：`{operation_id, status:"RESERVED", receipt_status:"PENDING"}`。同键同意图重试返回原操作，不二次预留。业务键作用域为租户/任务/tool_id/key；意图绑定grant_id、holder、tool_version和规范params，不含proof的jti与时间。相同任务不同令牌jti若对应同一不可变grant无需改变业务意图；换授权节点则视为冲突，初版不提供换链接管。
+接受返回202：`{operation_id, status, receipt_status}`；无回执公钥配置兼容PENDING，配置后同事务读取验签的当前持久发布状态。首次为RESERVED；同键同意图重试返回原操作的真实当前状态（包括终态），不二次预留。业务键作用域为租户/任务/tool_id/key；意图绑定grant_id、holder、tool_version和规范params，不含proof的jti与时间。相同任务不同令牌jti若对应同一不可变grant无需改变业务意图；换授权节点则视为冲突，初版不提供换链接管。
 
 查询用 `POST /v1/operations/query`，相同AGPoP+AG-Proof，purpose为result-read，body为 `{profile, task_id, operation_id}`。只允许原授权节点/holder且当前权限有效，结果读取不再次扣业务次数。返回 `{operation_id, status, receipt_status, result, receipt_jws}`；无最终回执时receipt_jws为null，UNKNOWN不伪装成FAILED。
 
@@ -526,9 +526,13 @@ OAuth端点保持OAuth风格：`{"error":"invalid_request","ag_error":"DELEGATIO
 
 网关使用 `{"error":{"code":"...","request_id":"..."}}`：400 INVALID_SCHEMA；401 INVALID_SIGNATURE/HOLDER_MISMATCH/STALE_REQUEST；403 SCOPE_DENIED/REVOKED/EXPIRED；409 REPLAY/IDEMPOTENCY_CONFLICT/QUOTE_CONFLICT；422 BUDGET_EXCEEDED/CALL_LIMIT_EXCEEDED；503 TRUSTED_STATE_UNAVAILABLE。AGPoP认证失败响应带对应WWW-Authenticate challenge，不错误标为Bearer或DPoP。
 
+### A2.3候选的发布与查询实现边界
+
+内部`agent_guard.gateway.receipt_worker`的init/check/run使用独立私有operator配置，显式AG_RECEIPT_DATABASE_URL及有界poll/batch/SQL设置，发布既有终局outbox；不迁移、不创建部署数据库、不公开签名或恢复管理路由。HTTP工厂使用init生成的gateway-public.json公开副本，不加载signer私钥。协议中的17回执claims、AG-EVIDENCE-1和各单组件/JWS原边界保持；仅固定证据包外层按准确规范字节数检查1MiB，公开响应仍≤65536，超限503并回滚proof。PENDING兼容与验证持久READY相互独立于业务终态。完整A2已由新独立reviewer全量复验并[正式接受](../tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，原r1否决保留；不是以自查、SDK或局部demo代替。
+
 ## 10. Python模块接口与联调夹具
 
-以下是目标接口，不是已有可调用代码。B输出共享包，A不得复制一份密码实现到网关。
+以下伪接口保留原设计语义，不作为当前调用API。实际A2.2入口为`InvocationVerifier.verify_bundle`→`VerifiedExecution.accept`，以及`InvocationVerifier.verify_query_bundle`→`AuthorizedQuery.query`；后者用冻结`VerifiedQueryBundle`保留`VerifiedResultQuery`、真实`PermissionSource`和opaque evidenceRef。同事务复核原ownership/原材料/当前权限，按principals→task→root至leaf→operation锁序，全部晚依赖和约束flush后用最终DBclock检查新鲜性。B输出共享实现，网关不复制密码算法。响应沿用规范编码65536字节上限，坏可信材料/超限503且query proof回滚。两公开POST入口及显式公钥配置/TLS启动见README；A2.3候选通过独立内部receipt_worker持续发布；导出和独立锚定仍属A3，本轮完整A2已[正式接受](../tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，完整复核已接受；协作发布暂不合并，A3仍未实施。
 
 ```python
 class CryptoProvider:
@@ -568,7 +572,7 @@ OAuth不替代业务一致性。A/B共同实现 [安全模型](security-model.md
 
 建议五分钟演示：用户确认预算 → 显示三代理与DID密钥绑定 → 正常采购 → 复制token盗用失败 → 并发争抢预算 → 模拟响应丢失和恢复 → 导出并验证回执。
 
-初版不宣称：完整OIDC认证通过、标准DPoP互通、完全去中心化身份、全栈国密、生产级安全或首创OAuth委托。成熟版继续补独立审计锚定、完整故障矩阵、50并发/10000调用目标、开销拆分与公平基线。密码替换是实施内容，组合机制与实验证据才是创新主张的依据。
+初版不宣称：通过OIDC协议认证或通用互通认证、标准DPoP互通、完全去中心化身份、全栈国密、生产级安全或首创OAuth委托。成熟版继续补独立审计锚定、完整故障矩阵、50并发/10000调用目标、开销拆分与公平基线。密码替换是实施内容，组合机制与实验证据才是创新主张的依据。
 
 ### 开工前的三个确认门槛
 
@@ -589,3 +593,10 @@ OAuth不替代业务一致性。A/B共同实现 [安全模型](security-model.md
 - [S9] [RFC7515 JWS](https://www.rfc-editor.org/rfc/rfc7515.html)、[RFC8785 JSON Canonicalization](https://www.rfc-editor.org/rfc/rfc8785.html)：签名输入与规范编码是不同层次，不能混淆。
 
 以上链接用于理解和验证设计。项目私有ALG、AGPoP、ag_*字段、SM2 DID验证方法及业务预算策略为本方案建议，不是这些标准已经提供的现成功能。
+
+
+A2.3补正候选在真实签名/READY前复用原接受事实校验：对不可变报价执行精确总额、数量/原请求及cost currency/calls检查，并逐事件核对历史验真的完整root→leaf路径和四种delta。两列quote/result相互一致不能替代上述约束。校验读取均先于query最终DB时刻，不引入当前报价、下游结果或当前撤销/到期条件；合法零价及迟延终局仍可历史发布。失败保留PENDING/null及原ID/iat，当前query失败回滚proof/link，仅允许原契约的隔离STAGED证据。
+
+容量域分列：本轮独立依据实际validator、q≥1/p≥0/Σq*p≤MAX_SAFE及标识符长度推导，canonical producer订单公开响应包含上界为48187＋2724＋124＝51035字节；兼容真实有效非canonical raw JWS仍可到16384，公开包含上界为48187＋16384＋124＝64695。两者均非共同可达合法最大值。正price的digits(q)＋digits(p)≤17，zero price≤16＋1；旧58168为较松Cartesian/标识符公式，仅历史比较。九个各≤65536组件的outer保守上界589964；1MiB/+1纯codec点并非保留组件profile的合法SDK bundle。组件64KiB、JWS16KiB、公开65536和外壳1MiB守卫不变；真实256 SKU、原边界/故障/回滚探针及范围分类见[完整独立review-r2](../tasks/workflow/runs/A2.3-receipts-20261004/review-r2.md)。本候选完整A2已[正式接受](../tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，原r1否决保留。
+
+最新结论：[正式接受](../tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)与[完整独立review-r2](../tasks/workflow/runs/A2.3-receipts-20261004/review-r2.md)，原[r1否决](../tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md)及[实施自查](../tasks/workflow/runs/A2.3-receipts-20261004/implementation-remediation-r2.md)保留为历史。本轮依据[真人恢复](../tasks/workflow/runs/A2.3-receipts-20261004/user-resume-sol-20261006.md)完成完整复核与接受；最新真人要求协作发布并交接全部A3。当前协作版本通过PR #7交付，暂不合并，A3未实施；CI/审核以PR当前实际head为准。

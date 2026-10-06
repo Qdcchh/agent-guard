@@ -1,22 +1,9 @@
-# 当前上下文与下一步
+# 当前上下文
 
-更新：2026-10-04（Asia/Shanghai）。本轮补正 **ACCEPTED**，整体项目 **PARTIAL**；本索引不授予新阶段权限。
+2026-10-06：完整 A2 **ACCEPTED**，项目整体 **PARTIAL**，A3.1—A3.4 **NOT_RUN**。本协作版本基于原 PR #7 的 A2.2 tip，选择已接受 A2 产品与公共文档发布到 `codex/a2.2-integration`；[PR #7](https://github.com/Qdcchh/agent-guard/pull/7)暂不合并。main 的已核产品基线为 `d7e91c75014d1097c822936a16559229e2b4906a`，后续以实际远端核实，不从旧 main 开始 A3。
 
-## 版本和当前结论
+[独立接受](runs/A2.3-receipts-20261004/acceptance.md)、[完整review-r2](runs/A2.3-receipts-20261004/review-r2.md)覆盖119/112/269/41/88。source/wheel各1185普通、2810完整PG、500时限通过；source增强原487P，wheel原484P/3F保留，以原407＋原模块新完整80逐case闭合。历史r1否决、原B/A1失败、未知原因与限制保留，不冒称所有历史组全绿。实际A2独立review不是GitHub人类审批。
 
-- 仓库：`/Users/qdcc/Documents/ChatGPT/密码竞赛/agent-guard-handoff`。本轮起始分支`handoff/b-integration-20261003`、起始HEAD `2051b402c99a3d400d8f12749287075e23a9a521`；main比较基线`153f14e9be180a1eb26b0f0e0898048d45170569`。发布后的实际分支/提交以Git实时状态为准，不能把起始HEAD当最终补正代码。
-- [当前接受记录](runs/local-remediation-20261004/acceptance.md)、[完整fresh review-r2](runs/local-remediation-20261004/review-r2.md)、[本轮state](runs/local-remediation-20261004/state.json)为当前结论；[问题台账](issues.md)保留各失败与关闭依据。
-- 67项全PASS、60项独立运行；source/wheel各952非集成＋1388 PG通过，历史/新边界、SM2/TLS/迁移/真进程等原义务完整。不得从旧“未实施/未验收”状态重新开发。
-- A1/A2.1旧state保留历史，不作为B当前接受依据。使用[Codex补充契约](runs/setup/codex-astra-sol-v1/workflow-contract.md)与已批准[运行适配](runs/local-remediation-20261004/runtime-addendum-proposal.md)，有效后台模型metadata仍UNKNOWN。
+本次只做协作发布/交接，产品、测试、SQL、依赖锁与CI字节由[公共产品指纹](../A2-public-product-manifest.json)绑定，当前文档更新不追溯改写实测wheel METADATA。原作者本地提交、dirty成果与原始证据保留；机器运行绑定/个人调度/私有原件不进新发布历史，详[发布说明](runs/A2.3-receipts-20261004/README.md)。干净克隆不含原始日志。
 
-## 必须保留的边界
-
-严格四工具参数和权限收窄、全祖先预算、proof新鲜性/重放、不可变意图/证据、候选命中仍动态验权、UNKNOWN保预算、原报价恢复、租约owner/version/state/锁后expiry、不可变事件/outbox、旧SQL/registry保全继续有效。具体义务见[A2原任务](../A2-execution-gateway.md)、[安全模型](../../docs/security-model.md)和[本轮正式包](runs/local-remediation-20261004/task-v1.md)。
-
-当前为进程内真实验签/执行、授权服务、证据绑定和只读回执投影；A2.2公开调用/最终动态查询、A2.3持续签发发布及A3锚定/完整演示/规模实验未完成，outbox仍PENDING。阶段接受不等于生产安全或绝对无缺陷。
-
-## 下一步和历史资料
-
-用户已明确授权修复、复核及条件合并；本地验收已闭合，可由主控提交/推送/创建PR，随后核必需CI及符合远端保护的独立审核，再正常合并。不得自批、管理员绕过或改变保护。若审核条件无法满足，保留可审PR并说明具体阻碍；不能把本地ACCEPTED写成已合并。A2.2/A2.3/A3与部署仍需另行批准。
-
-原本地A1/A2/B探针、历史失败及等价diff保留；缺失云端原件未冒称找回，旧一次P11无code/cause的根因不可追溯。已删除被替代setup说明与无用.DS_Store，保留正式任务/报告/SQL/依赖和原失败；只清理已核owner自有资源，原三个容器未连接或改动。
+同学下一步按[完整A3交接](../../docs/A3-HANDOFF.md)和[A3计划](../A3-plan.md)正式建A3.1包并独立包审，依次完成全部四段。回执仍UNANCHORED。每段前段接受、共享接口串行冻结、独立资源分工、唯一整合/完整自查、全部writer停写和新独立完整复核不可省略；CI/审核与后续合并按当前真实head另核，本次不合并、不实施A3。
