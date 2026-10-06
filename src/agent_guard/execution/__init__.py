@@ -1,8 +1,8 @@
-"""A2.1 execution lifecycle: accept flow, leases, terminal ledger and outbox.
+"""A2 execution lifecycle, verified public entry points and receipt publication.
 
-Trusted in-process only. No HTTP entry point, no management endpoints and no
-production authentication or signing double: B's verifiers and CryptoProvider
-are still missing and the receipt outbox stays ``PENDING``.
+A2.2 public invocation/query has been independently accepted. The A2.3
+internal receipt publisher and HTTPS integration are implemented candidates
+pending complete independent acceptance; audit anchoring and export remain A3.
 """
 
 from agent_guard.execution.receipts import (
