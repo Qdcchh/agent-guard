@@ -1,0 +1,20 @@
+{
+  "kind": "STATIC_PACKAGE_EXTRACTION_READBACK_NOT_RUNTIME_TEST",
+  "parents": 159,
+  "runtime_obligations": 151,
+  "A2_assertions": 269,
+  "A31_atoms": 95,
+  "A32_atoms": 73,
+  "A32_nodes": 19,
+  "A32_native": 3,
+  "original21P": 21,
+  "original21P_rows_with_core_http_aliases": 23,
+  "original30goals": 30,
+  "union_exact": true,
+  "ownership_disjoint": true,
+  "source_sha_current_readback": true,
+  "runtime": "NOT_RUN",
+  "resources_created": 0,
+  "resources_remaining": 0,
+  "static_initial_check_note": "First assertion expected21 P rows; actual23 retains P15CORE and P21HTTP alias rows. Corrected semantic21 goal set without deleting any rows; initial check exited1 before writing readback/manifest/STOP."
+}

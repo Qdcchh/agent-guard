@@ -211,7 +211,14 @@ def test_original_accept_facts_coherent_quote_result_refused_before_sign(
         (2 if fault == "cost-calls" else 1),
     )
     baseline = full_state(dsn, downstream_dsn)
-    assert len(baseline["gateway"]) == 31 and len(baseline["downstream"]) == 3
+    from tests.fixtures.receipts import AUDIT_GATEWAY_TABLES, OLD_GATEWAY_TABLES
+
+    assert set(baseline["gateway"]) == OLD_GATEWAY_TABLES | AUDIT_GATEWAY_TABLES
+    assert set(baseline["downstream"]) == {
+        "ds_operations",
+        "ds_orders",
+        "ds_notifications",
+    }
     with pytest.raises(psycopg.Error):
         with psycopg.connect(dsn) as conn:
             conn.execute(
@@ -268,7 +275,11 @@ def test_original_accept_facts_coherent_quote_result_refused_before_sign(
             assert full_state(dsn, downstream_dsn) == damaged
             with psycopg.connect(dsn) as conn:
                 out = store.fetch_outbox(conn, op)
-                assert (out["receipt_status"], out["receipt_jws"], out["signed_at"]) == (
+                assert (
+                    out["receipt_status"],
+                    out["receipt_jws"],
+                    out["signed_at"],
+                ) == (
                     "PENDING",
                     None,
                     None,
@@ -279,7 +290,11 @@ def test_original_accept_facts_coherent_quote_result_refused_before_sign(
                 )
             status, response, _ = query_http(application, dsn, current)
             assert status == 503 and response["error"]["code"] == "TRUSTED_STATE_UNAVAILABLE"
-            staged_only(damaged, full_state(dsn, downstream_dsn), proof_jti=current.query.proof_jti)
+            staged_only(
+                damaged,
+                full_state(dsn, downstream_dsn),
+                proof_jti=current.query.proof_jti,
+            )
         restored = full_state(dsn, downstream_dsn)
         ready = publisher.publish(op)
         assert ready.receipt_status == "READY" and calls == ["ag-receipt+jwt"]
@@ -495,10 +510,14 @@ def test_p18_publishers_same_operation_ten_rounds(ledger, dsn, downstream_dsn, m
         barrier.wait(5)
         return publisher.publish(op)
 
-    with psycopg.connect(dsn) as blocker, psycopg.connect(dsn, autocommit=True) as observer:
+    with (
+        psycopg.connect(dsn) as blocker,
+        psycopg.connect(dsn, autocommit=True) as observer,
+    ):
         blocker_pid = blocker.info.backend_pid
         blocker.execute(
-            "SELECT operation_id FROM ag_receipt_outbox WHERE operation_id=%s FOR UPDATE", (op,)
+            "SELECT operation_id FROM ag_receipt_outbox WHERE operation_id=%s FOR UPDATE",
+            (op,),
         )
         with ThreadPoolExecutor(2) as pool:
             futures = [pool.submit(run) for _ in range(2)]
@@ -533,7 +552,11 @@ def test_p18_publishers_same_operation_ten_rounds(ledger, dsn, downstream_dsn, m
         label = os.environ.get("A23_RUN_LABEL", "core")
         Path(output, f"{label}-sameop-publisher-lock-{round}.json").write_text(
             json.dumps(
-                {"blocker_pid": blocker_pid, "publisher_pids": pids, "target_activity": activities},
+                {
+                    "blocker_pid": blocker_pid,
+                    "publisher_pids": pids,
+                    "target_activity": activities,
+                },
                 indent=2,
             )
         )
@@ -943,6 +966,7 @@ def test_publish_query_retry_recovery_races_ten_rounds(ledger, dsn, downstream_d
             proof_jti=bundle.query.proof_jti,
             operation_id=op,
             publication=True,
+            observed_response=results[1],
         )
     else:
         from tests.fixtures.receipts import accept_retry_only
@@ -954,6 +978,7 @@ def test_publish_query_retry_recovery_races_ten_rounds(ledger, dsn, downstream_d
             proof_jti=bundle.invocation.proof_jti,
             operation_id=op,
             publication=True,
+            observed_response=results[1],
         )
 
 
@@ -1005,7 +1030,8 @@ def test_legal_zero_price_order_publishes_without_current_quote(ledger, dsn, dow
     with psycopg.connect(dsn) as conn:
         projection = verifier.verify_tx(conn, op, ready.receipt_jws)
         result = verify_receipt_bundle(
-            evidence_bundle(projection, ready.receipt_jws), trust=verifier._trust_tx(conn, op)
+            evidence_bundle(projection, ready.receipt_jws),
+            trust=verifier._trust_tx(conn, op),
         )
         assert result.amount_fen == 0 and result.anchoring_status == "UNANCHORED"
         assert (
@@ -1167,7 +1193,10 @@ def test_ready_external_mutation_races_follow_actual_lock_order(
             else env.adapter.accept_response(bundle, receipt_verifier=verifier)
         )
 
-    with psycopg.connect(dsn, autocommit=True) as observer, ThreadPoolExecutor(1) as pool:
+    with (
+        psycopg.connect(dsn, autocommit=True) as observer,
+        ThreadPoolExecutor(1) as pool,
+    ):
         if winner == "mutation":
             with psycopg.connect(dsn) as blocker:
                 mutate(blocker)
@@ -1344,7 +1373,11 @@ def test_real_as_bounded_capacity_preflight(ledger, dsn, downstream_dsn, sku_wid
 
     try:
         env = real_login_capacity_env(
-            dsn, downstream_dsn, sku_width=sku_width, quantity=quantity, budget=MAX_SAFE_INTEGER
+            dsn,
+            downstream_dsn,
+            sku_width=sku_width,
+            quantity=quantity,
+            budget=MAX_SAFE_INTEGER,
         )
         _, verifier, publisher = receipt_services(env, dsn)
         params = {
@@ -1468,7 +1501,11 @@ def test_real_as_bounded_capacity_preflight(ledger, dsn, downstream_dsn, sku_wid
                 "ag_verified_evidence WHERE evidence_ref=%s",
                 (actual_ref,),
             ).fetchone()
-            assert tuple(bytes(v) for v in material) == (query_token, query_proof, query_body)
+            assert tuple(bytes(v) for v in material) == (
+                query_token,
+                query_proof,
+                query_body,
+            )
         result_read_only(
             query_before,
             full_state(dsn, downstream_dsn),
@@ -1502,7 +1539,10 @@ def test_rotation_new_pending_and_bundle_self_key_never_supply_trust(ledger, dsn
     from agent_guard.contracts.encoding import b64url_decode
     from agent_guard.crypto.sm import generate_sm2_private_key, serialize_sm2_public_key
     from agent_guard.evidence.receipt import ReceiptVerificationError
-    from agent_guard.execution.receipt_publication import InternalPublisher, ReceiptVerifier
+    from agent_guard.execution.receipt_publication import (
+        InternalPublisher,
+        ReceiptVerifier,
+    )
 
     env, old_op, key, verifier, publisher = final_env(dsn, downstream_dsn)
     old_ready = publisher.publish(old_op)
@@ -1519,7 +1559,9 @@ def test_rotation_new_pending_and_bundle_self_key_never_supply_trust(ledger, dsn
     )
     new_op = env.adapter.accept(
         env.bundle(
-            "rotation-new", tool="procurement.request.read", params={"request_id": "req-001"}
+            "rotation-new",
+            tool="procurement.request.read",
+            params={"request_id": "req-001"},
         )
     ).operation_id
     assert env.service.run_operation(new_op).status == "SUCCEEDED"

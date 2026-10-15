@@ -7,10 +7,13 @@ There is no TTL deletion or reassignment API; accepted materials are permanent.
 from __future__ import annotations
 
 import secrets
-from dataclasses import asdict
+from collections.abc import Callable
+from dataclasses import asdict, dataclass
 
 import psycopg
 
+from agent_guard.audit.contracts import AcceptDescriptor
+from agent_guard.audit.journal import gateway_origin
 from agent_guard.authorization.permission_snapshot import (
     PermissionSnapshotProvider,
     PermissionSource,
@@ -33,6 +36,78 @@ def context_bytes(context) -> bytes:
         elif type(value) is tuple:
             values[key] = list(value)
     return canonical_json_bytes(values)
+
+
+_BINDING_FACTORY = object()
+
+
+@dataclass(frozen=True, slots=True, init=False)
+class TrustedAcceptBinding:
+    """Factory-created immutable descriptor and original same-TX validator.
+
+    Composition adds a local callback without losing the verified descriptor or
+    calling the original validator twice. It never derives trust from closures.
+    """
+
+    descriptor: AcceptDescriptor
+    _bind: Callable
+    _response: Callable | None
+
+    def __init__(self, descriptor, bind, response=None, *, _factory=None):
+        if _factory is not _BINDING_FACTORY or type(descriptor) is not AcceptDescriptor:
+            raise EvidenceError("trusted binding requires verified factory")
+        object.__setattr__(self, "descriptor", descriptor)
+        object.__setattr__(self, "_bind", bind)
+        object.__setattr__(self, "_response", response)
+
+    def __call__(self, conn, operation, disposition) -> None:
+        if self._bind(conn, operation, disposition) is not None:
+            raise EvidenceError("binding callback must return None")
+
+    def compose(self, callback) -> TrustedAcceptBinding:
+        if not callable(callback):
+            raise EvidenceError("binding composition callback required")
+
+        def combined(conn, operation, disposition):
+            self(conn, operation, disposition)
+            if callback(conn, operation, disposition) is not None:
+                raise EvidenceError("binding callback must return None")
+
+        return TrustedAcceptBinding(
+            self.descriptor, combined, self._response, _factory=_BINDING_FACTORY
+        )
+
+    def _with_response(self, reader):
+        if not callable(reader):
+            raise EvidenceError("local response projection required")
+        return TrustedAcceptBinding(self.descriptor, self._bind, reader, _factory=_BINDING_FACTORY)
+
+    def response_bytes(self):
+        return None if self._response is None else canonical_json_bytes(self._response())
+
+    def after_link(self, callback=None):
+        """Typed original binding attachment for direct accept/checked callers."""
+        return TrustedAfterLink(self, callback, _factory=_BINDING_FACTORY)
+
+
+@dataclass(frozen=True, slots=True, init=False)
+class TrustedAfterLink:
+    binding: TrustedAcceptBinding
+    _callback: Callable | None
+
+    def __init__(self, binding, callback=None, *, _factory=None):
+        if _factory is not _BINDING_FACTORY or type(binding) is not TrustedAcceptBinding:
+            raise EvidenceError("verified attachment factory required")
+        if callback is not None and not callable(callback):
+            raise EvidenceError("after-link observation must be callable")
+        object.__setattr__(self, "binding", binding)
+        object.__setattr__(self, "_callback", callback)
+
+    def __call__(self, conn, operation, disposition, baseline) -> None:
+        self.binding(conn, operation, disposition)
+        if self._callback is not None:
+            return self._callback(conn, operation, disposition, baseline)
+        return None
 
 
 class EvidenceStore:
@@ -139,7 +214,19 @@ class EvidenceStore:
                 (bundle.evidence_ref, operation.operation_id, kind),
             )
 
-        return bind
+        descriptor = AcceptDescriptor(
+            (gateway_origin(), bundle.invocation.tenant_id, bundle.invocation.task_id),
+            bundle.invocation.root_id,
+            bundle.source.snapshot.chain_grant_ids,
+            bundle.evidence_ref,
+            context_bytes(bundle.invocation),
+            bundle.source.digest,
+            bundle.source.material(),
+            bundle.invocation.token_digest,
+            bundle.invocation.proof_digest,
+            sm3_b64url(bytes(row_body(bundle, self._dsn))),
+        )
+        return TrustedAcceptBinding(descriptor, bind, _factory=_BINDING_FACTORY)
 
     def query_binding(self, bundle):
         from agent_guard.contracts.verification import VerifiedQueryBundle
@@ -170,3 +257,14 @@ class EvidenceStore:
                 raise EvidenceError("query evidence does not bind this verified request")
 
         return bind
+
+
+def row_body(bundle, dsn):
+    with psycopg.connect(dsn, connect_timeout=5) as conn:
+        row = conn.execute(
+            "SELECT body_bytes FROM ag_verified_evidence WHERE evidence_ref=%s",
+            (bundle.evidence_ref,),
+        ).fetchone()
+    if row is None:
+        raise EvidenceError("missing verified staged request body")
+    return bytes(row[0])

@@ -1,0 +1,15 @@
+{
+  "task": "/root/a32_a33_dependency_prepare_sol_r1",
+  "status": "NATIVE_SPAWNED_STATIC_PREPARATION_ONLY",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "effective_metadata": "UNKNOWN",
+  "authority": "user-extend-through-a33-20261009.md",
+  "exact_write_boundary": "ignored artifacts/workflow/A3.1-audit-20261008/a32-a33-dependency-prepare-r1/ only",
+  "no_product_or_formal_package_writes": true,
+  "no_tests_install_network_containers_git": true,
+  "no_read_unfinished_peer18_paths": true,
+  "result": "concise A32/A33 dependency/execution preflight; NOT_PACKAGE_READY_NOT_ACCEPTANCE",
+  "resources": 0,
+  "time": 1791559688.161726
+}

@@ -1,0 +1,52 @@
+{
+  "stage": "A3.1",
+  "role": "service",
+  "task": "/root/a31_service_sol_r1",
+  "status": "NATIVE_SPAWNED_ACTIVE_EXACT_OWNER",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "effective_metadata": "UNKNOWN",
+  "exact_write_paths": [
+    "src/agent_guard/audit/__main__.py",
+    "src/agent_guard/audit/checkpoint.py",
+    "src/agent_guard/audit/config.py",
+    "src/agent_guard/audit/http_app.py",
+    "src/agent_guard/audit/migrate.py",
+    "src/agent_guard/audit/operator_cli.py",
+    "src/agent_guard/audit/server.py",
+    "src/agent_guard/audit/store.py",
+    "tests/fixtures/a31_audit_service.py",
+    "tests/integration/test_audit_service.py",
+    "tests/integration/test_audit_tls.py",
+    "tests/unit/test_checkpoint_contract.py"
+  ],
+  "S0_native_stop_record": "s0-stop-r4.json",
+  "shared_interface": "artifacts/workflow/A3.1-audit-20261008/controller/shared32-frozen-interface-r4.json",
+  "shared_interface_sha256": "ec8bf59a8fa6d5fd4b62b33b3951219a4cdc291de7f2ff4db931dfadfd5af060",
+  "S0_complete_freeze": "artifacts/workflow/A3.1-audit-20261008/shared-r4-freeze/freeze.json",
+  "S0_complete_freeze_sha256": "297c2409c537eaeddcd62ab078180340df3b99e1d171ce916563704b17e6e35c",
+  "runtime": {
+    "owner_uuid": "78baf870-8f66-4961-9e24-8f4554e65c65",
+    "role_owner_token": "78baf8708f66-service",
+    "network_name": "ag-a31-78baf8708f66-service",
+    "GW_DS_PG_name": "ag-a31-78baf8708f66-service-pg",
+    "audit_PG_name": "ag-a31-78baf8708f66-service-audit",
+    "python_name": "ag-a31-78baf8708f66-service-py",
+    "project_label": "ag-a31-78baf8708f66-service",
+    "db_names": {
+      "gateway": "ag31_gw_78baf8708f66",
+      "downstream": "ag31_ds_78baf8708f66",
+      "audit": "ag31_audit_78baf8708f66"
+    },
+    "schema": "run-exclusive random marker validated by fixtures",
+    "evidence_dir": "artifacts/workflow/A3.1-audit-20261008/service-78baf8708f66",
+    "private_dir": "/tmp/ag31-78baf8708f66-service",
+    "binding_status": "CONTROLLER_CREATED_FULLIDS_OWNER_MOUNTS_IMAGE_NOPORTS_INDEPENDENTLY_VERIFIED_TRANSFERRED"
+  },
+  "resource_transfer": "controller creates exact owner-labeled role resources, worker must verify fullID/owner/mount before use; worker owns cleanup",
+  "peer_snapshot_policy": "runtime builder verifies all32 frozen shared hashes and excludes exact opposite S1 writer paths from source/wheel build and test-copy snapshot",
+  "peer_dependency_policy": "do not import/read unfinished peer files; delivery authenticates checkpoint with frozen codecs and existing mature SM2 verifier in its own paths/own signed transport fixtures, real joint peer chain reserved S2 after allSTOP",
+  "selfcheck": "own full positive/negative/race/fault/native process matrix source/noneditablewheel + quality/provenance, no skip/assertion dilution; complete A31 acceptance is later fresh reviewer",
+  "stop_rule": "No A3.2/Git/deploy/ACCEPTED. Stop writes, owned resources0 and exact evidence/report before native FINAL STOP",
+  "resource_transfer_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s1-resource-transfer-and-locked-cache-readback-r1.json"
+}

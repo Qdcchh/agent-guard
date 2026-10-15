@@ -1,0 +1,73 @@
+{
+  "status": "FORMAL_V3_FROZEN_FOR_PACKAGE_REVIEW_NOT_DISPATCHED",
+  "paths": {
+    "S0": [
+      "src/agent_guard/demo/__init__.py",
+      "src/agent_guard/demo/config.py",
+      "src/agent_guard/demo/init.py",
+      "src/agent_guard/demo/did_bootstrap.py",
+      "src/agent_guard/demo/provision.py",
+      "src/agent_guard/demo/client.py",
+      "src/agent_guard/demo/handoff.py",
+      "src/agent_guard/demo/worker.py",
+      "src/agent_guard/demo/__main__.py",
+      "tests/fixtures/a33_demo.py",
+      "src/agent_guard/audit/config.py",
+      "src/agent_guard/audit/server.py",
+      "tests/integration/test_audit_tls.py",
+      "src/agent_guard/audit/delivery.py",
+      "tests/integration/test_a33_registration.py"
+    ],
+    "S1_scenarios": [
+      "src/agent_guard/demo/holder.py",
+      "src/agent_guard/demo/runner.py",
+      "src/agent_guard/demo/faults.py",
+      "tests/integration/test_a33_scenarios.py"
+    ],
+    "S1_deploy": [
+      "tests/integration/test_a33_roles.py",
+      "tests/integration/test_a33_clean_deploy.py"
+    ],
+    "S2": [
+      "deploy/demo/compose.yaml",
+      "pyproject.toml",
+      "docs/deployment-demo.md",
+      "docs/technical-report.md",
+      "tests/test_a33_documents.py",
+      "README.md",
+      "HANDOFF.md",
+      "tasks/A2-report.md",
+      "tasks/A3-plan.md",
+      "docs/oauth-oidc-sm2-mvp.md",
+      "docs/security-model.md",
+      "docs/acceptance.md",
+      "deploy/demo/Dockerfile"
+    ]
+  },
+  "handoff": [
+    {
+      "path": "src/agent_guard/demo/__main__.py",
+      "from": "S0",
+      "to": "S2",
+      "when": "explicit S0 STOP+hash; S1 all STOP before S2 edit"
+    }
+  ],
+  "controller_only": [
+    "tasks/workflow/runs/A3.3-delivery-20261011/*",
+    "tasks/workflow/current-policy.md",
+    "tasks/workflow/context.md",
+    "tasks/workflow/issues.md",
+    "tasks/workflow/README.md",
+    "tasks/workflow/continue-prompt.md",
+    "tasks/workflow/stages/A3-closure.md"
+  ],
+  "existing_core": "READ_ONLY except exact S0 audit/config.py/server.py listener adaptation and delivery.py additive trusted confirmation helper; no existing function AST edits; no schema/migration/lock changes",
+  "parallel_gate": "S0 freeze config/client/handoff/fixture/worker signatures first; S1 scenarios and deployment tests then separate resources; deployment complete execution only final S2 freeze. No peer partial imports. S2 sole source integrator after all STOP.",
+  "resources": "each writer/reviewer exclusive UUID project/network/three PG/namespace/venv/private root; exact owner/full IDs; no reuse A32",
+  "current_worker_write_allowlist": "NONE until fresh v3 PACKAGE_READY; then sole new S0 remediation writer 15 paths, preserve current 13-path frozen work",
+  "prior_S0_STOP": {
+    "path": "artifacts/workflow/A3.3-delivery-20261011/s0-shared-sol-low-r1-35129743-e9f4-429b-959a-8df3347f0e49/STOP.json",
+    "SHA256": "ea5ba2aec0692542950bff0015c96cdd56bd8bde19b884b4cb860a9820549b08",
+    "resource_root_readback": "artifacts/workflow/A3.3-delivery-20261011/controller/S0-all-evidence-resources-root-readback.json"
+  }
+}

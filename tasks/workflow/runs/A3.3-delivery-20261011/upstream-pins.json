@@ -1,0 +1,12 @@
+{
+  "A32_acceptance_path": "tasks/workflow/runs/A3.2-evidence-20261011/acceptance.json",
+  "A32_acceptance_SHA256": "8cdc3a48a4932b2b156bb89af8b1418d910b07fea213ffa0eefbca8445119329",
+  "A32_frozen_candidate_SHA256": "e680193204ef1c25eb656169a0470eb1672422d7549016454f50f7118633629c",
+  "A32_report_SHA256": "bbfdff45783277c8fb6bcd390c0e10752e309c6b6052101a8487a29590cd6d2b",
+  "A32_manifest_SHA256": "f75df2be2e6c66357ce8eeffda422399390f65549ecf1bf638d014d7fb3c9abf",
+  "A32_STOP_SHA256": "36b5a38d163253a0abb2ac41e92068dfb3b34364027c05e7e75edfbbf6db8f69",
+  "branch": "handoff/a23-local-20261005",
+  "HEAD_baseline_only": "2a8cc7da4867ad1876350855c0ed5569c5ce6472",
+  "dirty_accepted_source": "full candidate SHA plus current source/SQL/lock bindings; HEAD alone is not implementation",
+  "effective_metadata": "UNKNOWN"
+}

@@ -1,0 +1,73 @@
+{
+  "UTC": "2026-10-11T20:13:08.908291+00:00",
+  "owner_uuid": "4b85e8be-6688-4691-a3be-4c571a47c4b8",
+  "status": "REUSED_EXISTING_COMPLETE_DRAFTS_WITH_ACTUAL_ACCEPTED_UPSTREAM_BINDING_NOT_IMPLEMENTED",
+  "draft_inputs": [
+    {
+      "path": "artifacts/workflow/A3.3-delivery-draft-20261011/delivery-contract-reference.md",
+      "SHA256": "17d98d094f15d77a691aa19f25fb0f21d41cbc8c2ff15bdedbe3b6a84e3ad9c4"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-draft-20261011/node-bindings-draft.json",
+      "SHA256": "062d3eb1b91a66fd6b7784b25acfbc71b39e07f57bf45ce4a6f9bf5d6cb670a7"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-draft-20261011/observed-api-draft.json",
+      "SHA256": "3612e81c9bb00eda419ac763e43f7429ae59d04192ffe3fdcaec808fe33c1757"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-draft-20261011/original-A33-task-reference.md",
+      "SHA256": "666d7c1c0e51447c7045da79d2f13fc740c4f0e5a14a031883830beb8d113074"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-draft-20261011/ownership-draft.json",
+      "SHA256": "fb2be96591462cc50195f0716b60bc537ea4723e12d4a417749a67367f64469f"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-draft-20261011/package-draft.md",
+      "SHA256": "087884de339b1dce64a6da96fae95ef12596481a10dddfeb84f3da0c3cf1ac80"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-draft-20261011/readback-and-stop-r1-history.json",
+      "SHA256": "b7988f71d94585c1d0785e6a13d79f4029db99a6133c7e8ad990fbe1c9b19f60"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-draft-20261011/readback-and-stop.json",
+      "SHA256": "4cae6c2b21ee5fde0967a43e58bdec5adc62ccfc6a0ceb03f81a1e2ac5743b04"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-draft-20261011/requirements-draft.json",
+      "SHA256": "3ca8207639b990c82f01245c90b79d9651885d8a98e5b87866ff012d13ec796a"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-draft-20261011/runtime-plan-draft.json",
+      "SHA256": "3b6173c4623ed79f493c5d104cf3da29e29fcce267ce9a5251733a6383e2e092"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-draft-20261011/source-read-manifest.json",
+      "SHA256": "5bbc57bf2eba8f04c2f2dac548e4984ff7097b19d1102bb6cb0bc5d51b9261d8"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-draft-20261011/task-package-review-draft.md",
+      "SHA256": "cc2cf438d1869e759c1589ac5cd5739444023851344b1cdfd5e8301a9483456b"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-interface-preparation-20261011-2799a66e-b3b5-459a-a713-96c28078b707/interface-proposal.json",
+      "SHA256": "d8b71d04ca494724ae9eb45f9b72b7916e3a3662b68a1534567fa5f224af01fa"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-interface-preparation-20261011-2799a66e-b3b5-459a-a713-96c28078b707/interface-proposal.md",
+      "SHA256": "e9ee01f3e6dc9a0689aa3f2fa3cf07d4c9eb154e08ee92ccf6d8a340c534270b"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-interface-preparation-20261011-2799a66e-b3b5-459a-a713-96c28078b707/manifest-stop.json",
+      "SHA256": "276384cb81a0aba0dd848d25ba99827c90d6d1c23b1b19eb4d1e604c2f362850"
+    }
+  ],
+  "scope_reconciliations": [
+    "Pair Unix socket directory/group permission vs distinct UID; original private key0700/0600 unchanged",
+    "S2 Dockerfile precise file ownership for clean reproducible deployment",
+    "Actual A32 accepted bindings and55 regression nodes"
+  ],
+  "code_or_resource_changes": false
+}

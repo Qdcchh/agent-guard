@@ -63,6 +63,15 @@ def _discover(migrations_dir: Path) -> list[tuple[str, str, str, str]]:
                 raise MigrationError(f"bad migration filename: {path.name}")
             continue
         data = path.read_bytes()
+        if path.name == "007_audit_journal.sql":
+            if migrations_dir.resolve() != _migrations_dir().resolve():
+                raise MigrationError("dependency migration007 requires qualified bundle")
+            from agent_guard.ledger.lineage import _entries
+
+            expected = next(m for m in _entries() if m.key == ("execution", "007"))
+            if hashlib.sha256(data).hexdigest() != expected.checksum:
+                raise MigrationError("dependency migration007 checksum mismatch")
+            continue
         # Preserve the original universal-newline registry checksum. The raw
         # digest independently detects even newline-only execution races.
         sql = data.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
@@ -114,7 +123,11 @@ def apply_migrations(conn: psycopg.Connection, migrations_dir: Path | None = Non
     directory = Path(migrations_dir) if migrations_dir is not None else _migrations_dir()
     pending = _discover(directory)
 
-    from agent_guard.ledger.lineage import _COORDINATOR, _exists, apply_bundle_migrations
+    from agent_guard.ledger.lineage import (
+        _COORDINATOR,
+        _exists,
+        apply_bundle_migrations,
+    )
 
     with conn.transaction():
         conn.execute("SET LOCAL lock_timeout = '10s'")
@@ -182,7 +195,10 @@ def main(argv: list[str] | None = None) -> int:
     try:
         with psycopg.connect(dsn, connect_timeout=5) as conn:
             if bundle:
-                from agent_guard.ledger.lineage import apply_bundle_migrations, load_manifest
+                from agent_guard.ledger.lineage import (
+                    apply_bundle_migrations,
+                    load_manifest,
+                )
 
                 applied = [
                     f"{ns}:{v}"
@@ -191,7 +207,10 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 applied = apply_migrations(conn, migrations_dir)
     except (MigrationError, psycopg.Error, OSError, ValueError):
-        print("migration failed: configuration, connection or migration rejected", file=sys.stderr)
+        print(
+            "migration failed: configuration, connection or migration rejected",
+            file=sys.stderr,
+        )
         return 1
     print(f"applied: {', '.join(applied)}" if applied else "already up to date")
     return 0

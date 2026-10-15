@@ -1,0 +1,28 @@
+{
+  "phase": "PACKAGE_REVIEW",
+  "controller_verified_native_stop": true,
+  "time_utc": "2026-10-09T16:09:08.512368+00:00",
+  "writers": [
+    {
+      "task": "/root/a31_shared_correction_sol_r4",
+      "native_status": "COMPLETED_STOPPED",
+      "owned_resources_remaining": 0
+    },
+    {
+      "task": "/root/a31_service_sol_r1",
+      "native_status": "COMPLETED_STOPPED",
+      "owned_resources_remaining": 0
+    },
+    {
+      "task": "/root/a31_delivery_sol_r1",
+      "native_status": "COMPLETED_STOPPED",
+      "owned_resources_remaining": 0
+    },
+    {
+      "task": "/root/a32_a33_dependency_prepare_sol_r1",
+      "native_status": "COMPLETED_STOPPED",
+      "owned_resources_remaining": 0
+    }
+  ],
+  "readback": "artifacts/workflow/A3.1-audit-20261008/controller/s1-all-native-stop-readback-r1.json"
+}

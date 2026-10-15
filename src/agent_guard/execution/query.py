@@ -6,7 +6,13 @@ import re
 
 import psycopg
 
-from agent_guard.authorization.evidence_store import EvidenceError, EvidenceStore
+from agent_guard.audit import journal
+from agent_guard.audit.contracts import AcceptDescriptor
+from agent_guard.authorization.evidence_store import (
+    EvidenceError,
+    EvidenceStore,
+    context_bytes,
+)
 from agent_guard.contracts.encoding import (
     EncodingError,
     canonical_json_bytes,
@@ -25,6 +31,7 @@ from agent_guard.contracts.ledger import (
     LedgerError,
 )
 from agent_guard.contracts.verification import VerifiedQueryBundle
+from agent_guard.crypto.sm import sm3_b64url
 from agent_guard.execution import store
 from agent_guard.execution.original_material import validate_original_tx
 from agent_guard.execution.receipt_projection import project_receipt
@@ -230,6 +237,44 @@ class AuthorizedQuery:
             raise EvidenceError("unusable persisted response") from exc
         if len(response_bytes) > MAX_GATEWAY_RESPONSE_BYTES:
             raise EvidenceError("persisted result exceeds public response limit")
+        stream = journal.require_stream_tx(conn, q.tenant_id, q.task_id)
+        if stream is None:
+            raise journal.JournalError("signed query requires existing maintained audit stream")
+        staged = conn.execute(
+            "SELECT body_sm3 FROM ag_verified_evidence WHERE evidence_ref=%s",
+            (q.evidence_ref,),
+        ).fetchone()
+        descriptor = AcceptDescriptor(
+            (journal.gateway_origin(), q.tenant_id, q.task_id),
+            q.root_id,
+            ids,
+            q.evidence_ref,
+            context_bytes(q),
+            bundle.source.digest,
+            bundle.source.material(),
+            q.token_digest,
+            q.proof_digest,
+            staged[0],
+        )
+        facts = journal.request_facts(descriptor)
+        facts.update(
+            first_evidence_ref=op.evidence_ref,
+            response_digest=sm3_b64url(response_bytes),
+            status=op.status,
+            receipt_status=response["receipt_status"],
+            result_digest=sm3_b64url(projection.result_bytes) if result is not None else None,
+            receipt_jws_digest=sm3_b64url(response["receipt_jws"].encode("ascii"))
+            if response["receipt_jws"]
+            else None,
+        )
+        journal.append_tx(
+            conn,
+            stream,
+            kind="QUERY",
+            operation_id=op.operation_id,
+            evidence_ref=q.evidence_ref,
+            facts_bytes=canonical_json_bytes(facts),
+        )
         # No SQL or external dependency work follows the final clock. Commit
         # constraints are made immediate before it, including proof-link FKs.
         conn.execute("SET CONSTRAINTS ALL IMMEDIATE")

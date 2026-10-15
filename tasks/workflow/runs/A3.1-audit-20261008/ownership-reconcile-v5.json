@@ -1,0 +1,20 @@
+{
+  "stage": "A3.1",
+  "status": "PROPOSED_NOT_DISPATCHED_REQUIRES_ALL_S1_STOP_FREEZE_FRESH_PACKAGE_REVIEW",
+  "inherits": "ownership-v4.json",
+  "supplement_sole_writer": "a31-reconcile-correction",
+  "exact_write_paths": [
+    "src/agent_guard/audit/client.py",
+    "src/agent_guard/audit/delivery.py",
+    "src/agent_guard/audit/delivery_cli.py",
+    "tests/fixtures/a31_delivery.py",
+    "tests/integration/test_audit_delivery.py",
+    "tests/unit/test_audit_client.py"
+  ],
+  "shared32": "READ_ONLY_FROZEN",
+  "service12": "READ_ONLY_AFTER_S1_STOP",
+  "SQL_original14_new007_audit001_locks_pyproject": "READ_ONLY_UNCHANGED",
+  "transfer_gate": "all existing S0/S1 native STOP/resources0 and root readback; fresh package review before dispatch; no concurrent writer on transferred6",
+  "S2_ownership": "inherit original sole integrator17, explicit prior paths transfer only when needed after correctionSTOP",
+  "no_directory_allowlist": true
+}

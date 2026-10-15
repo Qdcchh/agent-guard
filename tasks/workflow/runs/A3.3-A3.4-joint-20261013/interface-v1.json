@@ -1,0 +1,30 @@
+{
+  "status": "PROPOSED_ACTUAL_API_READ_NOT_RUNTIME_ACCEPTED",
+  "actual_read_bindings": [
+    {
+      "path": "src/agent_guard/authorization/verifier.py",
+      "bytes": 18837,
+      "sha256": "f676108f785dd6e2c8938a3f75dce1fd07653caf19d6b1719278f76117d0f1a7",
+      "read_kind": "complete UTF8 read; JSON parsed where structured; historical/planning not current PASS"
+    },
+    {
+      "path": "src/agent_guard/authorization/permission_snapshot.py",
+      "bytes": 8063,
+      "sha256": "6e0bfb89d0cc460c3d12c1d253a063623d9d843f5acf098873cd2f8443aea3de",
+      "read_kind": "complete UTF8 read; JSON parsed where structured; historical/planning not current PASS"
+    }
+  ],
+  "symbol_correction": "PublicInvocationVerifier is proposed caller alias of actual public InvocationVerifier; repository has no class named PublicInvocationVerifier. Import InvocationVerifier as PublicInvocationVerifier in research only, no production rename.",
+  "noAtomic_auth": "PublicInvocationVerifier(... stage_evidence=own research callback).verify_static(token,proof,endpoint=...,method=...,body=bytes,now=int); PermissionSnapshotProvider.load(token,grant_id=...,now=...) independently closes its connection/TX before research budget TX; revalidate source/current authority in same research accept TX.",
+  "research_api": [
+    "authenticate(raw_request,fixed_trust)->TypedPoPContext|BearerContext|ACLContext",
+    "accept(context,trusted_quote)->NEW|EXISTING",
+    "claim(operation_id,owner)->fenced lease",
+    "run/reconcile(operation_id,owner)->persisted state",
+    "finalize(conn,lease,outcome)",
+    "snapshot_oracle(run,mode)->RR READ ONLY facts"
+  ],
+  "typed_security": "PoP genuine JWS/SM2/SM3 and actual proof fields; Bearer proof=None possession=NOT_VERIFIED and any supplied proof ignored; ACL real password hash role/policy; no fake VerifiedInvocationBundle/private verifier reuse.",
+  "normal_bridge": "operator normal --config /owned/run/run.json --out PATH [--capacity-items 256]; trusted host supervisor relay public IDs/metadata only. authorize SyntheticLogin password private operator->planner stdin/pipe; no argv/public/log/bridge tokens; tokens only role/private validated handoff. No global docker socket/setuid/foreign secret.",
+  "freeze_dependencies": "actual S1 APIs/STOP sealed by root, then A33 normal CLI/runtime/wheel freeze; A34 consumes frozen normal interfaces without requiring separate A33 ACCEPTED. All current-state/lock/TTL/idem/recovery invariants preserved."
+}

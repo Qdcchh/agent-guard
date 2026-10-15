@@ -1,0 +1,104 @@
+{
+  "status": "FORMAL_JOINT_V1_PENDING_REVIEW_NO_NEW_WRITE_AUTHORITY",
+  "phases": [
+    {
+      "owner": "a33_s2_sole_integrator",
+      "paths": [
+        "deploy/demo/compose.yaml",
+        "pyproject.toml",
+        "docs/deployment-demo.md",
+        "docs/technical-report.md",
+        "tests/test_a33_documents.py",
+        "README.md",
+        "HANDOFF.md",
+        "tasks/A2-report.md",
+        "tasks/A3-plan.md",
+        "docs/oauth-oidc-sm2-mvp.md",
+        "docs/security-model.md",
+        "docs/acceptance.md",
+        "deploy/demo/Dockerfile"
+      ],
+      "explicit_functional_handoff": [
+        "src/agent_guard/demo/__main__.py"
+      ],
+      "minimal_style_only_paths": [
+        "src/agent_guard/audit/config.py",
+        "src/agent_guard/audit/server.py",
+        "src/agent_guard/demo/__main__.py",
+        "src/agent_guard/demo/client.py",
+        "src/agent_guard/demo/did_bootstrap.py",
+        "src/agent_guard/demo/handoff.py",
+        "src/agent_guard/demo/init.py",
+        "src/agent_guard/demo/worker.py",
+        "tests/integration/test_audit_tls.py"
+      ],
+      "style_diagnostics": 14,
+      "new_normal_assembly_paths_proposed": [
+        "deploy/demo/supervisor.py"
+      ],
+      "new_path_purpose": "trusted host owner finite supervisor/role relay; existing __main__ owns CLI integration; no new shared security API",
+      "new_normal_assembly_paths": [
+        "deploy/demo/supervisor.py"
+      ]
+    },
+    {
+      "owner": "a34_s0_serial",
+      "paths": [
+        "experiments/agent_guard_bench/__init__.py",
+        "experiments/agent_guard_bench/workload.py",
+        "experiments/agent_guard_bench/oracle.py",
+        "experiments/agent_guard_bench/research_contracts.py",
+        "experiments/agent_guard_bench/research_store.py",
+        "experiments/agent_guard_bench/research_service.py",
+        "experiments/agent_guard_bench/research_worker.py",
+        "experiments/agent_guard_bench/research_evidence.py",
+        "experiments/research-schema.sql",
+        "experiments/workload-v1.json",
+        "experiments/baseline-capabilities.json",
+        "tests/fixtures/a34_experiment.py",
+        "tests/unit/test_a34_workload.py"
+      ]
+    },
+    {
+      "owner": "a34_s1_baseline",
+      "paths": [
+        "experiments/agent_guard_bench/static_acl.py",
+        "experiments/agent_guard_bench/signed_no_atomic.py",
+        "experiments/agent_guard_bench/sm2_bearer.py",
+        "tests/integration/test_a34_baselines.py"
+      ]
+    },
+    {
+      "owner": "a34_s1_measurement",
+      "paths": [
+        "experiments/agent_guard_bench/runner.py",
+        "experiments/agent_guard_bench/statistics.py",
+        "experiments/agent_guard_bench/microbench.py",
+        "tests/unit/test_a34_statistics.py",
+        "tests/unit/test_a34_microbench.py",
+        "tests/integration/test_a34_experiments.py"
+      ],
+      "dependency": "shared STOP then baseline STOP before official experiment; measurement unit authoring can consume only frozen shared"
+    },
+    {
+      "owner": "joint_final_sole_integrator",
+      "paths": [
+        "docs/experiment-report.md",
+        "docs/technical-report.md",
+        "experiments/README.md",
+        "tests/test_a34_documents.py",
+        "README.md",
+        "HANDOFF.md",
+        "tasks/A2-report.md",
+        "tasks/A3-plan.md",
+        "docs/oauth-oidc-sm2-mvp.md",
+        "docs/security-model.md",
+        "docs/acceptance.md"
+      ],
+      "handoff": "A33 S2 and all A34 writers STOP+manifest/resource0; overlapping docs explicit sole transfer"
+    }
+  ],
+  "production_research_rule": "all production source/SQL read-only for A34; no migrations/skip/permission weakening/cap changes; real research FOR SHARE minimum nonbudget-column UPDATE or trusted study authority only with own namespace, no production budget writes",
+  "resources": "per writer distinct UUID project/PG16/schema/network/private/venv/evidence; no shared peer half-complete inputs",
+  "controller_only": "formal package/state/freeze/issues/acceptance; planner edits only this ignored proposal directory"
+}

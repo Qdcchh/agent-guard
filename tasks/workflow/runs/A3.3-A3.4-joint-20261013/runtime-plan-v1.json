@@ -1,0 +1,547 @@
+{
+  "status": "FORMAL_JOINT_V1_PLANNED_NOT_RUN",
+  "requested_worker": "gpt-6.1-sol/low",
+  "fresh_reviewer": "gpt-6.1-sol/high",
+  "effective_metadata": "UNKNOWN",
+  "authorization_override": "joint user authorization supersedes separate A33 ACCEPTED before A34, not shared STOP/freeze/package review/full verification",
+  "A33_original_runtime": {
+    "status": "FORMAL_V3_RUNTIME_PLAN_NOT_RUN",
+    "upstream_gate": {
+      "A32_acceptance_path": "tasks/workflow/runs/A3.2-evidence-20261011/acceptance.json",
+      "A32_acceptance_SHA256": "8cdc3a48a4932b2b156bb89af8b1418d910b07fea213ffa0eefbca8445119329",
+      "A32_frozen_candidate_SHA256": "e680193204ef1c25eb656169a0470eb1672422d7549016454f50f7118633629c",
+      "A32_report_SHA256": "bbfdff45783277c8fb6bcd390c0e10752e309c6b6052101a8487a29590cd6d2b",
+      "A32_manifest_SHA256": "f75df2be2e6c66357ce8eeffda422399390f65549ecf1bf638d014d7fb3c9abf",
+      "A32_STOP_SHA256": "36b5a38d163253a0abb2ac41e92068dfb3b34364027c05e7e75edfbbf6db8f69",
+      "branch": "handoff/a23-local-20261005",
+      "HEAD_baseline_only": "2a8cc7da4867ad1876350855c0ed5569c5ce6472",
+      "dirty_accepted_source": "full candidate SHA plus current source/SQL/lock bindings; HEAD alone is not implementation",
+      "effective_metadata": "UNKNOWN"
+    },
+    "stages": [
+      "fresh v3 package review -> sole S0 minimum registration remediation plus outstanding local selfcheck -> actual STOP/API/resource freeze",
+      "S1 scenarios and role/deployment test authors disjoint; separate resources; all STOP",
+      "S2 sole source+CLI+compose+docs integration; final freeze; complete source/wheel selfcheck",
+      "fresh independent implementation reviewer complete own source/wheel runs; root acceptance; exact owner cleanup"
+    ],
+    "roles": {
+      "operator": "short-lived owner initialization/provision/maintenance/approved trust; no artificial root/child",
+      "AS": "AS signer+all necessary client authentication hashes/secrets+authority DSN; never holder signing keys",
+      "GW": "public trust+authority DSN+current factory DSN/DS service credential; honest trusted worker boundary",
+      "planner": "own SM2/client Basic credential+public CA/trust only; distinct non-root process",
+      "selector": "own SM2/client Basic credential+public CA/trust only; distinct non-root process",
+      "executor": "own SM2/client Basic credential+public CA/trust only; distinct non-root process",
+      "execution_worker": "authority and DS credentials; bounded fair persistent intent scan; existing lease/fence run/reconcile semantics",
+      "publisher": "receipt private signer+authority role; no holder key",
+      "audit": "audit signer+independent audit PG+scoped writer/reader registration",
+      "export": "distinct audit-role HTTPS credential and SELECT-only authority connection; private bounded spool",
+      "offline": "bundle/public trust/external pin/report only; no network/DB/private files"
+    },
+    "network": {
+      "PG_domains": [
+        "authority AS/GW one shared transaction domain",
+        "DS independent PG16 instance/connection/TX",
+        "audit separate PG16 TLS verify-full instance/store/key"
+      ],
+      "holders": "fixed AS/GW/DID/approved handoff only. No database network attached. Internal role executes file-read and connect negative checks with exit+UID/PID/mount manifest. Shared host admin trusted.",
+      "TLS": "private run CA, exact SAN auth.agent-guard.test/gateway.agent-guard.test/identity.agent-guard.test/audit fixed configured origin; audit PG SAN exact sslmode verify-full. Hostname DNS through own container network; DID fixed DNS:443. WrongCA/SAN/redirect controls. RSA TLS + SM2 application explicitly not full GM TLS. No global hosts/trust modifications."
+    },
+    "bootstrap_sequence": [
+      "create exclusive owner private directories 0700 descriptor-bound; keys/secrets 0600/0400; public roles separately immutable",
+      "operator HTTPS fetch fixed DID documents; existing resolver purposes; approvals/newkid proof; approve/freeze public manifests; initialize three PG migrations/roles/catalog/users/principals/TaskPolicy, no create_task_root/child",
+      "AS verified HTTPS browser login/CSRF/state/nonce/PKCE root; planner->selector->executor two true exchanges/handoff; authority immutable first path exists",
+      "stop/drain all writers for journal bootstrap, obtain exact RegistrationDescriptor and register stream/key/scoped principals at audit through local operator; record maintenance boundary honestly; restart services/roles with frozen trust",
+      "four tools verified HTTPS + fresh proofs/current authorized query, persistent worker and receipt publisher; record READY only within live authorized window",
+      "bounded delivery/reconciliation to real independent audit; fixed reader latest/history public observation; drain/stop export assembly, capture and freeze scope/pin/history/public trust; restart current one-scope factory with SELECT-only export credential/TLS",
+      "export complete small-task profile; four-argument offline verifier; externally delivered trust+latest; after every synthetic token expiry/revoke public artifacts secret scan and publishable local synthetic materials",
+      "stop/reap every owned PID/container/network/volume/fullID; before/after unrelated resource control readback",
+      "Remote audit stream/key/all principals commit succeeds -> independent operator authority confirm_registered_tx with exact original committed descriptor -> only then restore writers; failure remains REGISTRATION_REQUIRED; retry same descriptor after real process failure"
+    ],
+    "checks": {
+      "modes": [
+        "source noneditable installed outside repository",
+        "wheel noneditable installed outside repository"
+      ],
+      "environment": "Python3.11 exact locks/PEP517/wheel SHA/pip check, clean PYTHONPATH, no tests import, child module path/hash, all SQL resources/checksums; fresh actual architecture observations",
+      "suite": "full inherited A1 separately/A2-P01..P21+B67/A22/A23/A31/A32 all IDs and old defect/probe assertions+new14/71; ordinary+integration+quality+docs+README exact commands; preserve55 fresh A32 authority regression nodes explicitly",
+      "race": "each compatible security race/crash tuple ten valid rounds per mode; independent PG backend connections+barriers/event; actual old/new PID; all future SQLSTATE/errors/clock traces retained",
+      "oracle": "preapproved independent authority and RR READ ONLY all ancestors four counters/immutable intent/first bytes/events+deltas/proofs/lease/outbox/DS effects/result/journal/checkpoint; rejection zero acceptance/effect/reserve, staging separately; UNKNOWN retains; retry/query no replacement or duplicate effect",
+      "faults": "reserve-before-worker; DS-commit crash; terminal node/event/outbox rollback; late success after none; multiple recoverers/fence/expiry/revoke; immutable quote; publisher pre-sign/post-sign-before-save/READY response loss; audit persist then loss/restart; offline all mutations and honest unanchored controls",
+      "maintenance": "new AS/GW/audit kid historical JWS+READY bytes unchanged; holder newkid approved proof oldkey disabled fresh external denied, accepted internal recovery remains; upgrade old001/003 nonzero/revoked/seven evidence tables exact columns; backup as-of full domains/public latest not rolled back; GAP honest",
+      "capacity": "reachable 256SKU full true chain/body/result plus layer-specific rejection. Existing 256MiB small-task profile full bounded spool. A34 per-task/frozen-partition full export + complete experiment manifest/oracle is allowed by E4; pagination only conditional on an actually required single scope exceeding old caps and no allowed complete partition. Do not add functionality or review round when original full delivery is satisfied."
+    },
+    "limits_provisional": {
+      "connect_s": 5,
+      "lock_s": 3,
+      "statement_s": 30,
+      "barrier_s": 15,
+      "http_connect_s": 5,
+      "http_read_s": [
+        15,
+        30
+      ],
+      "child_stage_s": 120,
+      "child_total_s": 180,
+      "reap_s": 10,
+      "offline_s": 300,
+      "materialization_s": 600,
+      "capacity_preflight_s": 1800,
+      "intentional_token_expiry_child_s": 360,
+      "intentional_proof_expiry_child_s": 90
+    },
+    "limit_rule": "final package rebind exact finite group wall/time schedule to actual A32 accepted API. Intentional TTL waits explicit finite >expiry <transport/SQL timeout; never renew proof/token/lease to bypass. Full runs no hidden truncation. quota changes formal amendment.",
+    "resource_ownership": "UUID Compose project labels+config/full container/network/volume IDs; each writer/reviewer separate three PG16; only exclusive TEST config, no DSN fallback; no prune/shared down; zero leftovers native receipts.",
+    "requested_worker": "gpt-6.1-sol/low",
+    "fresh_reviewer": "gpt-6.1-sol/high",
+    "effective_metadata": "UNKNOWN",
+    "inherited_execution": {
+      "actual_registry": "node-bindings-v2.json",
+      "original_complete20_eachmode": "All current inherited groups freshly run for S2 complete selfcheck and independently by new reviewer; pinned historical probe inputs may be copied/owner-remapped in owned runtime with exact AST/source evidence, no old PASS reuse",
+      "deadlines_seconds": {
+        "PG5002": 10800,
+        "each_strict500": 3600,
+        "ordinary": 1800,
+        "remaining_original_groups": 3600,
+        "A33_specific_complete_groups": 14400
+      },
+      "strict_partition": "original disjoint two500 with same1000 union, real waiter/backend/clock evidence and ten rounds unchanged",
+      "A33_collection": "17 planned node roots; actual parameters and assertion-to-node inventory frozen after writer STOP before full runs; no invented collected IDs"
+    },
+    "deployment_image": {
+      "delivery_files": [
+        "deploy/demo/compose.yaml",
+        "deploy/demo/Dockerfile"
+      ],
+      "clean_source_wheel": "build from pinned Python3.11 compatible platform image and exact existing requirements locks, fresh noneditable package; no dependence on local A32 images/venvs/ignored artifacts for normal demo",
+      "model_API": "none",
+      "dependencies": "no new Python runtime dependency, production SQL migration or public protocol; base OS TLS/build utilities document actual versions/provenance",
+      "runtime_roles": "distinct nonroot UID/minimal file/network mounts; pair IPC GIDs/modes and SO_PEERCRED per interface-v1"
+    },
+    "audit_listener_adaptation": {
+      "issue": "A33-PR-R1-001",
+      "status": "PROPOSED_NOT_IMPLEMENTED_NOT_RUN",
+      "APIs": [
+        "AuditConfig.load(path: Path, *, approved_listener_host: str | None = None)",
+        "create_server(config, *, store=None, approved_listener_host: str | None = None)"
+      ],
+      "default": "UNCHANGED: load loopback only; server127.0.0.1 only; existing audit CLI uses default",
+      "opt_in": "exact canonical RFC1918 IPv4 assigned to own audit role in immutable operator-approved resource manifest; config.host exact equals supplied address, checked independently by both APIs",
+      "reject": [
+        "0.0.0.0",
+        "unspecified",
+        "public/global",
+        "multicast",
+        "link-local",
+        "unapproved address",
+        "wrong role/run address",
+        "hostnames",
+        "noncanonical",
+        "bool/non-string"
+      ],
+      "caller": "demo.__main__ trusted validated run/role mapping supplies same address to load/create_server; not HTTP/DID/env/holder input",
+      "security": "bind permission only, all TLS/authorization/schema/private/PG checks unchanged",
+      "tests": "all old test_audit_tls assertions retained plus S0 explicit opt-in negatives and S1 true separate-container DNS/TLS/role/scope/framing zero-write probes"
+    },
+    "local_registration_confirmation": {
+      "issue": "A33-S0-001",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "module": "src/agent_guard/audit/delivery.py",
+      "signature": "confirm_registered_tx(conn, *, descriptor: RegistrationDescriptor) -> bool",
+      "caller": "trusted demo.provision.register_bootstrap; independent remote registration transaction commits first, then operator own authority transaction",
+      "trust_boundary": "local maintenance confirmation only; not an audit-signed receipt or authorization; no public HTTP/ENV/holder action",
+      "validation": [
+        "exact RegistrationDescriptor/JournalScope and strict original integer/digest/boundary bounds",
+        "full descriptor equals existing local committed bootstrap, every scope/epoch/genesis/bootstrap/index/count/bytes field",
+        "lock only exact delivery cursor; reject same-transaction/uncommitted bootstrap",
+        "REGISTRATION_REQUIRED: initial ack0/genesis/no checkpoint/no pending; update registration_state only",
+        "REGISTERED exact-descriptor repeat: return false without changing ack/head/pending even after later ACK",
+        "missing/mismatched/invalid cursor/type errors: zero writes; no implicit repair",
+        "remote success/local failure retry original descriptor; no new bootstrap overwrite"
+      ],
+      "return": "true for first transition; false already registered",
+      "transaction": "caller owned; no internal connect/network/commit; preserve all existing delivery and journal function ASTs",
+      "no_changes": [
+        "schema",
+        "migration",
+        "lockfiles",
+        "budget/revoke",
+        "checkpoint verification",
+        "normal audit CLI default",
+        "old assertions"
+      ]
+    },
+    "deployment_prerequisites": {
+      "PostgreSQL_initdb_args": "--locale=C --encoding=UTF8",
+      "publisher_keyshare_minimum": "GRANT UPDATE(evidence_ref) ON ag_verified_evidence TO demo_publisher; table UPDATE=false, all other columns UPDATE=false",
+      "normal_role_private_gid": "UID exactly",
+      "audit_listener": "explicit canonical owned RFC1918 IPv4 matched independently by load/create_server",
+      "gateway_export_account": "demo_gateway_export separate SELECT-only purpose account",
+      "role_UIDs": {
+        "as": 21000,
+        "audit": 21001,
+        "did": 21002,
+        "executor": 21003,
+        "export": 21004,
+        "gateway": 21005,
+        "offline": 21006,
+        "operator": 21007,
+        "planner": 21008,
+        "publisher": 21009,
+        "selector": 21010,
+        "worker": 21011
+      },
+      "pair_GIDs": {
+        "planner-selector": 22000,
+        "selector-executor": 22001
+      }
+    },
+    "new_registration_probes": [
+      [
+        "test_registered_confirmation_real_remote_and_delivery",
+        [
+          "A33-REG-01",
+          "A33-REG-02"
+        ],
+        "true remote committed descriptor/key/principals -> local exact confirmation -> real HTTPS delivery ACK; exact repeat before/after ACK leaves cursor unchanged"
+      ],
+      [
+        "test_registered_confirmation_rejections_zero_write",
+        [
+          "A33-REG-03",
+          "A33-REG-04"
+        ],
+        "wrong scope/epoch/genesis/bootstrap/index/count/bytes/type/bool/missing/uncommitted bootstrap/illegal cursor; exact DB zero-write projection; local confirmation rollback does not alter independent remote rows"
+      ],
+      [
+        "test_registered_confirmation_crash_recovery",
+        [
+          "A33-REG-05",
+          "A33-REG-06"
+        ],
+        "remote committed/local confirmation not committed: actual killed operator PID/new process original-descriptor retry, ten valid rounds per source/wheel; remote conflicting/failing register leaves local required, no overwrite"
+      ]
+    ]
+  },
+  "A34_original_runtime": {
+    "status": "IGNORED_DRAFT_ONLY_NOT_PACKAGE_READY",
+    "business": "NOT_RUN",
+    "interfaces": "NOT_FROZEN",
+    "effective_metadata": "UNKNOWN",
+    "requested_worker": "gpt-6.1-sol/low",
+    "official_schedule_verbatim": {
+      "status": "CONCRETE_RECOMMENDATION_TO_FREEZE_BEFORE_PACKAGE_REVIEW_NOT_AUTHORIZATION",
+      "official_install_variant": "wheel_noneditable; all4mode source functional+wheel functional separately; do not pool source timings",
+      "seed_order": [
+        2026100501,
+        2026100502
+      ],
+      "mode_order_rep1": [
+        "staticACL",
+        "realSM2delegation_noAtomic",
+        "complete",
+        "realSM2Bearer"
+      ],
+      "mode_order_rep2": [
+        "realSM2Bearer",
+        "complete",
+        "realSM2delegation_noAtomic",
+        "staticACL"
+      ],
+      "count_each": {
+        "legal": 3500,
+        "attack": 1000,
+        "retry": 500,
+        "warmup": 250
+      },
+      "tools_in_task_order": [
+        "procurement.request.read",
+        "procurement.document.read",
+        "procurement.order.create",
+        "notification.template.send"
+      ],
+      "task_ids": "T0000..T0874; client_slot=task_index modulo50; generation/matching seed fixed, unique mode/run namespace",
+      "legal_amount_calls": "root100000/mid80000/leaf70000; calls12/10/8; order70000 fixed approved SKU quantity1; reads+notify zeroamount each calls1; never additional gateway setup invokes",
+      "attack_classes_exact": [
+        "盗token",
+        "错holder父交换",
+        "重放",
+        "body替换",
+        "域错配",
+        "资源扩权",
+        "strictSKU",
+        "委托扩权",
+        "失效状态",
+        "预算次数竞争"
+      ],
+      "attack_assignment": "class_index0..9 and case_index0..99; each case emits exactly1 measured invoke. Classes0,1,3,4,5,6,7,8 use dedicated A<class>-<case> tasks independent of legal. Replay class2 case c reuses the ORIGINAL measured legal request.read from T(0500+c), index4*(500+c), exact original raw proof/token/body/key/holder/grant; its100 additional measured attack sends are distinct from retry sameproof100 targets T0250..0349. No dedicated fresh A2 task or uncounted priming invoke for replay. Budget/call-competition class9 has exactly100 measured rows grouped50 pairs: case2*p and2*p+1 share the SAME task/root A9-P<p>, root100000, two DIFFERENT mids each80000 and each leaf70000, distinct business keys, each requests70000 from same sharedroot; never differentroots. These50 roots are independent of each other and of3500legal targets; these100 rows are not100 independent task/root scenarios. All AS setup/rejections separately counted; no validchild→invalidinvoke records accurate AS-layer/no-valid-child. Independent pair oracle separates capacity from authorization; no uncounted prep invokes.",
+      "retry_targets": {
+        "fresh250": "legal T0000..T0249 procurement.request.read index4*t, exact original key/body/holder/grant with fresh signed jti",
+        "sameproof100": "T0250..T0349 procurement.request.read index4*t raw original proof+body byte-identical; immediately after original completes/fails no success-based selection",
+        "terminal100": "T0350..T0449 procurement.order.create index4*t+2 exact original intent/key after independent terminal witness; no target replacement",
+        "loss50": "T0450..T0499 procurement.order.create index4*t+2; controlled real transport response loss after genuine response write/commit witness; original legal row retained networkfailure/status unknown; exact original key fresh jti retry"
+      },
+      "dependency_dag": [
+        "AS login/root/two exchanges per task→procurement.request.read→procurement.document.read→procurement.order.create→notification.template.send(original opid)",
+        "fresh/sameproof retry follows its target before next tool; sameproof signed_at→resend desired≤5s and hard≤60s",
+        "class2 replay100 follows fixed legal T0500..T0599 request.read in same task slot before next tool; original bytes and consumption oracle, no dedicated one-send task/no uncounted priming",
+        "terminal/loss retry target→independent terminal/loss witness bounded wait≤120s→send JIT freshproof",
+        "no batch-alllegal-then500 retry; task-local schedule so oldproof and token300 never secretly renewed"
+      ],
+      "send_clock": "task AS completed real time starts300s max token window; proofs created immediately at actual send exp<=iat+60; no altered clock; signed token immutable cannot renew samegrant; hard target scheduling deadline240s after root issue",
+      "failure_deadline": "HTTP connect5s/read30s; dependency120s; on unmet dependency at fixed deadline emit same planned attempt with available original material and record dependency_unmet/layer/expired, never count synthetic row as actual invoke; if cannot actually send report missing actual attempt INCOMPLETE; no fresh target or uncounted preparation; all failures/retries kept",
+      "inflight": "50 real slots; first legal request.read across50 freshly initialized tasks released by barrier; log monotonic send/end and active counter; require observed≥50 actual pending requests, configuration alone insufficient; server32 reported; subsequent50slot task-local waves no artificial sleep",
+      "drain": "600s monotonic from last measured send; poll separately counted; preserve pending/gap and late follow-on events; do not prematurely claim COMPLETE",
+      "quota_recommendation": {
+        "PG_each_memory_bytes": 536870912,
+        "PG_domains": 3,
+        "server_workers": 32,
+        "internal_workers": 4,
+        "PG_max_connections": 100,
+        "record": "CPU limits,image digest,architecture/translation,exactPGsettings,TLS reuse,worker leases/checkpoint batch match allmodes; recommended numbers require actual accepted capacity/preflight binding",
+        "Docker_limit_preflight_requirement": "Before future formal official run read actual Docker server memory limit in owned authorized preflight, record exact command/output/time/SHA plus matching resource quotas; replace UNKNOWN with that real observation. Do not treat previous8321499136 guess or historical8318844928 as current observed ceiling or fixed hard gate."
+      },
+      "pilot": "one functional/resource/count pilot separate label and seed; cannot change official seed/body/proportions/targets/order based performance; changed quota requires preofficial formal amendment freeze",
+      "tool_version": "1",
+      "protocol_tool_contract": {
+        "canonical_http_tool_ids": [
+          "procurement.request.read",
+          "procurement.document.read",
+          "procurement.order.create",
+          "notification.template.send"
+        ],
+        "tool_version": "1",
+        "internal_short_alias_map": {
+          "request.read": "procurement.request.read",
+          "document.read": "procurement.document.read",
+          "order.create": "procurement.order.create",
+          "template.send": "notification.template.send"
+        },
+        "rule": "Short aliases preserved in original source texts and some internal case labels only; resolve through this exact map before building canonical HTTP body. Never send request.read/document.read/order.create/template.send as tool_id. All invoke/query binding uses exact canonical tool_id and tool_version string 1, not integer 1."
+      },
+      "budget_attack_pair_assignment": {
+        "class_index": 9,
+        "case_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          77,
+          78,
+          79,
+          80,
+          81,
+          82,
+          83,
+          84,
+          85,
+          86,
+          87,
+          88,
+          89,
+          90,
+          91,
+          92,
+          93,
+          94,
+          95,
+          96,
+          97,
+          98,
+          99
+        ],
+        "pair_count": 50,
+        "pair_function": "pair_index=case_index//2; side=case_index%2",
+        "same_scope": "both sides tenant/task/root A9-P<pair_index> identical",
+        "branches": "two distinct AS-signed root→mid(side)→leaf(side) paths; mid limits80000 each, leaf70000 each; root100000 shared",
+        "amount_per_side": 70000,
+        "rows_per_pair": 2,
+        "oracle": "complete≤1 accepted/effect; noAtomic controlled safety race independently10round and real140000 root high-water/effect; official pair outcomes retained without forced barrier"
+      },
+      "replay_attack_targets": {
+        "class_index": 2,
+        "case_count": 100,
+        "target_function": "case c=0..99 -> legal T0500..T0599, request.read index4*(500+c)",
+        "source": "already-counted3500 legal row; no extra invoke and no target selection after outcome",
+        "bytes": "exact original raw token/proof/body, same key/intent/holder/grant; no resign or fresh jti",
+        "schedule": "in target task slot immediately after original completes/fails and before next tool; desired signed_at-to-resend<=5s, hard original proof expiry<=60s and actual root300s preserved",
+        "oracle": "PoP modes separately prove original proof consumption from committed proof/link/operation facts and same bytes on wire; target proof unconsumed/unknown or expiry/earlier-layer rejection cannot claim replay predicate coverage. Preserve actual row/failure/layer, no replacement. If genuine replay-class prerequisite coverage is incomplete, report INCOMPLETE and retain allattempts; controlled fresh-task two-request probe outside official counts independently proves replay rejection10round/source+wheel.",
+        "modes_without_pop": "staticACL/Bearer same credential/token/body duplicate is measured but proof-replay=N/A, no fake proof; actual idem and once-effect separately checked",
+        "counts": "3500 legal+1000 attack(including these100)+500retry=5000; original legal target counted once, each duplicate attack is its own actual send row"
+      }
+    },
+    "statistics_contract_verbatim": {
+      "rows": "every actual invoke1 sanitizedJSONL mode/seed/client/task/tool/class/keyhash/bodybytes/monotonic sendend/status/code/opid; missing/duplicates fail, all failures/network/SQL exceptions retained",
+      "nearest_rank": "sort latency ascending n actual rows each all/failed/legal/attack/retry/tool/class; p50/p95/p99 index ceil(p*n)-1; no exclusion expired/reject/timeout; timeout measured at actual client end explicitly",
+      "throughput": "attempt/authpass/newaccept denominators send-window; terminal/READY/anchor denominators own completion/drain observation window; report counts/time/gaps each separately",
+      "rep": "each2 originals plus mean/range smallsample limit; no filtering/cherry picking; all rerun lineage old failures retained",
+      "instrument": "independent trace SQL queries/connections/lock bounds and DBclock, actualCPU/RSS/WAL/storage; overhead explicit; TLS emptyRTT not subtracted as network component; modelN/A"
+    },
+    "research_contract_verbatim": {
+      "scope": "three research modes separate package/network/DB/tables not production wheel/defaultENV",
+      "noAtomic": "real AS signed root→two distinct mid80000 leaf70000 paths; principals→task→grants authority FOR SHARE (NOT KEY SHARE), retain all relevant state through final DBclock+commit; only exact perbusinesskey mutex; no common taskbudget/rootcounter mutex. RC unlocked allancestor read/check→actual readbarrier safety test→ordinary counters=counters+delta increments without lostupdate or budget<=CHECK. No production guard disabled; independent research accept/store/terminal/recovery/evidence; no production counter writer. Barrier/sleep absent ordinaryperf. 10round noAtomic actual root highwater/DS140000 vs complete≤1 acceptance/effect≤70000; same mid confound forbidden",
+      "bearer": "real AS login/exchange PoP remains; signed currentstate/source/scope/quote with atomic allancestor research budget/idem; only invoke presenter possession removed; typed proof=None holder_possession=NOT_VERIFIED no fake VerifiedBundle/serverproof; exact sameproof request classified PoP NOT_APPLICABLE. Stolen valid token actual authorized-resource effect with no holder key vs full zeroeffect; mutated token/expanded scope rejected",
+      "staticACL": "distinctrole CSPRNG creds real tenant/tool/resource/quantity/delivery policy; independent positive/negative controls",
+      "revocation": "actual commit ordering via independent connections and barriers; bracket commit by monotonic precommit+successful transaction return+postcommit visibility, never effective_at commit time",
+      "capability": "receipt/journal/audit absence N/A costs kept visible; full actual costs retained; no pure singlevariable or industry superiority claim"
+    },
+    "official": {
+      "mode_count": 4,
+      "seeds": [
+        2026100501,
+        2026100502
+      ],
+      "attempts_each": 5000,
+      "total": 40000,
+      "complete": 10000,
+      "clients": 50,
+      "warmup_each_repeat": 250,
+      "warmup_total": 2000,
+      "installation": "wheel noneditable",
+      "security_functional_installations": [
+        "source noneditable outside cwd",
+        "wheel noneditable outside cwd"
+      ],
+      "safety_race_fault_rounds_per_applicable_tuple": 10,
+      "crypto_measured_each": 1000,
+      "crypto_warmup_each": 50
+    },
+    "resource_policy": "New owner UUID project/network/PG namespaces/venv/artifacts; TEST-only DSN; real PG16 and CA/SAN TLS; no creation in this draft; cleanup full ID plus owner evidence only.",
+    "export_dependency": "Per-task complete fixed S/H packages plus complete experiment manifest/oracle, frozen before official run, satisfy contract E4 allowed partition. No unconditional pagination prerequisite. Only a required single-scope 10000 complete export exceeding unchanged cap needs new profile package review, implementation and fresh acceptance. Preserve A32 capacity limitation/futureplan."
+  },
+  "sequence": [
+    "fresh joint PACKAGE_REVIEW",
+    "S1 root final freeze, actual source writer absence, all evidence SHA and resources0 verified; explicit ownership transfer; no worker STOP or host native0 fabricated",
+    "A33 unique S2 real normal source/wheel assembly then actual public interface freeze",
+    "A34 shared serial frozen research schema/context/oracle; disjoint writers then all STOP",
+    "sole final joint integrator; freeze full candidate; one complete joint selfcheck source/wheel",
+    "all native STOP/resource0/final candidate freeze",
+    "new independent Sol/high full IMPLEMENTATION_ACCEPTANCE; missing mandatory item prevents joint ACCEPTED",
+    "root full readback acceptance and exact owned cleanup then STOP"
+  ],
+  "official": {
+    "modes": [
+      "staticACL",
+      "noAtomic",
+      "full",
+      "Bearer"
+    ],
+    "seeds": [
+      2026100501,
+      2026100502
+    ],
+    "measured_per_config": 5000,
+    "measured_total": 40000,
+    "full_measured": 10000,
+    "warmup_per_config": 250,
+    "warmup_total_excluded": 2000,
+    "real_inflight_slots": 50,
+    "legal_per_config": 3500,
+    "tasks_legal_per_config": 875,
+    "attacks_per_config": 1000,
+    "classes": 10,
+    "per_class": 100,
+    "retry_per_config": 500,
+    "seed_order": "second reverse first order; freeze before measurement",
+    "TTL": "root300/proof60/JIT waves<=240; no preissued shortTTL batches or renew-to-hide-expiry"
+  },
+  "race": {
+    "rounds_per_install": 10,
+    "root_limit": 100000,
+    "two_operations_fen": [
+      70000,
+      70000
+    ],
+    "noAtomic_required": "two actual commits, DS two real orders140000, root highwater140000; root read0 barrier before first additive UPDATE; not lost update/conditionallimit/serializable",
+    "full_required": "at most one actual acceptance and real occupancy/effect<=70000; <=100000 alone insufficient",
+    "revocation": "sorted principal->task->rootleaf authority FOR SHARE to commit with current/final clock; no production budget helper lock upgrade; authority TX and research budget same authority instance TX; research ag_grants writes0"
+  },
+  "microbench": "real SM2sign/verify/SM3 each1000+50warmup; independent DBtrace and CA/hostname TLS RTT; no subtraction invented decomposition",
+  "statistics": "nearest-rank ceil(p*n)-1; full n/errors/failure rows; attempt/authpass/newaccept first-send-last-response/failure and terminal/READY/anchor own windows",
+  "export": "full10000=1750 real tasks across seeds; pre-frozen per-task/partition complete export/index/trust/pin packs+whole attempts/effects manifest/spoolpeak per original E4; old single10000 overcap FAIL kept, no pagination/cap raise/drop",
+  "full_checks": "each install original20 inherited groups + all A33/A34 matrix/history/equivalent probes; PG5002 cap10800s, each strict500 cap3600s, ten valid races/faults real kill/restart; final reviewer independently repeats full40000 official wheel measurements and both-install full functionality/security",
+  "durable_supervisor": "finite detached start_new_session, stdin DEVNULL, file stdout, native child returncode continuously persisted, exact kernel PID/start/owner/cap and finally owned cleanup; host session disappearance is UNKNOWN and original failures retained; do not touch root R18 guard",
+  "inherited_runtime_interpretation": "A33_original_runtime/A34_original_runtime are preserved historical verbatim plans. Current sequence/authorization_override/official/race/full_checks and explicit bindings are authoritative. Old separate A33 acceptance stages are superseded by human joint authorization.",
+  "S1_actual_root_rebase": {
+    "freeze": "artifacts/workflow/A3.3-delivery-20261011/controller/S1-r14-root-freeze.json",
+    "manifest": "artifacts/workflow/A3.3-delivery-20261011/controller/S1-r14-final-evidence-manifest.json",
+    "raw_readback": "artifacts/workflow/A3.3-delivery-20261011/controller/S1-r14-all-evidence-root-readback.json",
+    "wheel_root_cleanup": "artifacts/workflow/A3.3-delivery-20261011/s1-scenarios-wheel-r3-cc465dfa-28ff-438e-a81b-ddebd04743f2/root-finalization-recovery/cleanup-root.json",
+    "source_and_wheel_actual_cases": 691,
+    "test_native_each": 0,
+    "host_wrapper_exits": "UNKNOWN_NOT_TRACKED_CHILD",
+    "not_independent_acceptance": true
+  }
+}

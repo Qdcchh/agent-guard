@@ -11,6 +11,7 @@ from agent_guard.execution.verified import VerifiedExecution
 from agent_guard.gateway.config import (
     GatewayConfig,
     GatewaySecrets,
+    evidence_operator_inputs,
     receipt_public_keys,
     trusted_inputs,
 )
@@ -27,6 +28,8 @@ def build_app(
     *,
     gateway_dsn: str,
     downstream_dsn: str,
+    export_connection_factory=None,
+    export_spool_parent=None,
 ):
     if type(config) is not GatewayConfig or type(secrets) is not GatewaySecrets:
         raise ConfigError("validated gateway configuration required")
@@ -77,8 +80,45 @@ def build_app(
         ),
         receipt_verifier=receipt_verifier,
     )
-    return GatewayHttpApp(
+    gateway_app = GatewayHttpApp(
         endpoint,
         timeout_seconds=value["request_timeout_seconds"],
         max_workers=value["max_workers"],
     )
+    credentials, local_inputs = evidence_operator_inputs(value)
+    if local_inputs is None:
+        if export_connection_factory is not None or export_spool_parent is not None:
+            raise ConfigError("export resources require explicit export registration")
+        return gateway_app
+    if not callable(export_connection_factory) or export_spool_parent is None:
+        raise ConfigError("independent SELECT-only export connection and private spool required")
+    from agent_guard.evidence.task_bundle import load_checkpoint_history
+    from agent_guard.evidence.task_verify import load_public_trust
+    from agent_guard.evidence.verify_cli import _json
+    from agent_guard.gateway.evidence_endpoint import (
+        EvidenceExportEndpoint,
+        ExportTaskInputs,
+    )
+    from agent_guard.gateway.evidence_http_app import EvidenceHttpApp
+
+    with open(local_inputs.trust_file, "rb") as stream:
+        trust = load_public_trust(_json(stream))
+    with open(local_inputs.external_pin_file, "rb") as stream:
+        pin = _json(stream)
+    with open(local_inputs.external_checkpoint_history_file, "rb") as stream:
+        history = load_checkpoint_history(stream, external_trust=trust, external_pin=pin)
+    export_endpoint = EvidenceExportEndpoint(
+        export_connection_factory,
+        credentials=credentials,
+        task_inputs=(
+            ExportTaskInputs(
+                trust.scope,
+                pin["mode"],
+                pin["checkpoint_jws"],
+                pin["observed_at"],
+                history,
+            ),
+        ),
+        spool_parent=export_spool_parent,
+    )
+    return EvidenceHttpApp(export_endpoint, gateway_app=gateway_app)

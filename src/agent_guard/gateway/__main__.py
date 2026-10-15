@@ -15,7 +15,14 @@ from agent_guard.server.config import ConfigError
 from agent_guard.server.private_files import private_directory, read_private_file
 
 
-def init_config(out: Path):
+def init_config(
+    out: Path,
+    *,
+    export_credential_id=None,
+    export_tenant_id=None,
+    export_task_ids=None,
+    evidence_local_inputs=None,
+):
     # Synthetic discarded signing keys are used only to make a valid public
     # example. Gateway init stores no AS or agent private keys, creates no DB.
     as_key = generate_sm2_private_key()
@@ -43,15 +50,47 @@ def init_config(out: Path):
         },
         "catalog": {
             n: []
-            for n in ("requests", "documents", "quotes", "deliveries", "templates", "recipients")
+            for n in (
+                "requests",
+                "documents",
+                "quotes",
+                "deliveries",
+                "templates",
+                "recipients",
+            )
         },
         "secrets_path": "secrets.json",
         "request_timeout_seconds": 20,
         "max_workers": 8,
     }
+    export_secret = None
+    if export_credential_id is not None:
+        from agent_guard.server.config import secret_sha256
+
+        export_secret = secrets.token_urlsafe(32)
+        config["export_credentials"] = [
+            {
+                "credential_id": export_credential_id,
+                "credential_sha256": secret_sha256(export_secret).hex(),
+                "tenant_id": export_tenant_id,
+                "task_ids": export_task_ids,
+            }
+        ]
+        config["evidence_local_inputs"] = evidence_local_inputs
     load_gateway_config(canonical_json_bytes(config))
     with private_directory(out, create=True) as directory:
         directory.write_file("config.json", canonical_json_bytes(config))
+        if export_secret is not None:
+            directory.write_file(
+                "export-credential.json",
+                canonical_json_bytes(
+                    {
+                        "credential_id": export_credential_id,
+                        "secret": export_secret,
+                        "note": "independent synthetic export credential; protect this file",
+                    }
+                ),
+            )
         directory.write_file(
             "secrets.json",
             canonical_json_bytes(
@@ -81,6 +120,12 @@ def main(argv=None):
     sub = parser.add_subparsers(dest="command", required=True)
     init = sub.add_parser("init")
     init.add_argument("--out", required=True)
+    init.add_argument("--export-credential-id")
+    init.add_argument("--export-tenant-id")
+    init.add_argument("--export-task-id", action="append")
+    init.add_argument("--evidence-trust-file")
+    init.add_argument("--evidence-pin-file")
+    init.add_argument("--evidence-history-file")
     check = sub.add_parser("check")
     check.add_argument("--config", required=True)
     run = sub.add_parser("run")
@@ -89,26 +134,69 @@ def main(argv=None):
     run.add_argument("--port", type=int, default=8444)
     run.add_argument("--ssl-certfile", required=True)
     run.add_argument("--ssl-keyfile", required=True)
+    run.add_argument("--export-spool-parent")
     args = parser.parse_args(argv)
     try:
         if args.command == "init":
-            init_config(Path(args.out))
+            options = (
+                args.export_credential_id,
+                args.export_tenant_id,
+                args.export_task_id,
+                args.evidence_trust_file,
+                args.evidence_pin_file,
+                args.evidence_history_file,
+            )
+            if any(v is not None for v in options) and any(v is None for v in options):
+                raise ConfigError("all independent export initialization arguments required")
+            inputs = (
+                None
+                if not any(v is not None for v in options)
+                else {
+                    "trust_file": args.evidence_trust_file,
+                    "external_pin_file": args.evidence_pin_file,
+                    "external_checkpoint_history_file": args.evidence_history_file,
+                }
+            )
+            init_config(
+                Path(args.out),
+                export_credential_id=args.export_credential_id,
+                export_tenant_id=args.export_tenant_id,
+                export_task_ids=args.export_task_id,
+                evidence_local_inputs=inputs,
+            )
             return 0
         config, secret = _load(args.config)
         if args.command == "check":
-            build_app(
-                config,
-                secret,
-                gateway_dsn="offline-gateway-check",
-                downstream_dsn="offline-downstream-check",
-            )
             print("gateway config ok (offline)")
             return 0
         gateway_dsn = os.environ.get("AG_GATEWAY_DATABASE_URL")
         downstream_dsn = os.environ.get("AG_GATEWAY_DOWNSTREAM_DATABASE_URL")
         if not gateway_dsn or not downstream_dsn:
             raise ConfigError("explicit gateway/downstream database environment required")
-        app = build_app(config, secret, gateway_dsn=gateway_dsn, downstream_dsn=downstream_dsn)
+        export_dsn = os.environ.get("AG_GATEWAY_EXPORT_DATABASE_URL")
+        export_configured = "export_credentials" in load_strict_json(config.raw)
+        if export_configured != bool(export_dsn and args.export_spool_parent):
+            raise ConfigError("explicit independent export database and spool required")
+        if not export_configured and (export_dsn or args.export_spool_parent):
+            raise ConfigError("export resources require registration")
+        export_factory = None
+        if export_configured:
+            import psycopg
+
+            if export_dsn in (gateway_dsn, downstream_dsn):
+                raise ConfigError("independent SELECT-only export database credentials required")
+
+            def export_factory():
+                return psycopg.connect(export_dsn, connect_timeout=5)
+
+        app = build_app(
+            config,
+            secret,
+            gateway_dsn=gateway_dsn,
+            downstream_dsn=downstream_dsn,
+            export_connection_factory=export_factory,
+            export_spool_parent=args.export_spool_parent,
+        )
         import uvicorn
 
         uvicorn.run(
@@ -123,7 +211,10 @@ def main(argv=None):
         )
         return 0
     except (OSError, ValueError, TypeError):
-        print("error: invalid or unsafe gateway configuration/TLS startup", file=sys.stderr)
+        print(
+            "error: invalid or unsafe gateway configuration/TLS startup",
+            file=sys.stderr,
+        )
         return 2
 
 

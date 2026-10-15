@@ -1,0 +1,200 @@
+{
+  "status": "FROZEN_S0_SHARED_INTERFACE_AFTER_STOP_ROOT_READBACK_NOT_A33_ACCEPTANCE",
+  "UTC": "2026-10-11T23:35:11.417307+00:00",
+  "prior_partial_interface": "shared-interface-s0-r1.json",
+  "source_files": {
+    "src/agent_guard/audit/config.py": {
+      "SHA256": "12b2d15195b2f218ae97f26604879ddba72159dba717ce7b13d36666d5135750",
+      "bytes": 4956
+    },
+    "src/agent_guard/audit/delivery.py": {
+      "SHA256": "8a7cff1485a8a52f3bc5f84b8fd28b5370591958c5cf476ca3bd7d83ee07bfa4",
+      "bytes": 29862
+    },
+    "src/agent_guard/audit/server.py": {
+      "SHA256": "bb56a25e0672023ed713dbac1aedbb5bc185104ec773cdc800c168b05fb33b6c",
+      "bytes": 4637
+    },
+    "src/agent_guard/demo/__init__.py": {
+      "SHA256": "64d85ca36ad9cd96b957b9093c8feb476434e1b16feefbad7c2cf2410f18de44",
+      "bytes": 67
+    },
+    "src/agent_guard/demo/__main__.py": {
+      "SHA256": "8fb0a0fa079571011e5eca014e0de2b7b3eedceb164ce91db04e11de00571a5e",
+      "bytes": 3608
+    },
+    "src/agent_guard/demo/client.py": {
+      "SHA256": "d0b940d7fbb3c062bfec625676c142fa2cc40953447a852268fb9a67e6b4e657",
+      "bytes": 16639
+    },
+    "src/agent_guard/demo/config.py": {
+      "SHA256": "c63ea6c6a37436998deda1bb1128aa4b8674180d248a88a349ee3247ee4ec590",
+      "bytes": 19781
+    },
+    "src/agent_guard/demo/did_bootstrap.py": {
+      "SHA256": "560a088024f65dd52eeb3f571e3074a2a7cf066acd0ad0c45723cc717f1f7d91",
+      "bytes": 9836
+    },
+    "src/agent_guard/demo/handoff.py": {
+      "SHA256": "5506e137c37144600066d0f08127920b84b9e3d90fbb7bae3b7cee0dba53c724",
+      "bytes": 6029
+    },
+    "src/agent_guard/demo/init.py": {
+      "SHA256": "c1b14026e32b43288501facc37b35fb125825834b30c5c41088aff6f2f37bea1",
+      "bytes": 24221
+    },
+    "src/agent_guard/demo/provision.py": {
+      "SHA256": "d522d43aec6505a310b616a26a785488a3be4cc7d03d0c3cef72904de1b2626d",
+      "bytes": 17859
+    },
+    "src/agent_guard/demo/worker.py": {
+      "SHA256": "032a3362c8d76b076b7dc4dc36900e7dd6419630793f34c57c3f59f7eaa6b903",
+      "bytes": 12335
+    },
+    "tests/fixtures/a33_demo.py": {
+      "SHA256": "d9b2fa1b03c806952096ae5adea75d8af4117c11975ceb6dfd62588d0cb426b6",
+      "bytes": 5094
+    },
+    "tests/integration/test_a33_registration.py": {
+      "SHA256": "37c8ee274a5823ef294e842d383250ddfb17c4e3eb4c67003f008400c314c537",
+      "bytes": 15508
+    },
+    "tests/integration/test_audit_tls.py": {
+      "SHA256": "28ed3641b39bda11e2acfaac7854da5cf23fddd070e358037d76bf619b6469e9",
+      "bytes": 17182
+    }
+  },
+  "candidate15_sha256": "edf5353e8864b110c1f07c969d83974ac184444a55d9dc584aa6169802496313",
+  "actual_installed_API_DTO_evidence": "artifacts/workflow/A3.3-delivery-20261011/s0-registration-sol-low-r2-9895aa1b-3b3e-4acd-b54b-828fff0924ba/actual-api-and-candidate.json",
+  "actual_API_evidence_sha256": "d3073eb2e69384cb644c85044696370f1c749b281b8ab55605513ac2db9f8fb9",
+  "source_probe_sha256": "e54d8121bb54da6820b9a6870053c8e493b63af414afb2b602650b29c55756a8",
+  "wheel_probe_sha256": "36108629fb73059479c639f035c3037dafa5c742a33a910a46c3717dc2ed4ab8",
+  "private_file_allowlist": {
+    "as": [
+      "authority_dsn",
+      "secrets",
+      "signing_key",
+      "tls_key"
+    ],
+    "audit": [
+      "audit_config",
+      "audit_dsn",
+      "signing_key",
+      "tls_key"
+    ],
+    "did": [
+      "tls_key"
+    ],
+    "executor": [
+      "basic_secret",
+      "signing_key"
+    ],
+    "export": [
+      "export_credential",
+      "readonly_dsn"
+    ],
+    "gateway": [
+      "authority_dsn",
+      "downstream_dsn",
+      "readonly_dsn",
+      "secrets",
+      "tls_key"
+    ],
+    "offline": [],
+    "operator": [
+      "approval_registry",
+      "audit_dsn",
+      "audit_registration",
+      "authority_dsn",
+      "ca_key",
+      "downstream_dsn",
+      "downstream_secret",
+      "user_login"
+    ],
+    "planner": [
+      "basic_secret",
+      "signing_key"
+    ],
+    "publisher": [
+      "audit_delivery",
+      "authority_dsn",
+      "publisher_config",
+      "signing_key"
+    ],
+    "selector": [
+      "basic_secret",
+      "signing_key"
+    ],
+    "worker": [
+      "authority_dsn",
+      "downstream_dsn",
+      "downstream_secret"
+    ]
+  },
+  "new_registration_API": "(conn, *, descriptor: 'RegistrationDescriptor') -> 'bool'",
+  "registration_DTO_fields": [
+    {
+      "name": "scope",
+      "repr": true,
+      "type": "JournalScope"
+    },
+    {
+      "name": "genesis_digest",
+      "repr": true,
+      "type": "str"
+    },
+    {
+      "name": "bootstrap_digest",
+      "repr": true,
+      "type": "str"
+    },
+    {
+      "name": "boundary",
+      "repr": true,
+      "type": "str"
+    },
+    {
+      "name": "index_root",
+      "repr": true,
+      "type": "str"
+    },
+    {
+      "name": "object_count",
+      "repr": true,
+      "type": "int"
+    },
+    {
+      "name": "chunk_count",
+      "repr": true,
+      "type": "int"
+    },
+    {
+      "name": "wire_bytes",
+      "repr": true,
+      "type": "int"
+    }
+  ],
+  "remote_local_order": "demo.provision.register_bootstrap fully exits/commits independent audit connection before separate authority confirm_registered_tx transaction; only trusted maintenance, not remote signed receipt",
+  "deployment_prerequisites": [
+    "all three PG initdb --locale=C --encoding=UTF8; verify actual C/C/UTF8",
+    "demo_publisher single column UPDATE(evidence_ref) on ag_verified_evidence only, required for old FOR KEY SHARE; table UPDATE false, other columns false",
+    "trusted operator registry runner UID21007 includes GID21011 for metadata registry; worker UID21011 readonly /registry; no holder access"
+  ],
+  "STOP_sha256": "123541f64f88916c59b72fd93023d245b137ffec064692bb7b789ecfd75c32ae",
+  "manifest_sha256": "5003264b8cec3c169796f45bc6a66f88131128eb8458aa45c0160a49338242b7",
+  "root_evidence_readback": "artifacts/workflow/A3.3-delivery-20261011/controller/S0-registration-r2-all-evidence-root-readback.json",
+  "root_boundary_readback": "artifacts/workflow/A3.3-delivery-20261011/controller/S0-registration-r2-boundary-root-readback.json",
+  "selfcheck": {
+    "source": 77,
+    "wheel": 77,
+    "full_shared_chain_both": true,
+    "resources_zero_root_observed": true
+  },
+  "wheel_binary_sha256": {
+    "agent_guard-0.0.1-py3-none-any.whl": "a9011cd2f04703296740ee198f6fa7a5bec1b04f5ef1bb415732a98ab886054c"
+  },
+  "quality_remaining": 14,
+  "full_stage_acceptance": false,
+  "actual_effective_metadata": "UNKNOWN",
+  "runtime_normal_path_rule": "implementation and normal demo must not require ignored evidence helpers/images/venvs; receipts are provenance only"
+}

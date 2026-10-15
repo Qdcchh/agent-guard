@@ -14,6 +14,7 @@ from agent_guard.contracts.execution import ExecutionError, ExecutionErrorCode
 from agent_guard.contracts.ledger import ErrorCode, LedgerError
 from agent_guard.execution.query import AuthorizedQuery
 from tests.fixtures.gateway import query_bundle, signed_env_window, state
+from tests.fixtures.receipts import full_state, result_read_only
 from tests.integration.test_consent_final_decision import _wait_blocked, _wait_expired
 from tests.integration.test_verified_execution import signed_env
 
@@ -282,7 +283,10 @@ def test_query_serializes_with_revocation_and_key_state(
                     (client_id, registration.kid),
                 )
 
-    with psycopg.connect(dsn, autocommit=True) as observer, ThreadPoolExecutor(1) as pool:
+    with (
+        psycopg.connect(dsn, autocommit=True) as observer,
+        ThreadPoolExecutor(1) as pool,
+    ):
         if winner == "mutation":
             with psycopg.connect(dsn) as blocker:
                 if kind == "revoke":
@@ -369,7 +373,11 @@ def test_final_query_token_and_ancestor_windows(
 
     observations = []
     env = signed_env_window(
-        dsn, downstream_dsn, window, cross_second=cross_second, observations=observations
+        dsn,
+        downstream_dsn,
+        window,
+        cross_second=cross_second,
+        observations=observations,
     )
     with psycopg.connect(dsn) as conn:
         tokens = conn.execute(
@@ -378,7 +386,9 @@ def test_final_query_token_and_ancestor_windows(
         ).fetchall()
     claims = [
         verify_compact_jws(
-            token, expected_type="ag-at+jwt", trusted_keys={"as-sign-1": env.as_key.public_key()}
+            token,
+            expected_type="ag-at+jwt",
+            trusted_keys={"as-sign-1": env.as_key.public_key()},
         )
         for token, _ in tokens
     ]
@@ -411,11 +421,17 @@ def test_final_query_token_and_ancestor_windows(
         ThreadPoolExecutor(1) as pool,
     ):
         before = state(dsn)
+        complete_before = full_state(dsn, downstream_dsn)
         all_before = _query_all_rows(dsn, "ag_")
         downstream_before = _query_all_rows(downstream_dsn, "ds_")
-        assert {"ds_operations", "ds_orders", "ds_notifications"} <= downstream_before.keys()
+        assert {
+            "ds_operations",
+            "ds_orders",
+            "ds_notifications",
+        } <= downstream_before.keys()
         blocker.execute(
-            "SELECT * FROM ag_operations WHERE operation_id=%s FOR UPDATE", (accepted.operation_id,)
+            "SELECT * FROM ag_operations WHERE operation_id=%s FOR UPDATE",
+            (accepted.operation_id,),
         )
         future = pool.submit(AuthorizedQuery(dsn, evidence_store=env.evidence).query, bundle)
         _wait_blocked(observer, blocker.info.backend_pid, "FROM ag_operations")
@@ -426,9 +442,17 @@ def test_final_query_token_and_ancestor_windows(
             assert future.result(timeout=5)["status"] == "RESERVED"
             all_after = _query_all_rows(dsn, "ag_")
             assert len(all_after["ag_proofs"]) == len(all_before["ag_proofs"]) + 1
-            assert {k: v for k, v in all_after.items() if k != "ag_proofs"} == {
-                k: v for k, v in all_before.items() if k != "ag_proofs"
-            }
+            assert (
+                all_after["accepted_verified_evidence"] == all_before["accepted_verified_evidence"]
+            )
+            result_read_only(
+                complete_before,
+                full_state(dsn, downstream_dsn),
+                evidence_ref=bundle.evidence_ref,
+                proof_jti=bundle.query.proof_jti,
+                operation_id=accepted.operation_id,
+                staging=False,
+            )
         else:
             with pytest.raises(LedgerError) as failure:
                 future.result(timeout=5)
@@ -689,7 +713,7 @@ RESULT_FAULTS = [
 
 @pytest.mark.parametrize("shape,fault", RESULT_FAULTS)
 def test_persisted_result_failure_repair_same_proof_and_replay(
-    ledger, dsn, downstream_dsn, shape, fault
+    ledger, dsn, downstream_dsn, monkeypatch, shape, fault
 ):
     from agent_guard.contracts.encoding import canonical_json_bytes, load_strict_json
     from tests.fixtures.gateway import app_for
@@ -750,7 +774,9 @@ def test_persisted_result_failure_repair_same_proof_and_replay(
             }
         )
     _rewrite_result(
-        dsn, accepted.operation_id, b"[]" if fault == "array" else canonical_json_bytes(corrupt)
+        dsn,
+        accepted.operation_id,
+        b"[]" if fault == "array" else canonical_json_bytes(corrupt),
     )
     before = _query_all_rows(dsn, "ag_")
     downstream = _query_all_rows(downstream_dsn, "ds_")
@@ -765,14 +791,36 @@ def test_persisted_result_failure_repair_same_proof_and_replay(
         assert _query_all_rows(downstream_dsn, "ds_") == downstream
         _rewrite_result(dsn, accepted.operation_id, raw)
         repaired = _query_all_rows(dsn, "ag_")
-        status, answer, _ = send_bundle(app, dsn, bundle, query=True)
+        captured = []
+        normal_binding = env.evidence.query_binding
+
+        def observe_verified(candidate):
+            # HTTP performs the real verifier/staging again. Observe that exact
+            # bundle after staging and before query's SQL transaction starts.
+            captured.append((candidate, full_state(dsn, downstream_dsn)))
+            return normal_binding(candidate)
+
+        with monkeypatch.context() as patch:
+            patch.setattr(env.evidence, "query_binding", observe_verified)
+            status, answer, _ = send_bundle(app, dsn, bundle, query=True)
+        assert len(captured) == 1
+        verified, complete_before = captured[0]
+        assert verified.query.proof_jti == bundle.query.proof_jti
+        assert verified.query.operation_id == accepted.operation_id
         assert status == 200 and answer["status"] == terminal and answer["result"] == original
         assert answer["receipt_status"] == "PENDING" and answer["receipt_jws"] is None
         after = _query_all_rows(dsn, "ag_")
         assert len(after["ag_proofs"]) == len(repaired["ag_proofs"]) + 1
-        assert {k: v for k, v in after.items() if k != "ag_proofs"} == {
-            k: v for k, v in repaired.items() if k != "ag_proofs"
-        }
+        assert after["accepted_verified_evidence"] == repaired["accepted_verified_evidence"]
+        result_read_only(
+            complete_before,
+            full_state(dsn, downstream_dsn),
+            evidence_ref=verified.evidence_ref,
+            proof_jti=verified.query.proof_jti,
+            operation_id=accepted.operation_id,
+            staging=False,
+            observed_response=answer,
+        )
         assert _query_all_rows(downstream_dsn, "ds_") == downstream
         status, error, _ = send_bundle(app, dsn, bundle, query=True)
         assert status == 409 and error["error"]["code"] == "REPLAY"

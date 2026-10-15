@@ -4,7 +4,7 @@
 
 本轮 **NOT_ACCEPTED**。本人在冻结候选的 source 与 noneditable wheel 均确认阻断 P2 `A23-R1-PUBLISH-QUOTE-ARITHMETIC`：内部发布没有严格校验原 accepted quote 的算术，coherent quote/result 损坏仍被真实签名并提交 READY。current query 正确拒绝该材料，但不能代替 publisher 的 fail-closed 义务。另 source 全套 integration 没有完整全绿；不能以 wheel 全绿或局部补跑拼接放行。
 
-审查对象是当前完整 A2 补正候选、119 项／112 运行义务／269 条原 must_assert／41 nodes／88 local atoms；本轮没有实施 A3。原始平台回合返回 **possible cybersecurity risk** 后，主控明确将同 reviewer 接续限制为既有成果行政归档；这一续轮只读取既有证据、只读核验指纹与资源并生成报告／索引／STOP，没有启动产品测试、探针、数据库或容器，也没有资源变更。原回合中断被保留，不能把归档成功写成原回合成功。
+审查对象是当前完整 A2 补正候选、119 项／112 运行义务／269 条原 must_assert／41 nodes／88 local atoms；本轮没有实施 A3。原始平台回合被中断后，主控明确将同 reviewer 接续限制为既有成果行政归档；这一续轮只读取既有证据、只读核验指纹与资源并生成报告／索引／STOP，没有启动产品测试、探针、数据库或容器，也没有资源变更。原回合中断被保留，不能把归档成功写成原回合成功。
 
 日期／时区：2026-10-05T19:22:24.299937+08:00，Asia/Shanghai。整体项目仍 PARTIAL。P15/P16/P17 真验权／签验、P18 真签名／进程故障和 P21 真 HTTPS 已有本轮实际覆盖；本轮阶段拒绝不允许 A3 或 Git 发布放行。
 
@@ -341,7 +341,7 @@ source/wheel都实际完成256短及4／12／16／17宽合法链；width12 SDK60
 | CI-only 45→75变更 | 新CI-only PACKAGE_READY/CI_ONLY_CHANGE_REVIEWED与真实STOP只核其事实；产品源码/tests/SQL/锁未因此变。 | CI-only审查不替代本轮产品接受；remote新HEAD actual CI **NOT_RUN**。 |
 | source完整integration green | r2完整exit1；r4/r5中断；alignment v2联合smoke不能升级whole suite。 | 五必需整体项NOT_RUN_COMPLETE_GREEN_SOURCE，阶段不可接受。 |
 | A3／整体项目 | 三独立holder产品进程/部署编排、独立锚定/最新性/导出/任务历史完整性、50客户端10k与公平消融/最终材料未执行。 | 全为后段NOT_RUN，未偷放到本段PASS，不以这些A3缺项额外篡改A2门。 |
-| 原平台回合中断 | possible cybersecurity risk原native平台错误来自parent转交；本人无法取得内部平台原因或后台metadata。 | 如实归档原中断；本续轮仅行政产物，不声称原回合完成成功。 |
+| 原平台回合中断 | 原native平台错误来自parent转交；本人无法取得内部平台原因或后台metadata。 | 如实归档原中断；本续轮仅行政产物，不声称原回合完成成功。 |
 
 故障证据严格区分：port/异常注入不称真实网络断网；真实23514回滚是PG事务；core/CLI SIGKILL/newPID及READY后replyloss有真实proc/独立连接证据；真实CA/SAN TLS与Tongsuo SM2/SM3有实际签验。没有以日志文本、抛异常或模拟JSON替代真实进程/签名/HTTPS。UNANCHORED单笔receipt不证独立锚定、最新性或完整历史。
 

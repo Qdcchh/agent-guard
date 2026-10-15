@@ -38,6 +38,12 @@ from datetime import datetime, timezone
 
 import psycopg
 
+from agent_guard.audit import journal
+from agent_guard.audit.contracts import AfterLink, BeforeCreate, LockedAcceptContext
+from agent_guard.authorization.evidence_store import (
+    TrustedAcceptBinding,
+    TrustedAfterLink,
+)
 from agent_guard.contracts.ledger import (
     PROOF_MAX_FUTURE_SKEW_S,
     AcceptDisposition,
@@ -137,13 +143,26 @@ class ExecutionLedger:
 
     # ------------------------------------------------------------------ public
 
-    def accept(self, verified: VerifiedInvocation, cost: TrustedCost) -> AcceptResult:
+    def accept(
+        self,
+        verified: VerifiedInvocation,
+        cost: TrustedCost,
+        *,
+        before_create: BeforeCreate | None = None,
+        after_link: AfterLink | None = None,
+    ) -> AcceptResult:
         """Reserve budget for one invocation, exactly once per business key.
 
         Default API and semantics are unchanged: no material validator runs and
         every A1 caller behaves exactly as before.
         """
-        return self._accept_with(verified, cost, existing_validator=None)
+        return self._accept_with(
+            verified,
+            cost,
+            existing_validator=None,
+            before_create=before_create,
+            after_link=after_link,
+        )
 
     def accept_checked(
         self,
@@ -151,6 +170,8 @@ class ExecutionLedger:
         cost: TrustedCost,
         *,
         existing_validator: ExistingMaterialValidator,
+        before_create: BeforeCreate | None = None,
+        after_link: AfterLink | None = None,
     ) -> AcceptResult:
         """Like :meth:`accept`, plus an atomic check of the actual existing row.
 
@@ -164,7 +185,13 @@ class ExecutionLedger:
         """
         if existing_validator is None or not callable(existing_validator):
             raise ValueError("existing_validator must be callable")
-        return self._accept_with(verified, cost, existing_validator=existing_validator)
+        return self._accept_with(
+            verified,
+            cost,
+            existing_validator=existing_validator,
+            before_create=before_create,
+            after_link=after_link,
+        )
 
     def accept_bound(
         self,
@@ -172,13 +199,20 @@ class ExecutionLedger:
         cost: TrustedCost,
         *,
         existing_validator: ExistingMaterialValidator,
+        before_create: BeforeCreate | None = None,
+        after_link: AfterLink | None = None,
         binding: AcceptBinding,
     ):
         """Checked acceptance plus a per-call atomic evidence binding and final clock."""
         if not callable(existing_validator) or not callable(binding):
             raise ValueError("existing validator and binding must be callable")
         return self._accept_with(
-            verified, cost, existing_validator=existing_validator, binding=binding
+            verified,
+            cost,
+            existing_validator=existing_validator,
+            binding=binding,
+            before_create=before_create,
+            after_link=after_link,
         )
 
     def _accept_with(
@@ -188,7 +222,12 @@ class ExecutionLedger:
         *,
         existing_validator: ExistingMaterialValidator | None,
         binding: AcceptBinding | None = None,
+        before_create: BeforeCreate | None = None,
+        after_link: AfterLink | None = None,
     ) -> AcceptResult:
+        for hook in (before_create, after_link):
+            if hook is not None and not callable(hook):
+                raise ValueError("acceptance material hook must be callable")
         validate_invocation(verified)
         validate_cost(cost)
 
@@ -203,8 +242,13 @@ class ExecutionLedger:
                             cost,
                             existing_validator=existing_validator,
                             binding=binding,
+                            before_create=before_create,
+                            after_link=after_link,
                         )
-            except (psycopg.errors.DeadlockDetected, psycopg.errors.SerializationFailure) as exc:
+            except (
+                psycopg.errors.DeadlockDetected,
+                psycopg.errors.SerializationFailure,
+            ) as exc:
                 last_error = exc
                 if attempt == self._max_retries:
                     break
@@ -243,6 +287,8 @@ class ExecutionLedger:
         *,
         existing_validator: ExistingMaterialValidator | None = None,
         binding: AcceptBinding | None = None,
+        before_create: BeforeCreate | None = None,
+        after_link: AfterLink | None = None,
     ) -> AcceptResult:
         # (1) trusted path discovery — database parent chain is authoritative.
         path = store.load_path(conn, verified.grant_id)
@@ -260,6 +306,30 @@ class ExecutionLedger:
         # (3) linearization point: re-check state at the actual current time.
         now = store.db_now_epoch(conn)
         self._check_freshness(grants, principals, verified, now)
+
+        trusted_binding = (
+            binding
+            if type(binding) is TrustedAcceptBinding
+            else (after_link.binding if type(after_link) is TrustedAfterLink else None)
+        )
+        if type(binding) is TrustedAcceptBinding and type(after_link) is TrustedAfterLink:
+            raise ValueError("original trusted binding must execute exactly once")
+        descriptor = trusted_binding.descriptor if trusted_binding else None
+        context = LockedAcceptContext(
+            (journal.gateway_origin(), verified.tenant_id, verified.task_id),
+            verified.root_id,
+            tuple(g.grant_id for g in grants),
+            descriptor.context_bytes if descriptor else b"",
+            descriptor.source_digest if descriptor else None,
+            journal.tx_id(conn),
+        )
+        if descriptor is not None and (
+            descriptor.scope_key != context.scope_key
+            or descriptor.root_id != context.root_grant_id
+            or descriptor.path_ids != context.path_ids
+            or descriptor.evidence_ref != verified.evidence_ref
+        ):
+            raise journal.JournalError("trusted descriptor invocation mismatch")
 
         # (4) proof anti-replay registration before any idempotent shortcut.
         store.record_proof(
@@ -298,9 +368,7 @@ class ExecutionLedger:
                 proof_jti=verified.proof_jti,
                 operation_id=existing.operation_id,
             )
-            if binding is not None:
-                self._final_bound_check(conn, grants, keys, verified)
-            return AcceptResult(
+            result = AcceptResult(
                 operation_id=existing.operation_id,
                 grant_id=existing.grant_id,
                 root_id=grants[0].grant_id,
@@ -309,10 +377,34 @@ class ExecutionLedger:
                 cost=_cost_from_row(existing),
                 accepted_at=_utc(existing.accepted_at),
             )
+            baseline = journal.stream_tx(conn, context.scope_key)
+            if descriptor is not None and baseline is None:
+                raise journal.JournalError("signed retry requires existing maintained stream")
+            if (
+                after_link is not None
+                and after_link(conn, existing, AcceptDisposition.EXISTING, baseline) is not None
+            ):
+                raise ValueError("after_link must return None")
+            journal.append_accept_tx(
+                conn,
+                baseline,
+                existing,
+                AcceptDisposition.EXISTING,
+                descriptor,
+                result,
+                trusted_binding.response_bytes() if descriptor else None,
+            )
+            if binding is not None or baseline is not None or after_link is not None:
+                self._final_bound_check(conn, grants, keys, verified)
+            return result
 
         # (6) first accept: budget at root and every applicable node.
         self._check_budget(grants, cost)
 
+        baseline = journal.capture_empty_task_tx(conn, context)
+        if before_create is not None and before_create(conn, context) is not None:
+            raise ValueError("before_create must return None")
+        introduced = journal.capture_introduced_tx(conn, baseline, descriptor, grants)
         operation_id = uuid.uuid4().hex
         inserted = store.insert_operation(
             conn,
@@ -358,9 +450,7 @@ class ExecutionLedger:
             proof_jti=verified.proof_jti,
             operation_id=operation_id,
         )
-        if binding is not None:
-            self._final_bound_check(conn, grants, keys, verified)
-        return AcceptResult(
+        result = AcceptResult(
             operation_id=operation_id,
             grant_id=verified.grant_id,
             root_id=grants[0].grant_id,
@@ -369,6 +459,29 @@ class ExecutionLedger:
             cost=cost,
             accepted_at=_utc(inserted.accepted_at),
         )
+        if (
+            after_link is not None
+            and after_link(conn, inserted, AcceptDisposition.CREATED, baseline) is not None
+        ):
+            raise ValueError("after_link must return None")
+        journal.append_accept_tx(
+            conn,
+            baseline,
+            inserted,
+            AcceptDisposition.CREATED,
+            descriptor,
+            result,
+            trusted_binding.response_bytes() if descriptor else None,
+            introduced=introduced,
+        )
+        if (
+            binding is not None
+            or baseline is not None
+            or before_create is not None
+            or after_link is not None
+        ):
+            self._final_bound_check(conn, grants, keys, verified)
+        return result
 
     def _final_bound_check(self, conn, grants, keys, verified):
         # Flush deferred trigger/FK work before the authorization clock, then
@@ -463,7 +576,8 @@ class ExecutionLedger:
         )
         if not same:
             raise LedgerError(
-                ErrorCode.IDEMPOTENCY_CONFLICT, "business key reused with a different intent"
+                ErrorCode.IDEMPOTENCY_CONFLICT,
+                "business key reused with a different intent",
             )
 
     def _check_budget(self, grants: list[store.GrantRow], cost: TrustedCost) -> None:

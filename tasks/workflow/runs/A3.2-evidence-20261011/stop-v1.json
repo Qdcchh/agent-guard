@@ -1,0 +1,15 @@
+{
+  "native_status": "STOP",
+  "no_more_writes": true,
+  "conclusion": "FORMAL_PACKAGE_PROPOSED_FOR_FRESH_PACKAGE_REVIEW_NOT_PACKAGE_READY_NOT_ACCEPTED",
+  "runtime": "NOT_RUN",
+  "resources_created": 0,
+  "resources_remaining": 0,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "low",
+  "effective_metadata": "UNKNOWN",
+  "quota_last_remaining_percent": 33,
+  "manifest_sha256": "5f332465fc89186d464b87454079c6d46e94d3b828f5a710dd284e84f44be4ce",
+  "write_scope": "tasks/workflow/runs/A3.2-evidence-20261011",
+  "business_code_other_formal_files_changed": false
+}

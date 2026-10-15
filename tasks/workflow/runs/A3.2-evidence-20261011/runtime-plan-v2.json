@@ -1,0 +1,359 @@
+{
+  "stage": "A3.2-evidence",
+  "status": "PLANNED_NOT_CREATED_NOT_RUN",
+  "owner_uuid": "ad04c407-723f-4996-bb61-19784488acc9",
+  "resources_created": 0,
+  "resources_remaining": 0,
+  "modes": [
+    "source",
+    "fresh_noneditable_wheel"
+  ],
+  "workers": [
+    {
+      "phase": "s0-shared",
+      "mode": "source",
+      "project": "a32-ad04c407-s0-shared-source",
+      "service": "a32-ad04c407-s0-shared-source-runner",
+      "network": "a32-ad04c407-s0-shared-source-net",
+      "namespace": "a32_ad04c407_s0_shared_source",
+      "DB_domains": [
+        "owned_GW",
+        "owned_DS",
+        "owned_audit"
+      ],
+      "roles": [
+        "owned_migration",
+        "least_privilege_GW_runtime",
+        "read_only_export",
+        "independent_DS_runtime",
+        "audit_writer",
+        "audit_reader",
+        "audit_operator"
+      ],
+      "private_paths": [
+        "/tmp/a32-ad04c407-s0-shared-source/private",
+        "/tmp/a32-ad04c407-s0-shared-source/cache",
+        "/tmp/a32-ad04c407-s0-shared-source/spool",
+        "/tmp/a32-ad04c407-s0-shared-source/evidence"
+      ],
+      "fullID": "PENDING_ACTUAL_CREATION",
+      "ports": "internal-only443TLS and5432PG; no host publish",
+      "verify_purity": null
+    },
+    {
+      "phase": "s0-shared",
+      "mode": "fresh_noneditable_wheel",
+      "project": "a32-ad04c407-s0-shared-fresh_noneditable_wheel",
+      "service": "a32-ad04c407-s0-shared-fresh_noneditable_wheel-runner",
+      "network": "a32-ad04c407-s0-shared-fresh_noneditable_wheel-net",
+      "namespace": "a32_ad04c407_s0_shared_fresh_noneditable_wheel",
+      "DB_domains": [
+        "owned_GW",
+        "owned_DS",
+        "owned_audit"
+      ],
+      "roles": [
+        "owned_migration",
+        "least_privilege_GW_runtime",
+        "read_only_export",
+        "independent_DS_runtime",
+        "audit_writer",
+        "audit_reader",
+        "audit_operator"
+      ],
+      "private_paths": [
+        "/tmp/a32-ad04c407-s0-shared-fresh_noneditable_wheel/private",
+        "/tmp/a32-ad04c407-s0-shared-fresh_noneditable_wheel/cache",
+        "/tmp/a32-ad04c407-s0-shared-fresh_noneditable_wheel/spool",
+        "/tmp/a32-ad04c407-s0-shared-fresh_noneditable_wheel/evidence"
+      ],
+      "fullID": "PENDING_ACTUAL_CREATION",
+      "ports": "internal-only443TLS and5432PG; no host publish",
+      "verify_purity": null
+    },
+    {
+      "phase": "s1-export",
+      "mode": "source",
+      "project": "a32-ad04c407-s1-export-source",
+      "service": "a32-ad04c407-s1-export-source-runner",
+      "network": "a32-ad04c407-s1-export-source-net",
+      "namespace": "a32_ad04c407_s1_export_source",
+      "DB_domains": [
+        "owned_GW",
+        "owned_DS",
+        "owned_audit"
+      ],
+      "roles": [
+        "owned_migration",
+        "least_privilege_GW_runtime",
+        "read_only_export",
+        "independent_DS_runtime",
+        "audit_writer",
+        "audit_reader",
+        "audit_operator"
+      ],
+      "private_paths": [
+        "/tmp/a32-ad04c407-s1-export-source/private",
+        "/tmp/a32-ad04c407-s1-export-source/cache",
+        "/tmp/a32-ad04c407-s1-export-source/spool",
+        "/tmp/a32-ad04c407-s1-export-source/evidence"
+      ],
+      "fullID": "PENDING_ACTUAL_CREATION",
+      "ports": "internal-only443TLS and5432PG; no host publish",
+      "verify_purity": null
+    },
+    {
+      "phase": "s1-export",
+      "mode": "fresh_noneditable_wheel",
+      "project": "a32-ad04c407-s1-export-fresh_noneditable_wheel",
+      "service": "a32-ad04c407-s1-export-fresh_noneditable_wheel-runner",
+      "network": "a32-ad04c407-s1-export-fresh_noneditable_wheel-net",
+      "namespace": "a32_ad04c407_s1_export_fresh_noneditable_wheel",
+      "DB_domains": [
+        "owned_GW",
+        "owned_DS",
+        "owned_audit"
+      ],
+      "roles": [
+        "owned_migration",
+        "least_privilege_GW_runtime",
+        "read_only_export",
+        "independent_DS_runtime",
+        "audit_writer",
+        "audit_reader",
+        "audit_operator"
+      ],
+      "private_paths": [
+        "/tmp/a32-ad04c407-s1-export-fresh_noneditable_wheel/private",
+        "/tmp/a32-ad04c407-s1-export-fresh_noneditable_wheel/cache",
+        "/tmp/a32-ad04c407-s1-export-fresh_noneditable_wheel/spool",
+        "/tmp/a32-ad04c407-s1-export-fresh_noneditable_wheel/evidence"
+      ],
+      "fullID": "PENDING_ACTUAL_CREATION",
+      "ports": "internal-only443TLS and5432PG; no host publish",
+      "verify_purity": null
+    },
+    {
+      "phase": "s1-verify",
+      "mode": "source",
+      "project": "a32-ad04c407-s1-verify-source",
+      "service": "a32-ad04c407-s1-verify-source-runner",
+      "network": "a32-ad04c407-s1-verify-source-net",
+      "namespace": "a32_ad04c407_s1_verify_source",
+      "DB_domains": [],
+      "roles": [],
+      "private_paths": [
+        "/tmp/a32-ad04c407-s1-verify-source/private",
+        "/tmp/a32-ad04c407-s1-verify-source/cache",
+        "/tmp/a32-ad04c407-s1-verify-source/spool",
+        "/tmp/a32-ad04c407-s1-verify-source/evidence"
+      ],
+      "fullID": "PENDING_ACTUAL_CREATION",
+      "ports": "internal-only443TLS and5432PG; no host publish",
+      "verify_purity": "public inputs/read-only; network disabled and no DB/private keys/credential/env"
+    },
+    {
+      "phase": "s1-verify",
+      "mode": "fresh_noneditable_wheel",
+      "project": "a32-ad04c407-s1-verify-fresh_noneditable_wheel",
+      "service": "a32-ad04c407-s1-verify-fresh_noneditable_wheel-runner",
+      "network": "a32-ad04c407-s1-verify-fresh_noneditable_wheel-net",
+      "namespace": "a32_ad04c407_s1_verify_fresh_noneditable_wheel",
+      "DB_domains": [],
+      "roles": [],
+      "private_paths": [
+        "/tmp/a32-ad04c407-s1-verify-fresh_noneditable_wheel/private",
+        "/tmp/a32-ad04c407-s1-verify-fresh_noneditable_wheel/cache",
+        "/tmp/a32-ad04c407-s1-verify-fresh_noneditable_wheel/spool",
+        "/tmp/a32-ad04c407-s1-verify-fresh_noneditable_wheel/evidence"
+      ],
+      "fullID": "PENDING_ACTUAL_CREATION",
+      "ports": "internal-only443TLS and5432PG; no host publish",
+      "verify_purity": "public inputs/read-only; network disabled and no DB/private keys/credential/env"
+    },
+    {
+      "phase": "s2-integrator",
+      "mode": "source",
+      "project": "a32-ad04c407-s2-integrator-source",
+      "service": "a32-ad04c407-s2-integrator-source-runner",
+      "network": "a32-ad04c407-s2-integrator-source-net",
+      "namespace": "a32_ad04c407_s2_integrator_source",
+      "DB_domains": [
+        "owned_GW",
+        "owned_DS",
+        "owned_audit"
+      ],
+      "roles": [
+        "owned_migration",
+        "least_privilege_GW_runtime",
+        "read_only_export",
+        "independent_DS_runtime",
+        "audit_writer",
+        "audit_reader",
+        "audit_operator"
+      ],
+      "private_paths": [
+        "/tmp/a32-ad04c407-s2-integrator-source/private",
+        "/tmp/a32-ad04c407-s2-integrator-source/cache",
+        "/tmp/a32-ad04c407-s2-integrator-source/spool",
+        "/tmp/a32-ad04c407-s2-integrator-source/evidence"
+      ],
+      "fullID": "PENDING_ACTUAL_CREATION",
+      "ports": "internal-only443TLS and5432PG; no host publish",
+      "verify_purity": null
+    },
+    {
+      "phase": "s2-integrator",
+      "mode": "fresh_noneditable_wheel",
+      "project": "a32-ad04c407-s2-integrator-fresh_noneditable_wheel",
+      "service": "a32-ad04c407-s2-integrator-fresh_noneditable_wheel-runner",
+      "network": "a32-ad04c407-s2-integrator-fresh_noneditable_wheel-net",
+      "namespace": "a32_ad04c407_s2_integrator_fresh_noneditable_wheel",
+      "DB_domains": [
+        "owned_GW",
+        "owned_DS",
+        "owned_audit"
+      ],
+      "roles": [
+        "owned_migration",
+        "least_privilege_GW_runtime",
+        "read_only_export",
+        "independent_DS_runtime",
+        "audit_writer",
+        "audit_reader",
+        "audit_operator"
+      ],
+      "private_paths": [
+        "/tmp/a32-ad04c407-s2-integrator-fresh_noneditable_wheel/private",
+        "/tmp/a32-ad04c407-s2-integrator-fresh_noneditable_wheel/cache",
+        "/tmp/a32-ad04c407-s2-integrator-fresh_noneditable_wheel/spool",
+        "/tmp/a32-ad04c407-s2-integrator-fresh_noneditable_wheel/evidence"
+      ],
+      "fullID": "PENDING_ACTUAL_CREATION",
+      "ports": "internal-only443TLS and5432PG; no host publish",
+      "verify_purity": null
+    },
+    {
+      "phase": "fresh-reviewer",
+      "mode": "source",
+      "project": "a32-ad04c407-fresh-reviewer-source",
+      "service": "a32-ad04c407-fresh-reviewer-source-runner",
+      "network": "a32-ad04c407-fresh-reviewer-source-net",
+      "namespace": "a32_ad04c407_fresh_reviewer_source",
+      "DB_domains": [
+        "owned_GW",
+        "owned_DS",
+        "owned_audit"
+      ],
+      "roles": [
+        "owned_migration",
+        "least_privilege_GW_runtime",
+        "read_only_export",
+        "independent_DS_runtime",
+        "audit_writer",
+        "audit_reader",
+        "audit_operator"
+      ],
+      "private_paths": [
+        "/tmp/a32-ad04c407-fresh-reviewer-source/private",
+        "/tmp/a32-ad04c407-fresh-reviewer-source/cache",
+        "/tmp/a32-ad04c407-fresh-reviewer-source/spool",
+        "/tmp/a32-ad04c407-fresh-reviewer-source/evidence"
+      ],
+      "fullID": "PENDING_ACTUAL_CREATION",
+      "ports": "internal-only443TLS and5432PG; no host publish",
+      "verify_purity": null
+    },
+    {
+      "phase": "fresh-reviewer",
+      "mode": "fresh_noneditable_wheel",
+      "project": "a32-ad04c407-fresh-reviewer-fresh_noneditable_wheel",
+      "service": "a32-ad04c407-fresh-reviewer-fresh_noneditable_wheel-runner",
+      "network": "a32-ad04c407-fresh-reviewer-fresh_noneditable_wheel-net",
+      "namespace": "a32_ad04c407_fresh_reviewer_fresh_noneditable_wheel",
+      "DB_domains": [
+        "owned_GW",
+        "owned_DS",
+        "owned_audit"
+      ],
+      "roles": [
+        "owned_migration",
+        "least_privilege_GW_runtime",
+        "read_only_export",
+        "independent_DS_runtime",
+        "audit_writer",
+        "audit_reader",
+        "audit_operator"
+      ],
+      "private_paths": [
+        "/tmp/a32-ad04c407-fresh-reviewer-fresh_noneditable_wheel/private",
+        "/tmp/a32-ad04c407-fresh-reviewer-fresh_noneditable_wheel/cache",
+        "/tmp/a32-ad04c407-fresh-reviewer-fresh_noneditable_wheel/spool",
+        "/tmp/a32-ad04c407-fresh-reviewer-fresh_noneditable_wheel/evidence"
+      ],
+      "fullID": "PENDING_ACTUAL_CREATION",
+      "ports": "internal-only443TLS and5432PG; no host publish",
+      "verify_purity": null
+    }
+  ],
+  "host_ports": [],
+  "containers_fullIDs": null,
+  "TLS": {
+    "origin": "https://gateway.agent-guard.test",
+    "export_endpoint": "https://gateway.agent-guard.test/v1/evidence/export",
+    "audit_origin": "https://audit.agent-guard.test",
+    "CA": "fresh per owner/mode private local CA; SAN exact gateway.agent-guard.test/audit.agent-guard.test; CA/SAN verified, wrongCA/hostname/HTTP/redirect refusal",
+    "resolution": "only owned internal Docker network DNS aliases; no default host port publish"
+  },
+  "timeouts_seconds": {
+    "db_connect": 5,
+    "ordinary_lock": 3,
+    "ordinary_statement": 30,
+    "barrier": 15,
+    "http_connect": 5,
+    "audit_request": 15,
+    "export_download_read": 30,
+    "export_materialization": 600,
+    "offline_verify": 300,
+    "sizing_preflight": 1800,
+    "child_reap": 10,
+    "selected_inherited_group": 3600,
+    "intentional_expiry_lock": 180,
+    "intentional_expiry_statement": 240,
+    "current_pg_nonclock_complete_group": 10800,
+    "isolated_fault_child_stage": 120,
+    "isolated_fault_child_total": 180
+  },
+  "expiry_rule": "Only exact TTL-crossing nodes use explicit180s lock/240s statement; original token300s/proof<=60s/lease/sign-once unchanged, barrier proves expiry before lock release, no timeout substituted for freshness/fence. Inherited precise500+500 partitions use mature own resources and all original assertions.",
+  "inventory": "A31 accepted92 SDK Python+16SQL are starting baseline, original14SQL/checksums/locks immutable; actual new installed A32 SDK member set/source/wheel hashes must be generated,92 is not upper bound.15GW+isolatedaudit001 verify all real entrypoints.",
+  "readback": "Runtime before use records Docker fullID/project/service/owner labels/config source/network/anonymous volume/mount, DB-role/schema namespace, nativePID UID/kernelstart/argvhash/backendPID. Never reuse old actual names/fullIDs/DSNs.",
+  "cleanup": "Only verified owned fullIDs/PIDs/volumes/network/private dirs, no prune/shared project down. All writers STOP/resource0 before transfer; native registry and host/container child readbacks; quota<=10 safe partial archive then pause.",
+  "version": 2,
+  "inherits": "runtime-plan-v1.json except explicit overrides",
+  "group_deadline_mapping": {
+    "current-pg-nonclock": {
+      "modes": [
+        "source",
+        "fresh_noneditable_wheel"
+      ],
+      "actual_accepted_case_count_per_mode": 4342,
+      "controller_total_wall_seconds": 10800,
+      "runner_total_wall_seconds": 10800,
+      "baseline_elapsed_seconds": {
+        "source": 5882.730173826218,
+        "wheel": 5878.109217882156
+      },
+      "baseline_source": "A31 whole-current4342-native-readback-r2.json referenced by package-review-r1.md A32-PR-R1-001",
+      "child120180_applies": false
+    },
+    "other_confirmed_short_inherited_groups": {
+      "controller_total_wall_seconds": 3600,
+      "runner_total_wall_seconds": 3600
+    },
+    "new_A32_groups": {
+      "status": "NOT_COLLECTED_NOT_RUN",
+      "rule": "After actual collect freeze exact finite group/node/params/duration with source/wheel full union; default not a claim of observed runtime. Any material scheduling change fresh package review; timeout never PASS."
+    }
+  },
+  "child_scope": "120/180 only isolated fault subprocess; complete selected group controller/runner uses precise mapping. Reap10 preserved."
+}

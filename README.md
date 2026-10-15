@@ -1,16 +1,20 @@
 # Agent Guard
 
+A3.1与A3.2已正式独立接受；A3.3/A3.4联合v1已通过独立PACKAGE_REVIEW，S2正常装配必要自查已完成。完整联合自查及新独立IMPLEMENTATION_ACCEPTANCE尚未完成，项目仍PARTIAL。保留当前授权UNKNOWN、下游ATTESTED_NOT_INDEPENDENTLY_PROVEN、未锚尾部与bootstrap外部信任限制。
+
 **面向企业多智能体协同的可验证授权与可信执行系统。**
+
+本机演示页面：启动 Docker Desktop 后，在仓库根目录运行 `python3 tools/teacher_demo_server.py`，打开 `http://127.0.0.1:8765/`。支持真实演示启动、七类安全场景、带来源的验证记录回放和离线证据篡改对照；仅用于本地展示，不代表完整联合验收。见[演示操作稿](docs/teacher-demo-20261015.md)和[当前状态与覆盖范围](docs/project-status-and-demo-coverage-20261015.md)。
 
 目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
 
-本轮 B 补正已独立验收并通过 CI，经 [PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 合并 main。67 项验收、60 项独立运行完成；见 [正式接受记录](tasks/workflow/runs/local-remediation-20261004/acceptance.md)及 [当前交接](tasks/workflow/context.md)。整体项目仍 **PARTIAL**：A2.2 已完成95项/88运行义务的独立验收，A2.3候选已实现内部持续签名发布与真实HTTPS联合流程，完整联合自查完成后按真人指令停止，本轮补正后的新独立复验未执行、完整A2未接受、原r1否决保留；A3独立锚定/导出/交付演示与实验未完成；旧无回执公钥配置保持PENDING兼容。阶段通过不代表绝对无缺陷。
+本轮 B 补正已独立验收并通过 CI，经 [PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 合并 main。67 项验收、60 项独立运行完成；见 [正式接受记录](tasks/workflow/runs/local-remediation-20261004/acceptance.md)及 [当前交接](tasks/workflow/context.md)。整体项目仍 **PARTIAL**：A2.2 已完成95项/88运行义务的独立验收，A2.3内部持续签名发布与真实HTTPS联合流程已完成完整119项/112运行义务独立复验并[正式接受](tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，原r1否决保留为历史；A3.1独立锚定与A3.2导出已接受；A3.3交付演示与A3.4实验未完成；旧无回执公钥配置保持PENDING兼容。阶段通过不代表绝对无缺陷。
 
 `product-manifest.json` 保留 2026-10-03 原始交付的 186 项文件哈希；本轮文档已更新，该清单仅用于核对历史传输快照，不是当前工作树清单。旧云端内部报告与原始证据没有随此分支完整交付，不能把旧工作流 `state.json` 的 A2.1 `ACCEPTED` 当作 B 整合放行。
 
 ## 1. 项目目标
 
-面向全国密码技术竞赛构建可运行、可测试、可复现的工程原型，于 **2026 年 10 月 20 日**前完成工程与材料。重点不是通用聊天平台，而是智能体到业务副作用之间的可信执行边界。
+面向全国密码技术竞赛构建可运行、可测试、可复现的工程原型。当前是初版；完整A3及最终材料按实际阶段验收推进，历史10月20日不作为本次全部A3完成期限。重点不是通用聊天平台，而是智能体到业务副作用之间的可信执行边界。
 
 1. 基于 SM2/SM3 的授权凭证、规范编码与请求持有者证明。
 2. 根授权、至少两级子委托、至少三个代理身份；逐级权限只能收窄。
@@ -402,7 +406,7 @@ unset AG_GATEWAY_DATABASE_URL AG_GATEWAY_DOWNSTREAM_DATABASE_URL
 同步DB工作在有界线程池执行，超时后容量直到真实线程退出才释放。
 已接受事务可在HTTP超时后完成，客户端用新proof和原业务幂等键重试。
 响应含服务生成的32位hex request_id，禁止缓存；401只声明AGPoP挑战。
-此私有GM-MVP-1协议不声明标准DPoP兼容。公开HTTP只保留两条POST路径；内部签名发布使用独立receipt_worker CLI，独立锚定仍留A3。
+此私有GM-MVP-1协议不声明标准DPoP兼容。旧配置公开HTTP保留两条POST路径；内部签名发布使用独立receipt_worker CLI。配置独立 export_credentials 时，factory 同时装配 POST /v1/evidence/export，使用独立 SELECT-only 连接与私有临时目录。
 
 ### A2.3 内部回执发布与真实 HTTPS 联合演示
 
@@ -422,7 +426,7 @@ Use `$PRIVATE/receipt/gateway-public.json` as the gateway's public configuration
 AGENT_GUARD_TEST_DATABASE_URL="$RUN_GATEWAY_TEST_DSN" AGENT_GUARD_TEST_DOWNSTREAM_DATABASE_URL="$RUN_DOWNSTREAM_TEST_DSN" python -m tools.a2_receipt_demo
 ```
 
-本轮source/noneditable-wheel完整自查覆盖119项/112运行义务，收尾后按真人指令停止；本轮补正后的新独立复验未执行、完整A2未接受，原r1 NOT_ACCEPTED保留，局部演示或自查不构成接受。真实HTTPS联合演示展示协议与业务链；部署、三代理编排及独立审计导出仍属A3。
+本轮source/noneditable-wheel完整独立复验覆盖119项/112运行义务，主控核证后[正式接受](tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)；原r1 NOT_ACCEPTED及所有失败保留，局部演示或自查不构成接受。真实HTTPS联合演示展示协议与业务链；部署、三代理编排及独立审计导出仍属A3。
 
 ### 非 editable wheel 复现
 
@@ -464,17 +468,9 @@ wheel 并检查全部成员，不构建/发布 sdist；这不是 macOS sdist 风
 
 ## 6. 实施计划
 
-| 日期（2026） | 交付与验收 |
-| --- | --- |
-| 9/23—9/25 | 协议、威胁模型、状态机、密码库验证及数据库设计 |
-| 9/26—9/30 | 三代理、两级委托、四工具完整链路；正常执行、越权拒绝、并发不超额、重试不重复 |
-| 10/1—10/7 | 祖先额度、撤销竞态、故障恢复、独立检查点与离线验证 |
-| 10/8—10/13 | 安全与故障矩阵、对照实验、性能开销拆分；10/13 功能冻结 |
-| 10/14—10/17 | 干净环境复现、工程文档、图表、演示材料 |
-| 10/18—10/20 | 缺陷修复、最终验收、固定版本与提交包 |
-| 10/21—10/23 | 提交缓冲，不安排关键研发 |
+当前由用户本人继续。完整A2已接受，A3依次为：原子日志与独立检查点、有界导出与离线验证、干净部署与三holder演示、规模公平实验和最终材料。详见[A3计划](tasks/A3-plan.md)及[本轮规划包](tasks/workflow/runs/A3-planning-20261008/package.md)。当前仅规划，不把旧日期排程或过去A/B/C分工作为已完成事实或本次授权。
 
-A 负责可信执行与集成；B 负责密码授权及审计核心；C 在后期负责材料整理与复现验收。每位开发者负责自身模块的测试与技术文档。详细内部排班不进入仓库。
+初版M1—M13与成熟版完整审计/规模实验分层验收；每段以实际接口、完整矩阵与独立接受为进入后段的依据。完整目标不因调整排期而削减。
 
 ## 7. 验收与研究重点
 
@@ -500,6 +496,40 @@ OAuth/OIDC、SM2/SM3、Agent间委托与DID的唯一当前设计见 [实施及�
 
 A2.3补正候选在真实签名/READY前复用原接受事实校验：对不可变报价执行精确总额、数量/原请求及cost currency/calls检查，并逐事件核对历史验真的完整root→leaf路径和四种delta。两列quote/result相互一致不能替代上述约束。校验读取均先于query最终DB时刻，不引入当前报价、下游结果或当前撤销/到期条件；合法零价及迟延终局仍可历史发布。失败保留PENDING/null及原ID/iat，当前query失败回滚proof/link，仅允许原契约的隔离STAGED证据。
 
-容量域分列：当前canonical producer的订单公开响应保守包含上界为58168字节；兼容有效原始签名JWS（含非canonical JSON空白）的单JWS仍可到16384字节，不能套用canonical JWS上界。原接受事实要求q≥1、p≥0、每项q*p及Σq*p≤MAX_SAFE；p>0时digits(q)+digits(p)≥18会使最小乘积≥10^16>MAX_SAFE，p=0时至多16+1位。因此每项联合数字宽度≤17，256项比松Cartesian32位省3840字节，得到兼容域公开响应保守上界64695字节。两者均不是实际合法最大值；组件64KiB/JWS16KiB、公开65536和外层1MiB守卫保持不变，真实边界/非法组件探针仍独立保留。补正自查不代表正式接受；本轮按真人指令在自查、证据和资源清理后停止，本轮补正后的新独立复验未执行、完整A2未接受，原r1 NOT_ACCEPTED保留，P2仅标FIXED_PENDING_REVIEW。
+容量域分列：本轮独立依据实际validator、q≥1/p≥0/Σq*p≤MAX_SAFE及标识符长度推导，canonical producer订单公开响应包含上界为48187＋2724＋124＝51035字节；兼容真实有效非canonical raw JWS仍可到16384，公开包含上界为48187＋16384＋124＝64695。两者均非共同可达合法最大值。正price的digits(q)＋digits(p)≤17，zero price≤16＋1；旧58168为较松Cartesian/标识符公式，仅历史比较。九个各≤65536组件的outer保守上界589964；1MiB/+1纯codec点并非保留组件profile的合法SDK bundle。组件64KiB、JWS16KiB、公开65536和外壳1MiB守卫不变；真实256 SKU、原边界/故障/回滚探针及范围分类见[完整独立review-r2](tasks/workflow/runs/A2.3-receipts-20261004/review-r2.md)。本候选完整A2已[正式接受](tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，原r1否决保留。
 
-本轮完整自查报告：`tasks/workflow/runs/A2.3-receipts-20261004/implementation-remediation-r2.md`；最新真人停止指令：`tasks/workflow/runs/A2.3-receipts-20261004/user-stop-after-selfcheck-20261005.md`。本轮补正后的新独立复验未执行；完整A2未接受，原[r1否决](tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md)保留。
+最新结论：[正式接受](tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)与[完整独立review-r2](tasks/workflow/runs/A2.3-receipts-20261004/review-r2.md)，原[r1否决](tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md)及[实施自查](tasks/workflow/runs/A2.3-receipts-20261004/implementation-remediation-r2.md)保留为历史。本轮依据[真人恢复](tasks/workflow/runs/A2.3-receipts-20261004/user-resume-sol-20261006.md)完成完整复核、证据、资源清理与交接后停止；未Git交付/远端CI/合并或实施A3。
+
+
+A3.2 export 的 `run` 装配显式要求 `AG_GATEWAY_EXPORT_DATABASE_URL`（独立 SELECT-only 身份）和 `--export-spool-parent`（当前操作者拥有的 0700 私有父目录）；不得复用 gateway/downstream 写身份。公开 trust、四字段 external pin 和独立 reader 捕获的 checkpoint history 通过配置的 evidence_local_inputs 加载。未登记 export_credentials 的旧配置沿用原调用方式。`check` 离线验证配置及私有 secret 文件，不要求运行时 DSN 或临时目录。
+
+```bash
+export AG_GATEWAY_EXPORT_DATABASE_URL="$RUN_SELECT_ONLY_EXPORT_DSN"
+python -m agent_guard.gateway run --config "$RUN_GATEWAY_CONFIG_DIR/config.json" --host 127.0.0.1 --port 8444 --ssl-certfile "$RUN_TLS_CERT" --ssl-keyfile "$RUN_TLS_KEY" --export-spool-parent "$RUN_EXPORT_PRIVATE_PARENT"
+```
+
+## 正常隔离演示
+
+需要Docker Desktop、Compose v2和宿主Python 3；正常容器使用Python3.11及现有锁。无需模型API。以下脚本逐字执行；现有最终测试环境只消费本owner已准备的12角色/3PG，独立运行则由有限可信supervisor新建并最终清理自有资源。
+
+```bash
+# A33-REPRODUCE-BEGIN
+AG33_REPOSITORY="${AG33_REPOSITORY:-$(pwd)}"
+if [ -n "${AG33_FINAL_RESOURCE_MANIFEST:-}" ]; then
+  AG33_PROJECT="$(python3 -c 'import json,os;print(json.load(open(os.environ["AG33_FINAL_RESOURCE_MANIFEST"]))["project"])')"
+  AG33_CONTROL="$(dirname "$AG33_FINAL_RESOURCE_MANIFEST")/control"
+  AG33_OPERATOR_ID="$(python3 -c 'import json,os;print(json.load(open(os.environ["AG33_FINAL_RESOURCE_MANIFEST"]))["roles"]["operator"]["container_id"])')"
+  AG33_IMAGE="$(docker inspect --format '{{.Config.Image}}' "$AG33_OPERATOR_ID")"
+  AG33_SUBNET_PREFIX="$(python3 -c 'import json,os;print(json.load(open(os.environ["AG33_FINAL_RESOURCE_MANIFEST"]))["roles"]["audit"]["listener_host"].rsplit(".",1)[0])')"
+  export AG33_PROJECT AG33_CONTROL AG33_IMAGE AG33_SUBNET_PREFIX
+  docker compose -f "$AG33_REPOSITORY/deploy/demo/compose.yaml" --project-name "$AG33_PROJECT" config -q
+  docker exec "$AG33_OPERATOR_ID" python -m agent_guard.demo normal --config /owned/run/run.json --out /tmp/readme-demo
+else
+  AG33_RUN_ID="$(python3 -c 'import uuid;print(uuid.uuid4())')"
+  AG33_OWNER_ID="demo-$AG33_RUN_ID"
+  python3 "$AG33_REPOSITORY/deploy/demo/supervisor.py" --run-id "$AG33_RUN_ID" --owner-id "$AG33_OWNER_ID" --evidence "$PWD/demo-$AG33_RUN_ID" --mode wheel
+fi
+# A33-REPRODUCE-END
+```
+
+正常命令是`python -m agent_guard.demo normal --config /owned/run/run.json --out /tmp/OUTPUT [--capacity-items 256]`。256必须在trusted owner启动supervisor时同时传`--capacity-items 256`，在provision前固定catalog/policy；不能临时扩大已准备的任务。详见[部署操作](docs/deployment-demo.md)和[技术材料](docs/technical-report.md)。

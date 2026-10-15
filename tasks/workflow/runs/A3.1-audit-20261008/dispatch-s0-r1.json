@@ -1,0 +1,145 @@
+{
+  "stage": "A3.1",
+  "phase": "S0_SERIAL",
+  "requested_worker": "gpt-6.1-sol/medium",
+  "effective_metadata": "UNKNOWN",
+  "worker_task": "/root/a31_shared_impl_sol_r1",
+  "sole_writer_files": [
+    {
+      "path": "migrations/007_audit_journal.sql",
+      "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+    },
+    {
+      "path": "migrations/audit/001_checkpoint_store.sql",
+      "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+    },
+    {
+      "path": "pyproject.toml",
+      "baseline_sha256": "3949c7fa056e62e9cb16f3451b6fd8bb812b92a6c240031473b9bef04cbdfd00"
+    },
+    {
+      "path": "src/agent_guard/audit/__init__.py",
+      "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+    },
+    {
+      "path": "src/agent_guard/audit/bootstrap_cli.py",
+      "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+    },
+    {
+      "path": "src/agent_guard/audit/contracts.py",
+      "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+    },
+    {
+      "path": "src/agent_guard/audit/journal.py",
+      "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+    },
+    {
+      "path": "src/agent_guard/authorization/evidence_store.py",
+      "baseline_sha256": "c9c2f1aa617e134c4ab3e849e7dfe106722f41d9b342594ba2282c1cb5c1e4e3"
+    },
+    {
+      "path": "src/agent_guard/crypto/sm.py",
+      "baseline_sha256": "2b00b5df65f741ccae706d89a6549027d30fc76cf5abbd3a838c3b83fbeddd79"
+    },
+    {
+      "path": "src/agent_guard/execution/query.py",
+      "baseline_sha256": "9763ac130ebd0c7f87130f11be3ec64d3beb5a14edf722879a64d205c0d86ac5"
+    },
+    {
+      "path": "src/agent_guard/execution/service.py",
+      "baseline_sha256": "5bd596722f99cc078cf3b5cacb6e91213062e73cbad99468979ec122079c4642"
+    },
+    {
+      "path": "src/agent_guard/execution/store.py",
+      "baseline_sha256": "42b95254488b5c43028efd9284a7726dc8589182cdb32e67fbeafd9741d9e504"
+    },
+    {
+      "path": "src/agent_guard/execution/verified.py",
+      "baseline_sha256": "0555fd5855f478e1fba407dea6c7667ac7270d3bfbe58df9daeacf6a244ee74a"
+    },
+    {
+      "path": "src/agent_guard/execution/receipt_publication.py",
+      "baseline_sha256": "5ff868e408af6270a287b605b555cf239163634adff6f764e8e99d1679d5612f"
+    },
+    {
+      "path": "src/agent_guard/ledger/lineage.py",
+      "baseline_sha256": "036ddd3a02c1d4e3688e325b04e9e3db537872e1b42ad65a9371e7f38dbbae39"
+    },
+    {
+      "path": "src/agent_guard/ledger/migrate.py",
+      "baseline_sha256": "fe55dd46350d3950f2237d3fa85ed87715228d46531f2da61c34bab309b18a2c"
+    },
+    {
+      "path": "src/agent_guard/ledger/service.py",
+      "baseline_sha256": "5b208f73a59ca17bc149db1604ae6612ff9acb613ddc14bf159e3d7370cb108d"
+    },
+    {
+      "path": "tests/fixtures/a31_common.py",
+      "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+    },
+    {
+      "path": "tests/fixtures/isolation.py",
+      "baseline_sha256": "de79104ae1c9320224a312f4c1ad4299ed7c9343ac02e0d4ce1f81222993697d"
+    },
+    {
+      "path": "tests/integration/test_audit_atomicity.py",
+      "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+    },
+    {
+      "path": "tests/integration/test_audit_clock.py",
+      "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+    },
+    {
+      "path": "tests/integration/test_audit_fencing.py",
+      "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+    },
+    {
+      "path": "tests/integration/test_audit_lock_order.py",
+      "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+    },
+    {
+      "path": "tests/integration/test_audit_upgrade.py",
+      "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+    },
+    {
+      "path": "tests/integration/test_lineage_migrations.py",
+      "baseline_sha256": "bb82ee2f6991da40b565b3401a3d47c2edc452ec819d78e992071566f8a4bcc0"
+    },
+    {
+      "path": "tests/integration/test_migrations.py",
+      "baseline_sha256": "859344b5683f0068055ef6a96e76416396f1789566ce7973fad4b542bd864418"
+    },
+    {
+      "path": "tests/integration/test_a2_migrations.py",
+      "baseline_sha256": "dca69eaafbef2165e42fdd07834a85e1c769d82f0cb12595a1183a779102d237"
+    },
+    {
+      "path": "tests/unit/test_audit_journal.py",
+      "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+    },
+    {
+      "path": "tests/fixtures/receipts.py",
+      "baseline_sha256": "f02df7ea97b06bb168af36949327b70293e34477342b196b8fb8c517bd99bd40",
+      "reason": "r1 precise inherited oracle/inventory/trusted compose adaptation; all original assertions preserved"
+    },
+    {
+      "path": "tests/integration/test_receipt_publication.py",
+      "baseline_sha256": "5e1b5f0a34c58ed80e6eb2ee316d74081690c27489ee14ee6e1c6b4e4be571c1",
+      "reason": "r1 precise inherited oracle/inventory/trusted compose adaptation; all original assertions preserved"
+    },
+    {
+      "path": "tests/integration/test_evidence_binding.py",
+      "baseline_sha256": "749010fb2d02c6a9faaed76a1f8d95ba6de3ffc40d257d8d62f60b8fc813f607",
+      "reason": "r1 precise inherited oracle/inventory/trusted compose adaptation; all original assertions preserved"
+    }
+  ],
+  "role_resource_manifest": "artifacts/workflow/A3.1-audit-20261008/shared-78baf8708f66/resources.json",
+  "resource_manifest_sha256": "6f668441232b05df02f0a8f9663777dfb4931c9a217330af31f4926b452b4856",
+  "package_review": "package-review-r2.md",
+  "package_review_sha256": "380c1cb53eb96efeb9970c80cea5dac42f32f8822ea077ad8c21a1e289672a33",
+  "package_freeze": "artifacts/workflow/A3.1-audit-20261008/package-r2/freeze.json",
+  "all_other_product_files_readonly": true,
+  "runtime_helper": "artifacts/workflow/A3.1-audit-20261008/controller/runtime_helper.py",
+  "timestamp": 1791505247.5343082,
+  "stop_gate": "Actual S0 full selfcheck/readback/interfaces/schema/fixture SHA + native STOP and owned resource0 before S1"
+}

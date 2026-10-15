@@ -1,0 +1,29 @@
+{
+  "stage": "A2.3-receipts",
+  "kind": "IMPLEMENTATION_ACCEPTANCE",
+  "human_record": "tasks/workflow/runs/A2.3-receipts-20261004/user-resume-sol-20261006.md",
+  "human_sha256": "2d854f6f90b55a58a740b228d8184d966a6658cfc986e928eee876a4c963d3fa",
+  "requested_roles": {
+    "controller": "gpt-6.1-sol/high",
+    "worker": "gpt-6.1-sol/medium",
+    "reviewer": "gpt-6.1-sol/xhigh",
+    "effective_metadata": "UNKNOWN"
+  },
+  "authorization": "GRANTED_FULL_REVIEW_AND_NECESSARY_SAME_STAGE_REMEDIATION",
+  "counts": {
+    "requirements": 119,
+    "runtime": 112,
+    "must_assert": 269,
+    "nodes": 41,
+    "atoms": 88
+  },
+  "previous_runtime_binding": "tasks/workflow/runs/A2.3-receipts-20261004/runtime-binding-remediation-r2.json",
+  "finite_adaptation": "Previously continuous human approval; native receipts/full freeze/isolated real complete runs; no old gate changes",
+  "task": "tasks/workflow/runs/A2.3-receipts-20261004/task-full-acceptance-sol-r2.md",
+  "task_sha256": "aeda24f912c5e953cdf90b8f128c8ec6c7bcbbbc23aaf76f178d3045e3c4c7c5",
+  "candidate_freeze": "artifacts/workflow/A2.3-receipts-20261004/controller-sol-resume-20261006/full-acceptance-freeze-r2.json",
+  "reviewer_evidence": "artifacts/workflow/A2.3-receipts-20261004/full-acceptance-sol-reviewer-r2/",
+  "Git_delivery": "NOT_AUTHORIZED_THIS_RESUME",
+  "A3": "NOT_AUTHORIZED",
+  "timestamp": "2026-10-06T03:32:19.588008+00:00"
+}

@@ -1,0 +1,19 @@
+{
+  "worker": "/root/a31_shared_correction_sol_r4",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "medium",
+  "effective_metadata": "UNKNOWN",
+  "source_message": "继续",
+  "package": "r4 PACKAGE_READY DESIGN_ONLY",
+  "write_paths": [
+    "src/agent_guard/audit/journal.py",
+    "src/agent_guard/execution/receipt_publication.py",
+    "src/agent_guard/authorization/evidence_store.py",
+    "tests/integration/test_audit_lock_order.py",
+    "tests/integration/test_audit_atomicity.py",
+    "tests/integration/test_gateway_query.py"
+  ],
+  "other_shared_paths": "READ_ONLY",
+  "runtime_role": "shared",
+  "scope": "S0 correction and complete selfcheck; STOP resources0; no S1/no Git"
+}

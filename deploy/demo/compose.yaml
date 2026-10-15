@@ -1,0 +1,986 @@
+{
+  "name": "${AG33_PROJECT}",
+  "services": {
+    "as": {
+      "image": "${AG33_IMAGE}",
+      "user": "21000:21000",
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "read_only": true,
+      "tmpfs": [
+        "/tmp:rw,nosuid,size=128m"
+      ],
+      "group_add": [],
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "public",
+          "target": "/owned",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/as",
+          "read_only": true,
+          "volume": {
+            "subpath": "run/as"
+          }
+        },
+        {
+          "type": "bind",
+          "source": "${AG33_CONTROL}",
+          "target": "/control",
+          "read_only": true
+        }
+      ],
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "python",
+        "-m",
+        "agent_guard.demo",
+        "actor",
+        "--stage",
+        "hold",
+        "--role",
+        "as"
+      ],
+      "networks": {
+        "front": {
+          "ipv4_address": "${AG33_SUBNET_PREFIX}.11",
+          "aliases": [
+            "auth.agent-guard.test"
+          ]
+        },
+        "authority": {}
+      }
+    },
+    "audit": {
+      "image": "${AG33_IMAGE}",
+      "user": "21001:21001",
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "read_only": true,
+      "tmpfs": [
+        "/tmp:rw,nosuid,size=128m"
+      ],
+      "group_add": [],
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "public",
+          "target": "/owned",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/audit",
+          "read_only": true,
+          "volume": {
+            "subpath": "run/audit"
+          }
+        },
+        {
+          "type": "bind",
+          "source": "${AG33_CONTROL}",
+          "target": "/control",
+          "read_only": true
+        }
+      ],
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "python",
+        "-m",
+        "agent_guard.demo",
+        "actor",
+        "--stage",
+        "hold",
+        "--role",
+        "audit"
+      ],
+      "networks": {
+        "front": {
+          "ipv4_address": "${AG33_SUBNET_PREFIX}.13",
+          "aliases": [
+            "audit.agent-guard.test"
+          ]
+        },
+        "audit": {}
+      }
+    },
+    "did": {
+      "image": "${AG33_IMAGE}",
+      "user": "21002:21002",
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "read_only": true,
+      "tmpfs": [
+        "/tmp:rw,nosuid,size=128m"
+      ],
+      "group_add": [],
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "public",
+          "target": "/owned",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/did",
+          "read_only": true,
+          "volume": {
+            "subpath": "run/did"
+          }
+        },
+        {
+          "type": "bind",
+          "source": "${AG33_CONTROL}",
+          "target": "/control",
+          "read_only": true
+        }
+      ],
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "python",
+        "-m",
+        "agent_guard.demo",
+        "actor",
+        "--stage",
+        "did",
+        "--role",
+        "did"
+      ],
+      "networks": {
+        "front": {
+          "ipv4_address": "${AG33_SUBNET_PREFIX}.10",
+          "aliases": [
+            "identity.agent-guard.test"
+          ]
+        }
+      }
+    },
+    "executor": {
+      "image": "${AG33_IMAGE}",
+      "user": "21003:21003",
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "read_only": true,
+      "tmpfs": [
+        "/tmp:rw,nosuid,size=128m"
+      ],
+      "group_add": [
+        "22001"
+      ],
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "public",
+          "target": "/owned",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/executor",
+          "read_only": true,
+          "volume": {
+            "subpath": "run/executor"
+          }
+        },
+        {
+          "type": "bind",
+          "source": "${AG33_CONTROL}",
+          "target": "/control",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/ipc/selector-executor",
+          "read_only": false,
+          "volume": {
+            "subpath": "run/ipc/selector-executor"
+          }
+        }
+      ],
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "python",
+        "-m",
+        "agent_guard.demo",
+        "actor",
+        "--stage",
+        "hold",
+        "--role",
+        "executor"
+      ],
+      "networks": {
+        "front": {}
+      }
+    },
+    "export": {
+      "image": "${AG33_IMAGE}",
+      "user": "21004:21004",
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "read_only": true,
+      "tmpfs": [
+        "/tmp:rw,nosuid,size=128m"
+      ],
+      "group_add": [],
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "public",
+          "target": "/owned",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/export",
+          "read_only": true,
+          "volume": {
+            "subpath": "run/export"
+          }
+        },
+        {
+          "type": "bind",
+          "source": "${AG33_CONTROL}",
+          "target": "/control",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "outputs",
+          "target": "/results",
+          "read_only": false
+        }
+      ],
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "python",
+        "-m",
+        "agent_guard.demo",
+        "actor",
+        "--stage",
+        "hold",
+        "--role",
+        "export"
+      ],
+      "networks": {
+        "front": {},
+        "authority": {}
+      }
+    },
+    "gateway": {
+      "image": "${AG33_IMAGE}",
+      "user": "21005:21005",
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "read_only": true,
+      "tmpfs": [
+        "/tmp:rw,nosuid,size=128m"
+      ],
+      "group_add": [],
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "public",
+          "target": "/owned",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/gateway",
+          "read_only": true,
+          "volume": {
+            "subpath": "run/gateway"
+          }
+        },
+        {
+          "type": "bind",
+          "source": "${AG33_CONTROL}",
+          "target": "/control",
+          "read_only": true
+        }
+      ],
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "python",
+        "-m",
+        "agent_guard.demo",
+        "actor",
+        "--stage",
+        "hold",
+        "--role",
+        "gateway"
+      ],
+      "networks": {
+        "front": {
+          "ipv4_address": "${AG33_SUBNET_PREFIX}.12",
+          "aliases": [
+            "gateway.agent-guard.test"
+          ]
+        },
+        "authority": {},
+        "downstream": {}
+      }
+    },
+    "offline": {
+      "image": "${AG33_IMAGE}",
+      "user": "21006:21006",
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "read_only": true,
+      "tmpfs": [
+        "/tmp:rw,nosuid,size=128m"
+      ],
+      "group_add": [],
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "public",
+          "target": "/owned",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/offline",
+          "read_only": true,
+          "volume": {
+            "subpath": "run/offline"
+          }
+        },
+        {
+          "type": "bind",
+          "source": "${AG33_CONTROL}",
+          "target": "/control",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "outputs",
+          "target": "/inputs",
+          "read_only": true
+        }
+      ],
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "python",
+        "-m",
+        "agent_guard.demo",
+        "actor",
+        "--stage",
+        "hold",
+        "--role",
+        "offline"
+      ],
+      "network_mode": "none"
+    },
+    "operator": {
+      "image": "${AG33_IMAGE}",
+      "user": "21007:21007",
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "read_only": true,
+      "group_add": [
+        "21011"
+      ],
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "public",
+          "target": "/owned",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/operator",
+          "read_only": false,
+          "volume": {
+            "subpath": "run/operator"
+          }
+        },
+        {
+          "type": "bind",
+          "source": "${AG33_CONTROL}",
+          "target": "/control",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "registry",
+          "target": "/registry",
+          "read_only": false
+        },
+        {
+          "type": "volume",
+          "source": "operator-tmp",
+          "target": "/tmp"
+        }
+      ],
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "python",
+        "-m",
+        "agent_guard.demo",
+        "actor",
+        "--stage",
+        "hold",
+        "--role",
+        "operator"
+      ],
+      "networks": {
+        "front": {},
+        "authority": {},
+        "downstream": {},
+        "audit": {}
+      }
+    },
+    "planner": {
+      "image": "${AG33_IMAGE}",
+      "user": "21008:21008",
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "read_only": true,
+      "tmpfs": [
+        "/tmp:rw,nosuid,size=128m"
+      ],
+      "group_add": [
+        "22000"
+      ],
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "public",
+          "target": "/owned",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/planner",
+          "read_only": true,
+          "volume": {
+            "subpath": "run/planner"
+          }
+        },
+        {
+          "type": "bind",
+          "source": "${AG33_CONTROL}",
+          "target": "/control",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/ipc/planner-selector",
+          "read_only": false,
+          "volume": {
+            "subpath": "run/ipc/planner-selector"
+          }
+        }
+      ],
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "python",
+        "-m",
+        "agent_guard.demo",
+        "actor",
+        "--stage",
+        "hold",
+        "--role",
+        "planner"
+      ],
+      "networks": {
+        "front": {}
+      }
+    },
+    "publisher": {
+      "image": "${AG33_IMAGE}",
+      "user": "21009:21009",
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "read_only": true,
+      "tmpfs": [
+        "/tmp:rw,nosuid,size=128m"
+      ],
+      "group_add": [],
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "public",
+          "target": "/owned",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/publisher",
+          "read_only": true,
+          "volume": {
+            "subpath": "run/publisher"
+          }
+        },
+        {
+          "type": "bind",
+          "source": "${AG33_CONTROL}",
+          "target": "/control",
+          "read_only": true
+        }
+      ],
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "python",
+        "-m",
+        "agent_guard.demo",
+        "actor",
+        "--stage",
+        "hold",
+        "--role",
+        "publisher"
+      ],
+      "networks": {
+        "front": {},
+        "authority": {},
+        "audit": {}
+      }
+    },
+    "selector": {
+      "image": "${AG33_IMAGE}",
+      "user": "21010:21010",
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "read_only": true,
+      "tmpfs": [
+        "/tmp:rw,nosuid,size=128m"
+      ],
+      "group_add": [
+        "22000",
+        "22001"
+      ],
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "public",
+          "target": "/owned",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/selector",
+          "read_only": true,
+          "volume": {
+            "subpath": "run/selector"
+          }
+        },
+        {
+          "type": "bind",
+          "source": "${AG33_CONTROL}",
+          "target": "/control",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/ipc/planner-selector",
+          "read_only": false,
+          "volume": {
+            "subpath": "run/ipc/planner-selector"
+          }
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/ipc/selector-executor",
+          "read_only": false,
+          "volume": {
+            "subpath": "run/ipc/selector-executor"
+          }
+        }
+      ],
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "python",
+        "-m",
+        "agent_guard.demo",
+        "actor",
+        "--stage",
+        "hold",
+        "--role",
+        "selector"
+      ],
+      "networks": {
+        "front": {}
+      }
+    },
+    "worker": {
+      "image": "${AG33_IMAGE}",
+      "user": "21011:21011",
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "read_only": true,
+      "tmpfs": [
+        "/tmp:rw,nosuid,size=128m"
+      ],
+      "group_add": [],
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "public",
+          "target": "/owned",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/owned/run/worker",
+          "read_only": true,
+          "volume": {
+            "subpath": "run/worker"
+          }
+        },
+        {
+          "type": "bind",
+          "source": "${AG33_CONTROL}",
+          "target": "/control",
+          "read_only": true
+        },
+        {
+          "type": "volume",
+          "source": "registry",
+          "target": "/registry",
+          "read_only": true
+        }
+      ],
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "python",
+        "-m",
+        "agent_guard.demo",
+        "actor",
+        "--stage",
+        "hold",
+        "--role",
+        "worker"
+      ],
+      "networks": {
+        "front": {},
+        "authority": {},
+        "downstream": {}
+      }
+    },
+    "pg-authority": {
+      "image": "postgres:16",
+      "environment": {
+        "POSTGRES_DB": "ag_authority",
+        "POSTGRES_PASSWORD_FILE": "/pg/admin-password",
+        "POSTGRES_INITDB_ARGS": "--locale=C --encoding=UTF8"
+      },
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/pg",
+          "read_only": true,
+          "volume": {
+            "subpath": "pg/authority"
+          }
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/docker-entrypoint-initdb.d",
+          "read_only": true,
+          "volume": {
+            "subpath": "pg/authority"
+          }
+        },
+        {
+          "type": "volume",
+          "source": "pgdata-authority",
+          "target": "/var/lib/postgresql/data",
+          "read_only": false
+        }
+      ],
+      "networks": {
+        "authority": {
+          "aliases": [
+            "pg-authority.agent-guard.test"
+          ]
+        }
+      },
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "postgres",
+        "-c",
+        "ssl=on",
+        "-c",
+        "ssl_cert_file=/pg/server.pem",
+        "-c",
+        "ssl_key_file=/pg/server.key",
+        "-c",
+        "hba_file=/pg/pg_hba.conf"
+      ]
+    },
+    "pg-downstream": {
+      "image": "postgres:16",
+      "environment": {
+        "POSTGRES_DB": "ag_downstream",
+        "POSTGRES_PASSWORD_FILE": "/pg/admin-password",
+        "POSTGRES_INITDB_ARGS": "--locale=C --encoding=UTF8"
+      },
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/pg",
+          "read_only": true,
+          "volume": {
+            "subpath": "pg/downstream"
+          }
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/docker-entrypoint-initdb.d",
+          "read_only": true,
+          "volume": {
+            "subpath": "pg/downstream"
+          }
+        },
+        {
+          "type": "volume",
+          "source": "pgdata-downstream",
+          "target": "/var/lib/postgresql/data",
+          "read_only": false
+        }
+      ],
+      "networks": {
+        "downstream": {
+          "aliases": [
+            "pg-downstream.agent-guard.test"
+          ]
+        }
+      },
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "postgres",
+        "-c",
+        "ssl=on",
+        "-c",
+        "ssl_cert_file=/pg/server.pem",
+        "-c",
+        "ssl_key_file=/pg/server.key",
+        "-c",
+        "hba_file=/pg/pg_hba.conf"
+      ]
+    },
+    "pg-audit": {
+      "image": "postgres:16",
+      "environment": {
+        "POSTGRES_DB": "ag_audit",
+        "POSTGRES_PASSWORD_FILE": "/pg/admin-password",
+        "POSTGRES_INITDB_ARGS": "--locale=C --encoding=UTF8"
+      },
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/pg",
+          "read_only": true,
+          "volume": {
+            "subpath": "pg/audit"
+          }
+        },
+        {
+          "type": "volume",
+          "source": "private",
+          "target": "/docker-entrypoint-initdb.d",
+          "read_only": true,
+          "volume": {
+            "subpath": "pg/audit"
+          }
+        },
+        {
+          "type": "volume",
+          "source": "pgdata-audit",
+          "target": "/var/lib/postgresql/data",
+          "read_only": false
+        }
+      ],
+      "networks": {
+        "audit": {
+          "aliases": [
+            "pg-audit.agent-guard.test"
+          ]
+        }
+      },
+      "labels": {
+        "agent-guard.run": "${AG33_RUN_ID}",
+        "agent-guard.owner": "${AG33_OWNER_ID}"
+      },
+      "command": [
+        "postgres",
+        "-c",
+        "ssl=on",
+        "-c",
+        "ssl_cert_file=/pg/server.pem",
+        "-c",
+        "ssl_key_file=/pg/server.key",
+        "-c",
+        "hba_file=/pg/pg_hba.conf"
+      ]
+    }
+  },
+  "volumes": {
+    "private": {
+      "external": true,
+      "name": "${AG33_PROJECT}-private"
+    },
+    "public": {
+      "external": true,
+      "name": "${AG33_PROJECT}-public"
+    },
+    "registry": {
+      "external": true,
+      "name": "${AG33_PROJECT}-registry"
+    },
+    "outputs": {
+      "external": true,
+      "name": "${AG33_PROJECT}-outputs"
+    },
+    "pgdata-authority": {
+      "external": true,
+      "name": "${AG33_PROJECT}-pgdata-authority"
+    },
+    "pgdata-downstream": {
+      "external": true,
+      "name": "${AG33_PROJECT}-pgdata-downstream"
+    },
+    "pgdata-audit": {
+      "external": true,
+      "name": "${AG33_PROJECT}-pgdata-audit"
+    },
+    "operator-tmp": {
+      "external": true,
+      "name": "${AG33_PROJECT}-operator-tmp"
+    }
+  },
+  "networks": {
+    "front": {
+      "external": true,
+      "name": "${AG33_PROJECT}-front"
+    },
+    "authority": {
+      "external": true,
+      "name": "${AG33_PROJECT}-authority"
+    },
+    "downstream": {
+      "external": true,
+      "name": "${AG33_PROJECT}-downstream"
+    },
+    "audit": {
+      "external": true,
+      "name": "${AG33_PROJECT}-audit"
+    }
+  }
+}

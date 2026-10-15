@@ -784,7 +784,17 @@ class ReceiptScene:
         )
         assert public["status"] == "SUCCEEDED"
         query_after = full_state(self.dsn, self.downstream_dsn)
-        assert_query_only(query_before, query_after, operation_id)
+        assert_query_only(
+            query_before,
+            query_after,
+            operation_id,
+            query_material=(
+                self.token.encode("ascii"),
+                query_proof.encode("ascii"),
+                canonical_json_bytes(query),
+            ),
+            response=raw,
+        )
         self.oracles.append(
             {
                 "operation_id": operation_id,
@@ -792,7 +802,12 @@ class ReceiptScene:
                 "publish_after": state_digest(after),
                 "query_before": state_digest(query_before),
                 "query_after": state_digest(query_after),
-                "query_only_families": ["ag_proofs", "ag_verified_evidence"],
+                "query_only_families": [
+                    "ag_proofs",
+                    "ag_verified_evidence",
+                    "ag_audit_records",
+                    "ag_audit_streams",
+                ],
             }
         )
         with psycopg.connect(self.dsn) as conn:
@@ -913,8 +928,148 @@ class ReceiptScene:
             raise RuntimeError("; ".join(errors))
 
 
+def _assert_receipt_journal_delta(
+    old, new, *, operation_id=None, query_material=None, response=None
+):
+    """Validate one real PUBLISH/QUERY before normalizing its expected view.
+
+    The supplied full snapshots remain untouched. Only a proven new record,
+    head advance and publication transaction witness are normalized in copies.
+    """
+    from agent_guard.audit.contracts import (
+        decode_journal_record,
+        decode_material_projection,
+        utc_text,
+    )
+    from agent_guard.contracts.encoding import b64url_encode
+    from agent_guard.crypto.sm import sm3_b64url
+
+    a, b = old["gateway"], new["gateway"]
+
+    def rows(state, table):
+        return [json.loads(raw) for (raw,) in state[table]]
+
+    def raw(value):
+        assert type(value) is str and value.startswith("\\x")
+        return bytes.fromhex(value[2:])
+
+    def instant(value):
+        return utc_text(datetime.fromisoformat(value.replace("Z", "+00:00")))
+
+    prior = a["ag_audit_records"]
+    current = b["ag_audit_records"]
+    assert all(row in current for row in prior)
+    added = [row for row in current if row not in prior]
+    assert len(added) == 1
+    stored = json.loads(added[0][0])
+    record = decode_journal_record(raw(stored["raw"]))
+    kind = "PUBLISH" if query_material is None else "QUERY"
+    assert record.kind == kind
+    if operation_id is not None:
+        assert record.operation_id == operation_id
+    for column in (
+        "seq",
+        "record_id",
+        "kind",
+        "operation_id",
+        "evidence_ref",
+        "previous_digest",
+        "digest",
+    ):
+        assert stored[column] == getattr(record, column)
+    assert stored["stream_id"] == record.scope.stream_id
+    assert instant(stored["recorded_at"]) == record.recorded_at
+    streams = {r["stream_id"]: r for r in rows(a, "ag_audit_streams")}
+    newstreams = {r["stream_id"]: r for r in rows(b, "ag_audit_streams")}
+    assert streams.keys() == newstreams.keys()
+    stream = streams[record.scope.stream_id]
+    head = newstreams[record.scope.stream_id]
+    assert (
+        record.scope.gateway_id,
+        record.scope.tenant_id,
+        record.scope.task_id,
+        record.scope.epoch,
+    ) == (stream["gateway_id"], stream["tenant_id"], stream["task_id"], stream["epoch"])
+    assert record.seq == stream["head_seq"] + 1
+    assert record.previous_digest == stream["head_digest"]
+    assert (head["head_seq"], head["head_digest"]) == (record.seq, record.digest)
+    head["head_seq"], head["head_digest"] = stream["head_seq"], stream["head_digest"]
+    assert streams == newstreams
+    operations = {r["operation_id"]: r for r in rows(b, "ag_operations")}
+    outboxes = {r["operation_id"]: r for r in rows(b, "ag_receipt_outbox")}
+    oldout = {r["operation_id"]: r for r in rows(a, "ag_receipt_outbox")}
+    op, out = operations[record.operation_id], outboxes[record.operation_id]
+    assert (op["tenant_id"], op["task_id"]) == (record.scope.tenant_id, record.scope.task_id)
+    facts = load_strict_json(record.facts_bytes)
+    material = decode_material_projection(kind, raw(stored["material_binding_bytes"]))
+    if kind == "PUBLISH":
+        assert record.evidence_ref == op["evidence_ref"]
+        assert oldout[record.operation_id]["receipt_status"] == "PENDING"
+        assert out["receipt_status"] == "READY"
+        assert facts == {
+            "receipt_id": out["receipt_id"],
+            "receipt_jws_digest": sm3_b64url(out["receipt_jws"].encode("ascii")),
+            "signed_at": instant(out["signed_at"]),
+        }
+        assert material == {"jws": out["receipt_jws"]}
+        assert stored["created_xid"] == out["audit_ready_xid"]
+        # Only this positively witnessed publication may normalize its xid.
+        cleaned = []
+        for row in rows(b, "ag_receipt_outbox"):
+            previous = oldout[row["operation_id"]]
+            if row["operation_id"] == record.operation_id:
+                row["audit_ready_xid"] = previous["audit_ready_xid"]
+            else:
+                assert row == previous
+            cleaned.append((json.dumps(row, separators=(",", ":")),))
+        b["ag_receipt_outbox"] = cleaned
+    else:
+        evidence = {r["evidence_ref"]: r for r in rows(b, "ag_verified_evidence")}
+        linked = [r for r in rows(b, "ag_proofs") if r["evidence_ref"] == record.evidence_ref]
+        assert len(linked) == 1
+        proof, e = linked[0], evidence[record.evidence_ref]
+        assert proof["operation_id"] == op["operation_id"]
+        assert proof["purpose"] == e["purpose"] == "result-read"
+        assert proof["proof_jti"] == e["proof_jti"]
+        assert proof["holder_kid"] == e["holder_kid"]
+        assert proof["endpoint"] == e["endpoint"] == QUERY_ENDPOINT
+        assert e["method"] == "POST" and e["state"] == "STAGED"
+        assert stored["created_xid"] == proof["audit_linked_xid"]
+        token, signed_proof, body = query_material
+        for name, value in (("token", token), ("proof", signed_proof), ("body", body)):
+            assert raw(e[name + "_bytes"]) == value
+            assert e[name + "_sm3"] == sm3_b64url(value)
+            assert facts[name + "_digest"] == e[name + "_sm3"]
+        assert proof["proof_digest"] == e["proof_sm3"]
+        assert material == {
+            "context": b64url_encode(raw(e["context_json"])),
+            "source": b64url_encode(raw(e["chain_json"])),
+        }
+        assert facts["context_digest"] == sm3_b64url(raw(e["context_json"]))
+        assert facts["source_material_digest"] == sm3_b64url(raw(e["chain_json"]))
+        assert facts["source_digest"] == load_strict_json(raw(e["chain_json"]))["digest"]
+        assert facts["first_evidence_ref"] == op["evidence_ref"]
+        assert facts["status"] == op["status"]
+        assert facts["receipt_status"] == out["receipt_status"]
+        assert facts["receipt_jws_digest"] == sm3_b64url(out["receipt_jws"].encode("ascii"))
+        result = load_strict_json(raw(out["result_bytes"]))
+        expected_response = {
+            "operation_id": op["operation_id"],
+            "status": op["status"],
+            "receipt_status": out["receipt_status"],
+            "result": result,
+            "receipt_jws": out["receipt_jws"],
+        }
+        assert facts["result_digest"] == sm3_b64url(canonical_json_bytes(result))
+        assert facts["response_digest"] == sm3_b64url(canonical_json_bytes(expected_response))
+        assert response == canonical_json_bytes(expected_response)
+    b["ag_audit_records"] = list(prior)
+    b["ag_audit_streams"] = list(a["ag_audit_streams"])
+
+
 def assert_publication_only(before, after):
     old, new = json.loads(json.dumps(before)), json.loads(json.dumps(after))
+    _assert_receipt_journal_delta(old, new)
     for state in (old, new):
         rows = state["gateway"]["ag_receipt_outbox"]
         cleaned = []
@@ -928,8 +1083,11 @@ def assert_publication_only(before, after):
         raise AssertionError("publication changed non-publication persisted facts")
 
 
-def assert_query_only(before, after, operation_id):
+def assert_query_only(before, after, operation_id, *, query_material, response):
     old, new = json.loads(json.dumps(before)), json.loads(json.dumps(after))
+    _assert_receipt_journal_delta(
+        old, new, operation_id=operation_id, query_material=query_material, response=response
+    )
     added = {}
     for table in ("ag_proofs", "ag_verified_evidence"):
         prior = old["gateway"].pop(table)

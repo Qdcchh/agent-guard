@@ -1,0 +1,32 @@
+{
+  "stage": "A3.1",
+  "status": "EXPLICIT_STOPPED_SERVICE_TO_SOLE_INTEGRATOR_TRANSFER",
+  "writer": "/root/a31_s2_integrator_sol_r1",
+  "requested_model": "gpt-6.1-sol/medium",
+  "effective_metadata": "UNKNOWN",
+  "exact_additional_path": "src/agent_guard/audit/server.py",
+  "before_sha256": "70dd4898b576dc2d794145cc5fb0e336553138623d840436239beadf76d4dae1",
+  "reason": "Actual source full4222 framing-9 BrokenPipe before expected rejection response; separate finite real TLS split-send probe POST65537 10/10 BrokenPipe, GET10/10 405; original failing iteration value UNKNOWN. Same protocol/interface/65536 acceptance limit, no scope expansion.",
+  "approved_diff": "artifacts/workflow/A3.1-audit-20261008/s2-integration-r1/proposed-audit-oversize-drain-r2.diff",
+  "approved_diff_sha256": "f274b935dddd00f98d12f18a24f4577d39a129320759dc6679b6434894d585de",
+  "runtime_stop_readbacks": [
+    {
+      "path": "artifacts/workflow/A3.1-audit-20261008/s2-integration-r1/source-actual-tls-stop-r1.json",
+      "sha256": "3d26eae9b34ea4476f46ebb9a996764ad579e272d3d557ff29d809bf61c4932d",
+      "native_exit": 0,
+      "live_uid501": [],
+      "py_fullID": "4623fde450c0db81e0bf2e04ae095bc780efb62e3aadaf1f12d183fe6db94853"
+    },
+    {
+      "path": "artifacts/workflow/A3.1-audit-20261008/s2-integration-r1/wheel-actual-tls-stop-r1.json",
+      "sha256": "5627178446d2bbffcd365976686bf6c25f36c165e440b12461bf24bfbb1f4e27",
+      "native_exit": 0,
+      "live_uid501": [],
+      "py_fullID": "f89a404ae21f99862f2e53ab6346f2e216d1d54862833362128dad6355d70057"
+    }
+  ],
+  "limits": "Only canonical single Content-Length >65536 rejection drain: <=65537 bytes, monotonic <=1s, per-read remaining timeout, restore prior socket timeout; no parse/dispatch/write/sign/accept oversize. Existing assertions and security limits unchanged.",
+  "future_validation": "Finite genuine TLS framing/control then complete source and noneditable wheel full matrix; no partial borrowing; unchanged passed unaffected groups may reuse only exact actual provenance.",
+  "prior_service_stop": "Existing S1 service writer native STOP/resource0 in S2 transfer preconditions; no active service writer",
+  "created": 1791584961.446771
+}

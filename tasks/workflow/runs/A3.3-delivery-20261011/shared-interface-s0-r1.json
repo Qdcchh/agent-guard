@@ -1,0 +1,1062 @@
+{
+  "status": "FROZEN_PARTIAL_S0_INSTALLED_API_NOT_FUNCTIONAL_ACCEPTANCE",
+  "STOP_SHA256": "ea5ba2aec0692542950bff0015c96cdd56bd8bde19b884b4cb860a9820549b08",
+  "evidence_manifest_SHA256": "6211aaff4b5c9daec1675442c562a13a8a2f6965706b114894d627ca22df2d84",
+  "source_files": [
+    {
+      "path": "src/agent_guard/demo/__init__.py",
+      "sha256": "64d85ca36ad9cd96b957b9093c8feb476434e1b16feefbad7c2cf2410f18de44",
+      "bytes": 67
+    },
+    {
+      "path": "src/agent_guard/demo/config.py",
+      "sha256": "c63ea6c6a37436998deda1bb1128aa4b8674180d248a88a349ee3247ee4ec590",
+      "bytes": 19781
+    },
+    {
+      "path": "src/agent_guard/demo/init.py",
+      "sha256": "c1b14026e32b43288501facc37b35fb125825834b30c5c41088aff6f2f37bea1",
+      "bytes": 24221
+    },
+    {
+      "path": "src/agent_guard/demo/did_bootstrap.py",
+      "sha256": "560a088024f65dd52eeb3f571e3074a2a7cf066acd0ad0c45723cc717f1f7d91",
+      "bytes": 9836
+    },
+    {
+      "path": "src/agent_guard/demo/provision.py",
+      "sha256": "e1c596376414a1d2a6cac30673bae87650e2f604f125968bce8702d3b5f5e1e6",
+      "bytes": 17651
+    },
+    {
+      "path": "src/agent_guard/demo/client.py",
+      "sha256": "d0b940d7fbb3c062bfec625676c142fa2cc40953447a852268fb9a67e6b4e657",
+      "bytes": 16639
+    },
+    {
+      "path": "src/agent_guard/demo/handoff.py",
+      "sha256": "5506e137c37144600066d0f08127920b84b9e3d90fbb7bae3b7cee0dba53c724",
+      "bytes": 6029
+    },
+    {
+      "path": "src/agent_guard/demo/worker.py",
+      "sha256": "032a3362c8d76b076b7dc4dc36900e7dd6419630793f34c57c3f59f7eaa6b903",
+      "bytes": 12335
+    },
+    {
+      "path": "src/agent_guard/demo/__main__.py",
+      "sha256": "8fb0a0fa079571011e5eca014e0de2b7b3eedceb164ce91db04e11de00571a5e",
+      "bytes": 3608
+    },
+    {
+      "path": "tests/fixtures/a33_demo.py",
+      "sha256": "c6bd87848e4b94bf71dcd3cca347dc6fc3e7a8800a2e6625917011deb4d9377a",
+      "bytes": 4251
+    },
+    {
+      "path": "src/agent_guard/audit/config.py",
+      "sha256": "12b2d15195b2f218ae97f26604879ddba72159dba717ce7b13d36666d5135750",
+      "bytes": 4956
+    },
+    {
+      "path": "src/agent_guard/audit/server.py",
+      "sha256": "bb56a25e0672023ed713dbac1aedbb5bc185104ec773cdc800c168b05fb33b6c",
+      "bytes": 4637
+    },
+    {
+      "path": "tests/integration/test_audit_tls.py",
+      "sha256": "28ed3641b39bda11e2acfaac7854da5cf23fddd070e358037d76bf619b6469e9",
+      "bytes": 17182
+    }
+  ],
+  "installed_modules": {
+    "agent_guard.demo.__init__": {
+      "path": "/usr/local/lib/python3.11/site-packages/agent_guard/demo/__init__.py",
+      "sha256": "64d85ca36ad9cd96b957b9093c8feb476434e1b16feefbad7c2cf2410f18de44",
+      "signatures": {},
+      "dataclasses": {}
+    },
+    "agent_guard.demo.config": {
+      "path": "/usr/local/lib/python3.11/site-packages/agent_guard/demo/config.py",
+      "sha256": "c63ea6c6a37436998deda1bb1128aa4b8674180d248a88a349ee3247ee4ec590",
+      "signatures": {
+        "text": "(value, name='identifier')",
+        "integer": "(value, *, minimum=1, maximum=2147483647)",
+        "run_uuid": "(value)",
+        "exact": "(value, fields)",
+        "decode": "(raw)",
+        "freeze": "(value)",
+        "thaw": "(value)",
+        "leaf": "(value)",
+        "safe_base": "(path)",
+        "reference": "(base, value)",
+        "origin": "(value)",
+        "HandoffConfig": "(socket_path: 'Path', self_uid: 'int', peer_uid: 'int', self_client_id: 'str', peer_client_id: 'str', run_id: 'str', task_id: 'str', pair_gid: 'int', receiver_uid: 'int') -> None",
+        "RoleConfig": "(version: 'str', run_id: 'str', owner_id: 'str', role: 'str', uid: 'int', public_config_file: 'Path', private_files: 'Mapping[str, Path]', handoff: 'tuple[HandoffConfig, ...]', gid: 'int', supplementary_gids: 'tuple[int, ...]') -> None",
+        "DemoRunConfig": "(version: 'str', run_id: 'str', owner_id: 'str', scope: 'Mapping[str, str]', endpoints: 'Mapping', roles: 'Mapping[str, RoleConfig]', public_manifest: 'Path', approved_did_manifest: 'Path', resource_manifest: 'Path', base_dir: 'Path') -> None",
+        "PublicCheckReport": "(run_id: 'str', owner_id: 'str', roles: 'tuple[str, ...]', scope: 'Mapping[str, str]') -> None",
+        "InitManifest": "(run_id: 'str', owner_id: 'str', root: 'Path', run_config: 'Path', files: 'Mapping[str, str]') -> None",
+        "ApprovedRegistry": "(run_id: 'str', registrations: 'tuple', purposes: 'Mapping[str, tuple[str, ...]]', ca_file: 'Path', challenge: 'bytes') -> None",
+        "ApprovedDIDSnapshot": "(run_id: 'str', documents: 'Mapping[str, bytes]', digests: 'Mapping[str, str]', certificate_fingerprints: 'Mapping[str, str]', fetched_at: 'Mapping[str, str]') -> None",
+        "SyntheticLogin": "(tenant_id: 'str', subject: 'str', password: 'str') -> None",
+        "RootRequest": "(task_id: 'str', scope: 'str') -> None",
+        "DelegationRequest": "(target_client_id: 'str', scope: 'str', constraints: 'bytes', delegation_key: 'str', ttl_seconds: 'int' = 240, amount_limit_fen: 'int' = 80000, call_limit: 'int' = 10, delegation_remaining: 'int' = 1) -> None",
+        "RootTokens": "(access_token: 'str', id_token: 'str', id_claims: 'Mapping') -> None",
+        "ChildToken": "(access_token: 'str', target_client_id: 'str', parent_client_id: 'str', run_id: 'str', task_id: 'str') -> None",
+        "HolderConfig": "(role: 'RoleConfig', issuer: 'str', gateway_origin: 'str', tenant_id: 'str', task_id: 'str', client_id: 'str', kid: 'str', redirect_uri: 'str', ca_file: 'Path', as_keys: 'Mapping') -> None",
+        "InvocationResponse": "(status: 'int', raw: 'bytes', value: 'Mapping') -> None",
+        "QueryResponse": "(status: 'int', raw: 'bytes', value: 'Mapping') -> None",
+        "HandoffAck": "(run_id: 'str', task_id: 'str', sender: 'str', target: 'str') -> None",
+        "WorkerConfig": "(role: 'RoleConfig', tenant_id: 'str', task_id: 'str', catalog: 'object', approved_suppliers: 'frozenset[str]', approved_recipients: 'frozenset[str]', served_requests: 'frozenset[str]', lease_ttl_seconds: 'int' = 30, poll_seconds: 'float' = 0.1) -> None",
+        "WriterProcess": "(role: 'str', pid: 'int', start_identity: 'str', argv_sha256: 'str', process: 'object', inflight_zero: 'object') -> None",
+        "DrainReceipt": "(run_id: 'str', owner_id: 'str', writers: 'tuple[WriterProcess, ...]', stopped_at: 'str', blocked_credentials: 'tuple[str, ...]') -> None",
+        "OperatorSecrets": "(role: 'RoleConfig', login: 'SyntheticLogin', task_policy: 'Mapping', downstream_secret: 'str', audit_registration: 'Mapping') -> None",
+        "ProvisionReport": "(run_id: 'str', registered_clients: 'tuple[str, ...]') -> None",
+        "FrozenExportInputs": "(run_id: 'str', public_trust_file: 'Path', external_pin_file: 'Path', checkpoint_history_file: 'Path', history: 'object', pin: 'Mapping') -> None",
+        "load_role_config": "(raw: 'bytes', *, role: 'str', base_dir: 'Path') -> 'RoleConfig'",
+        "load_run_config": "(raw: 'bytes', *, base_dir: 'Path') -> 'DemoRunConfig'",
+        "check_config": "(config: 'DemoRunConfig') -> 'PublicCheckReport'",
+        "holder_config": "(config: 'DemoRunConfig', *, holder: 'str') -> 'HolderConfig'",
+        "worker_config": "(config: 'DemoRunConfig') -> 'WorkerConfig'"
+      },
+      "dataclasses": {
+        "HandoffConfig": [
+          {
+            "name": "socket_path",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "self_uid",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "peer_uid",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "self_client_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "peer_client_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "run_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "task_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "pair_gid",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "receiver_uid",
+            "type": "int",
+            "repr": true
+          }
+        ],
+        "RoleConfig": [
+          {
+            "name": "version",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "run_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "owner_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "role",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "uid",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "public_config_file",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "private_files",
+            "type": "Mapping[str, Path]",
+            "repr": false
+          },
+          {
+            "name": "handoff",
+            "type": "tuple[HandoffConfig, ...]",
+            "repr": true
+          },
+          {
+            "name": "gid",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "supplementary_gids",
+            "type": "tuple[int, ...]",
+            "repr": true
+          }
+        ],
+        "DemoRunConfig": [
+          {
+            "name": "version",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "run_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "owner_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "scope",
+            "type": "Mapping[str, str]",
+            "repr": true
+          },
+          {
+            "name": "endpoints",
+            "type": "Mapping",
+            "repr": true
+          },
+          {
+            "name": "roles",
+            "type": "Mapping[str, RoleConfig]",
+            "repr": true
+          },
+          {
+            "name": "public_manifest",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "approved_did_manifest",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "resource_manifest",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "base_dir",
+            "type": "Path",
+            "repr": false
+          }
+        ],
+        "PublicCheckReport": [
+          {
+            "name": "run_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "owner_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "roles",
+            "type": "tuple[str, ...]",
+            "repr": true
+          },
+          {
+            "name": "scope",
+            "type": "Mapping[str, str]",
+            "repr": true
+          }
+        ],
+        "InitManifest": [
+          {
+            "name": "run_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "owner_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "root",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "run_config",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "files",
+            "type": "Mapping[str, str]",
+            "repr": true
+          }
+        ],
+        "ApprovedRegistry": [
+          {
+            "name": "run_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "registrations",
+            "type": "tuple",
+            "repr": true
+          },
+          {
+            "name": "purposes",
+            "type": "Mapping[str, tuple[str, ...]]",
+            "repr": true
+          },
+          {
+            "name": "ca_file",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "challenge",
+            "type": "bytes",
+            "repr": false
+          }
+        ],
+        "ApprovedDIDSnapshot": [
+          {
+            "name": "run_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "documents",
+            "type": "Mapping[str, bytes]",
+            "repr": true
+          },
+          {
+            "name": "digests",
+            "type": "Mapping[str, str]",
+            "repr": true
+          },
+          {
+            "name": "certificate_fingerprints",
+            "type": "Mapping[str, str]",
+            "repr": true
+          },
+          {
+            "name": "fetched_at",
+            "type": "Mapping[str, str]",
+            "repr": true
+          }
+        ],
+        "SyntheticLogin": [
+          {
+            "name": "tenant_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "subject",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "password",
+            "type": "str",
+            "repr": false
+          }
+        ],
+        "RootRequest": [
+          {
+            "name": "task_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "scope",
+            "type": "str",
+            "repr": true
+          }
+        ],
+        "DelegationRequest": [
+          {
+            "name": "target_client_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "scope",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "constraints",
+            "type": "bytes",
+            "repr": true
+          },
+          {
+            "name": "delegation_key",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "ttl_seconds",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "amount_limit_fen",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "call_limit",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "delegation_remaining",
+            "type": "int",
+            "repr": true
+          }
+        ],
+        "RootTokens": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "repr": false
+          },
+          {
+            "name": "id_token",
+            "type": "str",
+            "repr": false
+          },
+          {
+            "name": "id_claims",
+            "type": "Mapping",
+            "repr": true
+          }
+        ],
+        "ChildToken": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "repr": false
+          },
+          {
+            "name": "target_client_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "parent_client_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "run_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "task_id",
+            "type": "str",
+            "repr": true
+          }
+        ],
+        "HolderConfig": [
+          {
+            "name": "role",
+            "type": "RoleConfig",
+            "repr": true
+          },
+          {
+            "name": "issuer",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "gateway_origin",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "tenant_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "task_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "client_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "kid",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "redirect_uri",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "ca_file",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "as_keys",
+            "type": "Mapping",
+            "repr": true
+          }
+        ],
+        "InvocationResponse": [
+          {
+            "name": "status",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "raw",
+            "type": "bytes",
+            "repr": false
+          },
+          {
+            "name": "value",
+            "type": "Mapping",
+            "repr": true
+          }
+        ],
+        "QueryResponse": [
+          {
+            "name": "status",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "raw",
+            "type": "bytes",
+            "repr": false
+          },
+          {
+            "name": "value",
+            "type": "Mapping",
+            "repr": true
+          }
+        ],
+        "HandoffAck": [
+          {
+            "name": "run_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "task_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "sender",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "target",
+            "type": "str",
+            "repr": true
+          }
+        ],
+        "WorkerConfig": [
+          {
+            "name": "role",
+            "type": "RoleConfig",
+            "repr": true
+          },
+          {
+            "name": "tenant_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "task_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "catalog",
+            "type": "object",
+            "repr": true
+          },
+          {
+            "name": "approved_suppliers",
+            "type": "frozenset[str]",
+            "repr": true
+          },
+          {
+            "name": "approved_recipients",
+            "type": "frozenset[str]",
+            "repr": true
+          },
+          {
+            "name": "served_requests",
+            "type": "frozenset[str]",
+            "repr": true
+          },
+          {
+            "name": "lease_ttl_seconds",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "poll_seconds",
+            "type": "float",
+            "repr": true
+          }
+        ],
+        "WriterProcess": [
+          {
+            "name": "role",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "pid",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "start_identity",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "argv_sha256",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "process",
+            "type": "object",
+            "repr": false
+          },
+          {
+            "name": "inflight_zero",
+            "type": "object",
+            "repr": false
+          }
+        ],
+        "DrainReceipt": [
+          {
+            "name": "run_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "owner_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "writers",
+            "type": "tuple[WriterProcess, ...]",
+            "repr": true
+          },
+          {
+            "name": "stopped_at",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "blocked_credentials",
+            "type": "tuple[str, ...]",
+            "repr": true
+          }
+        ],
+        "OperatorSecrets": [
+          {
+            "name": "role",
+            "type": "RoleConfig",
+            "repr": true
+          },
+          {
+            "name": "login",
+            "type": "SyntheticLogin",
+            "repr": true
+          },
+          {
+            "name": "task_policy",
+            "type": "Mapping",
+            "repr": true
+          },
+          {
+            "name": "downstream_secret",
+            "type": "str",
+            "repr": false
+          },
+          {
+            "name": "audit_registration",
+            "type": "Mapping",
+            "repr": false
+          }
+        ],
+        "ProvisionReport": [
+          {
+            "name": "run_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "registered_clients",
+            "type": "tuple[str, ...]",
+            "repr": true
+          }
+        ],
+        "FrozenExportInputs": [
+          {
+            "name": "run_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "public_trust_file",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "external_pin_file",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "checkpoint_history_file",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "history",
+            "type": "object",
+            "repr": true
+          },
+          {
+            "name": "pin",
+            "type": "Mapping",
+            "repr": true
+          }
+        ]
+      }
+    },
+    "agent_guard.demo.init": {
+      "path": "/usr/local/lib/python3.11/site-packages/agent_guard/demo/init.py",
+      "sha256": "c1b14026e32b43288501facc37b35fb125825834b30c5c41088aff6f2f37bea1",
+      "signatures": {
+        "init_run": "(out_dir: 'Path', *, run_id: 'str', owner_id: 'str', role_uids, handoff_gids) -> 'InitManifest'",
+        "activate_runtime": "(config, *, role_dsns, audit_listener_host: 'str', resource_manifest)"
+      },
+      "dataclasses": {}
+    },
+    "agent_guard.demo.did_bootstrap": {
+      "path": "/usr/local/lib/python3.11/site-packages/agent_guard/demo/did_bootstrap.py",
+      "sha256": "560a088024f65dd52eeb3f571e3074a2a7cf066acd0ad0c45723cc717f1f7d91",
+      "signatures": {
+        "possession_message": "(config: 'DemoRunConfig', registry: 'ApprovedRegistry', registration) -> 'bytes'",
+        "approve_dids": "(config: 'DemoRunConfig', *, registry: 'ApprovedRegistry', proof_of_possession) -> 'ApprovedDIDSnapshot'",
+        "save_approved_snapshot": "(config: 'DemoRunConfig', *, approved: 'ApprovedDIDSnapshot')",
+        "load_approved_snapshot": "(config: 'DemoRunConfig') -> 'ApprovedDIDSnapshot'",
+        "load_registry": "(config: 'DemoRunConfig') -> 'ApprovedRegistry'"
+      },
+      "dataclasses": {}
+    },
+    "agent_guard.demo.provision": {
+      "path": "/usr/local/lib/python3.11/site-packages/agent_guard/demo/provision.py",
+      "sha256": "e1c596376414a1d2a6cac30673bae87650e2f604f125968bce8702d3b5f5e1e6",
+      "signatures": {
+        "load_operator_secrets": "(config: 'DemoRunConfig', *, task_policy, audit_registration=None)",
+        "provision_run": "(config: 'DemoRunConfig', *, operator: 'OperatorSecrets', approved: 'ApprovedDIDSnapshot') -> 'ProvisionReport'",
+        "validate_drain": "(config: 'DemoRunConfig', stopped: 'DrainReceipt')",
+        "bootstrap_journal": "(config: 'DemoRunConfig', *, stopped: 'DrainReceipt')",
+        "register_bootstrap": "(config: 'DemoRunConfig', *, stopped: 'DrainReceipt', descriptor, trust, writer_credential_id: 'str', writer_credential: 'str', reader_credential_id: 'str', reader_credential: 'str', additional_readers: 'tuple[tuple[str, str], ...]' = ())",
+        "freeze_export_inputs": "(config: 'DemoRunConfig', *, stopped: 'DrainReceipt', reader, public_trust: 'bytes', out_dir: 'Path') -> 'FrozenExportInputs'",
+        "readonly_export_factory": "(config: 'DemoRunConfig', *, role: 'str' = 'export')",
+        "build_as": "(config: 'DemoRunConfig', *, approved: 'ApprovedDIDSnapshot')",
+        "build_gateway": "(config: 'DemoRunConfig', *, approved: 'ApprovedDIDSnapshot', export_connection_factory=None, export_spool_parent=None, export_inputs: 'FrozenExportInputs | None' = None, export_credentials: 'tuple' = ())"
+      },
+      "dataclasses": {}
+    },
+    "agent_guard.demo.client": {
+      "path": "/usr/local/lib/python3.11/site-packages/agent_guard/demo/client.py",
+      "sha256": "d0b940d7fbb3c062bfec625676c142fa2cc40953447a852268fb9a67e6b4e657",
+      "signatures": {
+        "DemoClient": "(role: 'HolderConfig')",
+        "DemoClient.browser_root": "(self, *, login: 'SyntheticLogin', request: 'RootRequest') -> 'RootTokens'",
+        "DemoClient.exchange": "(self, *, parent_token: 'str', request: 'DelegationRequest') -> 'ChildToken'",
+        "DemoClient.invoke": "(self, *, token: 'str', body: 'dict') -> 'InvocationResponse'",
+        "DemoClient.query": "(self, *, token: 'str', operation_id: 'str') -> 'InvocationResponse'"
+      },
+      "dataclasses": {}
+    },
+    "agent_guard.demo.handoff": {
+      "path": "/usr/local/lib/python3.11/site-packages/agent_guard/demo/handoff.py",
+      "sha256": "5506e137c37144600066d0f08127920b84b9e3d90fbb7bae3b7cee0dba53c724",
+      "signatures": {
+        "send_child": "(config: 'HandoffConfig', *, target: 'str', token: 'ChildToken') -> 'HandoffAck'",
+        "receive_child": "(config: 'HandoffConfig', *, expected_parent: 'str') -> 'ChildToken'"
+      },
+      "dataclasses": {}
+    },
+    "agent_guard.demo.worker": {
+      "path": "/usr/local/lib/python3.11/site-packages/agent_guard/demo/worker.py",
+      "sha256": "032a3362c8d76b076b7dc4dc36900e7dd6419630793f34c57c3f59f7eaa6b903",
+      "signatures": {
+        "OwnedOperationRegistry": "(directory: 'Path', *, run_id: 'str', owner_id: 'str', tenant_id: 'str', task_id: 'str', runner_uid: 'int', worker_uid: 'int', reader_gid: 'int')",
+        "OwnedOperationRegistry.register": "(self, operation_id: 'str')",
+        "OwnedOperationRegistry.operation_ids": "(self)",
+        "WorkerBatchReport": "(checked: 'tuple[str, ...]', processed: 'tuple[tuple[str, str], ...]', errors: 'tuple[tuple[str, str], ...]', cursor: 'int') -> None",
+        "WorkerStopReport": "(batches: 'int', processed: 'int', drained: 'bool') -> None",
+        "Worker": "(config: 'WorkerConfig', *, operations: 'OwnedOperationRegistry')",
+        "Worker.step": "(self, *, batch_size: 'int') -> 'WorkerBatchReport'",
+        "Worker.serve": "(self, *, stop_event: 'threading.Event') -> 'WorkerStopReport'",
+        "Worker.reconcile": "(self, *, operation_id: 'str')"
+      },
+      "dataclasses": {
+        "WorkerBatchReport": [
+          {
+            "name": "checked",
+            "type": "tuple[str, ...]",
+            "repr": true
+          },
+          {
+            "name": "processed",
+            "type": "tuple[tuple[str, str], ...]",
+            "repr": true
+          },
+          {
+            "name": "errors",
+            "type": "tuple[tuple[str, str], ...]",
+            "repr": true
+          },
+          {
+            "name": "cursor",
+            "type": "int",
+            "repr": true
+          }
+        ],
+        "WorkerStopReport": [
+          {
+            "name": "batches",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "processed",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "drained",
+            "type": "bool",
+            "repr": true
+          }
+        ]
+      }
+    },
+    "agent_guard.demo.__main__": {
+      "path": "/usr/local/lib/python3.11/site-packages/agent_guard/demo/__main__.py",
+      "sha256": "8fb0a0fa079571011e5eca014e0de2b7b3eedceb164ce91db04e11de00571a5e",
+      "signatures": {
+        "main": "(argv=None)"
+      },
+      "dataclasses": {}
+    },
+    "agent_guard.audit.config": {
+      "path": "/usr/local/lib/python3.11/site-packages/agent_guard/audit/config.py",
+      "sha256": "12b2d15195b2f218ae97f26604879ddba72159dba717ce7b13d36666d5135750",
+      "signatures": {
+        "validate_approved_listener": "(host: 'object', approved_listener_host: 'object') -> 'None'",
+        "private_bytes": "(path: 'Path') -> 'bytes'",
+        "AuditConfig": "(dsn: 'str', owner_role: 'str', key_id: 'str', private_key_path: 'Path', tls_certificate: 'Path', tls_private_key: 'Path', host: 'str', port: 'int', external_pins: 'tuple[str, ...]', external_trust: 'tuple[CheckpointTrust, ...]') -> None",
+        "AuditConfig.load": "(path: 'Path', *, approved_listener_host: 'str | None' = None)"
+      },
+      "dataclasses": {
+        "AuditConfig": [
+          {
+            "name": "dsn",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "owner_role",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "key_id",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "private_key_path",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "tls_certificate",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "tls_private_key",
+            "type": "Path",
+            "repr": true
+          },
+          {
+            "name": "host",
+            "type": "str",
+            "repr": true
+          },
+          {
+            "name": "port",
+            "type": "int",
+            "repr": true
+          },
+          {
+            "name": "external_pins",
+            "type": "tuple[str, ...]",
+            "repr": true
+          },
+          {
+            "name": "external_trust",
+            "type": "tuple[CheckpointTrust, ...]",
+            "repr": true
+          }
+        ]
+      }
+    },
+    "agent_guard.audit.server": {
+      "path": "/usr/local/lib/python3.11/site-packages/agent_guard/audit/server.py",
+      "sha256": "bb56a25e0672023ed713dbac1aedbb5bc185104ec773cdc800c168b05fb33b6c",
+      "signatures": {
+        "create_server": "(config, *, store=None, approved_listener_host: 'str | None' = None)",
+        "serve": "(config)"
+      },
+      "dataclasses": {}
+    }
+  },
+  "private_file_allowlist": {
+    "operator": [
+      "approval_registry",
+      "audit_dsn",
+      "audit_registration",
+      "authority_dsn",
+      "ca_key",
+      "downstream_dsn",
+      "downstream_secret",
+      "user_login"
+    ],
+    "as": [
+      "authority_dsn",
+      "secrets",
+      "signing_key",
+      "tls_key"
+    ],
+    "gateway": [
+      "authority_dsn",
+      "downstream_dsn",
+      "readonly_dsn",
+      "secrets",
+      "tls_key"
+    ],
+    "did": [
+      "tls_key"
+    ],
+    "audit": [
+      "audit_config",
+      "audit_dsn",
+      "signing_key",
+      "tls_key"
+    ],
+    "publisher": [
+      "audit_delivery",
+      "authority_dsn",
+      "publisher_config",
+      "signing_key"
+    ],
+    "worker": [
+      "authority_dsn",
+      "downstream_dsn",
+      "downstream_secret"
+    ],
+    "planner": [
+      "basic_secret",
+      "signing_key"
+    ],
+    "selector": [
+      "basic_secret",
+      "signing_key"
+    ],
+    "executor": [
+      "basic_secret",
+      "signing_key"
+    ],
+    "export": [
+      "export_credential",
+      "readonly_dsn"
+    ],
+    "offline": []
+  },
+  "Python": "3.11.17 (main, Oct  6 2026, 02:02:21) [GCC 14.2.0]",
+  "architecture": "x86_64",
+  "original_wheel_SHA256": "8a6dd083b4d92b5f389c5530f6685d1921ffd6a7602ec90ee1a71d28e082fbf1",
+  "original_wheel_binary": "NOT_EXPORTED; failed copy raw retained; future new final wheel must be retained",
+  "source_probe": {
+    "path": "artifacts/workflow/A3.3-delivery-20261011/s0-shared-sol-low-r1-35129743-e9f4-429b-959a-8df3347f0e49/api-source-r8.json",
+    "SHA256": "d14879d877cc7331f39202fd1b0f24404cf4a972139a3eb8343e7c8f742c3384"
+  },
+  "wheel_probe": {
+    "path": "artifacts/workflow/A3.3-delivery-20261011/s0-shared-sol-low-r1-35129743-e9f4-429b-959a-8df3347f0e49/api-wheel-r8.json",
+    "SHA256": "d14879d877cc7331f39202fd1b0f24404cf4a972139a3eb8343e7c8f742c3384"
+  },
+  "not_completed": [
+    "local registration confirmation",
+    "audit DeliveryWorker ACK",
+    "final fresh authorized queries after READY (waiting child processes expire)",
+    "freeze_export_inputs live full history/latest pin",
+    "SELECT-only export API live functional flow and negative write/DDL",
+    "final r8 local pytest",
+    "old/new TLS tests actual execution (only AST preservation and imports; dedicated harness none-network connect failure preserved)",
+    "complete source/wheel end-to-end chain",
+    "S0 complete freeze / READY / acceptance"
+  ],
+  "blocked_by": "A33-S0-001",
+  "effective_metadata": "UNKNOWN"
+}

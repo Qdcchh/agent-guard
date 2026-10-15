@@ -1,0 +1,30 @@
+{
+  "status": "FORMAL_SOLE_FILE_TRANSFER",
+  "writer": "/root/a31_s2_integrator_sol_r1",
+  "exact_additional_path": "tests/integration/test_gateway_receipt_query.py",
+  "before_sha256": "e11bc44d1f68fe3d5e80840a2c0237213e6ffe9637b164e5e2247b531fddc831",
+  "reason": "Actual complete source/wheel4222 each4202P20F at existing shared-kid concurrent-query full-state equality; exact original-node diagnostic validates two required QUERY journal records/head advance while all other domains unchanged. Same A31 integration scope and interface.",
+  "allowed_change": "Only in failed existing function import existing frozen strict _journal_delta and call on EXPECTED deepcopy before original proof pop with two actual QUERY operation/evidence_ref interactions. Preserve all original asserts/decorators/parameters/barrier/replay/crossowner/trust repair. No shared fixture or SDK change, broad table removal, expected relaxation or skip. Update only directly affected truthful oracle evidence text if needed.",
+  "runtime_stop_readbacks": [
+    {
+      "path": "artifacts/workflow/A3.1-audit-20261008/s2-integration-r1/source-whole590-actual-stop-r2.json",
+      "sha256": "73e1d7a83d5130900d1d5d4161c6932250eb3cdb7807558397c76314f6a1bf52",
+      "native_exit": 0,
+      "live_uid501": [],
+      "py_fullID": "4623fde450c0db81e0bf2e04ae095bc780efb62e3aadaf1f12d183fe6db94853",
+      "raw_sha256": "6c73dfbd8af3312d5d963fa34a75b1d718aef95be3f001b04e4e80dc2a13437c"
+    },
+    {
+      "path": "artifacts/workflow/A3.1-audit-20261008/s2-integration-r1/wheel-whole590-actual-stop-r2.json",
+      "sha256": "90849c6d0ed7c949651ec10dfc3140f15802f65dd2a2c35ffed414336853dffc",
+      "native_exit": 0,
+      "live_uid501": [],
+      "py_fullID": "f89a404ae21f99862f2e53ab6346f2e216d1d54862833362128dad6355d70057",
+      "raw_sha256": "edebb7fd9c948cc70f5112bf1e9f783050644f7d665755feac0247fddc071bbe"
+    }
+  ],
+  "actual_delta": "artifacts/workflow/A3.1-audit-20261008/integrator-wheel-78baf8708f66/s2-results/s2-wheel-current-pg-nonclock-shared-kid-actual-delta-r1-1791605243050623678/actual-shared-kid-delta-r1.json",
+  "actual_delta_sha256": "5f9f513e3a84f69f4ef5a4123854ebb6f8a720d0a59db1ef63098cacd8b145d1",
+  "validation": "Preserve original complete failure and original test bytes/assert AST. Run exact original20 params per mode with native0 and finite effective strict-oracle positive/negative controls, then fresh full4222 plus all required20 complete groups. Reuse unaffected completed groups by actual selected dependency/SHA only.",
+  "created": 1791605366.881296
+}

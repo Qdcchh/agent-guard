@@ -68,6 +68,16 @@ RESET_TABLES = (
     "ag_operation_review_flags",
 )
 
+AUDIT_RESET_TABLES = (
+    "ag_audit_delivery",
+    "ag_audit_delivery_batches",
+    "ag_audit_records",
+    "ag_audit_bootstrap_chunks",
+    "ag_audit_bootstrap",
+    "ag_audit_streams",
+    "ag_event_seals",
+)
+
 # Preserve the original A read-only assertion helper's compatibility view.
 TABLES = (
     "ag_proofs",
@@ -194,9 +204,15 @@ def reset_state(ns: Namespace) -> None:
     with psycopg.connect(ns.base_dsn, connect_timeout=CONNECT_TIMEOUT_S) as conn:
         with conn.transaction():
             bundle = conn.execute(
-                "SELECT to_regclass(%s)", (f'"{ns.schema}".ag_schema_migration_lineages',)
+                "SELECT to_regclass(%s)",
+                (f'"{ns.schema}".ag_schema_migration_lineages',),
             ).fetchone()[0]
             tables = RESET_TABLES if bundle is not None else TABLES
+            audit = conn.execute(
+                "SELECT to_regclass(%s)", (f'"{ns.schema}".ag_audit_streams',)
+            ).fetchone()[0]
+            if audit is not None:
+                tables = (*AUDIT_RESET_TABLES, *tables)
             targets = ", ".join(f'"{ns.schema}"."{table}"' for table in tables)
             conn.execute(f"TRUNCATE {targets} RESTART IDENTITY CASCADE")
 

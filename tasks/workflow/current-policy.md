@@ -1,37 +1,27 @@
-# 当前角色、交付和文档维护约定
+# 现行角色与边界
 
-生效：2026-10-04（Asia/Shanghai）。来源：用户明确要求合并已验收分支、完善后续指导、调整角色模型并持续修正过时文档。本文件覆盖历史契约中的角色配置和已过时当前状态；历史报告不追改。
+当前演示前端子任务（2026-10-15）：真人授权本地可操作演示页，worker 指定 `gpt-6.1-sol / low`。用户随后授权补齐安全场景台：复用现有真实安全测试，新增固定场景运行、明确标注的历史记录回放与能力全景；范围为页面与本地固定动作适配器、演示检查及说明；A3.3/A3.4完整实验和联合验收仍暂停。此角色覆盖仅适用于当前前端任务，不把旧OpenCode配置当作本次worker。
 
-| 角色 | 请求模型与推理档位 | 职责 |
-| --- | --- | --- |
-| 主 agent | `gpt-6-astra / UNKNOWN` | 授权、任务包、调度、冻结、证据核对、状态与交付 |
-| worker | `gpt-6.1-sol / medium` | 已批准范围的实施和补正，保持原配置 |
-| reviewer | `gpt-6-astra / medium` | 每轮新独立子任务；包审与实施验收分离 |
+当前角色覆盖：2026-10-14真人继续授权；worker OpenCode Go `deepseek-v4.1-flash/max`，全新reviewer `gpt-6-astra/high`，主控按用户当前Astra设置。effective metadata未观测仍UNKNOWN。见[本轮授权](runs/A3.3-A3.4-joint-20261013/user-resume-opencode-astra-20261014.md)。
 
-2026-10-05 最新真人指令：“我把主模型换成astra了，请把reviewer也换成astra中，请继续”。从本轮后续调度生效；主会话推理档位未明确，记 UNKNOWN，worker 保持 Sol medium；历史请求配置与报告不追改。
+当前2026-10-15：真人明确要求先暂停并解释卡住原因。worker与当前测量已停，当前driver真实父wait -2、精确owner资源0；guard已不在运行。source/wheel对照扩展分段自查及测量修复探针已运行；正式40000尚未完成：r6已有3组COMPLETE回执、各5000条，尚未经主控完整接受；complete模式存在bootstrap随累积状态增长导致TTL失败的阻塞，待恢复后处理。此前失败、中断与证据缺口保留。完整联合最终自查和全新独立验收仍未完成，项目仍PARTIAL；当前进程及证据以[state](runs/A3.3-A3.4-joint-20261013/state.json)与本轮controller-checkpoint为准。恢复入口见[中断接续记录](runs/A3.3-A3.4-joint-20261013/resume-after-platform-interruption-20261014.md)。
 
-这是调度要求，不会自动切换当前主会话设置；用户在界面同步调整。子任务创建时显式请求上述配置，记录原生回执；工具未暴露的有效模型/档位仍记 UNKNOWN，不把请求值当后台证明。保留 [原补充契约](runs/setup/codex-astra-sol-v1/workflow-contract.md) 的独立性、停写、资源隔离、证据与完整验收义务。
+当前真人2026-10-13明确授权A3.3与A3.4做完一起完整独立验收，见[新授权](runs/A3.3-A3.4-joint-20261013/user-joint-acceptance-20261013.md)。覆盖先单独正式接受A33再实施A34的顺序。A3.1、A3.2已正式独立接受；A33 v3/S0/S1成果承接，source/非editable wheel场景各691参数分段自查已root封存，A33正常装配已封存分段自查，A34共享层已停写并由root核验21737原件及19运行资源0；对照与测量已平台中断，完整联合自查/独验尚未执行，项目仍PARTIAL。旧暂停/恢复/失败/验收保持原文，不作当前停止门。
 
-## 当前交付与授权边界
+[合并正式包](runs/A3.3-A3.4-joint-20261013/package-v1.md)与[state](runs/A3.3-A3.4-joint-20261013/state.json)：185父/177运行、568原子(269+95+73+71+60)、55回归、6注册与40000正式实验不减。fresh联合PACKAGE_REVIEW后唯一S2完成真实正常装配/CLI/部署/256/维护/文档并冻结接口，再研究共享串行与独立文件/资源worker；全部STOP与资源核验后唯一联合整合、一次完整selfcheck和全新完整IMPLEMENTATION_ACCEPTANCE。有真正阻断最小补正、保失败并换新完整reviewer。PACKAGE_READY或分段自查不是接受。
 
-[PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 已于 2026-10-04 合并，main 产品基线为 `d7e91c75014d1097c822936a16559229e2b4906a`；候选 `361ec117f538ddd4b50a7f236adf80aab44408db` 的 CI 为 SUCCESS（952 普通测试、1388 PostgreSQL 集成测试）。用户在确认作者同时为唯一 CODEOWNER 的具体阻碍后明确回复“合并吧”，授权本次现有管理员审核豁免；未修改保护，也没有自批。
+| 角色 | 请求配置 | 职责 |
+|---|---|---|
+| 主控 | Astra / 用户当前设置 | 授权、精确所有权、调度/冻结、证据与接受 |
+| worker | OpenCode Go deepseek-v4.1-flash / max | 批准范围实施/补正、自查、停写 |
+| reviewer | gpt-6-astra / high，每轮新任务 | 包审与完整实施验收分离 |
 
-该例外仅用于 PR #6，不自动适用于未来 PR。新发布遵循必需 CI 与审核条件，确需例外须有明确授权。用户先授权只推进 A2.2 及本阶段有限适配，现又明确要求 A2.2 独立复核通过后合并，并无论能否合并都继续 A2.3、完整验收 A2；这覆盖之前的 A2.2 单段停止点。最新[授权扩展记录](runs/A2.2-integration-20261004/authorization-expansion-20261004.json)保留真人原话。2026-10-05真人现已明确恢复此前取消的A2剩余整合与完整独立验收，并授权必要补正、提交/推送/PR及在实际CI和审核满足后合并main，见[本次恢复授权](runs/A2.3-receipts-20261004/user-resume-20261005.md)。本次不实施A3，交接完成后停止。[旧停止记录](runs/A2.3-receipts-20261004/user-stop-20261005.md)保留为历史，不再控制本次剩余A2工作。119项/112运行义务及独立性不减，PR #6管理员例外不继承。
+有效metadata未观测就记UNKNOWN，不将请求配置冒充后台证明。[实施契约](implementation-contract.md)、[验收契约](review-contract.md)及[原契约](runs/setup/codex-astra-sol-v1/workflow-contract.md)完整性/独立性/安全要求保持，推进次序以新真人授权为准。
 
-前段B补正的 [有限运行适配](runs/local-remediation-20261004/runtime-addendum-proposal.md) 只适用于已完成的 B 补正，不能自动延长到下一阶段。下一阶段建包时先核原生运行证据/门能力，保存具体适配及下述持续真人授权来源；不同性质或降低标准的适配仍须另行批准；不能让旧 state 或 UNKNOWN 字段自动放行。旧机器门与历史 state 保持原样。
+同类有限运行适配已持续真人批准，原话见[历史](current-policy-history.md)；不重复问电源/额度，不降低验收或改旧caps/保护，不扩大部署权限。有限detached supervisor真实落native child退出/原件与精确owner资源清理，不能因宿主session缺席伪造0。网络失败先尝试setproxy。
 
-用户后续明确“批准A2.3轮有限适配，以后再有这样的类似情况都直接批准”。这是同类有限适配的持续真人授权：原生有效模型元数据/旧门绑定仍缺时，按同等实际原生回执、停写/全哈希、范围/资源隔离、真实完整独立验收方式继续，不再重复确认；每段仍保存具体适配、实际缺口与此授权来源。它不授权降低安全/验收、不补造后台metadata、不修改旧门或保护，不扩大阶段/部署范围，也不授管理员审核例外。不同性质或降低标准的变更另行提出。
+共享接口/迁移/fixtures先串行停写冻结；按精确文件与独占资源分工、不消费peer半成品；显式移交后唯一整合。范围/接口实质变化fresh包审。不删assert/skip/放宽预期；原SM2/SM3、PG/TLS、完整预算撤销、10有效竞争、真进程恢复、source/wheel、前段与历史/等价探针、原始失败证据保持。重复已通过且真实未受影响检查应复用，最终联合完整自查与新独立验收必跑。
 
-用户曾要求出门暂停，随后明确“从检查点继续A2.2”。暂停指纹与Git未漂移，随后恢复原已批准A2.2范围与本段适配。用户再次要求十五分钟内暂停，当时已原生完成停写、自有资源余留0，见[暂停r2](runs/A2.2-integration-20261004/pause-r2.md)。用户现明确“从检查点继续 A2.2”，主控核276项指纹/Git/资源一致，恢复IN_PROGRESS；继续同一包/已批准适配，不重复索取授权，保留历史暂停原件。r3 worker现已原生COMPLETED、精确范围核验通过且自有资源余留0，完整自查READY_FOR_REVIEW；见[报告r3](runs/A2.2-integration-20261004/implementation-r3.md)。r1否决与r4补正原件保留；fresh [A2.2 r2](runs/A2.2-integration-20261004/review-r2.md)已原生COMPLETED并经主控核95/88及完整证据接受，两项P2 CLOSED_REVIEWED_R2，见[接受记录](runs/A2.2-integration-20261004/acceptance.md)。历史 [暂停检查点](runs/A2.2-integration-20261004/pause.md)保留。
+不查额度、不Git发布；保全部既有提交/index/dirty/untracked，不reset/clean/强推，不改Git身份或保护。发布另需当前真人授权和实际CI/审核，PR6例外不沿用。只清理核实fullID/owner的自有资源，不连接/inspect/修改外部容器，不prune/shared down。主控有限guard单独管理，worker/reviewer不触碰。最终联合接受、材料和精确自有清理后停止。
 
-## 实施协作
-
-用户明确要求：当 worker 任务非常适合多 agent 协作时，应拆分任务并开启合适数量的子 agent 一起完成，以后按此执行。数量由任务的独立性、规模和可用并发槽决定，不为凑数量拆分。主控或 worker 应先说明分工；各子任务绑定精确文件、只读依赖、自有测试资源与证据目录。共享类型、迁移、锁序和 fixtures 等前置工作先串行完成并停写；存在文件冲突或频繁依赖时继续串行，独立部分可并行，整合后仍须完整自查与 fresh 独立复核。
-
-本条为长期协作偏好，不扩大阶段授权或绕过审包与冻结。已批准包明确串行且需改成并行时，先由主控调整分工并重新审包，不在实施中临时引入交叉 writer。当前 A2.2 task-v1 的串行边界保持，原任务与历史包审记录不追改。
-
-## 持续维护
-
-每次任务结束核对 README、HANDOFF、A2-report、workflow/context 和相关阶段提纲：当前状态、实际 Git 交付、已验证范围、下一步与未完成项一致。过时或错误的现行内容直接修正；重复且无引用价值的文档可删除，同时修复入链并检查干净检出可读性。不要为了保留旧措辞让入口继续显示待复核。
-
-历史任务包、失败/验收报告、授权与指纹属于审计证据，保留并标明历史适用范围；不改写历史测试数、模型或结论，不删除历史 SQL/锁文件。可清理已核归属的缓存和临时资源，保留原始证据；不依赖未提交 artifacts 路径作为唯一交接说明。新增文档只在现有入口无法清楚承载时创建。
+现行文档只保当前事实/执行规则/入口；历史授权、失败、接受、SQL与锁保留，[历史约定](current-policy-history.md)、[历史问题](issues-history.md)按需追溯，不重复生成长文。[A3.2接受](runs/A3.2-evidence-20261011/acceptance.md)与[机器记录](runs/A3.2-evidence-20261011/acceptance.json)不重开。

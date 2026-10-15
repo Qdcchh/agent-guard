@@ -515,3 +515,60 @@ def lease_deadline(ttl_seconds: int, *, now: datetime | None = None) -> datetime
     """Helper for tests/tools that need to reason about expiry windows."""
     base = now or datetime.now(tz=timezone.utc)
     return base + timedelta(seconds=ttl_seconds)
+
+
+def capture_write_fence(conn, *, operation_id, owner_token, fencing_version):
+    """Capture the four early conditions and exact lease expiry in this TX."""
+    from agent_guard.audit.contracts import WriteFence, utc_text
+    from agent_guard.audit.journal import tx_id
+
+    operation = assert_terminal_write_allowed(
+        conn,
+        operation_id=operation_id,
+        owner_token=owner_token,
+        fencing_version=fencing_version,
+    )
+    lease = lock_lease(conn, operation_id)
+    return WriteFence(
+        operation_id,
+        owner_token,
+        fencing_version,
+        operation.status,
+        utc_text(lease[2]),
+        tx_id(conn),
+    )
+
+
+def assert_write_fence_current(conn, fence, *, expected_terminal: str) -> None:
+    """Allow this TX's terminal transition, then use the last real DB clock."""
+    from agent_guard.audit.contracts import WriteFence, utc_text
+    from agent_guard.audit.journal import available, tx_id
+
+    if type(fence) is not WriteFence or expected_terminal not in TERMINAL_VALUES:
+        raise ExecutionError(ExecutionErrorCode.ILLEGAL_TRANSITION, "invalid terminal fence")
+    operation = lock_operation(conn, fence.operation_id)
+    lease = lock_lease(conn, fence.operation_id)
+    if fence.tx_id != tx_id(conn) or operation is None or operation.status != expected_terminal:
+        raise ExecutionError(
+            ExecutionErrorCode.ILLEGAL_TRANSITION,
+            "terminal fence transaction/state mismatch",
+        )
+    if available(conn):
+        witness = conn.execute(
+            "SELECT audit_terminal_xid FROM ag_operations WHERE operation_id=%s",
+            (fence.operation_id,),
+        ).fetchone()[0]
+        if witness != fence.tx_id:
+            raise ExecutionError(
+                ExecutionErrorCode.ILLEGAL_TRANSITION, "terminal not created by this TX"
+            )
+    if lease is None or (lease[0], lease[1], utc_text(lease[2])) != (
+        fence.owner_token,
+        fence.fencing_version,
+        fence.expires_at,
+    ):
+        raise ExecutionError(ExecutionErrorCode.LEASE_LOST, "terminal fence lease changed")
+    if ledger_store.db_now_epoch(conn) >= lease[2].timestamp():
+        raise ExecutionError(
+            ExecutionErrorCode.LEASE_LOST, "lease expired after terminal journal wait"
+        )

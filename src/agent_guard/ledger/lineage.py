@@ -154,6 +154,15 @@ _PINNED = (
         "B-remediation-integration",
         None,
     ),
+    (
+        "execution",
+        "007",
+        "007_audit_journal.sql",
+        "007_audit_journal.sql",
+        "4ae5b1c1a2d6d2cdd4355a43961a13fccdb3dbff0661278dd78ea347326fd1de",
+        "A3.1-audit-shared",
+        None,
+    ),
 )
 
 
@@ -183,7 +192,9 @@ def _entries() -> tuple[Migration, ...]:
     result = []
     for row in _PINNED:
         ns, version = row[:2]
-        if ns == "infrastructure" or (ns == "common" and version == "001"):
+        if ns == "execution" and version == "007":
+            deps = (("execution", "006"), ("authorization", "010"))
+        elif ns == "infrastructure" or (ns == "common" and version == "001"):
             deps = ()
         elif version == "004":
             deps = (("common", "003"),)
@@ -258,7 +269,9 @@ def _recognize(rows: list[tuple], manifest: BundleManifest) -> tuple[str, list[M
     common = [m for m in manifest.migrations if m.namespace == "common"]
     for source, ns in (("A", "execution"), ("B", "authorization")):
         branch = common + [
-            m for m in manifest.migrations if m.namespace == ns and m.version != "010"
+            m
+            for m in manifest.migrations
+            if m.namespace == ns and m.key not in (("authorization", "010"), ("execution", "007"))
         ]
         if len(rows) <= len(branch) and all(
             row[:3] == (m.version, m.filename, m.checksum)
@@ -332,7 +345,11 @@ def _catalog(conn: psycopg.Connection, schema: str) -> tuple:
 
 
 def _check_catalog(
-    conn: psycopg.Connection, manifest: BundleManifest, expected: list[Migration], *, registry: bool
+    conn: psycopg.Connection,
+    manifest: BundleManifest,
+    expected: list[Migration],
+    *,
+    registry: bool,
 ) -> None:
     original_path = conn.execute("SHOW search_path").fetchone()[0]
     target = conn.execute("SELECT current_schema()").fetchone()[0]
@@ -364,7 +381,12 @@ def _check_catalog(
 
 
 def _add(
-    conn: psycopg.Connection, migration: Migration, *, origin: str, source: str, original_time=None
+    conn: psycopg.Connection,
+    migration: Migration,
+    *,
+    origin: str,
+    source: str,
+    original_time=None,
 ) -> None:
     conn.execute(
         "INSERT INTO ag_schema_migration_lineages "
@@ -392,7 +414,12 @@ def _validated_state(conn: psycopg.Connection, manifest: BundleManifest) -> list
         "infrastructure_sha256 FROM ag_schema_legacy_binding"
     ).fetchall()
     raw = _legacy_json(legacy)
-    expected_binding = (source, raw, hashlib.sha256(raw.encode()).hexdigest(), infra.checksum)
+    expected_binding = (
+        source,
+        raw,
+        hashlib.sha256(raw.encode()).hexdigest(),
+        infra.checksum,
+    )
     if bindings != [expected_binding]:
         raise MigrationError("legacy registry binding changed or is missing")
     rows = conn.execute(
@@ -403,10 +430,22 @@ def _validated_state(conn: psycopg.Connection, manifest: BundleManifest) -> list
     known = {m.key: m for m in manifest.migrations}
     original_rows = {m.key: row for m, row in zip(original, legacy, strict=True)}
     present = set()
-    for ns, version, filename, checksum, origin, lineage, original_time, applied_time in rows:
+    for (
+        ns,
+        version,
+        filename,
+        checksum,
+        origin,
+        lineage,
+        original_time,
+        applied_time,
+    ) in rows:
         key = ns, version
         migration = known.get(key)
-        if migration is None or (filename, checksum) != (migration.filename, migration.checksum):
+        if migration is None or (filename, checksum) != (
+            migration.filename,
+            migration.checksum,
+        ):
             raise MigrationError("unknown or modified lineage record")
         old = original_rows.get(key)
         if old is not None:
@@ -439,6 +478,9 @@ def apply_bundle_migrations(
     manifest = load_manifest() if manifest is None else manifest
     _validate_manifest(manifest)
     with conn.transaction():
+        version = int(conn.execute("SHOW server_version_num").fetchone()[0])
+        if not 160000 <= version < 170000:
+            raise MigrationError("qualified bundle requires supported PostgreSQL16")
         conn.execute("SET LOCAL lock_timeout = '10s'")
         conn.execute("SET LOCAL statement_timeout = '15s'")
         conn.execute("SELECT pg_advisory_xact_lock(%s)", (_COORDINATOR,))
@@ -457,7 +499,7 @@ def apply_bundle_migrations(
                 # old registry before binding it, as on a normal empty A DB.
                 _ensure_registry(conn)
                 for m in manifest.migrations:
-                    if m.namespace not in ("common", "execution"):
+                    if m.namespace not in ("common", "execution") or m.version == "007":
                         continue
                     conn.execute(_sql_text(manifest, m))
                     conn.execute(

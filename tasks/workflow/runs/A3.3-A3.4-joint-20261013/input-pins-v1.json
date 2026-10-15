@@ -1,0 +1,318 @@
+{
+  "status": "ROOT_REBASED_FORMAL_JOINT_V1",
+  "planner_manifest": "artifacts/workflow/A3.3-A3.4-joint-package-proposal-20261013/manifest.json",
+  "planner_manifest_SHA": "32079574532b9f30a084bfcfb86834b936f28ab6f39fb1512f50547fb9f8cd3b",
+  "members": [
+    {
+      "path": "AGENT.md",
+      "bytes": 4051,
+      "sha256": "fd7a38b4ba1e0fe74d52cd77aa4fa6da1ffa9040f6280e8270f5cdc13f160862"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 235,
+      "sha256": "bff0879f590af57bfa0a80459e12f307cb9c5e4383aea53e3adffed8f01bc596"
+    },
+    {
+      "path": "HANDOFF.md",
+      "bytes": 2196,
+      "sha256": "0c3155a4b93cc6e560c5310f8d90de102f3ade80b0a6e198548b315b66babdfb"
+    },
+    {
+      "path": "README.md",
+      "bytes": 38484,
+      "sha256": "b494e4ea6f4f709d8d428b55143ef13b305aa7c88f286b5db238eea8aa0c6d4b"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-20261011/controller/S1-r14-all-evidence-root-readback.json",
+      "bytes": 404,
+      "sha256": "d33e8616ad65865a80e774a15ce395ecc74caa7f139d675a4a9b26fa1103841f"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-20261011/controller/S1-r14-final-evidence-manifest.json",
+      "bytes": 17567215,
+      "sha256": "cd18fc5f7af5b29111a8f1e1c702484217a25de0857f2f0acfd8e9957ab4db84"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-20261011/controller/S1-r14-root-freeze.json",
+      "bytes": 1552,
+      "sha256": "e73aaaaf02659e2d2af32d359926a4487ee0ad9a325e3f574a6b498e80115668"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-20261011/controller/task-s2-integrator-draft.md",
+      "bytes": 6322,
+      "sha256": "119087a9bcf99a18c2f60e57006aa5175817c1f7d8a9f3d5031ef337f4c05ab6"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-20261011/s1-scenarios-wheel-r3-cc465dfa-28ff-438e-a81b-ddebd04743f2/root-finalization-recovery/cleanup-root.json",
+      "bytes": 3388,
+      "sha256": "08ad93824c795221be6f7472905f5d9d30a4ea533302c872594e496c86e23ea9"
+    },
+    {
+      "path": "artifacts/workflow/A3.3-delivery-20261011/s2-readonly-preparation-resume-sol-low-r2/notes.md",
+      "bytes": 3373,
+      "sha256": "2b7606932e54cc203b142ef31b24e51144cde344144e278b55e70569eac890e0"
+    },
+    {
+      "path": "artifacts/workflow/A3.4-experiment-draft-20261011/api-source-inventory.json",
+      "bytes": 23367,
+      "sha256": "c35ffd7b166b094b726e1ecfaa5acb6548f170df2a55c9e7f136f33bc9488f71"
+    },
+    {
+      "path": "artifacts/workflow/A3.4-experiment-draft-20261011/manifest.json",
+      "bytes": 1659,
+      "sha256": "347c62e57366cdc8123b4fcd33814a569f61e5bd37f0dfcccf05ea395c8c0185"
+    },
+    {
+      "path": "artifacts/workflow/A3.4-experiment-draft-20261011/node-bindings-draft.json",
+      "bytes": 108729,
+      "sha256": "510bb9bc0f6bc1e24e624109eb0414ce6a8e32d3b3dc56a14bf9e48705a3025a"
+    },
+    {
+      "path": "artifacts/workflow/A3.4-experiment-draft-20261011/ownership-draft.md",
+      "bytes": 3553,
+      "sha256": "b53f45c229cfb050f05abd2de53f1c81812eae27741d89e2891fe1b6384c759a"
+    },
+    {
+      "path": "artifacts/workflow/A3.4-experiment-draft-20261011/package-draft.md",
+      "bytes": 7975,
+      "sha256": "67dd863090d4f168fd5b8faff8e3f0475ae22fcce49adfc19f5c2c8cc11c0972"
+    },
+    {
+      "path": "artifacts/workflow/A3.4-experiment-draft-20261011/read-input-manifest.json",
+      "bytes": 21203,
+      "sha256": "530890ef613b79529f947b595d0e6c2681ecd027f5c780c824b527317759ad82"
+    },
+    {
+      "path": "artifacts/workflow/A3.4-experiment-draft-20261011/requirements-draft.json",
+      "bytes": 270050,
+      "sha256": "e00e84b58048afca7cac6dad9d0fd372829cc9aae14e4d84f9a4ba1fe00131f1"
+    },
+    {
+      "path": "artifacts/workflow/A3.4-experiment-draft-20261011/runtime-plan-draft.json",
+      "bytes": 14434,
+      "sha256": "805920e001d98fe18de2e97d328512d0c6d60dea25e50b82e6aa32e642f04cac"
+    },
+    {
+      "path": "artifacts/workflow/A3.4-runtime-preparation-20261011-92966ac5-374b-4e2e-94ef-f8dc6a542b1a/manifest-stop.json",
+      "bytes": 934,
+      "sha256": "2b6b63b9a880c6f8f6f753712fe5321b5a844ae3fad3ca3305e7c89526b9e62f"
+    },
+    {
+      "path": "artifacts/workflow/A3.4-runtime-preparation-20261011-92966ac5-374b-4e2e-94ef-f8dc6a542b1a/runtime-proposal.json",
+      "bytes": 55060,
+      "sha256": "ae2a4d31486be40620c90bc67d9dff1d634342bb9e73a298c2345e61818b75d8"
+    },
+    {
+      "path": "artifacts/workflow/A3.4-runtime-preparation-20261011-92966ac5-374b-4e2e-94ef-f8dc6a542b1a/runtime-proposal.md",
+      "bytes": 7844,
+      "sha256": "8d685b7aa5cf3fd81d5079cd62926ee5d69db076bf544c116889b466a1c1d249"
+    },
+    {
+      "path": "docs/acceptance.md",
+      "bytes": 18718,
+      "sha256": "07d78a958335451614de73fda107e2cceb194314ee7609158b32b36399ff37e7"
+    },
+    {
+      "path": "docs/oauth-oidc-sm2-mvp.md",
+      "bytes": 52107,
+      "sha256": "3f9657f7f629e609187a6c67614156231bf2d6fa9f34415821526254eb0d23bc"
+    },
+    {
+      "path": "docs/security-model.md",
+      "bytes": 15921,
+      "sha256": "9347a63e6df27ad0d20a2774f950d371134753ab6d3f4771ac603a8c2e7648e2"
+    },
+    {
+      "path": "src/agent_guard/authorization/permission_snapshot.py",
+      "bytes": 8063,
+      "sha256": "6e0bfb89d0cc460c3d12c1d253a063623d9d843f5acf098873cd2f8443aea3de"
+    },
+    {
+      "path": "src/agent_guard/authorization/verifier.py",
+      "bytes": 18837,
+      "sha256": "f676108f785dd6e2c8938a3f75dce1fd07653caf19d6b1719278f76117d0f1a7"
+    },
+    {
+      "path": "src/agent_guard/demo/faults.py",
+      "bytes": 4141,
+      "sha256": "5bde81a02aa95e18bb48cbbc5655269d1f14d7c9b39dcc4428ca4cb49f4bd9d3"
+    },
+    {
+      "path": "src/agent_guard/demo/holder.py",
+      "bytes": 13093,
+      "sha256": "194e6e24be682af9eeb53cb8b2402cb778b69c20a99c7fecc5007fb629d924cd"
+    },
+    {
+      "path": "src/agent_guard/demo/runner.py",
+      "bytes": 13744,
+      "sha256": "a404b530258b671f42be841010b21712034744e1106e3d3fcd5dc47eaae69996"
+    },
+    {
+      "path": "tasks/A3-plan.md",
+      "bytes": 9952,
+      "sha256": "3d6b51b24283deb6e26bf193c4b59c3c1a35be4897b72ab62a0e144c61312779"
+    },
+    {
+      "path": "tasks/workflow/context.md",
+      "bytes": 2118,
+      "sha256": "067fb821bc68c9ea3026db606a9dd8cfa95ccedc2819044385ed1d5af49f78c5"
+    },
+    {
+      "path": "tasks/workflow/continue-prompt.md",
+      "bytes": 2122,
+      "sha256": "b5cc693e79104107c345d0008f437e92d3055ed09aee0fdcd31f4aeeaf14f5af"
+    },
+    {
+      "path": "tasks/workflow/current-policy.md",
+      "bytes": 3316,
+      "sha256": "908a37df3390294127da0289f67495a093f14616d2bb1c087f77e0b6194fe8f6"
+    },
+    {
+      "path": "tasks/workflow/implementation-contract.md",
+      "bytes": 4020,
+      "sha256": "e317206381968cddba03108f2c7e7ff993c20c364c6698ad9c9135439dbf39af"
+    },
+    {
+      "path": "tasks/workflow/review-contract.md",
+      "bytes": 17611,
+      "sha256": "a22bd62ddb7556a2ab2cfa80677a5cb0ac9abf6b66cdbc17779aacd23ac7d1c0"
+    },
+    {
+      "path": "tasks/workflow/runs/A3-planning-20261008/audit-contract.md",
+      "bytes": 31086,
+      "sha256": "237f4fb234e27c7d00c0a521747a4256fa57cf6cae8de8f48340907ff1683e2f"
+    },
+    {
+      "path": "tasks/workflow/runs/A3-planning-20261008/delivery-experiment-contract.md",
+      "bytes": 49081,
+      "sha256": "1dade6248bb6dbba1828fe7515db540d04b8485b66d10641a7a3ada4cdd29739"
+    },
+    {
+      "path": "tasks/workflow/runs/A3-planning-20261008/package.md",
+      "bytes": 11634,
+      "sha256": "b2443021f7c0847a29bfc8fe4909c4db512ea345e4349bfbd7b1b0af951c524f"
+    },
+    {
+      "path": "tasks/workflow/runs/A3-planning-20261008/requirements.json",
+      "bytes": 271504,
+      "sha256": "08a82fab93b1c7364da8118631905f4ec29d86c9ff788ba0a3d06bd85edd509b"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.1-audit-20261008/inherited-bindings-v1.json",
+      "bytes": 17473086,
+      "sha256": "72ce3a703688cc7a928edf32ffbaec783dc140582f1d12154f75f40295d092c5"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-A3.4-joint-20261013/counts-id-readback-v1.json",
+      "bytes": 20910,
+      "sha256": "483d4e38189af63412562f53f813824807bb80e475ae12ba52a441b892e55266"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-A3.4-joint-20261013/interface-v1.json",
+      "bytes": 2489,
+      "sha256": "351ccb4cfc8e6c582f6fc941e277a0d4d93d9fde60a54949625883b93ffa687e"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-A3.4-joint-20261013/node-bindings-v1.json",
+      "bytes": 203828,
+      "sha256": "15431ffdfdb5c566f517b24df98e06172830e5f9d603593952ab06858f55d124"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-A3.4-joint-20261013/ownership-v1.json",
+      "bytes": 4078,
+      "sha256": "8ce9dcdd642f578b7a5baca84011ddf389f192f9fc332deff91510c7ce747ac3"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-A3.4-joint-20261013/package-v1.md",
+      "bytes": 3754,
+      "sha256": "ab7f94f415a1a7da6a5c574d43622bf36f2e9e053fcf460f53c7cf9b23edd0ee"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-A3.4-joint-20261013/requirements-v1.json",
+      "bytes": 1990174,
+      "sha256": "cc68c2a6bd7dff9e87720972bbe278f58300132079d30c404bd206659d5a22d9"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-A3.4-joint-20261013/runtime-plan-v1.json",
+      "bytes": 34936,
+      "sha256": "0569e3597f63d094838e22c4a2ecdc4a92d0cf126db933db4a67b87faa71e189"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-A3.4-joint-20261013/user-joint-acceptance-20261013.md",
+      "bytes": 919,
+      "sha256": "489888499b3441f800a08ea1c30d23511bdbaf739e0d02f986fbdd21368fa70c"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-delivery-20261011/accepted-api-bindings-v3.json",
+      "bytes": 37980,
+      "sha256": "c278b39d65e43b3cf226489bbd96bb6b86d61e9a21416a0ac9e4d446bb3f300c"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-delivery-20261011/capacity-workload-binding-v3.json",
+      "bytes": 2103,
+      "sha256": "58ed8e9b040fff84f68d92bd186de81a58c1662813085d3d8d74ba08a80e298b"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-delivery-20261011/delivery-experiment-contract.md",
+      "bytes": 407,
+      "sha256": "76b4b810d09c820361a551a1cce0da90c6d987e5ce401cdbc9b9c296492a6cb4"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-delivery-20261011/deployment-assembly-binding-v3.json",
+      "bytes": 1439,
+      "sha256": "a70c4409c3f889c77c15b7c7ca3e72cadbeac73a38e0bbc6035e7a0faa90a0b1"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-delivery-20261011/interface-v3.json",
+      "bytes": 9692,
+      "sha256": "a239c33b757e70d4fc5231637752ffb09fc5d8358bb88c9a33d621bef39a79bd"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-delivery-20261011/node-bindings-v3.json",
+      "bytes": 19661385,
+      "sha256": "ed2daaff8b657d8328e3c86f9a7cf9036c377a178439d747a3388618faafc9b0"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-delivery-20261011/ownership-v3.json",
+      "bytes": 3082,
+      "sha256": "b29abf48eb4d0bbf485b397f9d2b023a0ef8dd1ea572c0fffbbad0dde19bf73a"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-delivery-20261011/package-v3.md",
+      "bytes": 2483,
+      "sha256": "a03a9c06e30d350493ffab7e1a8ee212acfddecdc7a7f9e91f62ae3c40be71f8"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-delivery-20261011/requirements-v3.json",
+      "bytes": 413542,
+      "sha256": "78a4d8d3b438bd106ee582cfd404a92e2311c2ab6bc935a4cd03e9662bcd5342"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-delivery-20261011/runtime-plan-v3.json",
+      "bytes": 14880,
+      "sha256": "8518bf4c2472052a89a1d93640480719c3f5169d91abe0fce28b2e6303bb50f5"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-delivery-20261011/shared-interface-s0-r2.json",
+      "bytes": 6571,
+      "sha256": "79c90c6e6f313241481ad23aac8ee0867269abdd7c490ed95f28714a57c7af89"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.3-delivery-20261011/upstream-pins.json",
+      "bytes": 825,
+      "sha256": "ed0652abf1e7ea65238b345d1b81bc88fde487f6d964f7402d5ae2eee846c4b3"
+    },
+    {
+      "path": "tasks/workflow/runs/setup/codex-astra-sol-v1/workflow-contract.md",
+      "bytes": 4829,
+      "sha256": "c542d3f9cc80f51712538942480aff7c423fa2ecfea5598f68c9e32f36c75845"
+    },
+    {
+      "path": "tests/integration/test_a33_scenarios.py",
+      "bytes": 104861,
+      "sha256": "6e9a174b5a3cacde9f48521cdcc3b075bc74a719a3f5e7737a49f1b5964d4299"
+    }
+  ],
+  "state_is_controller_administrative_not_candidate": "state not pinned while dispatch/review outcomes change"
+}

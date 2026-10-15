@@ -728,7 +728,12 @@ def test_shared_kid_concurrent_current_query_cross_owner_and_trust_repair(
     from agent_guard.evidence.receipt import verify_receipt_bundle
     from agent_guard.execution.receipt_projection import project_receipt
     from agent_guard.execution.receipt_publication import ReceiptVerifier, evidence_bundle
-    from tests.fixtures.receipts import legal_shared_operations, publication_only, result_read_only
+    from tests.fixtures.receipts import (
+        _journal_delta,
+        legal_shared_operations,
+        publication_only,
+        result_read_only,
+    )
 
     records, verifier, publisher = legal_shared_operations(
         dsn, downstream_dsn, failed=order == "reverse", public=True
@@ -792,6 +797,14 @@ def test_shared_kid_concurrent_current_query_cross_owner_and_trust_repair(
     monkeypatch.undo()
     after = full_state(dsn, downstream_dsn)
     old, new = copy.deepcopy(baseline), copy.deepcopy(after)
+    _journal_delta(
+        old,
+        new,
+        interactions=tuple(
+            ("QUERY", item["op"], bundle.evidence_ref)
+            for item, bundle in zip(records, bundles, strict=True)
+        ),
+    )
     existing = old["gateway"].pop("ag_proofs")
     current = new["gateway"].pop("ag_proofs")
     added = [json.loads(row[0]) for row in current if row not in existing]

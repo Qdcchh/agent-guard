@@ -16,7 +16,11 @@ from pathlib import Path
 import psycopg
 import pytest
 
-from agent_guard.contracts.execution import ExecutionError, ExecutionErrorCode, OperationStatus
+from agent_guard.contracts.execution import (
+    ExecutionError,
+    ExecutionErrorCode,
+    OperationStatus,
+)
 from agent_guard.contracts.ledger import AcceptDisposition
 from agent_guard.execution import store as exec_store
 from agent_guard.ledger import applied_versions, apply_migrations
@@ -47,7 +51,14 @@ _BUSINESS_TABLE_ORDER = {
 
 
 def expected_versions(migrations_dir: Path = DEFAULT_MIGRATIONS_DIR) -> list[str]:
-    return sorted(p.name.split("_", 1)[0] for p in migrations_dir.glob("*.sql"))
+    paths = list(migrations_dir.glob("*.sql"))
+    if migrations_dir.resolve() == DEFAULT_MIGRATIONS_DIR.resolve():
+        assert (migrations_dir / "007_audit_journal.sql").is_file()
+        paths = [p for p in paths if p.name != "007_audit_journal.sql"]
+        versions = sorted(p.name.split("_", 1)[0] for p in paths)
+        assert versions == ["001", "002", "003", "004", "005", "006"]
+        return versions
+    return sorted(p.name.split("_", 1)[0] for p in paths)
 
 
 def snapshot_business_tables(dsn: str) -> dict[str, list[tuple]]:
@@ -153,7 +164,9 @@ def test_p19_upgrade_from_003_preserves_nonzero_seven_tables(scratch):
         assert_tables_unchanged(before, after)
         assert fetch_counters(scratch.dsn, tree.root_id)["amount_reserved"] == 70000
         assert fetch_one(
-            scratch.dsn, "SELECT revoked FROM ag_grants WHERE grant_id = %s", (tree.mid_id,)
+            scratch.dsn,
+            "SELECT revoked FROM ag_grants WHERE grant_id = %s",
+            (tree.mid_id,),
         ) == (True,)
         # the sidecar exists but is empty: the legacy rows are untouched
         assert fetch_counts(scratch.dsn)["ag_operation_review_flags"] == 0
@@ -405,7 +418,8 @@ def test_p20_accepted_operations_and_paths_cannot_be_deleted(a2):
         with pytest.raises(psycopg.errors.CheckViolation):
             with conn.transaction():
                 conn.execute(
-                    "DELETE FROM ag_operations WHERE operation_id = %s", (accepted.operation_id,)
+                    "DELETE FROM ag_operations WHERE operation_id = %s",
+                    (accepted.operation_id,),
                 )
 
     # deleting any node of the accepted path is refused
@@ -452,8 +466,14 @@ def test_p20_events_and_nodes_cannot_be_updated_or_deleted(a2):
             "UPDATE ag_ledger_events SET phase = %s WHERE operation_id = %s",
             ("RELEASE", accepted.operation_id),
         ),
-        ("UPDATE ag_ledger_events SET seq = 7 WHERE operation_id = %s", (accepted.operation_id,)),
-        ("DELETE FROM ag_ledger_events WHERE operation_id = %s", (accepted.operation_id,)),
+        (
+            "UPDATE ag_ledger_events SET seq = 7 WHERE operation_id = %s",
+            (accepted.operation_id,),
+        ),
+        (
+            "DELETE FROM ag_ledger_events WHERE operation_id = %s",
+            (accepted.operation_id,),
+        ),
         (
             "UPDATE ag_ledger_event_nodes SET amount_reserved_delta = 0 WHERE grant_id = %s",
             (a2.tree.root_id,),
@@ -589,7 +609,9 @@ def test_p20_legitimate_updates_still_work(a2):
             )
 
     assert fetch_one(
-        a2.gateway_dsn, "SELECT revoked FROM ag_grants WHERE grant_id = %s", (a2.tree.mid_id,)
+        a2.gateway_dsn,
+        "SELECT revoked FROM ag_grants WHERE grant_id = %s",
+        (a2.tree.mid_id,),
     ) == (True,)
     assert a2.service.operation_status(accepted.operation_id) == "EXECUTING"
 
@@ -620,7 +642,8 @@ def test_p20_unreferenced_non_root_grant_delete_stays_possible(a2):
         with conn.transaction():
             conn.execute("DELETE FROM ag_grants WHERE grant_id = 'p20-unused-child'")
     assert fetch_one(
-        a2.gateway_dsn, "SELECT count(*) FROM ag_grants WHERE grant_id = 'p20-unused-child'"
+        a2.gateway_dsn,
+        "SELECT count(*) FROM ag_grants WHERE grant_id = 'p20-unused-child'",
     ) == (0,)
 
 

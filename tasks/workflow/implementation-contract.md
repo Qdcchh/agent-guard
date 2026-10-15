@@ -1,6 +1,10 @@
 # 实施与补正子 agent 规则
 
-实施者：`gpt-6.1-sol / medium`，角色与生效边界见 [现行约定](current-policy.md)。主控拥有需求解释、阶段控制和最终验收；实施者只执行已批准Markdown任务包。完整原始需求、最新review与任务包都必须读，不以主控的一句聊天概述替代。
+当前角色覆盖：2026-10-14真人继续授权；worker OpenCode Go `deepseek-v4.1-flash/max`，全新reviewer `gpt-6-astra/high`，主控按用户当前Astra设置。effective metadata未观测仍UNKNOWN。正在恢复A34实施，以下旧Sol角色及中断状态为此前记录；完整自查/40000/独验仍NOT_RUN。见[本轮授权](runs/A3.3-A3.4-joint-20261013/user-resume-opencode-astra-20261014.md)。
+
+当前实施边界为真人2026-10-13明确授权的A3.3/A3.4联合交付，见[runs/A3.3-A3.4-joint-20261013/user-joint-acceptance-20261013.md](runs/A3.3-A3.4-joint-20261013/user-joint-acceptance-20261013.md)。正常装配接口冻结后研究实施，最后统一完整自查与新完整独立验收；此前先单独接受A33的顺序被覆盖，原全部安全与验证要求不变。角色精确文件/资源移交仍由主控授权，fresh联合包审前不授新实施写权。
+
+实施者：`gpt-6.1-sol / low`，角色与生效边界见 [现行约定](current-policy.md)。主控拥有需求解释、阶段控制和最终验收；实施者只执行已批准Markdown任务包。完整原始需求、最新review与任务包都必须读，不以主控的一句聊天概述替代。
 
 ## 开工前
 

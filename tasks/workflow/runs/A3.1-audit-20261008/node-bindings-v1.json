@@ -1,0 +1,3056 @@
+{
+  "stage": "A3.1",
+  "status": "PRE_IMPLEMENTATION_PLAN",
+  "new_parents": 22,
+  "new_atoms": 95,
+  "planned_nodes": [
+    {
+      "planned_node": "tests/unit/test_audit_journal.py::test_task_stream_canonical_sm3_schema",
+      "file": "tests/unit/test_audit_journal.py",
+      "function": "test_task_stream_canonical_sm3_schema",
+      "sole_initial_owner": "a31-shared",
+      "phase": "S0_SERIAL",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-01.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-01",
+            "assertindex_1based": 1
+          },
+          "local_slice": "schema scope constraints only; persistence delegated",
+          "finite_case_ref": "A31-01.01",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-01.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-01",
+            "assertindex_1based": 2
+          },
+          "local_slice": "canonical SM3 and strict typed fields",
+          "finite_case_ref": "A31-01.02",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-01.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-01",
+            "assertindex_1based": 3
+          },
+          "local_slice": "codec bounds/rejection",
+          "finite_case_ref": "A31-01.03",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "kind",
+        "scope_mutation",
+        "encoding_boundary"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": null,
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-shared",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_atomicity.py::test_task_stream_rows_and_independent_heads",
+      "file": "tests/integration/test_audit_atomicity.py",
+      "function": "test_task_stream_rows_and_independent_heads",
+      "sole_initial_owner": "a31-shared",
+      "phase": "S0_SERIAL",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-01.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-01",
+            "assertindex_1based": 1
+          },
+          "local_slice": "PG unique stream and persistent sequence",
+          "finite_case_ref": "A31-01.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-01.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-01",
+            "assertindex_1based": 4
+          },
+          "local_slice": "actual two-task independent head lock barriers",
+          "finite_case_ref": "A31-01.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-01.05",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-01",
+            "assertindex_1based": 5
+          },
+          "local_slice": "rollback no burned seq / SIGKILL new PID persistence",
+          "finite_case_ref": "A31-01.05",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "persistent_restart",
+        "rollback_no_gap",
+        "same_task_concurrent",
+        "two_tasks_independent_heads"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-shared",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_atomicity.py::test_first_retry_query_atomic_coverage",
+      "file": "tests/integration/test_audit_atomicity.py",
+      "function": "test_first_retry_query_atomic_coverage",
+      "sole_initial_owner": "a31-shared",
+      "phase": "S0_SERIAL",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-02.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-02",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local first/retry/query成功事实同事务关联 observation: A31-02.01",
+          "finite_case_ref": "A31-02.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-02.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-02",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local first/retry/query成功事实同事务关联 observation: A31-02.02",
+          "finite_case_ref": "A31-02.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-02.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-02",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local first/retry/query成功事实同事务关联 observation: A31-02.03",
+          "finite_case_ref": "A31-02.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-02.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-02",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local first/retry/query成功事实同事务关联 observation: A31-02.04",
+          "finite_case_ref": "A31-02.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-02.05",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-02",
+            "assertindex_1based": 5
+          },
+          "local_slice": "Local first/retry/query成功事实同事务关联 observation: A31-02.05",
+          "finite_case_ref": "A31-02.05",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "first",
+        "retry",
+        "query",
+        "same_proof",
+        "same_business_key",
+        "positive_first_seed_once",
+        "transaction_retry_seed_rebuilt",
+        "callbacks_concurrent_no_cross_talk"
+      ],
+      "additional_cases_preserved": [
+        "entry: accept/checked/bound/service_candidate/quote_failure_recheck/new_race/verified/accept_response/query",
+        "hooks: omitted/explicit_none/before_only/after_only/full",
+        "stream: legacy_unenabled/enabled/new_public_empty",
+        "material: real_binding/trusted_attachment/opaque_missing",
+        "outer accept_response wrapper preserves immutable trusted descriptor and all original binding/publication waits",
+        "TX retry-local seed/material isolation; standalone successful invoke proof-link RETRY"
+      ],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-shared",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_atomicity.py::test_journal_faults_roll_back_business_facts",
+      "file": "tests/integration/test_audit_atomicity.py",
+      "function": "test_journal_faults_roll_back_business_facts",
+      "sole_initial_owner": "a31-shared",
+      "phase": "S0_SERIAL",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-03.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-03",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local journal失败业务全回滚 observation: A31-03.01",
+          "finite_case_ref": "A31-03.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-03.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-03",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local journal失败业务全回滚 observation: A31-03.02",
+          "finite_case_ref": "A31-03.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-03.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-03",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local journal失败业务全回滚 observation: A31-03.03",
+          "finite_case_ref": "A31-03.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-03.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-03",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local journal失败业务全回滚 observation: A31-03.04",
+          "finite_case_ref": "A31-03.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "fault_point",
+        "first_retry_query_terminal_publish",
+        "SQLSTATE"
+      ],
+      "additional_cases_preserved": [
+        "missing_assembly/missing_record/wrong_scope/wrong_xid/wrong_binding/proof_link_only",
+        "FIRST/RETRY/QUERY/TERMINAL/first_READY fault and positive control",
+        "full proof/link/op/all ancestor counters/events/lease/outbox/bootstrap/chunks/head rollback"
+      ],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-shared",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_clock.py::test_final_public_clock_after_journal_wait",
+      "file": "tests/integration/test_audit_clock.py",
+      "function": "test_final_public_clock_after_journal_wait",
+      "sole_initial_owner": "a31-shared",
+      "phase": "S0_SERIAL",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-04.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-04",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 公开接受/query最后freshclock observation: A31-04.01",
+          "finite_case_ref": "A31-04.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-04.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-04",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 公开接受/query最后freshclock observation: A31-04.02",
+          "finite_case_ref": "A31-04.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-04.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-04",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 公开接受/query最后freshclock observation: A31-04.03",
+          "finite_case_ref": "A31-04.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-04.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-04",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 公开接受/query最后freshclock observation: A31-04.04",
+          "finite_case_ref": "A31-04.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-04.05",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-04",
+            "assertindex_1based": 5
+          },
+          "local_slice": "Local 公开接受/query最后freshclock observation: A31-04.05",
+          "finite_case_ref": "A31-04.05",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "invoke",
+        "query",
+        "proof_exp",
+        "token_exp",
+        "ancestor_exp",
+        "positive_negative",
+        "before_create_capture_wait",
+        "late_proof_link_wait",
+        "head_wait",
+        "deferred_flush_wait"
+      ],
+      "additional_cases_preserved": [
+        "default_none/explicit_attachment/bound_none/accept_response composite waits",
+        "capture/link/head/flush × proof/token/ancestor expiry × positive/negative"
+      ],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-shared",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_fencing.py::test_terminal_final_fence_after_journal_wait",
+      "file": "tests/integration/test_audit_fencing.py",
+      "function": "test_terminal_final_fence_after_journal_wait",
+      "sole_initial_owner": "a31-shared",
+      "phase": "S0_SERIAL",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-05.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-05",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 终局最后owner/fence/state/expiry observation: A31-05.01",
+          "finite_case_ref": "A31-05.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-05.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-05",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 终局最后owner/fence/state/expiry observation: A31-05.02",
+          "finite_case_ref": "A31-05.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-05.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-05",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 终局最后owner/fence/state/expiry observation: A31-05.03",
+          "finite_case_ref": "A31-05.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-05.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-05",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 终局最后owner/fence/state/expiry observation: A31-05.04",
+          "finite_case_ref": "A31-05.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "expiry_no_takeover",
+        "takeover",
+        "stale_owner",
+        "stale_version",
+        "settle_release"
+      ],
+      "additional_cases_preserved": [
+        "worker run/reconcile without accept callback",
+        "signed_first/maintained_opaque_history; enough accepted facts success+GAP / insufficient facts reject/quarantine",
+        "prestate capture→tentative terminal→journal→flush→expected_state/owner/version/lease expiry final DBclock"
+      ],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-shared",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_lock_order.py::test_public_terminal_publisher_lock_order",
+      "file": "tests/integration/test_audit_lock_order.py",
+      "function": "test_public_terminal_publisher_lock_order",
+      "sole_initial_owner": "a31-shared",
+      "phase": "S0_SERIAL",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-06.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-06",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 锁序及publisher无outbox到task反序 observation: A31-06.01",
+          "finite_case_ref": "A31-06.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-06.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-06",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 锁序及publisher无outbox到task反序 observation: A31-06.02",
+          "finite_case_ref": "A31-06.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-06.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-06",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 锁序及publisher无outbox到task反序 observation: A31-06.03",
+          "finite_case_ref": "A31-06.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-06.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-06",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 锁序及publisher无outbox到task反序 observation: A31-06.04",
+          "finite_case_ref": "A31-06.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "publisher_terminal",
+        "publisher_query",
+        "claim_terminal",
+        "two_tasks"
+      ],
+      "additional_cases_preserved": [
+        "terminal/query/default_none/actual accepted READY first/retry/missingstream",
+        "outbox→existinghead; no outbox→task; no initial business lock after head; original READY JWS no second PUBLISH"
+      ],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-shared",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_lock_order.py::test_revocation_key_state_journal_linearization",
+      "file": "tests/integration/test_audit_lock_order.py",
+      "function": "test_revocation_key_state_journal_linearization",
+      "sole_initial_owner": "a31-shared",
+      "phase": "S0_SERIAL",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-07.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-07",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 撤销/key状态与新日志等待线性化 observation: A31-07.01",
+          "finite_case_ref": "A31-07.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-07.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-07",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 撤销/key状态与新日志等待线性化 observation: A31-07.02",
+          "finite_case_ref": "A31-07.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-07.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-07",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 撤销/key状态与新日志等待线性化 observation: A31-07.03",
+          "finite_case_ref": "A31-07.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-07.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-07",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 撤销/key状态与新日志等待线性化 observation: A31-07.04",
+          "finite_case_ref": "A31-07.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "task_root_middle_leaf",
+        "key_deactivate",
+        "before_after_accept"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-shared",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_upgrade.py::test_maintenance_bootstrap_preserves_history",
+      "file": "tests/integration/test_audit_upgrade.py",
+      "function": "test_maintenance_bootstrap_preserves_history",
+      "sole_initial_owner": "a31-shared",
+      "phase": "S0_SERIAL",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-08.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-08",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 维护bootstrap真实历史快照 observation: A31-08.01",
+          "finite_case_ref": "A31-08.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-08.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-08",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 维护bootstrap真实历史快照 observation: A31-08.02",
+          "finite_case_ref": "A31-08.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-08.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-08",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 维护bootstrap真实历史快照 observation: A31-08.03",
+          "finite_case_ref": "A31-08.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-08.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-08",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 维护bootstrap真实历史快照 observation: A31-08.04",
+          "finite_case_ref": "A31-08.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-08.05",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-08",
+            "assertindex_1based": 5
+          },
+          "local_slice": "Local 维护bootstrap真实历史快照 observation: A31-08.05",
+          "finite_case_ref": "A31-08.05",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-08.06",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-08",
+            "assertindex_1based": 6
+          },
+          "local_slice": "Local 维护bootstrap真实历史快照 observation: A31-08.06",
+          "finite_case_ref": "A31-08.06",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "populated",
+        "opaque",
+        "short_events",
+        "new_task",
+        "registration_pending",
+        "positive_cost_empty_seed",
+        "same_task_two_first_accepts",
+        "old_new_key_miss_nonzero_history",
+        "zero_ops_nonzero_offpath_counter",
+        "as_child_grant_before_during_capture"
+      ],
+      "additional_cases_preserved": [
+        "legacy accept/checked/bound/service/Bridge opaque remain unenabled",
+        "positive cost c/calls1 pre-reserve all-task zero; two concurrent FIRST only one bootstrap",
+        "old_key_miss/offpath_nonzero reject EMPTY; maintenance nonzero/opaque/GAP unchanged",
+        "post-bootstrap genuine AS newgrant FIRST introduced-zero trusted creation/no prior execution/fourzero/full AS chain; no unknown history reset"
+      ],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-shared",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_upgrade.py::test_007_audit001_lineage_source_wheel",
+      "file": "tests/integration/test_audit_upgrade.py",
+      "function": "test_007_audit001_lineage_source_wheel",
+      "sole_initial_owner": "a31-shared",
+      "phase": "S0_SERIAL",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-09.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-09",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local execution007/audit001独立迁移历史兼容 observation: A31-09.01",
+          "finite_case_ref": "A31-09.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-09.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-09",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local execution007/audit001独立迁移历史兼容 observation: A31-09.02",
+          "finite_case_ref": "A31-09.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-09.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-09",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local execution007/audit001独立迁移历史兼容 observation: A31-09.03",
+          "finite_case_ref": "A31-09.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-09.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-09",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local execution007/audit001独立迁移历史兼容 observation: A31-09.04",
+          "finite_case_ref": "A31-09.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "A",
+        "B",
+        "v2",
+        "repeat",
+        "illegal",
+        "source",
+        "wheel",
+        "PG16",
+        "PG14"
+      ],
+      "additional_cases_preserved": [
+        "A1/B Bridge/README/A2fixtures/boundclock/legacy first not fabricated; actual source/wheel install"
+      ],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-shared",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_upgrade.py::test_bootstrap_chunks_and_required_coverage",
+      "file": "tests/integration/test_audit_upgrade.py",
+      "function": "test_bootstrap_chunks_and_required_coverage",
+      "sole_initial_owner": "a31-shared",
+      "phase": "S0_SERIAL",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-10.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-10",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local bootstrap切片及必要coverageguards observation: A31-10.01",
+          "finite_case_ref": "A31-10.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-10.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-10",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local bootstrap切片及必要coverageguards observation: A31-10.02",
+          "finite_case_ref": "A31-10.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-10.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-10",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local bootstrap切片及必要coverageguards observation: A31-10.03",
+          "finite_case_ref": "A31-10.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-10.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-10",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local bootstrap切片及必要coverageguards observation: A31-10.04",
+          "finite_case_ref": "A31-10.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-10.05",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-10",
+            "assertindex_1based": 5
+          },
+          "local_slice": "Local bootstrap切片及必要coverageguards observation: A31-10.05",
+          "finite_case_ref": "A31-10.05",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "chunk_boundary",
+        "wire_total",
+        "missing_required_record",
+        "legacy_unchanged",
+        "seed_scope_tx_lineage_mismatch",
+        "complete_task_offpath",
+        "zero_ops_nonzero_counter",
+        "capture_limits_cap_plus_one"
+      ],
+      "additional_cases_preserved": [
+        "enabled oldbinary/default missing/wrong record binding fails; unenabled legacy facts untouched",
+        "bounded deep immutable sameTX seed, cap+1; auxiliary lifecycle kinds nonmandatory"
+      ],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-shared",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/unit/test_checkpoint_contract.py::test_checkpoint_sm2_type_scope_version",
+      "file": "tests/unit/test_checkpoint_contract.py",
+      "function": "test_checkpoint_sm2_type_scope_version",
+      "sole_initial_owner": "a31-service",
+      "phase": "S1_PARALLEL_SERVICE",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-11.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-11",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local checkpoint真实SM2/profile/typ隔离 observation: A31-11.01",
+          "finite_case_ref": "A31-11.01",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-11.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-11",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local checkpoint真实SM2/profile/typ隔离 observation: A31-11.02",
+          "finite_case_ref": "A31-11.02",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-11.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-11",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local checkpoint真实SM2/profile/typ隔离 observation: A31-11.03",
+          "finite_case_ref": "A31-11.03",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-11.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-11",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local checkpoint真实SM2/profile/typ隔离 observation: A31-11.04",
+          "finite_case_ref": "A31-11.04",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "typ",
+        "alg",
+        "profile_version",
+        "scope",
+        "kid",
+        "signature"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": null,
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-service",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_service.py::test_atomic_batch_continuity_fork_rejection",
+      "file": "tests/integration/test_audit_service.py",
+      "function": "test_atomic_batch_continuity_fork_rejection",
+      "sole_initial_owner": "a31-service",
+      "phase": "S1_PARALLEL_SERVICE",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-12.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-12",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 远端连续批原子去重分叉拒绝 observation: A31-12.01",
+          "finite_case_ref": "A31-12.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-12.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-12",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 远端连续批原子去重分叉拒绝 observation: A31-12.02",
+          "finite_case_ref": "A31-12.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-12.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-12",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 远端连续批原子去重分叉拒绝 observation: A31-12.03",
+          "finite_case_ref": "A31-12.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-12.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-12",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 远端连续批原子去重分叉拒绝 observation: A31-12.04",
+          "finite_case_ref": "A31-12.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "duplicate",
+        "gap",
+        "oldrange",
+        "fork",
+        "wrongprev_scope",
+        "partialfault"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-service",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_service.py::test_two_audit_pids_same_batch_original_jws",
+      "file": "tests/integration/test_audit_service.py",
+      "function": "test_two_audit_pids_same_batch_original_jws",
+      "sole_initial_owner": "a31-service",
+      "phase": "S1_PARALLEL_SERVICE",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-13.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-13",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 双audit进程同批唯一原checkpoint observation: A31-13.01",
+          "finite_case_ref": "A31-13.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-13.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-13",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 双audit进程同批唯一原checkpoint observation: A31-13.02",
+          "finite_case_ref": "A31-13.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-13.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-13",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 双audit进程同批唯一原checkpoint observation: A31-13.03",
+          "finite_case_ref": "A31-13.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-13.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-13",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 双audit进程同批唯一原checkpoint observation: A31-13.04",
+          "finite_case_ref": "A31-13.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "samebatch",
+        "adjacentbatches"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-service",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_service.py::test_audit_sigkill_commit_response_windows",
+      "file": "tests/integration/test_audit_service.py",
+      "function": "test_audit_sigkill_commit_response_windows",
+      "sole_initial_owner": "a31-service",
+      "phase": "S1_PARALLEL_SERVICE",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-14.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-14",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local audit存前存后SIGKILL新PID恢复 observation: A31-14.01",
+          "finite_case_ref": "A31-14.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-14.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-14",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local audit存前存后SIGKILL新PID恢复 observation: A31-14.02",
+          "finite_case_ref": "A31-14.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-14.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-14",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local audit存前存后SIGKILL新PID恢复 observation: A31-14.03",
+          "finite_case_ref": "A31-14.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-14.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-14",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local audit存前存后SIGKILL新PID恢复 observation: A31-14.04",
+          "finite_case_ref": "A31-14.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "presign",
+        "midinsert",
+        "precommit",
+        "postcommit_preresponse",
+        "lostresponse"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-service",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_tls.py::test_real_audit_tls_registered_roles_and_scope",
+      "file": "tests/integration/test_audit_tls.py",
+      "function": "test_real_audit_tls_registered_roles_and_scope",
+      "sole_initial_owner": "a31-service",
+      "phase": "S1_PARALLEL_SERVICE",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-15.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-15",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local auditTLS凭据角色资源隔离 observation: A31-15.01",
+          "finite_case_ref": "A31-15.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-15.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-15",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local auditTLS凭据角色资源隔离 observation: A31-15.02",
+          "finite_case_ref": "A31-15.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-15.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-15",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local auditTLS凭据角色资源隔离 observation: A31-15.03",
+          "finite_case_ref": "A31-15.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-15.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-15",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local auditTLS凭据角色资源隔离 observation: A31-15.04",
+          "finite_case_ref": "A31-15.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "TLSpositive",
+        "badTLS",
+        "wrongrole",
+        "crossscope",
+        "framing"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-service",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_service.py::test_checkpoint_history_encoded_pages_rotation",
+      "file": "tests/integration/test_audit_service.py",
+      "function": "test_checkpoint_history_encoded_pages_rotation",
+      "sole_initial_owner": "a31-service",
+      "phase": "S1_PARALLEL_SERVICE",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-16.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-16",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local checkpointhistory分页轮换和latest界限 observation: A31-16.01",
+          "finite_case_ref": "A31-16.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-16.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-16",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local checkpointhistory分页轮换和latest界限 observation: A31-16.02",
+          "finite_case_ref": "A31-16.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-16.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-16",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local checkpointhistory分页轮换和latest界限 observation: A31-16.03",
+          "finite_case_ref": "A31-16.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-16.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-16",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local checkpointhistory分页轮换和latest界限 observation: A31-16.04",
+          "finite_case_ref": "A31-16.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "multipage",
+        "appendduringread",
+        "keyrotate",
+        "keyrange"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-service",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_service.py::test_audit_restore_behind_external_pin_refused",
+      "file": "tests/integration/test_audit_service.py",
+      "function": "test_audit_restore_behind_external_pin_refused",
+      "sole_initial_owner": "a31-service",
+      "phase": "S1_PARALLEL_SERVICE",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-17.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-17",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local audit旧备份与外部pin反回滚 observation: A31-17.01",
+          "finite_case_ref": "A31-17.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-17.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-17",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local audit旧备份与外部pin反回滚 observation: A31-17.02",
+          "finite_case_ref": "A31-17.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-17.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-17",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local audit旧备份与外部pin反回滚 observation: A31-17.03",
+          "finite_case_ref": "A31-17.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-17.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-17",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local audit旧备份与外部pin反回滚 observation: A31-17.04",
+          "finite_case_ref": "A31-17.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "lowerseq",
+        "same_seq_fork",
+        "missingpin"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-service",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/unit/test_audit_client.py::test_sender_encoded_prefix_and_original_pending_body",
+      "file": "tests/unit/test_audit_client.py",
+      "function": "test_sender_encoded_prefix_and_original_pending_body",
+      "sole_initial_owner": "a31-delivery",
+      "phase": "S1_PARALLEL_DELIVERY",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-18.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-18",
+            "assertindex_1based": 1
+          },
+          "local_slice": "encoded bytes incl base64 metadata",
+          "finite_case_ref": "A31-18.01",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-18.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-18",
+            "assertindex_1based": 2
+          },
+          "local_slice": "max contiguous prefix and single-too-large rejection",
+          "finite_case_ref": "A31-18.02",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "onemax",
+        "64small",
+        "encodedboundary",
+        "singlefailure"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": null,
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-delivery",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_delivery.py::test_pending_body_persistence_and_growth",
+      "file": "tests/integration/test_audit_delivery.py",
+      "function": "test_pending_body_persistence_and_growth",
+      "sole_initial_owner": "a31-delivery",
+      "phase": "S1_PARALLEL_DELIVERY",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-18.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-18",
+            "assertindex_1based": 3
+          },
+          "local_slice": "PG exact body saved short TX before network, locks released",
+          "finite_case_ref": "A31-18.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-18.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-18",
+            "assertindex_1based": 4
+          },
+          "local_slice": "journal growth cannot alter saved batch",
+          "finite_case_ref": "A31-18.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-18.05",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-18",
+            "assertindex_1based": 5
+          },
+          "local_slice": "SIGKILL/new PID/exact persisted batch; S2 real audit original CP",
+          "finite_case_ref": "A31-18.05",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "pending_persisted_then_growth",
+        "kill_before_send",
+        "remote_commit_lost_reply"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-delivery",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_delivery.py::test_sender_sigkill_exact_pending_ack_recovery",
+      "file": "tests/integration/test_audit_delivery.py",
+      "function": "test_sender_sigkill_exact_pending_ack_recovery",
+      "sole_initial_owner": "a31-delivery",
+      "phase": "S1_PARALLEL_DELIVERY",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-19.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-19",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 递送全部死亡窗口ACK恢复 observation: A31-19.01",
+          "finite_case_ref": "A31-19.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-19.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-19",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 递送全部死亡窗口ACK恢复 observation: A31-19.02",
+          "finite_case_ref": "A31-19.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-19.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-19",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 递送全部死亡窗口ACK恢复 observation: A31-19.03",
+          "finite_case_ref": "A31-19.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-19.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-19",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 递送全部死亡窗口ACK恢复 observation: A31-19.04",
+          "finite_case_ref": "A31-19.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "businesscommit",
+        "pendingsaved",
+        "presend",
+        "remotecommitlostreply",
+        "preack",
+        "postack"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-delivery",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_audit_delivery.py::test_two_senders_remote_ahead_rollback_reconcile",
+      "file": "tests/integration/test_audit_delivery.py",
+      "function": "test_two_senders_remote_ahead_rollback_reconcile",
+      "sole_initial_owner": "a31-delivery",
+      "phase": "S1_PARALLEL_DELIVERY",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-20.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-20",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 双sender晚ACK/history对账及GW回滚 observation: A31-20.01",
+          "finite_case_ref": "A31-20.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-20.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-20",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 双sender晚ACK/history对账及GW回滚 observation: A31-20.02",
+          "finite_case_ref": "A31-20.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-20.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-20",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 双sender晚ACK/history对账及GW回滚 observation: A31-20.03",
+          "finite_case_ref": "A31-20.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A31-20.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-20",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 双sender晚ACK/history对账及GW回滚 observation: A31-20.04",
+          "finite_case_ref": "A31-20.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "lateack",
+        "remoteahead",
+        "wronghead",
+        "missingpage",
+        "rollback",
+        "fairrotation"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a31-delivery",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_a31_joint_tls.py::test_real_four_tools_receipt_checkpoint_flow",
+      "file": "tests/integration/test_a31_joint_tls.py",
+      "function": "test_real_four_tools_receipt_checkpoint_flow",
+      "sole_initial_owner": "single-integrator",
+      "phase": "S2_SERIAL_INTEGRATION",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A31-21.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A31-21",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Real joint TLS/public flow only; inherited/full review assertions assigned to native stage obligations",
+          "finite_case_ref": "A31-21.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "source",
+        "noneditablewheel",
+        "fourtools"
+      ],
+      "additional_cases_preserved": [
+        "normal default real public factory→worker run/reconcile→actual accepted publisher/query→independent CP",
+        "source/noneditablewheel four canonical tools and actual CLI subprocesses"
+      ],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "single-integrator",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    }
+  ],
+  "native_obligations": [
+    {
+      "atom_ref": "A31-21.02",
+      "owner": "controller + single-integrator + fresh independent reviewer",
+      "status": "PLANNED_NATIVE_OBLIGATION_NOT_RUN",
+      "why_no_pytest_node": "Native workflow/full inherited matrix/static clause decision cannot be truthfully proved by invented runtime function.",
+      "finite_case_ref": "A31-21.02"
+    },
+    {
+      "atom_ref": "A31-21.03",
+      "owner": "controller + single-integrator + fresh independent reviewer",
+      "status": "PLANNED_NATIVE_OBLIGATION_NOT_RUN",
+      "why_no_pytest_node": "Native workflow/full inherited matrix/static clause decision cannot be truthfully proved by invented runtime function.",
+      "finite_case_ref": "A31-21.03"
+    },
+    {
+      "atom_ref": "A31-21.04",
+      "owner": "controller + single-integrator + fresh independent reviewer",
+      "status": "PLANNED_NATIVE_OBLIGATION_NOT_RUN",
+      "why_no_pytest_node": "Native workflow/full inherited matrix/static clause decision cannot be truthfully proved by invented runtime function.",
+      "finite_case_ref": "A31-21.04"
+    },
+    {
+      "atom_ref": "A31-S01.01",
+      "owner": "controller + single-integrator + fresh independent reviewer",
+      "status": "PLANNED_NATIVE_OBLIGATION_NOT_RUN",
+      "why_no_pytest_node": "Native workflow/full inherited matrix/static clause decision cannot be truthfully proved by invented runtime function.",
+      "finite_case_ref": "A31-S01.01"
+    },
+    {
+      "atom_ref": "A31-S01.02",
+      "owner": "controller + single-integrator + fresh independent reviewer",
+      "status": "PLANNED_NATIVE_OBLIGATION_NOT_RUN",
+      "why_no_pytest_node": "Native workflow/full inherited matrix/static clause decision cannot be truthfully proved by invented runtime function.",
+      "finite_case_ref": "A31-S01.02"
+    },
+    {
+      "atom_ref": "A31-S01.03",
+      "owner": "controller + single-integrator + fresh independent reviewer",
+      "status": "PLANNED_NATIVE_OBLIGATION_NOT_RUN",
+      "why_no_pytest_node": "Native workflow/full inherited matrix/static clause decision cannot be truthfully proved by invented runtime function.",
+      "finite_case_ref": "A31-S01.03"
+    },
+    {
+      "atom_ref": "A31-S01.04",
+      "owner": "controller + single-integrator + fresh independent reviewer",
+      "status": "PLANNED_NATIVE_OBLIGATION_NOT_RUN",
+      "why_no_pytest_node": "Native workflow/full inherited matrix/static clause decision cannot be truthfully proved by invented runtime function.",
+      "finite_case_ref": "A31-S01.04"
+    }
+  ],
+  "finite_cases": [
+    {
+      "id": "A31-01.01",
+      "parent_id": "A31-01",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/0/subassertions/0/must_assert",
+      "must_assert_verbatim": "tenant/task/gateway/stream唯一scope/epoch1且无reset，seq从1无nextval烧号",
+      "input_and_positive_control": "same fixed tenant/task/gateway stream epoch1 seq1",
+      "negative_or_honest_limit_control": "duplicate scope or epoch2/reset SQL attempt",
+      "exact_oracle": "one stream unique constraint and no journal sequence burn",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-01.02",
+      "parent_id": "A31-01",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/0/subassertions/1/must_assert",
+      "must_assert_verbatim": "使用现SM3 SDK与rfc8785，不变更GM算法/签名域；严格fixed-kind facts/ID/seq/prev字段，record_id有kind前缀",
+      "input_and_positive_control": "canonical BOOTSTRAP FIRST RETRY QUERY TERMINAL PUBLISH with kind-prefixed record IDs",
+      "negative_or_honest_limit_control": "unknown kind wrong prefix mutated prev/ID/seq",
+      "exact_oracle": "SDK SM3 of exact RFC8785 bytes equals persisted digest",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-01.03",
+      "parent_id": "A31-01",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/0/subassertions/2/must_assert",
+      "must_assert_verbatim": "canonical raw<=32768且default65536bytes/4096nodes/depth64/strings65536保持，duplicate/unknown/float/bool-int/negative/overflow拒绝",
+      "input_and_positive_control": "legal raw at greatest reachable fixed-schema size and codec-only32768",
+      "negative_or_honest_limit_control": "raw32769 duplicate unknown float bool-int negative overflow nodes4097 depth65 string65537 bytes65537",
+      "exact_oracle": "exact boundary accepts or explicit unreachable codec-only label and all bad values reject",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-01.04",
+      "parent_id": "A31-01",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/0/subassertions/3/must_assert",
+      "must_assert_verbatim": "different tasks独立head，无global序列瓶颈",
+      "input_and_positive_control": "hold taskA head while taskB appends",
+      "negative_or_honest_limit_control": "same task competing append",
+      "exact_oracle": "B commits independently A waits per backend PID no globalhead",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-01.05",
+      "parent_id": "A31-01",
+      "assertindex_1based": 5,
+      "json_pointer": "/requirements/0/subassertions/4/must_assert",
+      "must_assert_verbatim": "真实PG stream/records持久连续、拒绝rollback无seq烧号/重启不reset、同task唯一stream；两个task独立head实际锁与barrier证明不需globalhead。每race/crash十轮及source/wheel，全行SHA/不同newPID。",
+      "input_and_positive_control": "commit seq1..3 rollback fourth then restart different PID",
+      "negative_or_honest_limit_control": "concurrent same-task first and forced abort",
+      "exact_oracle": "persisted seq1..3 then next4 and one stream all-row digests stable",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-02.01",
+      "parent_id": "A31-02",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/1/subassertions/0/must_assert",
+      "must_assert_verbatim": "first与operation/RESERVE/raw first link同TX；全task可信预留前seed不含本次op/event，真实正成本FIRST只预留/计入一次；retry新proof/link另记录不替换first，不capture新零基线。所有accept候选/报价失败安全recheck分支传播optional材料hooks默认None；结构capture/append由ledger内建，事务retry重建私有seed不共享state。",
+      "input_and_positive_control": "positive cost17 calls1 new empty task FIRST then freshproof RETRY via accept accept_checked accept_bound candidatehit safe-recheck newcost TX-EXISTING and outer accept_response",
+      "negative_or_honest_limit_control": "missing trusted descriptor opaque evidence or retry intent mutation",
+      "exact_oracle": "bootstrap excludes current op/event all ancestors reserve17/1 once immutable FIRST and quote preserved",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-02.02",
+      "parent_id": "A31-02",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/1/subassertions/1/must_assert",
+      "must_assert_verbatim": "query raw证据/当前source/proof-link/响应digest同TX记录；独立STAGED孤儿不是成功查询",
+      "input_and_positive_control": "real query same original accepted op new purpose proof exact signed source",
+      "negative_or_honest_limit_control": "STAGED orphan unlinked proof or wrong source query",
+      "exact_oracle": "QUERY proof/link response digest atomic orphan is never successful query",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-02.03",
+      "parent_id": "A31-02",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/1/subassertions/2/must_assert",
+      "must_assert_verbatim": "same proof并发仅一成功记录，same business key freshproof重试多retry但一reserve/效果/terminal",
+      "input_and_positive_control": "two connections same proof then distinct fresh proofs same businesskey",
+      "negative_or_honest_limit_control": "reuse proof or mutate intent",
+      "exact_oracle": "one success for proof one reserve one effect one terminal multiple legal RETRY records",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-02.04",
+      "parent_id": "A31-02",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/1/subassertions/3/must_assert",
+      "must_assert_verbatim": "TX creating xid coverage拒绝enabled旧binary缺journal业务写，不依赖client boolean",
+      "input_and_positive_control": "enabled stream legacy-shaped missing journal write direct SQL",
+      "negative_or_honest_limit_control": "unenabled legacy opaque existing trusted call control",
+      "exact_oracle": "enabled TX rejected all mutations rollback control preserves old API semantics",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-02.05",
+      "parent_id": "A31-02",
+      "assertindex_1based": 5,
+      "json_pointer": "/requirements/1/subassertions/4/must_assert",
+      "must_assert_verbatim": "seed为_accept_tx私有局部值，结构writer同connection/TX/scope验证；CREATED预算后insert前由ledger直接capture；BeforeCreate仅材料prepare且返回None，EXISTING不capture；AfterLink只读seed仅可信材料attach，随后结构writer核材料并晚append。EvidenceStore.bind原材料/权限复核不提前append，whole-TX回滚全继承。",
+      "input_and_positive_control": "local immutable seed captured budget-before-insert exact same connection",
+      "negative_or_honest_limit_control": "cross-TX reused seed wrong scope self/global holder hook noncallable",
+      "exact_oracle": "before hook returnsNone after sees readonly seed no mandatory append dependency on callback existence",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-03.01",
+      "parent_id": "A31-03",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/2/subassertions/0/must_assert",
+      "must_assert_verbatim": "append前后fault/guard failure/head locktimeout/deferred FK真实失败分别覆盖",
+      "input_and_positive_control": "fresh invoke/query/terminal/first READY with no fault",
+      "negative_or_honest_limit_control": "beforeappend afterappend guardfail headlocktimeout deferredFK actual constraint fault",
+      "exact_oracle": "target SQLSTATE and full TX rollback each branch",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-03.02",
+      "parent_id": "A31-03",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/2/subassertions/1/must_assert",
+      "must_assert_verbatim": "对应TX proof/link/四counter/op/event/allnodes/outbox/journal/head完整rollback；原STAGED可留但不linked",
+      "input_and_positive_control": "preexisting STAGED then rollback linked mutation",
+      "negative_or_honest_limit_control": "append or flush failure",
+      "exact_oracle": "proof/link fourcounter op event nodes outbox bootstrap chunks records head exactly before except independent orphan STAGED",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-03.03",
+      "parent_id": "A31-03",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/2/subassertions/2/must_assert",
+      "must_assert_verbatim": "禁止commit后异步补日志冒原子；下游unknown effect不得release/重做",
+      "input_and_positive_control": "businesscommit then delivery unavailable and downstream effect exists UNKNOWN",
+      "negative_or_honest_limit_control": "async postcommit log repair or release/redelivery of unknown intent forbidden",
+      "exact_oracle": "journal atomic at commit budget retained exactly one downstream effect",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-03.04",
+      "parent_id": "A31-03",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/2/subassertions/3/must_assert",
+      "must_assert_verbatim": "原immutable first/quote/result/outbox不被retry修补，收全异常SQLSTATE",
+      "input_and_positive_control": "FIRST quote result outbox frozen then legal new retry",
+      "negative_or_honest_limit_control": "attempt overwrite original or retry backfill missing first",
+      "exact_oracle": "all original bytes/hash stable exception type SQLSTATE captured",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-04.01",
+      "parent_id": "A31-04",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/3/subassertions/0/must_assert",
+      "must_assert_verbatim": "真实另连接锁head跨proof/token/ancestor expiry；invoke/query negative rollback本次proof/journal/counter",
+      "input_and_positive_control": "invoke/query blocked real head lock fresh at entry",
+      "negative_or_honest_limit_control": "release after each proof/token/root/middle/leaf expiry DBclock",
+      "exact_oracle": "negative full rollback proof/journal/all counters",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-04.02",
+      "parent_id": "A31-04",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/3/subassertions/1/must_assert",
+      "must_assert_verbatim": "positive释放后仍fresh真实成功，不mockclock/sleep猜顺序",
+      "input_and_positive_control": "same held-head positive released before all actual expiries",
+      "negative_or_honest_limit_control": "late release control",
+      "exact_oracle": "fresh success and expiry failure use observed PG clock no mock",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-04.03",
+      "parent_id": "A31-04",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/3/subassertions/2/must_assert",
+      "must_assert_verbatim": "ledger结构capture在预算后insert/reserve前；binding/proof-link全部原等待→可选材料after_link→结构核材料→ensure_stream/append；capture/chunks/head/flush全部等待纳入末尾DBclock。head前预获约束业务锁，flush后只核已锁path/principals/必要权限源再finalclock，之后无SQL/network；晚等跨TTL整TX回滚。",
+      "input_and_positive_control": "capture then binding/prooflink then append/chunks/flush ordered trace",
+      "negative_or_honest_limit_control": "block each wait phase past TTL",
+      "exact_oracle": "no SQL/network after finalclock no head-to-business inversion all TX rollback",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-04.04",
+      "parent_id": "A31-04",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/3/subassertions/3/must_assert",
+      "must_assert_verbatim": "原current ownership/完整source/所有ancestor/key要求不弱化",
+      "input_and_positive_control": "all current ownership/source path/key validated fresh",
+      "negative_or_honest_limit_control": "change holder ownership source digest or deactivate key before final check",
+      "exact_oracle": "reject without first repair or counters mutation",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-04.05",
+      "parent_id": "A31-04",
+      "assertindex_1based": 5,
+      "json_pointer": "/requirements/3/subassertions/4/must_assert",
+      "must_assert_verbatim": "各新增/晚等待实际barrier跨proof/token/ancestor expiry：初始fresh不能放行最终expired，真实finalclock拒绝且proof/link/op/所有counter/events/bootstrap/chunks/journal/head整TX回滚；每参数十轮source/wheel，正例仍fresh成功。",
+      "input_and_positive_control": "invoke and query wait phases capture prooflink head deferredflush independently each expiry source",
+      "negative_or_honest_limit_control": "early release control and expired release",
+      "exact_oracle": "each explicit compatible phase/expiry row ten rounds source/wheel all rollback observations",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-05.01",
+      "parent_id": "A31-05",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/4/subassertions/0/must_assert",
+      "must_assert_verbatim": "capture旧helper锁下合法prestatus/owner/version/expiry；业务暂terminal后expected-status helper允许本TXterminal并仍check四条件",
+      "input_and_positive_control": "legal prestate ownerA version3 live expiry tentatively SETTLE or RELEASE",
+      "negative_or_honest_limit_control": "wrong expected-terminal status ownerB version2 expired lease",
+      "exact_oracle": "expected-terminal helper accepts current TX terminal only with all four valid conditions",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-05.02",
+      "parent_id": "A31-05",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/4/subassertions/1/must_assert",
+      "must_assert_verbatim": "真实head等待跨expiry整TX rollbackcounter/event/status/outbox/journal/head，不释放已effect预算",
+      "input_and_positive_control": "hold terminal head lock after actual downstream commit",
+      "negative_or_honest_limit_control": "release after owner expiry no takeover",
+      "exact_oracle": "terminal TX rollback no budget release one effect stays reserved",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-05.03",
+      "parent_id": "A31-05",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/4/subassertions/2/must_assert",
+      "must_assert_verbatim": "staleowner/version与newowner接管竞争只一个terminal，不以current已terminal调用旧helper拒绝合法本TX",
+      "input_and_positive_control": "ownerA version3 vs ownerB takeover version4 observed barrier",
+      "negative_or_honest_limit_control": "stale owner and stale version",
+      "exact_oracle": "only ownerB or still-validA writes single TERMINAL no dual delta",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-05.04",
+      "parent_id": "A31-05",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/4/subassertions/3/must_assert",
+      "must_assert_verbatim": "不得续lease为迟到结果洗白；failure恢复只处理原immutable intent",
+      "input_and_positive_control": "restart reconcile original immutable intent after late result",
+      "negative_or_honest_limit_control": "renew old lease to make stale result pass or change intent",
+      "exact_oracle": "fence unchanged rejection budget retained real recovery no second effect",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-06.01",
+      "parent_id": "A31-06",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/5/subassertions/0/must_assert",
+      "must_assert_verbatim": "public principals→task→grants→op→lease/outbox→head；publisher仅outbox→head",
+      "input_and_positive_control": "public invoke/query terminal claim and READY separate conn trace",
+      "negative_or_honest_limit_control": "force compatible overlapping outbox/head grants/task wait phases",
+      "exact_oracle": "principals task grants op lease/outbox head order publisher outbox head only",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-06.02",
+      "parent_id": "A31-06",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/5/subassertions/1/must_assert",
+      "must_assert_verbatim": "publisher缺stream明确failclosed，维护bootstrap先完成，不outbox→task动态创建",
+      "input_and_positive_control": "existing stream READY after terminal",
+      "negative_or_honest_limit_control": "missing stream publisher first READY",
+      "exact_oracle": "failclosed no outbox-to-task bootstrap no PUBLISH or JWS changed",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-06.03",
+      "parent_id": "A31-06",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/5/subassertions/2/must_assert",
+      "must_assert_verbatim": "真实publisher/terminal/query/claim混合barrier无40P01且不隐藏失败，head后不首次取业务锁/外部network",
+      "input_and_positive_control": "publisher-v-terminal publisher-v-query claim-v-terminal ten rounds",
+      "negative_or_honest_limit_control": "expose every child error and SQLSTATE",
+      "exact_oracle": "no40P01 no suppressed deadlock no network while headlock",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-06.04",
+      "parent_id": "A31-06",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/5/subassertions/3/must_assert",
+      "must_assert_verbatim": "不同task head独立；原claim/UNKNOWN/quarantine如未新增journal等待保留已审语义不强加新记录",
+      "input_and_positive_control": "hold taskA head taskB success claim UNKNOWN quarantine control",
+      "negative_or_honest_limit_control": "try require unsupported lifecycle record",
+      "exact_oracle": "taskB independent old auxiliary semantics no mandatory auxiliary kind",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-07.01",
+      "parent_id": "A31-07",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/6/subassertions/0/must_assert",
+      "must_assert_verbatim": "task/root/middle/leaf撤销先commit新公开accept/query拒绝；key deactivate晚依赖后不能旧state成功",
+      "input_and_positive_control": "accept/query before ordered revocation commit control",
+      "negative_or_honest_limit_control": "task root middle leaf revoke and key deactivation commit first",
+      "exact_oracle": "new public request rejects all ancestors budget effects evidence journal match ordering",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-07.02",
+      "parent_id": "A31-07",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/6/subassertions/1/must_assert",
+      "must_assert_verbatim": "先accept后撤销内部恢复原意图允许终局与journal，不新授权/新意图",
+      "input_and_positive_control": "accept then revoke/expire before reconcile",
+      "negative_or_honest_limit_control": "new public request for changed intent after revoke",
+      "exact_oracle": "internal immutable accepted recovery terminal permitted no new grant or authorization",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-07.03",
+      "parent_id": "A31-07",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/6/subassertions/2/must_assert",
+      "must_assert_verbatim": "所有ancestor四counter与ds_*、op/evidence/journal变化匹配真实commit顺序，非walltime猜测",
+      "input_and_positive_control": "ordered commit tickets with same task competing new accept and revocation",
+      "negative_or_honest_limit_control": "reverse commit order",
+      "exact_oracle": "all ancestor four counters ds op evidence journal correspond actual linearization",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-07.04",
+      "parent_id": "A31-07",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/6/subassertions/3/must_assert",
+      "must_assert_verbatim": "若辅助UNKNOWN/lease路径未来确增等待其最后fence不得省；不要求为此扩大AS全签发审计",
+      "input_and_positive_control": "auxiliary claim UNKNOWN without new wait",
+      "negative_or_honest_limit_control": "if future concrete helper adds wait hold across fence expiry",
+      "exact_oracle": "no AS whole issuance scope and added waits must finalfence tested",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-08.01",
+      "parent_id": "A31-08",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/7/subassertions/0/must_assert",
+      "must_assert_verbatim": "停止旧writers排空TX/维护强锁，真实asof/schema lineage/counters/status/material能力快照",
+      "input_and_positive_control": "stop writers drain TX take maintenance task locks real snapshot",
+      "negative_or_honest_limit_control": "active old writer or incomplete drain",
+      "exact_oracle": "CLI fails before bootstrap real asof lineage nonzero state exact",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-08.02",
+      "parent_id": "A31-08",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/7/subassertions/1/must_assert",
+      "must_assert_verbatim": "旧七表allcols/非零四counter/撤销/evidence/opaque/shortnode原值保全，不补历史顺序时间；旧task任何历史缺stream，即使当前新business key miss也拒绝EMPTY seed，必须先停旧writers排空TX独占维护真实bootstrap；维护后新FIRST仅新delta，旧op不重记FIRST。",
+      "input_and_positive_control": "old seven tables nonzero four counters revoked opaque shortnodes and old operations",
+      "negative_or_honest_limit_control": "new businesskey miss on historical task without stream",
+      "exact_oracle": "emptyseed refused preserve allcols maintenance baseline oldop never FIRST again",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-08.03",
+      "parent_id": "A31-08",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/7/subassertions/2/must_assert",
+      "must_assert_verbatim": "BOOTSTRAP seq1 pin小manifest/chunkroot；外部operator单独预登记scope/genesis/bootstrap digest，不由writer自登记；bootstrap_cli migrate/bootstrap/describe-pending命令实际run，保存仅publicregistrationdescriptor无私钥，S0本地自查不依赖未完成service模块",
+      "input_and_positive_control": "bootstrap_cli migrate/bootstrap/describe-pending public descriptor then independent operator register",
+      "negative_or_honest_limit_control": "writer self-register re-register same scope or expose private key",
+      "exact_oracle": "seq1 fixed chunkroot descriptor trust separate no service import during S0",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-08.04",
+      "parent_id": "A31-08",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/7/subassertions/3/must_assert",
+      "must_assert_verbatim": "选择方案A：新task initiallocks/freshness→proof→existing miss→budgetcheck→ledger内建全task capture BEFORE insert/reserve；无accepted历史且全部真实四counter=0才生成深不可变per-TX私有seed。binding/proof-link全部原等待→可选材料after_link→结构核材料/ensure_stream(seed)→BOOTSTRAP1/FIRST2→flush→finalDBclock同TX；失败不留本次stream/snapshot/chunks/journal/预算。operator仅提交后独立注册再delivery，不提供reset。",
+      "input_and_positive_control": "newtask fourzero no acceptedhistory cost17",
+      "negative_or_honest_limit_control": "existing history or nonzero offpath despite key miss",
+      "exact_oracle": "capture before reserve BOOTSTRAP1 FIRST2 finalclock sameTX failure no stream/chunks/reserve",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-08.05",
+      "parent_id": "A31-08",
+      "assertindex_1based": 5,
+      "json_pointer": "/requirements/7/subassertions/4/must_assert",
+      "must_assert_verbatim": "正成本c/calls1真实首次：bootstrap全grant零且无本次operation/event，FIRST reserve仅一次；逐全部祖先重算真实DB c/1，seed原件稳定。并发两首accept十轮只一个bootstrap/stream、连续FIRST/seq，失败不留新stream/chunks/records/reservation。",
+      "input_and_positive_control": "two first calls cost17/23 independent conn",
+      "negative_or_honest_limit_control": "abort one after capture",
+      "exact_oracle": "one bootstrap seqcontinuous each successful reserve once every grant zero baseline original bytes unchanged",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-08.06",
+      "parent_id": "A31-08",
+      "assertindex_1based": 6,
+      "json_pointer": "/requirements/7/subassertions/5/must_assert",
+      "must_assert_verbatim": "完整task保护逐writer核验：实际accept/_claim/_finalize/_mark_unknown/root/child/ASexchange持task锁；publisher/quarantine仅既有op不误称持task。capture全task集合稳定读取，AS并发child持task等待。bootstrap后AS合法新grant仅在其FIRST携完整真实已验签AS链/不可变intent/path/绑定可信来源、trusted预留前核从未执行且真实四零时以introduced-zero纳入完整连续FIRST/TERMINAL逐grant重放；不要求未来所有grant预先bootstrap、不加全AS审计。历史非零/已接受/旧FIRST引用/未知创建来源或gap节点绝不按新grant清零；未来accepted全writer锁合同/具体字段来源重绑。",
+      "input_and_positive_control": "AS child issuance blocked at tasklock during capture then new introduced-zero FIRST real signed chain",
+      "negative_or_honest_limit_control": "nonzero historic grant priorFIRST unknown provenance missingmaterial",
+      "exact_oracle": "all task grants included trusted creation source never-executed fourzero required old grants cannot reset",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-09.01",
+      "parent_id": "A31-09",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/8/subassertions/0/must_assert",
+      "must_assert_verbatim": "007显式execution006+authorization010 deps；保留全部原SQL/checksum/registry/_V2_COMPLETION_FLOOR",
+      "input_and_positive_control": "manifest lineage001 + authorization004..010 + execution001..007 (15 qualified entries) with007deps execution006 authorization010",
+      "negative_or_honest_limit_control": "alter old SQL/checksum/floor",
+      "exact_oracle": "latest inventory15 historical completion floor14 both namespaces exact",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-09.02",
+      "parent_id": "A31-09",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/8/subassertions/1/must_assert",
+      "must_assert_verbatim": "实际A/B/v2 upgrade/repeat/illegalcatalog/checksum/rawSQLTOCTOU，双namespace同version不混淆",
+      "input_and_positive_control": "A-only B-only v2 upgrades repeat and rawSQL barrier TOCTOU",
+      "negative_or_honest_limit_control": "illegal catalog checksum or dualnamespace collision",
+      "exact_oracle": "all oldrows applied_at original migration hashes stable no partial upgrade",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-09.03",
+      "parent_id": "A31-09",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/8/subassertions/2/must_assert",
+      "must_assert_verbatim": "audit001仅独立DB own registry，不并入业务bundle，错DB/role拒绝启动",
+      "input_and_positive_control": "independent auditDB own001 registry configured roles",
+      "negative_or_honest_limit_control": "GW DB used for audit or audit credential used for GW",
+      "exact_oracle": "startup refused audit001 excluded business15",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-09.04",
+      "parent_id": "A31-09",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/8/subassertions/3/must_assert",
+      "must_assert_verbatim": "source/noneditablewheel别cwd发现完整SQL清单；PG16/PG14照现契约真正支持或明确拒绝",
+      "input_and_positive_control": "source and noneditablewheel clean cwd discoverSQL",
+      "negative_or_honest_limit_control": "PG14 unsupported contract or wheel missing SQL",
+      "exact_oracle": "qualified inventory identical PG16 true supported PG14 exact supported-or-explicit rejection",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-10.01",
+      "parent_id": "A31-10",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/9/subassertions/0/must_assert",
+      "must_assert_verbatim": "24576切片/defaultcodec/实际wire限，不含无界digest list或巨型JSON",
+      "input_and_positive_control": "bounded bootstrap object split raw24576 parts exact fixed metadata",
+      "negative_or_honest_limit_control": "raw24577 fragment giant hashlist or huge JSON",
+      "exact_oracle": "actual encoded limits all bytes counted parser unchanged",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-10.02",
+      "parent_id": "A31-10",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/9/subassertions/1/must_assert",
+      "must_assert_verbatim": "全部snapshot objects refs/count/root/wire正确、全taskgrant集合/四counter/无accepted历史探针完整；seed绑定scope/root/current TX/capture DBtime/schema lineage/FROM_EMPTY_TASK，raw与typed tuple深不可变且有界。超过原wire/object/frame/typedraw界限整TX不开stream，不截断offpath grants，不从reserve后减cost倒推清零。",
+      "input_and_positive_control": "complete task grants zero seed sameTX root/capturetime lineage",
+      "negative_or_honest_limit_control": "omit offpath exceed typedraw/object/frame/wire or connection-bearing seed",
+      "exact_oracle": "cap+1 reject whole TX no stream no reverse-subtraction seed",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-10.03",
+      "parent_id": "A31-10",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/9/subassertions/2/must_assert",
+      "must_assert_verbatim": "mandatory guards仅成功first/retry/query/terminal/READY；不强加LEASE/UNKNOWN/quarantine日志。seed由trusted same-TX数据库捕获，不接受客户端skip/zero；真实零acceptedop但任意offpath四counter非零拒绝并保留预算。现有stream只append；缺stream且有历史走维护，不晚期现值伪零bootstrap；publisher禁止outbox→task自建。",
+      "input_and_positive_control": "enabled FIRST RETRY QUERY TERMINAL READY each mandatory",
+      "negative_or_honest_limit_control": "skip boolean zero flag offpath each fourcounter=1 missingstreamhistorical publisher bootstrap",
+      "exact_oracle": "reject bypass absent callback cannot disable existing journal no auxiliary kinds",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-10.04",
+      "parent_id": "A31-10",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/9/subassertions/3/must_assert",
+      "must_assert_verbatim": "已enabled旧binary缺mandatory日志拒绝；未enabled历史事实不rewrite",
+      "input_and_positive_control": "unenabled historical legacy call",
+      "negative_or_honest_limit_control": "enabled legacy direct businesswrite omits journal",
+      "exact_oracle": "enabled rejected preserving old unenabled facts no rewrite",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-10.05",
+      "parent_id": "A31-10",
+      "assertindex_1based": 5,
+      "json_pointer": "/requirements/9/subassertions/4/must_assert",
+      "must_assert_verbatim": "seed bounded typedraw/chunks/root真实字节、四counter/scope/lineage/object counts正确，完整task cap+1超限拒绝不截断；深不可变tuple/bytes不含sharedmutable/connection，rollback重试不复用旧seed。不新加辅助kind coverage。",
+      "input_and_positive_control": "tuple/bytes private seed deepfreeze before reservation",
+      "negative_or_honest_limit_control": "nested mutation self/global reference old TXseed reused cap+1",
+      "exact_oracle": "raw/chunks/root all lengths exact private no connection failures rollback",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-11.01",
+      "parent_id": "A31-11",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/10/subassertions/0/must_assert",
+      "must_assert_verbatim": "profile GM-MVP-1/checkpoint_version AG-CHECKPOINT-1/typ ag-checkpoint+jwt沿既有alg/USERID/rawJWS",
+      "input_and_positive_control": "real SM2 checkpoint existing alg USERID rawJWS profile version typ",
+      "negative_or_honest_limit_control": "receipt access-token or AGPoP typ substituted",
+      "exact_oracle": "type isolation no new signature domain",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-11.02",
+      "parent_id": "A31-11",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/10/subassertions/1/must_assert",
+      "must_assert_verbatim": "payloadkid=protectedkid，scope/epoch/seq/head/previous/issuedat exactfixed，rawASCII<=16384",
+      "input_and_positive_control": "kid K1 both headers payload scope epoch1 seq head previous issuedat rawASCII<=16384",
+      "negative_or_honest_limit_control": "one field mismatch raw16385",
+      "exact_oracle": "exact schema claim/header rejection",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-11.03",
+      "parent_id": "A31-11",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/10/subassertions/2/must_assert",
+      "must_assert_verbatim": "receipt/at/pop替代/unknownkid/wrongrole/SPKI/badsig/duplicateunknownfields拒绝",
+      "input_and_positive_control": "real signed base with trusted audit K1",
+      "negative_or_honest_limit_control": "unknownkid wrongrole wrongSPKI badsig duplicate unknownclaims each single mutation",
+      "exact_oracle": "target trust/crypto/schema failure all no counterfeit positives",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-11.04",
+      "parent_id": "A31-11",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/10/subassertions/3/must_assert",
+      "must_assert_verbatim": "verify仅独立受信audit publickeys不信包自带key，旧SDK类型限制不弱化",
+      "input_and_positive_control": "independent external audit publickey supplied",
+      "negative_or_honest_limit_control": "replace bundledkey with attacker-key selfsigned checkpoint",
+      "exact_oracle": "external-only verifier rejects no SDK relax",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-12.01",
+      "parent_id": "A31-12",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/11/subassertions/0/must_assert",
+      "must_assert_verbatim": "ownstreamlock→batch查重先于startseq检查→连续allrecord+CP+head同TX",
+      "input_and_positive_control": "registeredscope first batch seq1..2 exactbody then exact retry",
+      "negative_or_honest_limit_control": "old range different batch and same-seq differentraw gap prev scope",
+      "exact_oracle": "dedup under streamlock before nextstart exact original JWS/time/id",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-12.02",
+      "parent_id": "A31-12",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/11/subassertions/1/must_assert",
+      "must_assert_verbatim": "samebatch exact原JWS/time/ID重试，oldrange换批不重签，same-seq不同raw/gap/prev/scope fork拒绝",
+      "input_and_positive_control": "persisted batch repeated after head advances",
+      "negative_or_honest_limit_control": "batch identity changed oldrange",
+      "exact_oracle": "samebatch original response oldrange never re-sign",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-12.03",
+      "parent_id": "A31-12",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/11/subassertions/2/must_assert",
+      "must_assert_verbatim": "批中任一点真实失败无partialauditrecords/checkpoint/head；writer只预登记scope",
+      "input_and_positive_control": "batch real records fail at first/middle/last insert or sign precommit",
+      "negative_or_honest_limit_control": "unregisteredscope writer append",
+      "exact_oracle": "no partial records batches checkpoint head any failure",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-12.04",
+      "parent_id": "A31-12",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/11/subassertions/3/must_assert",
+      "must_assert_verbatim": "远端DB独立保存为准不信GW localcache",
+      "input_and_positive_control": "audit durableDB latest while GW cache deleted",
+      "negative_or_honest_limit_control": "forged localcachehead",
+      "exact_oracle": "audit response uses durable original cache not authority",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-13.01",
+      "parent_id": "A31-13",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/12/subassertions/0/must_assert",
+      "must_assert_verbatim": "两个真实PID/backendconn同步同batch一份records/batch/CP/head",
+      "input_and_positive_control": "two OS PIDs two backendconns same canonicalbatch startbarrier",
+      "negative_or_honest_limit_control": "attempt different body samebatchid",
+      "exact_oracle": "one persisted records batch CP head both successful responses exact",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-13.02",
+      "parent_id": "A31-13",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/12/subassertions/1/must_assert",
+      "must_assert_verbatim": "两response exact同原JWS即使SM2签名随机也不重签",
+      "input_and_positive_control": "random SM2 signer actual duplicate two processes",
+      "negative_or_honest_limit_control": "re-sign samebatch mutation",
+      "exact_oracle": "byte-exact original response ID time signature not only semantic equality",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-13.03",
+      "parent_id": "A31-13",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/12/subassertions/2/must_assert",
+      "must_assert_verbatim": "adjacentbatches合法连续或明确RECONCILE，不反序覆盖",
+      "input_and_positive_control": "adjacent batch1..2 and3..4 barrier",
+      "negative_or_honest_limit_control": "batch3 arrivesfirst",
+      "exact_oracle": "continuous commit or explicit RECONCILE no reverse overwrite",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-13.04",
+      "parent_id": "A31-13",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/12/subassertions/3/must_assert",
+      "must_assert_verbatim": "收集所有child exceptions/nativeexit/SQLSTATE/barrier，非mock调用",
+      "input_and_positive_control": "join both children ten rounds collect native exits SQLSTATE",
+      "negative_or_honest_limit_control": "child crash timeout error",
+      "exact_oracle": "no unobserved child exceptions bounded reaping all resource manifest",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-14.01",
+      "parent_id": "A31-14",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/13/subassertions/0/must_assert",
+      "must_assert_verbatim": "签前/中insert/precommit SIGKILL无partial持久记录",
+      "input_and_positive_control": "normalbatchcommit control",
+      "negative_or_honest_limit_control": "SIGKILL before signing midinsert precommit",
+      "exact_oracle": "newPID sees no partial state each fault tenround",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-14.02",
+      "parent_id": "A31-14",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/13/subassertions/1/must_assert",
+      "must_assert_verbatim": "postcommit/presend死亡或真丢HTTP响应，新PIDexactretry返回原JWS/time/ID",
+      "input_and_positive_control": "persisted remote commit acknowledged fixture barrier",
+      "negative_or_honest_limit_control": "SIGKILL postcommit presend or real socketlostreply",
+      "exact_oracle": "newPID samebody gets byteexact original JWS/time/id",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-14.03",
+      "parent_id": "A31-14",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/13/subassertions/2/must_assert",
+      "must_assert_verbatim": "测试barrier只私有fixture，公开服务无skip/sign/fault环境开关",
+      "input_and_positive_control": "private test socket/filebarrier fixture",
+      "negative_or_honest_limit_control": "public request fault/skip/sign env flag attempt",
+      "exact_oracle": "public schema refuses and production config has no fault switch",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-14.04",
+      "parent_id": "A31-14",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/13/subassertions/3/must_assert",
+      "must_assert_verbatim": "GW预算/receipt/下游效果不因审计失败重执行",
+      "input_and_positive_control": "GW/DS allcols snapshot before audit failures",
+      "negative_or_honest_limit_control": "retry sender after recovery",
+      "exact_oracle": "no extra effect budget receipt mutation audit-only changes",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-15.01",
+      "parent_id": "A31-15",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/14/subassertions/0/must_assert",
+      "must_assert_verbatim": "真实CA/hostname HTTPS固定endpoint，badhostname/untrustedCA/plainHTTP/redirect拒绝且不verifyFalse",
+      "input_and_positive_control": "own CA fixed hostname HTTPS append and reader latest",
+      "negative_or_honest_limit_control": "badhostname untrustedCA plainHTTP redirect",
+      "exact_oracle": "TLS/transport refusal no verifyFalse DB unchanged",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-15.02",
+      "parent_id": "A31-15",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/14/subassertions/1/must_assert",
+      "must_assert_verbatim": "operator独立预登记writer/reader/scope，AS/holder/GW/downstream credentials不能冒充；audit/operator_cli.py init/register/check为可执行本机operator CLI，writer无register权，无公共注册HTTP，真实pre-register后append成功",
+      "input_and_positive_control": "operator_cli init/register/check then writer append reader latest",
+      "negative_or_honest_limit_control": "writer register reader append AS holder GW DS credentials",
+      "exact_oracle": "only local operator owns registration no publicregisterHTTP",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-15.03",
+      "parent_id": "A31-15",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/14/subassertions/2/must_assert",
+      "must_assert_verbatim": "signer/DB/privateconfig仅audit进程，GW publicHTTP无auditkey；同机仅逻辑独立声明",
+      "input_and_positive_control": "audit signer config key mode0600 separateDB",
+      "negative_or_honest_limit_control": "GW process key/env lookup or crossDBrole",
+      "exact_oracle": "GW cannot sign/register samehost logical independence reported",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-15.04",
+      "parent_id": "A31-15",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/14/subassertions/3/must_assert",
+      "must_assert_verbatim": "framing/duplicates/oversize/wrongmethod/schema在DB写前拒绝，sanitized errors无token/DSN/secrets",
+      "input_and_positive_control": "POST strict schema bytes limits",
+      "negative_or_honest_limit_control": "wrongmethod chunked/framing duplicate unknown oversized",
+      "exact_oracle": "reject before DB write sanitized body no DSN/token/key",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-16.01",
+      "parent_id": "A31-16",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/15/subassertions/0/must_assert",
+      "must_assert_verbatim": "latest返回持久原JWS，长期停写不重签伪新时间",
+      "input_and_positive_control": "latest twice no writes despite elapsed real time",
+      "negative_or_honest_limit_control": "expect re-sign/new timestamp control",
+      "exact_oracle": "original JWS/time/ID stable",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-16.02",
+      "parent_id": "A31-16",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/15/subassertions/1/must_assert",
+      "must_assert_verbatim": "history固定observedlatest身份/seq，真实encoded<=65536最大合法prefix/page，多page链完整",
+      "input_and_positive_control": "freeze observed latest CP identity then pages encoded size<=65536",
+      "negative_or_honest_limit_control": "splice changingcutoff or page exceeding bound",
+      "exact_oracle": "max actual legal prefix plus next smaller page full historical chain",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-16.03",
+      "parent_id": "A31-16",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/15/subassertions/2/must_assert",
+      "must_assert_verbatim": "previousdigest=SM3原JWS，operator新key外部历史sequence范围，旧JWS不改",
+      "input_and_positive_control": "key K1 seqrange then K2 operator historicalrange",
+      "negative_or_honest_limit_control": "previous uses canonical payload digest instead rawJWS digest",
+      "exact_oracle": "exact old bytes stable SM3 rawASCII previous and ranges enforced",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-16.04",
+      "parent_id": "A31-16",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/15/subassertions/3/must_assert",
+      "must_assert_verbatim": "本机配置/minpin只能相对该锚；HTTPS reader取得的latest也是该请求时观察值不保证未来不变",
+      "input_and_positive_control": "configuredminimum vs real independent TLS reader observedlatest",
+      "negative_or_honest_limit_control": "claim current future/latest without request",
+      "exact_oracle": "relative guarantee MINIMUM_ONLY/request-time explicit UNKNOWN otherwise",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-17.01",
+      "parent_id": "A31-17",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/16/subassertions/0/must_assert",
+      "must_assert_verbatim": "run-owned auditDB真实备份回退，已独立保留cp对比lowerseq或sameseqwrongheadstartup拒绝",
+      "input_and_positive_control": "backup own auditDB at CP2 advanceCP3 retain externalCP3 then restorebackup",
+      "negative_or_honest_limit_control": "lowerseq or same-seq changedhead startup",
+      "exact_oracle": "startup rejects no new epoch no silent stream reset",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-17.02",
+      "parent_id": "A31-17",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/16/subassertions/1/must_assert",
+      "must_assert_verbatim": "不能新epoch/register覆盖同scope；无externallatest诚实UNKNOWN非伪检测",
+      "input_and_positive_control": "external latest available same scope",
+      "negative_or_honest_limit_control": "re-register epoch2 or omitlatest",
+      "exact_oracle": "duplicate scope refused withoutlatest honest UNKNOWN no fake rollback detection",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-17.03",
+      "parent_id": "A31-17",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/16/subassertions/2/must_assert",
+      "must_assert_verbatim": "共同key/anchor失陷及same-host逻辑域LIMITATIONS",
+      "input_and_positive_control": "report fixed samehost trust compromise limitation",
+      "negative_or_honest_limit_control": "all trusted keys/anchor compromised counterexample",
+      "exact_oracle": "no independent-organization absolute-security assertion",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-17.04",
+      "parent_id": "A31-17",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/16/subassertions/3/must_assert",
+      "must_assert_verbatim": "仅runowned备份DB/PID资源操作不碰旧容器/生产",
+      "input_and_positive_control": "owner manifest exact backup target PID DBlabels",
+      "negative_or_honest_limit_control": "unowned DB/PID target",
+      "exact_oracle": "no destructive action permitted outside owned manifest",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-18.01",
+      "parent_id": "A31-18",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/17/subassertions/0/must_assert",
+      "must_assert_verbatim": "raw<=32768、entries<=64、实际canonicalbody<=65536计base64metadataoverhead；不rawsum估算；32768boundary若实际fixedschema不可达仅codec边界负例，不能随机blob假冒合法journal",
+      "input_and_positive_control": "actual legal canonicalrecords count1..64 choose max encodedbody<=65536",
+      "negative_or_honest_limit_control": "65entries body65537 raw32769 codec boundary",
+      "exact_oracle": "all b64 overhead actual count legal reachability separate from codec-only32768",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-18.02",
+      "parent_id": "A31-18",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/17/subassertions/1/must_assert",
+      "must_assert_verbatim": "最大连续合法prefix，不跳条；single装不下明拒，全部原codec限制保持",
+      "input_and_positive_control": "consecutive seq n..n+k max fitting body",
+      "negative_or_honest_limit_control": "skip oversized nextrecord or single cannotfit",
+      "exact_oracle": "largest fitting prefix no skip single explicit reject",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-18.03",
+      "parent_id": "A31-18",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/17/subassertions/2/must_assert",
+      "must_assert_verbatim": "短TX保存immutable pendingexactbytes/batchdigest再network，不跨业务head/task锁",
+      "input_and_positive_control": "persist immutable batch exactbody/batchdigest shortTX release locks",
+      "negative_or_honest_limit_control": "delay real network afterpersist",
+      "exact_oracle": "independent GW/head updater proceeds no DB locks held network",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-18.04",
+      "parent_id": "A31-18",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/17/subassertions/3/must_assert",
+      "must_assert_verbatim": "restart先用pending不因新增records改变batch边界",
+      "input_and_positive_control": "pending n..m then append newer m+1",
+      "negative_or_honest_limit_control": "restart with journalgrowth",
+      "exact_oracle": "send pending exactoriginal bytes boundary not rebatch",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-18.05",
+      "parent_id": "A31-18",
+      "assertindex_1based": 5,
+      "json_pointer": "/requirements/17/subassertions/4/must_assert",
+      "must_assert_verbatim": "真实PG保存immutable pending body/batch_id后新增真实journal，SIGKILL旧PID→不同newPID复用相同exact body/digest/边界；同批remotecommit丢响应恢复拿原checkpoint JWS/time/id而非重签，不额外预算/效果。S1冻结transport harness，禁import同时service半成品；S2实际独立audit重复验证。",
+      "input_and_positive_control": "SIGKILL after pendingpersist new journals before restart remotecommitlostreply",
+      "negative_or_honest_limit_control": "attempt body mutation",
+      "exact_oracle": "newPID exact bytes digest ID original checkpoint no extra effect S1 frozenharness S2 realservice",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-19.01",
+      "parent_id": "A31-19",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/18/subassertions/0/must_assert",
+      "must_assert_verbatim": "businesscommit后未send仍pending，无重复预算/效果",
+      "input_and_positive_control": "businesscommit before sends start",
+      "negative_or_honest_limit_control": "kill sender before send",
+      "exact_oracle": "pending retained afterrestart no operation/effect repeated",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-19.02",
+      "parent_id": "A31-19",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/18/subassertions/1/must_assert",
+      "must_assert_verbatim": "pendingpersist/send前/remotecommitlostreply/localACK前后SIGKILL，同DBnewPID exactbody/JWS恢复",
+      "input_and_positive_control": "pendingpersist presend remotecommitlostreply preACK postACK five actual kill windows",
+      "negative_or_honest_limit_control": "newPID reuses sameDB",
+      "exact_oracle": "ten rounds each body/JWS recovery no broad mock equivalent",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-19.03",
+      "parent_id": "A31-19",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/18/subassertions/2/must_assert",
+      "must_assert_verbatim": "remoteCP独立验scope/seq/head/previous后local短TX单调ACK+clearmatchingpending",
+      "input_and_positive_control": "trusted CP scope seq head previous verified then short ACKTX",
+      "negative_or_honest_limit_control": "bad signature scope wronghead previous or lateoldACK",
+      "exact_oracle": "monotonic ACK only clears matching batch",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-19.04",
+      "parent_id": "A31-19",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/18/subassertions/3/must_assert",
+      "must_assert_verbatim": "多round核全部GW/DS/AUDIT/DELIVERY rows，旧ACK不覆盖新状态",
+      "input_and_positive_control": "each fault round all row snapshots",
+      "negative_or_honest_limit_control": "late ACK old batch while new pending exists",
+      "exact_oracle": "new cursor/batch never regresses whole business unchanged",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-20.01",
+      "parent_id": "A31-20",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/19/subassertions/0/must_assert",
+      "must_assert_verbatim": "双sender共用persistedpending，晚旧ACK不退cursor不clear别batch",
+      "input_and_positive_control": "two sender PIDs use persisted samepending",
+      "negative_or_honest_limit_control": "lateoldACK afternewbatch",
+      "exact_oracle": "exactbody stable cursor monotonic matchingclear only",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-20.02",
+      "parent_id": "A31-20",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/19/subassertions/1/must_assert",
+      "must_assert_verbatim": "remoteahead历史多页逐seq/hash匹配，不凭latestseq直接advance；badsig/missingpage停pending",
+      "input_and_positive_control": "remoteahead CP history multiple boundedpages valid completeprefix",
+      "negative_or_honest_limit_control": "missing middlepage badsig correctlatestseq but wronghistory",
+      "exact_oracle": "no cursoradvance pending untouched until everyseq/rawhash verified",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-20.03",
+      "parent_id": "A31-20",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/19/subassertions/2/must_assert",
+      "must_assert_verbatim": "runownedGW旧backup与externalpin lowerseq/fork拒绝，不能新stream绕过",
+      "input_and_positive_control": "ownedGW backup restore behind external trustedCP",
+      "negative_or_honest_limit_control": "lowerseq same-seq fork newstreamattempt",
+      "exact_oracle": "startup refuses scope continuity no reset",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-20.04",
+      "parent_id": "A31-20",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/19/subassertions/3/must_assert",
+      "must_assert_verbatim": "无latest只相对现pin/UNKNOWN；坏stream有界轮转无合法task永久饿死，no网络持DBlock",
+      "input_and_positive_control": "goodtask and stalled badtask boundedroundrobin",
+      "negative_or_honest_limit_control": "badremote no observedlatest networkwait",
+      "exact_oracle": "good progress within finite turn budget relativepin/UNKNOWN no heldDBlock",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-21.01",
+      "parent_id": "A31-21",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/20/subassertions/0/must_assert",
+      "must_assert_verbatim": "actualacceptedA23真实login/consent/root/twochildren/四工具HTTPS/publish/query→独立CP，不用DTO/零签名；source/wheel真实bootstrap_cli→public descriptor→独立operator_cli register→delivery原pending重试→reader observedpin，全CLI subprocess/native回执",
+      "input_and_positive_control": "real login consent root twochild fourtools HTTPS quote invoke query READY publicdescriptor operator register delivery reader",
+      "negative_or_honest_limit_control": "tampered proof source absent descriptor unregistered writer",
+      "exact_oracle": "source/wheel independent subprocess exact inherited journal receipt CP no fakeDTO",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-21.02",
+      "parent_id": "A31-21",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/20/subassertions/1/must_assert",
+      "must_assert_verbatim": "source/wheel/README/A1/A2/B/历史trigger/oracle/SQL全mandatory继承不省略，不复制未冻结119/112数",
+      "input_and_positive_control": "full inherited actual accepted tests source/wheel README SQL history",
+      "negative_or_honest_limit_control": "omit a mandatory node/variant or use old119/112 count",
+      "exact_oracle": "native inventory exact percase command exit XML stage not pass until all run",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-21.03",
+      "parent_id": "A31-21",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/20/subassertions/2/must_assert",
+      "must_assert_verbatim": "30goal实际节点/子断言/command/观察全映射；A33/A34未run内容仍NOT_RUN非projectaccepted",
+      "input_and_positive_control": "30goal original full matrix current stage evidence",
+      "negative_or_honest_limit_control": "mark unrun A33/A34 PASS",
+      "exact_oracle": "goals mapped actual commands observations unsatisfied future NOT_RUN",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-21.04",
+      "parent_id": "A31-21",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/20/subassertions/3/must_assert",
+      "must_assert_verbatim": "worker完整自查/native停写/fullfreeze之后freshsol/xhigh reviewer完整独立复验，补正再freshreview",
+      "input_and_positive_control": "worker native STOP fullhash fresh reviewer actualindependentrun",
+      "negative_or_honest_limit_control": "reuse reviewer or mutate frozen candidate",
+      "exact_oracle": "fresh review mandatory repairs fresh freeze and reviewer no fabricated metadata",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-S01.01",
+      "parent_id": "A31-S01",
+      "assertindex_1based": 1,
+      "json_pointer": "/requirements/21/subassertions/0/must_assert",
+      "must_assert_verbatim": "原§8/9.5明确first/retry/final和CP；成功query是结果访问关联，terminal必需重算ledger；LEASE/UNKNOWN/quarantine额外记录不是原规范直接必需",
+      "input_and_positive_control": "read original8/9.5 first retry terminal CP clauses",
+      "negative_or_honest_limit_control": "claim LEASE UNKNOWN quarantine original mandatory",
+      "exact_oracle": "static source exact distinction query resultassociation terminal fullledger",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-S01.02",
+      "parent_id": "A31-S01",
+      "assertindex_1based": 2,
+      "json_pointer": "/requirements/21/subassertions/1/must_assert",
+      "must_assert_verbatim": "LEASE可观测fence恢复但不影响reserve/terminal预算重算；UNKNOWN本身无delta；quarantine仅诊断gap，默认不要求额外journal",
+      "input_and_positive_control": "UNKNOWN claim quarantine path no amount/calls delta",
+      "negative_or_honest_limit_control": "release reservation on UNKNOWN",
+      "exact_oracle": "static original state invariant counters unchanged",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-S01.03",
+      "parent_id": "A31-S01",
+      "assertindex_1based": 3,
+      "json_pointer": "/requirements/21/subassertions/2/must_assert",
+      "must_assert_verbatim": "若actual正式包选择额外kind，列具体最小关联理由/guard/测试/新等待后fence；否则不编mandatorycoverage导致旧claim失败",
+      "input_and_positive_control": "default no auxiliary kinds",
+      "negative_or_honest_limit_control": "future choose extra kind without reason guard waits tests",
+      "exact_oracle": "formal gap requires explicit revised plan not generic mandatory",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "id": "A31-S01.04",
+      "parent_id": "A31-S01",
+      "assertindex_1based": 4,
+      "json_pointer": "/requirements/21/subassertions/3/must_assert",
+      "must_assert_verbatim": "任何已新增等待后的finalfreshclock/fence为必需，不因辅助记录不采纳削弱",
+      "input_and_positive_control": "all actual added waits inventoried",
+      "negative_or_honest_limit_control": "skip finalclock/fence because lifecycle kind optional",
+      "exact_oracle": "static obligation every addedwait expiry/fence regression preserved",
+      "case_composition": "Enumerate explicitly listed alternatives individually in fixture; no unrelated dimension cross product. Every listed race/fault compatible tuple rounds0..9; no invented collected IDs.",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    }
+  ],
+  "counts": {
+    "planned_nodes": 23,
+    "native": 7,
+    "atoms": 95
+  },
+  "actual_collection": "After each implementation native STOP; actual exact parameterized IDs must map all atoms/native and inherited119. Never substitute node names/counts for semantic observation.",
+  "finite_timeouts": {
+    "connect_s": 5,
+    "ordinary_lock_s": 3,
+    "ordinary_statement_s": 30,
+    "barrier_s": 15,
+    "http_connect_s": 5,
+    "http_read_s": 15,
+    "child_phase_s": 120,
+    "child_total_s": 180,
+    "reap_s": 10,
+    "specific_cross_expiry_cap_s": 180
+  },
+  "expiry_case_override": "Per actual proof/token/lease setup bind finite lock/statement limits longer than intended expiry yet <=180s; actual DBexpiry must trigger before timeout, no mockclock. Original callbacks/grants300/proof60 semantics unchanged."
+}

@@ -7,15 +7,18 @@ from types import MappingProxyType
 
 import psycopg
 
+from agent_guard.audit import journal
+from agent_guard.audit.contracts import utc_text
 from agent_guard.authorization.evidence_store import EvidenceError
 from agent_guard.authorization.permission_snapshot import PermissionSnapshotProvider
-from agent_guard.contracts.encoding import load_strict_json
+from agent_guard.contracts.encoding import canonical_json_bytes, load_strict_json
 from agent_guard.contracts.execution import ExecutionError
 from agent_guard.contracts.ledger import ErrorCode, LedgerError
 from agent_guard.contracts.ledger_changes import load_ledger_changes
 from agent_guard.crypto.sm import (
     serialize_sm2_public_key,
     sign_compact_jws,
+    sm3_b64url,
     verify_compact_jws,
 )
 from agent_guard.evidence.receipt import verify_receipt_bundle
@@ -216,8 +219,9 @@ class InternalPublisher:
     def publish(self, operation_id) -> ReceiptPublication:
         try:
             with self._connect() as conn:
-                # Only the publication row is locked; never reverse the public
-                # authorization lock order by acquiring grants or operations.
+                # Serialize signing on the publication row. Journal append takes
+                # weak operation/evidence FK locks before its head; it never
+                # takes the public authorization path's strong business locks.
                 conn.execute(
                     "SELECT operation_id FROM ag_receipt_outbox WHERE operation_id=%s FOR UPDATE",
                     (operation_id,),
@@ -242,6 +246,35 @@ class InternalPublisher:
                 ).fetchone()
                 if row is None:
                     raise EvidenceError("publication state changed under lock")
+                scope_row = conn.execute(
+                    "SELECT tenant_id,task_id FROM ag_receipt_outbox WHERE operation_id=%s",
+                    (operation_id,),
+                ).fetchone()
+                stream = journal.require_stream_tx(conn, *scope_row)
+                if stream is None:
+                    raise journal.JournalError(
+                        "signed publication requires existing maintained audit stream"
+                    )
+                if stream is not None:
+                    first = conn.execute(
+                        "SELECT evidence_ref FROM ag_operation_evidence "
+                        "WHERE operation_id=%s AND kind='first'",
+                        (operation_id,),
+                    ).fetchone()
+                    journal.append_tx(
+                        conn,
+                        stream,
+                        kind="PUBLISH",
+                        operation_id=operation_id,
+                        evidence_ref=first[0] if first else None,
+                        facts_bytes=canonical_json_bytes(
+                            {
+                                "receipt_id": publication.receipt_id,
+                                "receipt_jws_digest": sm3_b64url(signed.encode("ascii")),
+                                "signed_at": utc_text(row[0]),
+                            }
+                        ),
+                    )
                 conn.execute("SET CONSTRAINTS ALL IMMEDIATE")
                 return ReceiptPublication(
                     operation_id, publication.receipt_id, "READY", signed, row[0]

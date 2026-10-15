@@ -1,0 +1,29 @@
+# A3.1 接口补充 v3
+
+PROPOSED_FOR_PACKAGE_REVIEW_NOT_DISPATCHED。完整继承 [interface-contract-v2](interface-contract-v2.md) 和 [interface-bindings-v2](interface-bindings-v2.json) 的安全语义、拟接口及历史实际读取依据。v2 baseline API哈希不是实施后源字节；S0 STOP后必须另绑定实际源码/签名/SQL/fixtures及运行原件。此补充不新增业务公共HTTP API；下述必需FK父锁前置明确修正v2的publisher宏观锁序简写。
+
+`tests/integration/test_gateway_query.py` 仅两个成功 oracle 适配：query_bundle 已保存本次 STAGED 后、执行前取全 `full_state`，执行后调用冻结的 `result_read_only`，传精确 evidence_ref/proof_jti/operation_id，staging=False。保原 proof 数量+1、`accepted_verified_evidence`别名全值相等、完整下游相等；全部失败、过期、修复前拒绝和重放的完整相等断言保留。严格验证仅当次 QUERY 的 raw/SM3/seq/prev/scope/op/ref/材料/同TX服务器见证及对应head前进；其他旧事实及所有 bootstrap/chunks/pending/delivery不变。不能过滤整个审计域。
+
+冻结实际共享实现时须核有界内部投影，保旧每逻辑原件上限和通用codec：FIRST物料37+3×87382=262183；RETRY/QUERY物料26+2×87382=174790；TERMINAL物料25+2×87382=174789；PUBLISH物料10+16384=16394；BOOTSTRAP为2。具体固定字段/类型/节点/深度与各原件门必须独立验证，公式须与最终代码字节核同，不能据此提高 raw record32768或 append body65536。
+
+AcceptResult内部投影的 quote raw仍≤65536。其 quote_snapshot=null 的合法固定 metadata canonical 字节数 B≤65536；替换成引号内base64url后的长度恰为 B−4+2+encoded_length，encoded_length≤87382，绝对保守上限152916。None保持原codec；类型/未知字段/节点/深度/原件大小门保持。它仅供内部response_digest，不更改公开HTTP字段或通用codec。要求边界、拒例与真实大合法quote的RETRY回归，而非只合成序列化通过。
+
+JournalScope实际wire边界须规范UUID stream_id、HTTPS gateway origin及epoch1；tenant/task旧identifier语义不变。真实低权限拒绝测试可按实际namespace/run创建独占NOLOGIN角色，核OID/owner marker/权限/membership，finally重核后仅清本次创建角色；保原23514、42501及真实current_user断言，不依赖外来固定角色。旧装配失败保留，未打印的SQLSTATE不能补猜。
+
+并发发布时，RETRY/QUERY日志必须绑定本次真实捕获的完整响应。先返回PENDING、随后发布READY的合法交错不能把日志receipt_status改为后来数据库的READY，却保留PENDING响应摘要。ACCEPT_RESPONSE严格三字段、operation_id/status与本次接受一致；PENDING的JWS摘要为null，READY须有实际不可变发布JWS。测试只在显式提供实际observed_response时允许该交错并核完整响应摘要/JWS；未提供时保留原窄预期，不能把待验facts当作期望来源。真实失败与补正22项竞争/时钟小组原件保留，完整source/wheel矩阵及独立验收仍须执行。
+
+实际调用接口须明确兼容扩展：ExecutionLedger.accept、accept_checked、accept_bound及内部_accept_with/_accept_tx增加可选keyword-only before_create/after_link；ExecutionService.accept_invocation及内部_accept_from_candidate/_accept_checked逐调用透传，原参数和返回类型保留。BeforeCreate在当前锁定上下文、首次写入前执行；AfterLink在真实operation/proof关联后执行；两者须返回None，异常及非None返回失败关闭并回滚同一事务。它们仅为可信进程内显式调用接口，不是运行环境开关；传None仍无条件执行内建capture/introduced/append/final fence，不得禁用审计。原TrustedAcceptBinding只执行一次，显式TrustedAfterLink组合与直接binding互斥。STOP后实际31源字节与41基线API规范化比较、真实调用方及source/wheel运行证据须重新读回绑定；当前预读不是冻结或接受。
+
+S0新增的实际内部 TrustedAcceptBinding/TrustedAfterLink 类型及compose/透传、所有DTO字段、guard真实事实、reset闭包、原14SQL与新增GW007/audit001均须源/wheel实核并冻结供S1消费；所有额外路径遵循 [ownership-v3](ownership-v3.json) gate。
+
+快照原件分类补正：ag_grant_tokens.token_jws、ag_auth_evidence.proof_jws、ag_exchange_evidence.proof_jws及ag_receipt_outbox.receipt_jws的TEXT值须按原ASCII字节分别作为token/proof/receipt对象，保每件16384字节门，metadata仅存kind/object_id/digest引用；非ASCII、超限明确拒绝。NULL保持原NULL。实际seed对象/index/wire因分类改变，旧候选800/200时钟结果不得映射为新候选通过。完整初始oracle逆投影原任务相关SQL行与原件引用，独立绑定真实调用tenant/task与fixture网关origin，核全部BOOT/stream/base/chunks/头字段及全域旧状态。旧升级oracle仅许可五个明确新增witness列为NULL，未知新增列及任何旧列/行/登记变化拒绝。最终当前候选source/wheel完整复验及fresh独立验收仍必需。
+
+## 实证40P01后的必需父锁顺序补正
+
+当前冻结候选source owned-r7为1139P，wheel owned-r6为834P/1F，均实际退出；后者publisher持head等待operation FK KEY SHARE，query持operation FOR UPDATE等待head，是真实阻断，当前S0为STOPPED_NEEDS_REPLAN而非READY。原件及诊断见state的readback和shared报告。
+
+拟在journal.append_tx完成_material_tx后、首次锁head之前，为非null operation_id和evidence_ref按operation→verified evidence顺序显式取得其真实FK父行FOR KEY SHARE。BOOTSTRAP两引用为null不取父锁；stream已由head行锁保护。publisher保持outbox→必需弱FK父锁→head，不取得task/grant锁、不取得operation FOR UPDATE，不弱化public路径原锁；原描述“只锁outbox、不取operation任何锁”仅适用于旧实现，不能覆盖本补正。全kind head后不得首次取父行锁、网络或材料等待；不能仅加自动重试掩盖40P01。首次READY、稳定原JWS、完整atomic guards、真实材料、全部预算/撤销/时钟和终局fence保持。维护仍须停writer/drain，publisher不做outbox→task自动bootstrap。
+
+父行查询必须实际取得对应行；空结果失败关闭，不冒称受保护。SDK可按明确JournalError拒绝缺父/缺材料，正常DB错误保持调用方原映射。直接SQL原FK/coverage guard不改，实际23503/P0002等只按真实PG原件记录；不得手工构造psycopg异常冒称数据库SQLSTATE。新增缺operation/evidence负控须记录实际异常层及全事务rollback/head不变。
+
+确定性交错用测试装配暂停真实query或retry已持operation锁的事务，启动真实publisher并核两个独立backend及pg_blocking_pids；随后释放公开路径，让它实际append/flush/commit，再让publisher完成READY。query/retry各10轮/mode，必须核完整原业务状态、精确QUERY或RETRY加PUBLISH效果及稳定签名/JWS；旧实现真实死锁证据保留，新控制不能捕获死锁作成功或绕过公开接口。现有原publisher竞争各10轮、终局恢复、所有继承矩阵继续完整运行。该补正改变append路径，旧源码1139P及1000时钟不自动成为新候选通过；补正后按实际影响运行完整S0源/wheel自查并记录清晰依赖证明，最终A31 full selfcheck与fresh完整独立验收不减。

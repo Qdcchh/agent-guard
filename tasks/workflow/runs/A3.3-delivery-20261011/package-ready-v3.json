@@ -1,0 +1,37 @@
+{
+  "UTC": "2026-10-11T22:41:35.220956+00:00",
+  "status": "PACKAGE_READY",
+  "review_kind": "PACKAGE_REVIEW",
+  "not_implementation_acceptance": true,
+  "reviewer": "/root/a33_package_review_sol_high_r3",
+  "requested": "gpt-6.1-sol/high",
+  "effective_metadata": "UNKNOWN",
+  "candidate_SHA256": "44e94b55a570ea81a8b89e9f10fda433f8d8e59aafd7af82c313f4796c58ff4e",
+  "review": {
+    "path": "artifacts/workflow/A3.3-delivery-20261011/package-review-sol-high-r3-3156778d-6574-427e-b5cd-dc004f4bc74b/review.md",
+    "SHA256": "736e942162549c60a2668cc5f7312758ca80066dfb4d5fb9d23e8a2c58a818f8"
+  },
+  "coverage": {
+    "path": "artifacts/workflow/A3.3-delivery-20261011/package-review-sol-high-r3-3156778d-6574-427e-b5cd-dc004f4bc74b/coverage.json",
+    "SHA256": "c46091d8bd35b5982afefa05bfd76f327c8c7e1c79884bb8868e14c0e403fce2"
+  },
+  "manifest": {
+    "path": "artifacts/workflow/A3.3-delivery-20261011/package-review-sol-high-r3-3156778d-6574-427e-b5cd-dc004f4bc74b/manifest.json",
+    "SHA256": "e5a4249f08681ddd549eccd5b481cd7dc1ebbc0b09c1f290834e428dd3036079"
+  },
+  "STOP": {
+    "path": "artifacts/workflow/A3.3-delivery-20261011/package-review-sol-high-r3-3156778d-6574-427e-b5cd-dc004f4bc74b/STOP.json",
+    "SHA256": "179871caac6449841ac37cee48c2d9161fa0275013b0991a2a535f879b8dc01a"
+  },
+  "root_readback": {
+    "path": "artifacts/workflow/A3.3-delivery-20261011/controller/package-r3-root-readback.json",
+    "SHA256": "d5ca2b187457f1eda47a49d69ddbbe1a6aaf2694296f3e85a1e0f17c2982d542"
+  },
+  "complete_counts": "173/165/508+55+6 supplemental cases; original17+3=20 planned roots; 21/23/30 unchanged",
+  "all_writers_STOP": true,
+  "root_actual_last_writer_PID_absent": 3514,
+  "approved_scope": "v3 sole S0 additive confirmation + original13 paths, total15; existing source preserved",
+  "authorization": "../A3.2-evidence-20261011/user-extend-through-a34-20261011.md",
+  "issue_status": "A33-S0-001 plan accepted; implementation and full independent validation pending",
+  "no_Git_publication": true
+}

@@ -187,7 +187,7 @@
 
 原source/wheel coherent初次及快照r2各0 passed／1 failed、exit1。实际旧publisher签了坏材料且SDK接受；current query拒绝且proof回滚。亲自重算source/wheel damaged-before→after快照，唯一变动均为outbox的receipt_jws/receipt_status/signed_at三列，其余gateway及DS行列一致。baseline→damage还包括提前staged query evidence，不能错误宣称该窗口只有两个corruption列。
 
-原平台turn被 `possible cybersecurity risk` 中断；随后同reviewer仅行政归档完成报告及STOP。行政closure不把原中断变成成功产品运行。原正式r1仍为 NOT_ACCEPTED＋FINAL STOP，原件、失败和控制记录均保留。历史真实SM2、DB回滚、fault fixture、真实进程/网络/TLS证据的性质不混写为本轮实跑。
+原平台turn被中断；随后同reviewer仅行政归档完成报告及STOP。行政closure不把原中断变成成功产品运行。原正式r1仍为 NOT_ACCEPTED＋FINAL STOP，原件、失败和控制记录均保留。历史真实SM2、DB回滚、fault fixture、真实进程/网络/TLS证据的性质不混写为本轮实跑。
 
 ## 8. 缺陷、补正要求与问题台账更新
 

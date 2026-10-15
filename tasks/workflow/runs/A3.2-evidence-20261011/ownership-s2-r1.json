@@ -1,0 +1,207 @@
+{
+  "phase": "S2_SOLE_INTEGRATION",
+  "from_roles": [
+    "a32-shared",
+    "a32-export",
+    "a32-verify"
+  ],
+  "to_role": "a32-integrator-sol-low-r1",
+  "all_previous_writers_native_STOP": true,
+  "all_previous_resources_remaining": 0,
+  "exclusive_paths": [
+    "src/agent_guard/gateway/factory.py",
+    "tests/fixtures/a32_joint.py",
+    "tests/integration/test_a32_joint_tls.py",
+    "HANDOFF.md",
+    "README.md",
+    "docs/acceptance.md",
+    "docs/crypto-profile-v1.md",
+    "docs/oauth-oidc-sm2-mvp.md",
+    "docs/security-model.md",
+    "tasks/A3.2-report.md",
+    "tasks/workflow/README.md",
+    "tasks/workflow/context.md",
+    "tasks/workflow/current-policy.md",
+    "tasks/workflow/issues.md",
+    "tasks/workflow/stages/A3.2-evidence.md",
+    "src/agent_guard/evidence/export.py",
+    "src/agent_guard/gateway/evidence_endpoint.py",
+    "src/agent_guard/gateway/evidence_http_app.py",
+    "tests/fixtures/a32_export.py",
+    "tests/integration/test_evidence_export.py",
+    "tests/integration/test_evidence_export_tls.py",
+    "src/agent_guard/evidence/task_verify.py",
+    "src/agent_guard/evidence/verify_cli.py",
+    "tests/fixtures/a32_offline.py",
+    "tests/integration/test_evidence_offline.py",
+    "tests/unit/test_task_evidence_verify.py",
+    "src/agent_guard/evidence/receipt.py",
+    "src/agent_guard/evidence/receipt_semantics.py",
+    "src/agent_guard/evidence/task_bundle.py",
+    "src/agent_guard/gateway/__main__.py",
+    "src/agent_guard/gateway/config.py",
+    "src/agent_guard/gateway/evidence_auth.py",
+    "tests/fixtures/a32_common.py",
+    "tests/unit/test_receipt_components.py",
+    "tests/unit/test_task_bundle_codec.py"
+  ],
+  "previous_member_hashes": [
+    {
+      "path": "src/agent_guard/gateway/factory.py",
+      "sha256": "46aba9b666ccaec48736b3ea20956775e58eb795c6bf61d86d1a137832dfc74f"
+    },
+    {
+      "path": "tests/fixtures/a32_joint.py",
+      "sha256": null
+    },
+    {
+      "path": "tests/integration/test_a32_joint_tls.py",
+      "sha256": null
+    },
+    {
+      "path": "HANDOFF.md",
+      "sha256": "c6b81b2ef4b44614cfc61b58910fb84f34f9f8aa9bd18a724d9acc260396212b"
+    },
+    {
+      "path": "README.md",
+      "sha256": "f558ed4b27993c208aac784d88246e3babd07c53b4348764d61ed71a8bb55c39"
+    },
+    {
+      "path": "docs/acceptance.md",
+      "sha256": "b39f61385f676004efacf3793b224470b558e160c0d403383ad2f7f93d6ffc47"
+    },
+    {
+      "path": "docs/crypto-profile-v1.md",
+      "sha256": "9286be8f1b1d3c4087406a08491e0652eb25d5b4f3d47145a065348b5372f989"
+    },
+    {
+      "path": "docs/oauth-oidc-sm2-mvp.md",
+      "sha256": "bf7a354a200f5b49f0fe791bbec740a4a49bceff026124c02943d8589a03052e"
+    },
+    {
+      "path": "docs/security-model.md",
+      "sha256": "d0378fb0241ef1eb804f95fad8447e70e2db61387bbaadfbe6a885e92593ee46"
+    },
+    {
+      "path": "tasks/A3.2-report.md",
+      "sha256": null
+    },
+    {
+      "path": "tasks/workflow/README.md",
+      "sha256": "08d09e86a86ac0c9d2899388adf0deb5d25f528bc078fb35d1a27285fe1159c3"
+    },
+    {
+      "path": "tasks/workflow/context.md",
+      "sha256": "35312e570afee69d498bebb30286608939033fbe7a333fd9accfea66f9ca2a51"
+    },
+    {
+      "path": "tasks/workflow/current-policy.md",
+      "sha256": "8cef58dd68538ff95edaa6e3a6230a5005ef96411ae031a225df51ff257603d3"
+    },
+    {
+      "path": "tasks/workflow/issues.md",
+      "sha256": "7f158aa68d6a0a9c2b7cfd9c1a59710e6d595315b4d2a8a114519adaf0844755"
+    },
+    {
+      "path": "tasks/workflow/stages/A3.2-evidence.md",
+      "sha256": null
+    },
+    {
+      "path": "src/agent_guard/evidence/export.py",
+      "sha256": "786580bc43dcc682127391e5e364893b6a8409a5f7ec485b69a4754b9281d046"
+    },
+    {
+      "path": "src/agent_guard/gateway/evidence_endpoint.py",
+      "sha256": "2fca2ce7233dd9970448d8b73090eb955bed843a997f1ee6416835806e06ef6b"
+    },
+    {
+      "path": "src/agent_guard/gateway/evidence_http_app.py",
+      "sha256": "5d054299aa1f4e9ad8d5d9f2a700ad1ee0f891c713ea4ae8594054c65e4aaff8"
+    },
+    {
+      "path": "tests/fixtures/a32_export.py",
+      "sha256": "22d545e7e9c2b625ed739551d239157377cd8aabce4d6d652515bb270cbf6981"
+    },
+    {
+      "path": "tests/integration/test_evidence_export.py",
+      "sha256": "1f927e9b584036fea5c3319648ec6937b26acf8e087223bd67d867e70faf6af2"
+    },
+    {
+      "path": "tests/integration/test_evidence_export_tls.py",
+      "sha256": "a8b4d1a20a8c1738114635a2a6cb96cd7bd0309952e06baae211f0012da80bda"
+    },
+    {
+      "path": "src/agent_guard/evidence/task_verify.py",
+      "sha256": "e6c4e51844803719a02a695e4c0485e55ca97781032928d911254d8613040de1"
+    },
+    {
+      "path": "src/agent_guard/evidence/verify_cli.py",
+      "sha256": "0bd54b678a1c162510b9d47feb4e59b4e82731261d246d7256af9cb649c90c66"
+    },
+    {
+      "path": "tests/fixtures/a32_offline.py",
+      "sha256": "6a28cdd6349390d5dd0d2fa1df4b859f46315cd2ce5dccad4ea31be592472808"
+    },
+    {
+      "path": "tests/integration/test_evidence_offline.py",
+      "sha256": "aef19a6d1c27c656365b9a10d362bfd1d0c30727bb940835c0747d28634d4b44"
+    },
+    {
+      "path": "tests/unit/test_task_evidence_verify.py",
+      "sha256": "7183e012945017a33bf6aef27bb162fbf1e57bdc3108c42cc46193d5a81165ac"
+    },
+    {
+      "path": "src/agent_guard/evidence/receipt.py",
+      "sha256": "15a9599c53ef03e96aef2841872a80bcb33d701e9caebbd5aff528c6addd650d"
+    },
+    {
+      "path": "src/agent_guard/evidence/receipt_semantics.py",
+      "sha256": "59faf8e865f11716e596c81d92c69175dfef66902ca5425e475ae98f14543645"
+    },
+    {
+      "path": "src/agent_guard/evidence/task_bundle.py",
+      "sha256": "70596321645269e3ec4326975bdf43f1094102b96f3ccf1bfa2f06926f30bc83"
+    },
+    {
+      "path": "src/agent_guard/gateway/__main__.py",
+      "sha256": "7f9b5f9d430e1b62b1d9aca1affbb024f1150b00a61df110ea197fa3c45b58b8"
+    },
+    {
+      "path": "src/agent_guard/gateway/config.py",
+      "sha256": "add1402145fd380b3eacff7851e02db85d050efb8ab72c6cd3822dc908a89b66"
+    },
+    {
+      "path": "src/agent_guard/gateway/evidence_auth.py",
+      "sha256": "b9ba405f74d9fc93c339a382c620e3254b92b0a184e8706c507f737a5ebce500"
+    },
+    {
+      "path": "tests/fixtures/a32_common.py",
+      "sha256": "c3a7193af7f012264797d32e36adbb1c201e21a70cc3cc2f7fde6fff63e035f8"
+    },
+    {
+      "path": "tests/unit/test_receipt_components.py",
+      "sha256": "ad8f70d3d2ab214b6189eaefa3c735ade722cecdfff851449ab6ebf94d40ca80"
+    },
+    {
+      "path": "tests/unit/test_task_bundle_codec.py",
+      "sha256": "873c99e74d2e851c4eaab57170be3f26cc2515b84a015e6f5e8550a3ea9fc3a9"
+    }
+  ],
+  "root_exclusive": [
+    "tasks/workflow/runs/A3.2-evidence-20261011/state.json",
+    "tasks/workflow/runs/A3.2-evidence-20261011/task-s2-integrator-r1.md",
+    "tasks/workflow/runs/A3.2-evidence-20261011/ownership-s2-r1.json",
+    "tasks/workflow/continue-prompt.md"
+  ],
+  "constraint": "S0 API/frames/limits frozen; S0 paths transferred only for necessary original capacity tests or reproduced joint correction, no speculative rewrite; current-policy/issues explicitly transferred to S2, root does not concurrently write. All original evidence remains immutable.",
+  "root_readbacks": [
+    {
+      "path": "artifacts/workflow/A3.2-evidence-20261011/controller/s1-export-mechanical-root-readback-v3.json",
+      "sha256": "b894e8e3b28394c5a31c65b22939bf031545381b7b7bfb577fa9b9b70641d4cd"
+    },
+    {
+      "path": "artifacts/workflow/A3.2-evidence-20261011/controller/s1-verify-mechanical-root-readback-v3.json",
+      "sha256": "6be698bdd8c4ba454de6fc4ffb8b9d231809598c4049cb9edd5dbbffd8287721"
+    }
+  ]
+}

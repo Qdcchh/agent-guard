@@ -38,7 +38,6 @@ class VerifiedExecution:
         def binding(conn, operation, disposition):
             nonlocal response
             response = None
-            original_binding(conn, operation, disposition)
             if receipt_verifier is not None:
                 publication = receipt_verifier.read_tx(conn, operation.operation_id)
                 receipt_status = publication.receipt_status
@@ -65,7 +64,9 @@ class VerifiedExecution:
             canonical_json_bytes(response)
 
         accepted = self._service.accept_invocation(
-            bundle.invocation, bundle.permissions, binding=binding
+            bundle.invocation,
+            bundle.permissions,
+            binding=original_binding.compose(binding)._with_response(lambda: response),
         )
         if response is None or response["operation_id"] != accepted.operation_id:
             raise RuntimeError("acceptance did not capture its transaction response")

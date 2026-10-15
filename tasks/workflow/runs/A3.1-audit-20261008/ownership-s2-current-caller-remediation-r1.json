@@ -1,0 +1,29 @@
+{
+  "stage": "A3.1",
+  "status": "EXPLICIT_SINGLE_CALLER_TO_SOLE_INTEGRATOR_TRANSFER",
+  "writer": "/root/a31_s2_integrator_sol_r1",
+  "requested_model": "gpt-6.1-sol/medium",
+  "effective_metadata": "UNKNOWN",
+  "exact_additional_path": "tests/integration/test_execution_r4_regressions.py",
+  "before_sha256": "a4ebfe78e2d66ea30dbc515704ab70733a18abb1d4a24c00b724f4fa3a147004",
+  "reason": "Actual current full4222 source20 failures TypeError before_create in old delayed_accept wrapper, so 2x10 true competition never enters window. Same existing callback interface; default formal caller must forward both before_create/after_link. No runtime-copy-only bypass.",
+  "allowed_change": "Only nested delayed_accept signature accepts **kwargs and original accept_checked call forwards **kwargs unchanged; every original Assert AST/test decorator/params/barrier/thread/validation remains unchanged.",
+  "runtime_stop_readbacks": [
+    {
+      "path": "artifacts/workflow/A3.1-audit-20261008/s2-integration-r1/source-actual-execution-stop-r1.json",
+      "sha256": "a8b636e5e6e873c4c068fd26f24583cfcf853919fa631dfd75d3fced991fff85",
+      "native_exit": 0,
+      "live_uid501": [],
+      "py_fullID": "4623fde450c0db81e0bf2e04ae095bc780efb62e3aadaf1f12d183fe6db94853"
+    },
+    {
+      "path": "artifacts/workflow/A3.1-audit-20261008/s2-integration-r1/wheel-actual-execution-stop-r1.json",
+      "sha256": "8f7b171a1fac7075c8824ad6b95720993e2ff72cbda0fbf0b88a20e5cb931446",
+      "native_exit": 0,
+      "live_uid501": [],
+      "py_fullID": "f89a404ae21f99862f2e53ab6346f2e216d1d54862833362128dad6355d70057"
+    }
+  ],
+  "validation": "Original current65 complete source/wheel native0 including original20 valid/invalid competing accept cases, assertions/decorators/params comparison; then fresh actual candidate and complete4222/current20 matrix; no partial borrowing. Unchanged prior groups only truthful actual selected dependency provenance.",
+  "created": 1791588825.399968
+}

@@ -193,12 +193,31 @@ def trusted_inputs(value):
     return as_keys, resolver, registrations, catalog.TrustedCatalog(**seed)
 
 
+def evidence_operator_inputs(value):
+    """Optional export setup is independent and requires all public input paths."""
+    from agent_guard.gateway.evidence_auth import (
+        load_evidence_local_inputs,
+        load_export_credentials,
+    )
+
+    if ("export_credentials" in value) != ("evidence_local_inputs" in value):
+        raise ConfigError("complete independent export configuration required")
+    if "export_credentials" not in value:
+        return (), None
+    return (
+        load_export_credentials(value["export_credentials"]),
+        load_evidence_local_inputs(value["evidence_local_inputs"]),
+    )
+
+
 def load_gateway_config(raw: bytes):
     try:
         value = load_strict_json(raw)
         if type(value) is not dict or set(value) not in (
             _FIELDS,
             _FIELDS | {"receipt_keys"},
+            _FIELDS | {"export_credentials", "evidence_local_inputs"},
+            _FIELDS | {"receipt_keys", "export_credentials", "evidence_local_inputs"},
         ):
             raise ConfigError("exact gateway fields required")
         _string(value["secrets_path"], "secrets_path")
@@ -206,6 +225,7 @@ def load_gateway_config(raw: bytes):
             if type(value[name]) is not int or not 1 <= value[name] <= upper:
                 raise ConfigError("bounded positive gateway setting required")
         trusted_inputs(value)
+        evidence_operator_inputs(value)
         return GatewayConfig(canonical_json_bytes(value))
     except (ValueError, TypeError, KeyError, UnicodeError) as exc:
         raise ConfigError("invalid gateway configuration") from exc

@@ -1,6 +1,8 @@
 # 安全模型与执行状态
 
-状态：GM-MVP-1的规范性安全要求，不是全部要求均已实现或验收的声明。B补正已完成独立验收并合并；[正式接受记录](../tasks/workflow/runs/local-remediation-20261004/acceptance.md)保留67项/60运行义务及原失败证据。A2.2本轮已完成95项/88运行义务的独立验收，见[任务包](../tasks/workflow/runs/A2.2-integration-20261004/task-v1.md)。整体项目仍PARTIAL：A2.3候选已实现内部持续签名发布与真实HTTPS联合流程，本轮补正后的新独立复验未执行、完整A2未接受，本轮完整自查收尾后按真人指令停止、原r1否决保留；A3独立锚定/导出/交付演示/规模对照实验尚未完成，旧无回执公钥配置保持PENDING兼容。 消息接口以 [实施方案](oauth-oidc-sm2-mvp.md) 为准，测试统一在 [验收矩阵](acceptance.md) 维护。
+A3.1与A3.2已正式独立接受；A3.3/A3.4联合v1已通过独立PACKAGE_REVIEW，S2正常装配必要自查已完成。完整联合自查及新独立IMPLEMENTATION_ACCEPTANCE尚未完成，项目仍PARTIAL。保留当前授权UNKNOWN、下游ATTESTED_NOT_INDEPENDENTLY_PROVEN、未锚尾部与bootstrap外部信任限制。
+
+状态：GM-MVP-1的规范性安全要求，不是全部要求均已实现或验收的声明。B补正已完成独立验收并合并；[正式接受记录](../tasks/workflow/runs/local-remediation-20261004/acceptance.md)保留67项/60运行义务及原失败证据。A2.2本轮已完成95项/88运行义务的独立验收，见[任务包](../tasks/workflow/runs/A2.2-integration-20261004/task-v1.md)。整体项目仍PARTIAL：A2.3内部持续签名发布与真实HTTPS联合流程已完成完整119项/112运行义务独立复验并[正式接受](../tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，原r1否决保留为历史；A3.1锚定与A3.2导出已接受；A3.3/A3.4联合实施与完整验收待完成，旧无回执公钥配置保持PENDING兼容。 消息接口以 [实施方案](oauth-oidc-sm2-mvp.md) 为准，测试统一在 [验收矩阵](acceptance.md) 维护。
 
 ## 1. 威胁模型
 
@@ -122,6 +124,6 @@ A2.3候选的内部publisher只锁既有outbox行，用有界同一PG事务验�
 
 A2.3补正候选在真实签名/READY前复用原接受事实校验：对不可变报价执行精确总额、数量/原请求及cost currency/calls检查，并逐事件核对历史验真的完整root→leaf路径和四种delta。两列quote/result相互一致不能替代上述约束。校验读取均先于query最终DB时刻，不引入当前报价、下游结果或当前撤销/到期条件；合法零价及迟延终局仍可历史发布。失败保留PENDING/null及原ID/iat，当前query失败回滚proof/link，仅允许原契约的隔离STAGED证据。
 
-容量域分列：当前canonical producer的订单公开响应保守包含上界为58168字节；兼容有效原始签名JWS（含非canonical JSON空白）的单JWS仍可到16384字节，不能套用canonical JWS上界。原接受事实要求q≥1、p≥0、每项q*p及Σq*p≤MAX_SAFE；p>0时digits(q)+digits(p)≥18会使最小乘积≥10^16>MAX_SAFE，p=0时至多16+1位。因此每项联合数字宽度≤17，256项比松Cartesian32位省3840字节，得到兼容域公开响应保守上界64695字节。两者均不是实际合法最大值；组件64KiB/JWS16KiB、公开65536和外层1MiB守卫保持不变，真实边界/非法组件探针仍独立保留。补正自查不代表正式接受；本轮按真人指令在自查、证据和资源清理后停止，本轮补正后的新独立复验未执行、完整A2未接受，原r1 NOT_ACCEPTED保留，P2仅标FIXED_PENDING_REVIEW。
+容量域分列：本轮独立依据实际validator、q≥1/p≥0/Σq*p≤MAX_SAFE及标识符长度推导，canonical producer订单公开响应包含上界为48187＋2724＋124＝51035字节；兼容真实有效非canonical raw JWS仍可到16384，公开包含上界为48187＋16384＋124＝64695。两者均非共同可达合法最大值。正price的digits(q)＋digits(p)≤17，zero price≤16＋1；旧58168为较松Cartesian/标识符公式，仅历史比较。九个各≤65536组件的outer保守上界589964；1MiB/+1纯codec点并非保留组件profile的合法SDK bundle。组件64KiB、JWS16KiB、公开65536和外壳1MiB守卫不变；真实256 SKU、原边界/故障/回滚探针及范围分类见[完整独立review-r2](../tasks/workflow/runs/A2.3-receipts-20261004/review-r2.md)。本候选完整A2已[正式接受](../tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，原r1否决保留。
 
-本轮完整自查报告：`../tasks/workflow/runs/A2.3-receipts-20261004/implementation-remediation-r2.md`；最新真人停止指令：`../tasks/workflow/runs/A2.3-receipts-20261004/user-stop-after-selfcheck-20261005.md`。本轮补正后的新独立复验未执行；完整A2未接受，原[r1否决](../tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md)保留。
+最新结论：[正式接受](../tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)与[完整独立review-r2](../tasks/workflow/runs/A2.3-receipts-20261004/review-r2.md)，原[r1否决](../tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md)及[实施自查](../tasks/workflow/runs/A2.3-receipts-20261004/implementation-remediation-r2.md)保留为历史。本轮依据[真人恢复](../tasks/workflow/runs/A2.3-receipts-20261004/user-resume-sol-20261006.md)完成完整复核、证据、资源清理与交接后停止；未Git交付/远端CI/合并或实施A3。

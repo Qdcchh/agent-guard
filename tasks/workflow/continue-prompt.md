@@ -1,7 +1,11 @@
-# A2 接续入口
+# A3.3 → A3.4接续
 
-当前恢复检查点：NEW完整A2独立reviewer r1已原生FINAL STOP、自有资源0，主控完整读回；结论 **NOT_ACCEPTED**。P2 `A23-R1-PUBLISH-QUOTE-ARITHMETIC` 为OPEN_CONFIRMED：损坏quote/result一致却算术错误仍签READY，正常SQL不可变保护有效。原source完整2798P/1F/exit1、wheel2799P/exit0及中断/失败全保留。正式原文见 tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md；当前补正 task-remediation-r2 与13文件所有权已由新 Astra medium 独立包审 PACKAGE_READY，报告见 tasks/workflow/runs/A2.3-receipts-20261004/package-review-remediation-r2.md；主控已核原生 FINAL STOP/完整指纹/资源0，正调度唯一 Sol medium worker。补正后完整自查与全新reviewer119/112必须重做；本次不实施A3，不提交/发布未接受候选。以下旧冻结前措辞属于该时点记录，不能替代当前真实执行。
+真人2026-10-13授权A3.3与A3.4做完一起完整独立验收，覆盖先单独接受A3.3的顺序。A3.1、A3.2已正式接受；A3.3场景source/非editable wheel各691项分段自查完成，原36场景原子/共享15与代码SHA已核、资源0并root封存。source原生test退出0；wheel真实Docker exec_die0已核，hostwrapper退出UNKNOWN与缺失原件保留。A3.3整合未完成、A3.4未实施，项目仍PARTIAL。
 
-2026-10-05真人已[恢复A2](runs/A2.3-receipts-20261004/user-resume-20261005.md)。先核真实Git/PR、HANDOFF、context/state/issues、v3完整包与最新原生证据。承接既有成果，sole29联合整合与完整自查已原生STOP、自有资源0；核正式报告及已完成的CI预算独立审查，完整冻结后，NEW独立119/112 source/wheel验收及必要补正，正式接受后提交推送PR，实际CI/审核满足后合并main，交接后停止。不实施A3、不继承PR #6例外、不reset/clean。
+[真人新授权](runs/A3.3-A3.4-joint-20261013/user-joint-acceptance-20261013.md) · [合并包](runs/A3.3-A3.4-joint-20261013/package-v1.md) · [当前状态](runs/A3.3-A3.4-joint-20261013/state.json) · [A3.2接受](runs/A3.2-evidence-20261011/acceptance.md)。
 
-本文件是接续提示而非新真人授权；现行授权、真实状态及历史停止/失败/验收记录分别保留。新会话不得凭本提示伪造已运行或已接受。
+合并包185父/177运行、568原子(269+95+73+71+60)、55回归/6注册保持。fresh合并PACKAGE_REVIEW→唯一S2完成正常装配/CLI/三PG/12角色/256/维护/README，冻结实际共享→A34研究共享串行及独立文件/资源worker→全部STOP后唯一整合、一次完整联合自查和全新Sol/high完整独立验收。40000正式实验、source/wheel完整前段与新增矩阵、历史/等价探针、原PG5002/strict预算、真实10轮/真进程恢复不减。有阻断最小补正保失败并换新完整reviewer。
+
+root场景冻结/56368文件SHA与资源回执：仓库内 artifacts/workflow/A3.3-delivery-20261011/controller/S1-r14-root-freeze.json、S1-r14-all-evidence-root-readback.json、S1-r14-root-final-report.md。原73998文件暂停封存、R9/R10/R11失败、中断与旧误推713/23计数保留；实际691来自七根690+容量1，没有22虚拟补充。
+
+worker Sol/low，每轮新reviewer Sol/high，effective UNKNOWN。不额度、不Git发布、不reset/clean/强推、不改身份；原分支handoff/a23-local-20261005、HEAD2a8cc7da4867ad1876350855c0ed5569c5ce6472、空index与全部dirty/untracked保留。主控有限R18 guard单独管理，writer/reviewer不触碰；最终精确自有清理后停止。当前授权UNKNOWN、下游ATTESTED_NOT_INDEPENDENTLY_PROVEN、未锚尾部和外部信任限制保持。[现行约定](current-policy.md)。

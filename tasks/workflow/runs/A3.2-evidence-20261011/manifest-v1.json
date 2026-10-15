@@ -1,0 +1,55 @@
+{
+  "kind": "A32_PACKAGE_WORKER_OUTPUT_SHA_MANIFEST_NOT_CONTROLLER_FULL_FREEZE",
+  "entries": [
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/authorization.md",
+      "sha256": "8d97024ca9bfbcc0d86bb56511af18060a89dbe27922d77577185eda01b157ec",
+      "size": 888
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/baseline.json",
+      "sha256": "40f6bf0a3a615041225885a7b165519ba43a22d7d62c1e378d8d30e0b798e41c",
+      "size": 42224
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/node-bindings-v1.json",
+      "sha256": "0b0e779b6c5755f16eb03949ca9c0453f9b686aaf83d1753fab3bd635aae1fec",
+      "size": 58686
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/ownership-v1.json",
+      "sha256": "89bc73387b2251d1372fd65b3ca93f0ce5243e2db2284aebe391b084384c1f15",
+      "size": 2225
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/package-v1.md",
+      "sha256": "0e03c23ab145b5f71b4a6f33efdfd34b6dca4e97cd71be6e828187f554a69ada",
+      "size": 20106
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/requirements-v1.json",
+      "sha256": "a773a8ca1fcbc4404a635812ee8a7475c85d8c5daca0d039f4e1cc69129abe11",
+      "size": 348197
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/runtime-plan-v1.json",
+      "sha256": "8cbe9614510ffe7912692a9c6b8d1266f4727c14aa150857c0cf59a1ec16deea",
+      "size": 12659
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/state.json",
+      "sha256": "ac1c0e7e28c8ec34114c2047da4187efbb1435fd9295eebb6efbd41bef0f10a2",
+      "size": 4421
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/static-readback-v1.json",
+      "sha256": "71cf112c171592c0e6f1b2a06a35e8d18420039db413a557d98a474ef951d358",
+      "size": 717
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/task-package-review-v1.md",
+      "sha256": "e3e52f1155eef250364270629363411ab39f47d5f7ecbb362e07ddd640d5fc50",
+      "size": 1413
+    }
+  ]
+}

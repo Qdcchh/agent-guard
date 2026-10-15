@@ -1,0 +1,37 @@
+{
+  "UTC": "2026-10-11T20:51:30.249096+00:00",
+  "review_kind": "PACKAGE_REVIEW",
+  "decision": "PACKAGE_READY",
+  "active_package": "package-v2.md",
+  "frozen_candidate_SHA256": "d721a00876af439acd03b6a1dfdd9830006cb6e05d38c6fa00373dd97185694f",
+  "reviewer": "/root/a33_package_review_sol_high_r2",
+  "requested_model": "gpt-6.1-sol/high",
+  "effective_metadata": "UNKNOWN",
+  "evidence_directory": "artifacts/workflow/A3.3-delivery-20261011/package-review-sol-high-r2-5f00903e-a4dc-4dae-97a3-64608a91b035",
+  "root_readback": "artifacts/workflow/A3.3-delivery-20261011/controller/package-r2-root-readback.json",
+  "pins": {
+    "STOP_SHA256": "d2467aa28298b611ee0fa7b7557f346912a8c6aaa0c0f61b5d593b3c58cb6ee4",
+    "manifest_SHA256": "37a48e5fbc0e58e961eb32ca15f46ed9b509bbe86e82d6616c8943a16f2e4bfa",
+    "report_SHA256": "82e5fe3b9503a72280785a466c6d4bd4d578c1847ac9454e6d5d73bc84b481a4",
+    "review_md_SHA256": "6d178c15adb398f470e5de6c9f5c7691869d4adf55c7b29375f284bf6690cfd7"
+  },
+  "counts": {
+    "parents": 173,
+    "runtime": 165,
+    "atoms": 508,
+    "A2": 269,
+    "A31": 95,
+    "A32": 73,
+    "A33": 71,
+    "regressions": 55,
+    "new_roots": 17,
+    "semantic": 21,
+    "declarations": 23,
+    "goals": 30
+  },
+  "resources_remaining": 0,
+  "A33_PR_R1_001": "PACKAGE_DESIGN_GAP_RESOLVED_IMPLEMENTATION_NOT_RUN",
+  "implementation_acceptance": false,
+  "no_Git_publication": true,
+  "quota_monitoring": false
+}

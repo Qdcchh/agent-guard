@@ -1,0 +1,3119 @@
+{
+  "kind": "A31_A32_PLANNING_FINDINGS_AND_ASSERTION_MAPPING",
+  "status": "PLANNING_BASELINE_REVIEW_PENDING",
+  "business_status": "NOT_RUN",
+  "PACKAGE_READY": false,
+  "implementation_authorized": false,
+  "effective_metadata": "UNKNOWN",
+  "accepted_A2_binding": {
+    "baseline": "baseline.json",
+    "acceptance": "../A2.3-receipts-20261004/acceptance.md",
+    "source_observations": [
+      {
+        "path": "src/agent_guard/ledger/service.py",
+        "sha256": "5b208f73a59ca17bc149db1604ae6612ff9acb613ddc14bf159e3d7370cb108d",
+        "bytes": 22648,
+        "lines": 499,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/ledger/store.py",
+        "sha256": "f86b656ac481a1a2e5d8edcb4d598945ef944e154b0887a22d889a01f57ac4d8",
+        "bytes": 11687,
+        "lines": 360,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/ledger/migrate.py",
+        "sha256": "fe55dd46350d3950f2237d3fa85ed87715228d46531f2da61c34bab309b18a2c",
+        "bytes": 8260,
+        "lines": 215,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/ledger/lineage.py",
+        "sha256": "036ddd3a02c1d4e3688e325b04e9e3db537872e1b42ad65a9371e7f38dbbae39",
+        "bytes": 21041,
+        "lines": 504,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/execution/service.py",
+        "sha256": "5bd596722f99cc078cf3b5cacb6e91213062e73cbad99468979ec122079c4642",
+        "bytes": 47189,
+        "lines": 1079,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/execution/store.py",
+        "sha256": "42b95254488b5c43028efd9284a7726dc8589182cdb32e67fbeafd9741d9e504",
+        "bytes": 19073,
+        "lines": 517,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/execution/verified.py",
+        "sha256": "0555fd5855f478e1fba407dea6c7667ac7270d3bfbe58df9daeacf6a244ee74a",
+        "bytes": 3597,
+        "lines": 72,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/execution/query.py",
+        "sha256": "9763ac130ebd0c7f87130f11be3ec64d3beb5a14edf722879a64d205c0d86ac5",
+        "bytes": 9557,
+        "lines": 242,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/execution/receipt_publication.py",
+        "sha256": "5ff868e408af6270a287b605b555cf239163634adff6f764e8e99d1679d5612f",
+        "bytes": 11710,
+        "lines": 268,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/execution/original_material.py",
+        "sha256": "41ea51dd7c06ccb7122d2871f67cd83154074d82d8ac215ed34bf267e3d846fd",
+        "bytes": 9244,
+        "lines": 231,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/authorization/evidence_store.py",
+        "sha256": "c9c2f1aa617e134c4ab3e849e7dfe106722f41d9b342594ba2282c1cb5c1e4e3",
+        "bytes": 6994,
+        "lines": 172,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/evidence/receipt.py",
+        "sha256": "50bc7b6aba7a6cb8cc89880dc44ef00d716cea8e8914d6c5bf42195e36868ed5",
+        "bytes": 14163,
+        "lines": 362,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/contracts/encoding.py",
+        "sha256": "aaa89677f767844f6a8c2e88c0be1f131b993964119b8c701ba3be0d6d9406ba",
+        "bytes": 6924,
+        "lines": 190,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/crypto/sm.py",
+        "sha256": "2b00b5df65f741ccae706d89a6549027d30fc76cf5abbd3a838c3b83fbeddd79",
+        "bytes": 9290,
+        "lines": 240,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/ledger/provisioning.py",
+        "sha256": "e16168f6397d3303ad2714c953e2e006502cc1996f1b8f649c45f54228b84d57",
+        "bytes": 9549,
+        "lines": 245,
+        "baseline_match": true
+      },
+      {
+        "path": "src/agent_guard/authorization/exchange_service.py",
+        "sha256": "1b3d139b4d9068e2f6302bbce643fa0513bb443a3d72cc477d7a4dd4948222cd",
+        "bytes": 21117,
+        "lines": 493,
+        "baseline_match": true
+      },
+      {
+        "path": "migrations/001_init.sql",
+        "sha256": "d5e7bb01b9713b7fd9f80b5da85ea039bdf311e2d4a8b6a191d7c48eb43b148c",
+        "bytes": 9963,
+        "lines": 218,
+        "baseline_match": true
+      },
+      {
+        "path": "migrations/002_root_invariants.sql",
+        "sha256": "bae1d72e1cf3dbe95ea73408e43196cdaa51297279319ac2dbf6111a68d44519",
+        "bytes": 5714,
+        "lines": 155,
+        "baseline_match": true
+      },
+      {
+        "path": "migrations/003_root_delete_guard.sql",
+        "sha256": "1d919f8f59a8d4f4bfe49a278006dd4b79f1bb8d791e701ec604ae051ec7527b",
+        "bytes": 802,
+        "lines": 18,
+        "baseline_match": true
+      },
+      {
+        "path": "migrations/004_execution_lifecycle.sql",
+        "sha256": "41527dc2926c379895527b16d71c059d9bf8adac6d1f0a930d48361cbc964c98",
+        "bytes": 14548,
+        "lines": 330,
+        "baseline_match": true
+      },
+      {
+        "path": "migrations/005_event_node_seal.sql",
+        "sha256": "29529103ec7ffab8f785746edc4823a14e5e41d364010e3578e732e1a4e39c9e",
+        "bytes": 8812,
+        "lines": 215,
+        "baseline_match": true
+      },
+      {
+        "path": "migrations/006_event_seal.sql",
+        "sha256": "3abb279bc88b2fd7b2ff427a57fda407b77908182ec612334d500bea2f76760c",
+        "bytes": 6126,
+        "lines": 143,
+        "baseline_match": true
+      },
+      {
+        "path": "migrations/b/004_authorization_code.sql",
+        "sha256": "ac8f9235fb5601453b225ff95a6ca16241a03c2ada0c0a6a8ae96cb7786c1957",
+        "bytes": 3151,
+        "lines": 74,
+        "baseline_match": true
+      },
+      {
+        "path": "migrations/b/005_delegation.sql",
+        "sha256": "176f3743702022ded8b0d0691e4456a92c392884152f9e9142ffba91a68350f3",
+        "bytes": 1837,
+        "lines": 43,
+        "baseline_match": true
+      },
+      {
+        "path": "migrations/b/006_task_revocation.sql",
+        "sha256": "39a5f4b2c632f86d3511c7d69db04f576d33dfe1bfdc7a868e685a55ebf37784",
+        "bytes": 1122,
+        "lines": 28,
+        "baseline_match": true
+      },
+      {
+        "path": "migrations/b/007_admin_grant_revocation.sql",
+        "sha256": "6d7d44a2056d25f7c085c734b7ead77ffc36b0bec2d6f82cf3542a4d63fb3820",
+        "bytes": 1425,
+        "lines": 37,
+        "baseline_match": true
+      },
+      {
+        "path": "migrations/b/008_login_consent.sql",
+        "sha256": "6bfd359aff88c69909995b85fc15434d07390b93e3d2da9daf10ffe88b5e579e",
+        "bytes": 4033,
+        "lines": 97,
+        "baseline_match": true
+      },
+      {
+        "path": "migrations/b/009_consent_policy_snapshot.sql",
+        "sha256": "ee94ca3672497c0c0d5c67b04041afe12cf1618abb4f26363376dceea44974f1",
+        "bytes": 974,
+        "lines": 25,
+        "baseline_match": true
+      },
+      {
+        "path": "migrations/b/010_evidence_store.sql",
+        "sha256": "a694e2f523b7c44f2ef1d17238552ddf98252d8d37b00d34f19342237dd927e0",
+        "bytes": 2180,
+        "lines": 44,
+        "baseline_match": true
+      },
+      {
+        "path": "migrations/lineage/001_registry.sql",
+        "sha256": "12da43d61229f481a3309e58ab73400615f8740644404e9698177942fe399a13",
+        "bytes": 1743,
+        "lines": 31,
+        "baseline_match": true
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "AUD-P01",
+      "classification": "HISTORICAL_STATUS_CORRECTION",
+      "conflict_or_gap": "历史r2草案首段A23 pending及Sol/xhigh不再是当前权威",
+      "location": "controller/audit-plan-r2/task-A3.1-draft.md:3; current-policy.md; A2 acceptance",
+      "resolution": "完整A2已接受；本轮worker Sol/medium，reviewer Astra/high，effective UNKNOWN；不追改历史。",
+      "contract_sections": [
+        1,
+        9
+      ],
+      "status": "RESOLVED_PLANNING",
+      "current_A2_product_defect_claimed": false
+    },
+    {
+      "id": "AUD-P02",
+      "classification": "CONFIRMED_CURRENT_CALLSITE_DESIGN_BINDING",
+      "conflict_or_gap": "外围accept_response closure会遮蔽未来内层descriptor",
+      "location": "src/agent_guard/execution/verified.py:35-68",
+      "resolution": "S0拟TrustedAcceptBinding composite显式保留真实bundle-derived descriptor，所有原binding/出版验证等待留同TX；不是现有A2产品bug。",
+      "contract_sections": [
+        1,
+        3,
+        8
+      ],
+      "status": "RESOLVED_INTERFACE_CHOICE_PENDING_IMPLEMENTATION",
+      "current_A2_product_defect_claimed": false
+    },
+    {
+      "id": "AUD-P03",
+      "classification": "CONFIRMED_CURRENT_WRITER_BINDING",
+      "conflict_or_gap": "历史首次READY路径UNKNOWN可由真实A2解决",
+      "location": "src/agent_guard/execution/receipt_publication.py:216-250",
+      "resolution": "InternalPublisher.publish是首次READY事务writer，精确S0写路径；outbox→已有head，首次PUBLISH原子，READY重试原JWS无重复。",
+      "contract_sections": [
+        1,
+        3,
+        8
+      ],
+      "status": "RESOLVED_INTERFACE_CHOICE_PENDING_IMPLEMENTATION",
+      "current_A2_product_defect_claimed": false
+    },
+    {
+      "id": "AUD-P04",
+      "classification": "HISTORICAL_CAPACITY_CORRECTION",
+      "conflict_or_gap": "旧A32 whole nonledger outer65KiB疑点已由接受A2闭合",
+      "location": "src/agent_guard/evidence/receipt.py:178-212; docs/oauth-oidc-sm2-mvp.md:600; A2 acceptance",
+      "resolution": "保留逐组件default和准确outer1MiB及UNANCHORED；不退回旧65KiB outer。51035/64695为包含域上界；原A32-03.04按实际接受前段解释。",
+      "contract_sections": [
+        1,
+        7
+      ],
+      "status": "RESOLVED_PLANNING",
+      "current_A2_product_defect_claimed": false
+    },
+    {
+      "id": "AUD-P05",
+      "classification": "CONTRADICTORY_DRAFT_SCOPE",
+      "conflict_or_gap": "旧design强制LEASE/UNKNOWN/quarantine与r2 A31-S01相矛盾",
+      "location": "audit-design/design.md:19,31; test-plan.json A31-S01.01-.04",
+      "resolution": "采用r2原最小mandatory FIRST/RETRY/QUERY/TERMINAL/READY及BOOTSTRAP，无辅助强制guard；未来实际新增等待仍finalclock/fence。",
+      "contract_sections": [
+        2,
+        3,
+        9
+      ],
+      "status": "RESOLVED_PLANNING",
+      "current_A2_product_defect_claimed": false
+    },
+    {
+      "id": "AUD-P06",
+      "classification": "TRANSACTION_ORDER_DESIGN",
+      "conflict_or_gap": "after_link重新读取counter会双计首次reserve",
+      "location": "src/agent_guard/ledger/service.py:313-360; bootstrap-sequencing-addendum.md",
+      "resolution": "方案A预算后insert前完整task可信深不可变seed；晚ensure/BOOTSTRAP1/FIRST2，四零正成本只计一次，callback只材料。",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "status": "RESOLVED_INTERFACE_CHOICE_PENDING_IMPLEMENTATION",
+      "current_A2_product_defect_claimed": false
+    },
+    {
+      "id": "AUD-P07",
+      "classification": "COMPATIBILITY_DESIGN",
+      "conflict_or_gap": "optional None可被误认为停journal、并遗漏service候选/报价失败分支",
+      "location": "src/agent_guard/execution/service.py:196-356; ledger/service.py:140-245",
+      "resolution": "结构writer内建默认责任，所有接受入口可选hooks逐分支传播，原必需参数保持；enabled无材料拒绝，legacy未启用保持。",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "status": "RESOLVED_INTERFACE_CHOICE_PENDING_IMPLEMENTATION",
+      "current_A2_product_defect_claimed": false
+    },
+    {
+      "id": "AUD-P08",
+      "classification": "FINAL_CLOCK_AND_FENCE_DESIGN",
+      "conflict_or_gap": "head/flush新等待在当前初查后，旧terminal helper会拒本TX终态",
+      "location": "src/agent_guard/execution/service.py:686-775; execution/store.py assert_terminal_write_allowed",
+      "resolution": "新增capture/assert expected-status四条件最后clock；不续租，不head后首次业务锁，下游可能已effect仍保预留恢复。",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "status": "RESOLVED_INTERFACE_CHOICE_PENDING_IMPLEMENTATION",
+      "current_A2_product_defect_claimed": false
+    },
+    {
+      "id": "AUD-P09",
+      "classification": "MIGRATION_DESIGN",
+      "conflict_or_gap": "默认glob与空库common/execution循环会提前执行跨auth依赖007",
+      "location": "src/agent_guard/ledger/migrate.py:53-74; ledger/lineage.py:455-469",
+      "resolution": "standalone固定原001–006，空库原legacy后依赖有序auth010→007；GW15/audit001独立，保14floor/所有原SQL和旧applied_at。",
+      "contract_sections": [
+        4,
+        8
+      ],
+      "status": "RESOLVED_INTERFACE_CHOICE_PENDING_IMPLEMENTATION",
+      "current_A2_product_defect_claimed": false
+    },
+    {
+      "id": "AUD-P10",
+      "classification": "RESET_INVENTORY_DESIGN",
+      "conflict_or_gap": "未来sidecar可能不在旧RESET_TABLES的FK闭包",
+      "location": "tests/fixtures/isolation.py:42-69,191-201",
+      "resolution": "显式owned新GW inventory；production不TRUNCATE/DDL，测试不关guard、不ag_%；无法安全时正式重包每例namespace。",
+      "contract_sections": [
+        4,
+        8,
+        9
+      ],
+      "status": "RESOLVED_INTERFACE_CHOICE_PENDING_IMPLEMENTATION",
+      "current_A2_product_defect_claimed": false
+    },
+    {
+      "id": "AUD-P11",
+      "classification": "TRUST_AND_BOOTSTRAP_DESIGN",
+      "conflict_or_gap": "新key miss并非全task空历史；启用后AS可新增grant",
+      "location": "ledger/provisioning.py:120,174; authorization/exchange_service.py:164; test-plan A31-08.06",
+      "resolution": "完整task capture/offpath四零，非零历史停写drain维护GAP；新grant仅完整真实signed链/可信来源/从未执行/四零introduced-zero，不全AS审计。",
+      "contract_sections": [
+        3,
+        7
+      ],
+      "status": "RESOLVED_INTERFACE_CHOICE_PENDING_IMPLEMENTATION",
+      "current_A2_product_defect_claimed": false
+    },
+    {
+      "id": "AUD-P12",
+      "classification": "DELIVERY_IDEMPOTENCY_DESIGN",
+      "conflict_or_gap": "重启重新选最大prefix可能换批并重复签；晚ACK可清新pending",
+      "location": "audit-design/design.md:10.2; test-plan A31-18.05/A31-20.01",
+      "resolution": "persist exact immutable pending先network，查重先seq检查，条件ACK仅匹配批；remoteahead逐seq+history验证。",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "status": "RESOLVED_INTERFACE_CHOICE_PENDING_IMPLEMENTATION",
+      "current_A2_product_defect_claimed": false
+    },
+    {
+      "id": "AUD-P13",
+      "classification": "FRAMING_AND_CAPACITY_DESIGN",
+      "conflict_or_gap": "256MiB不能承诺10000最大payload，整体defaultJSON装不下",
+      "location": "audit-design/design.md:10.3; test-plan A32-01/A32-08",
+      "resolution": "小切片NDJSON/固定fold/count/wire，完整spool后download；真实固定10000 workload精确编码预检，超限503不截断，必要分页先重包审。",
+      "contract_sections": [
+        6,
+        9
+      ],
+      "status": "RESOLVED_INTERFACE_CHOICE_PENDING_IMPLEMENTATION",
+      "current_A2_product_defect_claimed": false
+    },
+    {
+      "id": "AUD-P14",
+      "classification": "ASSURANCE_SCOPE_CORRECTION",
+      "conflict_or_gap": "N=S也不能把无辅助journal的runtime status说成锚定",
+      "location": "test-plan A32-05.01/A32-06.03/A32-16.01",
+      "resolution": "anchored_execution_semantics和runtime_status_as_of明确分开；合法observation篡改+无密钥fold重算为不可检测诚实正控。",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "status": "RESOLVED_PLANNING",
+      "current_A2_product_defect_claimed": false
+    },
+    {
+      "id": "AUD-P15",
+      "classification": "PORTABLE_AUTHORITY_AND_FULL_INHERITANCE",
+      "conflict_or_gap": "仅ignored链接不可移植；单节点/51wrapper不代原要求",
+      "location": "requirements.json; test-plan.json; docs/acceptance.md",
+      "resolution": "当前tracked原文+自足合同+168逐ID节/case/node/native映射，21P/30goal/全A2/原各前段/sourcewheel历史负例全保持；后段真实接受再正式建包。",
+      "contract_sections": [
+        8,
+        9,
+        10
+      ],
+      "status": "RESOLVED_PLANNING",
+      "current_A2_product_defect_claimed": false
+    }
+  ],
+  "remaining_formal_stage_gates": [
+    {
+      "id": "AUD-G01",
+      "stage": "A31",
+      "gate": "Bind actual final DTO/SQL/constraints source SHA, proof of complete-task writer locks, exact coverage predicates/lock acquisition, finite deadlines/roles/resources, 007/audit001/reset inventory; fresh business PACKAGE_REVIEW and explicit implementation authorization.",
+      "status": "PENDING_FORMAL_PACKAGE_NOT_BLOCKING_PLANNING"
+    },
+    {
+      "id": "AUD-G02",
+      "stage": "A31",
+      "gate": "After authorized implementation actual collect/source+wheel/races/faults/true PID recovery/CLI/full inherited independent review; no current run evidence.",
+      "status": "PENDING_IMPLEMENTATION_THEN_REAL_ACCEPTANCE"
+    },
+    {
+      "id": "AUD-G03",
+      "stage": "A32",
+      "gate": "Actual accepted A31 checkpoint/schema/CLI/trust APIs plus current receipt component implementation; freeze auth/schema/limits/spool/cleanup and 10000 workload capacity before fresh business package review.",
+      "status": "PENDING_ACTUAL_A31_ACCEPTANCE"
+    },
+    {
+      "id": "AUD-G04",
+      "stage": "A32",
+      "gate": "After authorized implementation real framing/TLS/RR race/256 SKU/wide chain/offline disabled sockets/10000 exact wire/sourcewheel/full predecessor review.",
+      "status": "PENDING_IMPLEMENTATION_THEN_REAL_ACCEPTANCE"
+    },
+    {
+      "id": "AUD-G05",
+      "stage": "A33/A34",
+      "gate": "Consume actual accepted CLI/config/framing/report and workload bytes; capacity preflight is not deployment acceptance or 50-client experiment.",
+      "status": "PENDING_ACTUAL_PREDECESSOR_ACCEPTANCE"
+    }
+  ],
+  "counts": {
+    "parents": 40,
+    "assertions": 168,
+    "planned_nodes": 42,
+    "native_obligations": 10
+  },
+  "assertion_mapping": [
+    {
+      "assertion_id": "A31-01.01",
+      "parent_id": "A31-01",
+      "contract_sections": [
+        2,
+        4,
+        9
+      ],
+      "finite_case_ref": "A31-01.01",
+      "planned_nodes": [
+        "tests/unit/test_audit_journal.py::test_task_stream_canonical_sm3_schema",
+        "tests/integration/test_audit_atomicity.py::test_task_stream_rows_and_independent_heads"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-01.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-01.02",
+      "parent_id": "A31-01",
+      "contract_sections": [
+        2,
+        4,
+        9
+      ],
+      "finite_case_ref": "A31-01.02",
+      "planned_nodes": [
+        "tests/unit/test_audit_journal.py::test_task_stream_canonical_sm3_schema"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-01.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-01.03",
+      "parent_id": "A31-01",
+      "contract_sections": [
+        2,
+        4,
+        9
+      ],
+      "finite_case_ref": "A31-01.03",
+      "planned_nodes": [
+        "tests/unit/test_audit_journal.py::test_task_stream_canonical_sm3_schema"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-01.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-01.04",
+      "parent_id": "A31-01",
+      "contract_sections": [
+        2,
+        4,
+        9
+      ],
+      "finite_case_ref": "A31-01.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_atomicity.py::test_task_stream_rows_and_independent_heads"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-01.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-01.05",
+      "parent_id": "A31-01",
+      "contract_sections": [
+        2,
+        4,
+        9
+      ],
+      "finite_case_ref": "A31-01.05",
+      "planned_nodes": [
+        "tests/integration/test_audit_atomicity.py::test_task_stream_rows_and_independent_heads"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-01.05",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-02.01",
+      "parent_id": "A31-02",
+      "contract_sections": [
+        1,
+        2,
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-02.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_atomicity.py::test_first_retry_query_atomic_coverage"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-02.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-02.02",
+      "parent_id": "A31-02",
+      "contract_sections": [
+        1,
+        2,
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-02.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_atomicity.py::test_first_retry_query_atomic_coverage"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-02.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-02.03",
+      "parent_id": "A31-02",
+      "contract_sections": [
+        1,
+        2,
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-02.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_atomicity.py::test_first_retry_query_atomic_coverage"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-02.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-02.04",
+      "parent_id": "A31-02",
+      "contract_sections": [
+        1,
+        2,
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-02.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_atomicity.py::test_first_retry_query_atomic_coverage"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-02.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-02.05",
+      "parent_id": "A31-02",
+      "contract_sections": [
+        1,
+        2,
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-02.05",
+      "planned_nodes": [
+        "tests/integration/test_audit_atomicity.py::test_first_retry_query_atomic_coverage"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-02.05",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-03.01",
+      "parent_id": "A31-03",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-03.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_atomicity.py::test_journal_faults_roll_back_business_facts"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-03.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-03.02",
+      "parent_id": "A31-03",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-03.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_atomicity.py::test_journal_faults_roll_back_business_facts"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-03.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-03.03",
+      "parent_id": "A31-03",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-03.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_atomicity.py::test_journal_faults_roll_back_business_facts"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-03.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-03.04",
+      "parent_id": "A31-03",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-03.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_atomicity.py::test_journal_faults_roll_back_business_facts"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-03.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-04.01",
+      "parent_id": "A31-04",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-04.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_clock.py::test_final_public_clock_after_journal_wait"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-04.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-04.02",
+      "parent_id": "A31-04",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-04.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_clock.py::test_final_public_clock_after_journal_wait"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-04.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-04.03",
+      "parent_id": "A31-04",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-04.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_clock.py::test_final_public_clock_after_journal_wait"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-04.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-04.04",
+      "parent_id": "A31-04",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-04.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_clock.py::test_final_public_clock_after_journal_wait"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-04.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-04.05",
+      "parent_id": "A31-04",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-04.05",
+      "planned_nodes": [
+        "tests/integration/test_audit_clock.py::test_final_public_clock_after_journal_wait"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-04.05",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-05.01",
+      "parent_id": "A31-05",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-05.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_fencing.py::test_terminal_final_fence_after_journal_wait"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-05.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-05.02",
+      "parent_id": "A31-05",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-05.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_fencing.py::test_terminal_final_fence_after_journal_wait"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-05.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-05.03",
+      "parent_id": "A31-05",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-05.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_fencing.py::test_terminal_final_fence_after_journal_wait"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-05.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-05.04",
+      "parent_id": "A31-05",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-05.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_fencing.py::test_terminal_final_fence_after_journal_wait"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-05.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-06.01",
+      "parent_id": "A31-06",
+      "contract_sections": [
+        3,
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-06.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_lock_order.py::test_public_terminal_publisher_lock_order"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-06.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-06.02",
+      "parent_id": "A31-06",
+      "contract_sections": [
+        3,
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-06.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_lock_order.py::test_public_terminal_publisher_lock_order"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-06.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-06.03",
+      "parent_id": "A31-06",
+      "contract_sections": [
+        3,
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-06.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_lock_order.py::test_public_terminal_publisher_lock_order"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-06.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-06.04",
+      "parent_id": "A31-06",
+      "contract_sections": [
+        3,
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-06.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_lock_order.py::test_public_terminal_publisher_lock_order"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-06.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-07.01",
+      "parent_id": "A31-07",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-07.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_lock_order.py::test_revocation_key_state_journal_linearization"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-07.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-07.02",
+      "parent_id": "A31-07",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-07.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_lock_order.py::test_revocation_key_state_journal_linearization"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-07.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-07.03",
+      "parent_id": "A31-07",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-07.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_lock_order.py::test_revocation_key_state_journal_linearization"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-07.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-07.04",
+      "parent_id": "A31-07",
+      "contract_sections": [
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-07.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_lock_order.py::test_revocation_key_state_journal_linearization"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-07.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-08.01",
+      "parent_id": "A31-08",
+      "contract_sections": [
+        2,
+        3,
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-08.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_maintenance_bootstrap_preserves_history"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-08.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-08.02",
+      "parent_id": "A31-08",
+      "contract_sections": [
+        2,
+        3,
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-08.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_maintenance_bootstrap_preserves_history"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-08.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-08.03",
+      "parent_id": "A31-08",
+      "contract_sections": [
+        2,
+        3,
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-08.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_maintenance_bootstrap_preserves_history"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-08.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-08.04",
+      "parent_id": "A31-08",
+      "contract_sections": [
+        2,
+        3,
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-08.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_maintenance_bootstrap_preserves_history"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-08.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-08.05",
+      "parent_id": "A31-08",
+      "contract_sections": [
+        2,
+        3,
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-08.05",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_maintenance_bootstrap_preserves_history"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-08.05",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-08.06",
+      "parent_id": "A31-08",
+      "contract_sections": [
+        2,
+        3,
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-08.06",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_maintenance_bootstrap_preserves_history"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-08.06",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-09.01",
+      "parent_id": "A31-09",
+      "contract_sections": [
+        4,
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-09.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_007_audit001_lineage_source_wheel"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-09.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-09.02",
+      "parent_id": "A31-09",
+      "contract_sections": [
+        4,
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-09.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_007_audit001_lineage_source_wheel"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-09.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-09.03",
+      "parent_id": "A31-09",
+      "contract_sections": [
+        4,
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-09.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_007_audit001_lineage_source_wheel"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-09.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-09.04",
+      "parent_id": "A31-09",
+      "contract_sections": [
+        4,
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-09.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_007_audit001_lineage_source_wheel"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-09.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-10.01",
+      "parent_id": "A31-10",
+      "contract_sections": [
+        2,
+        3,
+        4,
+        6,
+        9
+      ],
+      "finite_case_ref": "A31-10.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_bootstrap_chunks_and_required_coverage"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-10.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-10.02",
+      "parent_id": "A31-10",
+      "contract_sections": [
+        2,
+        3,
+        4,
+        6,
+        9
+      ],
+      "finite_case_ref": "A31-10.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_bootstrap_chunks_and_required_coverage"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-10.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-10.03",
+      "parent_id": "A31-10",
+      "contract_sections": [
+        2,
+        3,
+        4,
+        6,
+        9
+      ],
+      "finite_case_ref": "A31-10.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_bootstrap_chunks_and_required_coverage"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-10.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-10.04",
+      "parent_id": "A31-10",
+      "contract_sections": [
+        2,
+        3,
+        4,
+        6,
+        9
+      ],
+      "finite_case_ref": "A31-10.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_bootstrap_chunks_and_required_coverage"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-10.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-10.05",
+      "parent_id": "A31-10",
+      "contract_sections": [
+        2,
+        3,
+        4,
+        6,
+        9
+      ],
+      "finite_case_ref": "A31-10.05",
+      "planned_nodes": [
+        "tests/integration/test_audit_upgrade.py::test_bootstrap_chunks_and_required_coverage"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-10.05",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-11.01",
+      "parent_id": "A31-11",
+      "contract_sections": [
+        1,
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-11.01",
+      "planned_nodes": [
+        "tests/unit/test_checkpoint_contract.py::test_checkpoint_sm2_type_scope_version"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-11.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-11.02",
+      "parent_id": "A31-11",
+      "contract_sections": [
+        1,
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-11.02",
+      "planned_nodes": [
+        "tests/unit/test_checkpoint_contract.py::test_checkpoint_sm2_type_scope_version"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-11.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-11.03",
+      "parent_id": "A31-11",
+      "contract_sections": [
+        1,
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-11.03",
+      "planned_nodes": [
+        "tests/unit/test_checkpoint_contract.py::test_checkpoint_sm2_type_scope_version"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-11.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-11.04",
+      "parent_id": "A31-11",
+      "contract_sections": [
+        1,
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-11.04",
+      "planned_nodes": [
+        "tests/unit/test_checkpoint_contract.py::test_checkpoint_sm2_type_scope_version"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-11.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-12.01",
+      "parent_id": "A31-12",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-12.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_atomic_batch_continuity_fork_rejection"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-12.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-12.02",
+      "parent_id": "A31-12",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-12.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_atomic_batch_continuity_fork_rejection"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-12.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-12.03",
+      "parent_id": "A31-12",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-12.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_atomic_batch_continuity_fork_rejection"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-12.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-12.04",
+      "parent_id": "A31-12",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-12.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_atomic_batch_continuity_fork_rejection"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-12.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-13.01",
+      "parent_id": "A31-13",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-13.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_two_audit_pids_same_batch_original_jws"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-13.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-13.02",
+      "parent_id": "A31-13",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-13.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_two_audit_pids_same_batch_original_jws"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-13.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-13.03",
+      "parent_id": "A31-13",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-13.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_two_audit_pids_same_batch_original_jws"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-13.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-13.04",
+      "parent_id": "A31-13",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-13.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_two_audit_pids_same_batch_original_jws"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-13.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-14.01",
+      "parent_id": "A31-14",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-14.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_audit_sigkill_commit_response_windows"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-14.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-14.02",
+      "parent_id": "A31-14",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-14.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_audit_sigkill_commit_response_windows"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-14.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-14.03",
+      "parent_id": "A31-14",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-14.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_audit_sigkill_commit_response_windows"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-14.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-14.04",
+      "parent_id": "A31-14",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-14.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_audit_sigkill_commit_response_windows"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-14.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-15.01",
+      "parent_id": "A31-15",
+      "contract_sections": [
+        5,
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-15.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_tls.py::test_real_audit_tls_registered_roles_and_scope"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-15.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-15.02",
+      "parent_id": "A31-15",
+      "contract_sections": [
+        5,
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-15.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_tls.py::test_real_audit_tls_registered_roles_and_scope"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-15.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-15.03",
+      "parent_id": "A31-15",
+      "contract_sections": [
+        5,
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-15.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_tls.py::test_real_audit_tls_registered_roles_and_scope"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-15.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-15.04",
+      "parent_id": "A31-15",
+      "contract_sections": [
+        5,
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-15.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_tls.py::test_real_audit_tls_registered_roles_and_scope"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-15.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-16.01",
+      "parent_id": "A31-16",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A31-16.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_checkpoint_history_encoded_pages_rotation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-16.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-16.02",
+      "parent_id": "A31-16",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A31-16.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_checkpoint_history_encoded_pages_rotation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-16.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-16.03",
+      "parent_id": "A31-16",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A31-16.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_checkpoint_history_encoded_pages_rotation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-16.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-16.04",
+      "parent_id": "A31-16",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A31-16.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_checkpoint_history_encoded_pages_rotation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-16.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-17.01",
+      "parent_id": "A31-17",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A31-17.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_audit_restore_behind_external_pin_refused"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-17.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-17.02",
+      "parent_id": "A31-17",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A31-17.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_audit_restore_behind_external_pin_refused"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-17.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-17.03",
+      "parent_id": "A31-17",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A31-17.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_audit_restore_behind_external_pin_refused"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-17.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-17.04",
+      "parent_id": "A31-17",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A31-17.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_service.py::test_audit_restore_behind_external_pin_refused"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-17.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-18.01",
+      "parent_id": "A31-18",
+      "contract_sections": [
+        5,
+        6,
+        9
+      ],
+      "finite_case_ref": "A31-18.01",
+      "planned_nodes": [
+        "tests/unit/test_audit_client.py::test_sender_encoded_prefix_and_original_pending_body"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-18.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-18.02",
+      "parent_id": "A31-18",
+      "contract_sections": [
+        5,
+        6,
+        9
+      ],
+      "finite_case_ref": "A31-18.02",
+      "planned_nodes": [
+        "tests/unit/test_audit_client.py::test_sender_encoded_prefix_and_original_pending_body"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-18.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-18.03",
+      "parent_id": "A31-18",
+      "contract_sections": [
+        5,
+        6,
+        9
+      ],
+      "finite_case_ref": "A31-18.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_delivery.py::test_pending_body_persistence_and_growth"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-18.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-18.04",
+      "parent_id": "A31-18",
+      "contract_sections": [
+        5,
+        6,
+        9
+      ],
+      "finite_case_ref": "A31-18.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_delivery.py::test_pending_body_persistence_and_growth"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-18.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-18.05",
+      "parent_id": "A31-18",
+      "contract_sections": [
+        5,
+        6,
+        9
+      ],
+      "finite_case_ref": "A31-18.05",
+      "planned_nodes": [
+        "tests/integration/test_audit_delivery.py::test_pending_body_persistence_and_growth"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-18.05",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-19.01",
+      "parent_id": "A31-19",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-19.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_delivery.py::test_sender_sigkill_exact_pending_ack_recovery"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-19.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-19.02",
+      "parent_id": "A31-19",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-19.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_delivery.py::test_sender_sigkill_exact_pending_ack_recovery"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-19.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-19.03",
+      "parent_id": "A31-19",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-19.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_delivery.py::test_sender_sigkill_exact_pending_ack_recovery"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-19.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-19.04",
+      "parent_id": "A31-19",
+      "contract_sections": [
+        5,
+        9
+      ],
+      "finite_case_ref": "A31-19.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_delivery.py::test_sender_sigkill_exact_pending_ack_recovery"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-19.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-20.01",
+      "parent_id": "A31-20",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A31-20.01",
+      "planned_nodes": [
+        "tests/integration/test_audit_delivery.py::test_two_senders_remote_ahead_rollback_reconcile"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-20.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-20.02",
+      "parent_id": "A31-20",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A31-20.02",
+      "planned_nodes": [
+        "tests/integration/test_audit_delivery.py::test_two_senders_remote_ahead_rollback_reconcile"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-20.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-20.03",
+      "parent_id": "A31-20",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A31-20.03",
+      "planned_nodes": [
+        "tests/integration/test_audit_delivery.py::test_two_senders_remote_ahead_rollback_reconcile"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-20.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-20.04",
+      "parent_id": "A31-20",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A31-20.04",
+      "planned_nodes": [
+        "tests/integration/test_audit_delivery.py::test_two_senders_remote_ahead_rollback_reconcile"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-20.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-21.01",
+      "parent_id": "A31-21",
+      "contract_sections": [
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-21.01",
+      "planned_nodes": [
+        "tests/integration/test_a31_joint_tls.py::test_real_four_tools_receipt_checkpoint_flow"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-21.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-21.02",
+      "parent_id": "A31-21",
+      "contract_sections": [
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-21.02",
+      "planned_nodes": [],
+      "native_obligations": [
+        "controller + single-integrator + fresh independent reviewer"
+      ],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-21.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-21.03",
+      "parent_id": "A31-21",
+      "contract_sections": [
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-21.03",
+      "planned_nodes": [],
+      "native_obligations": [
+        "controller + single-integrator + fresh independent reviewer"
+      ],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-21.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-21.04",
+      "parent_id": "A31-21",
+      "contract_sections": [
+        8,
+        9
+      ],
+      "finite_case_ref": "A31-21.04",
+      "planned_nodes": [],
+      "native_obligations": [
+        "controller + single-integrator + fresh independent reviewer"
+      ],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-21.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-S01.01",
+      "parent_id": "A31-S01",
+      "contract_sections": [
+        2,
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-S01.01",
+      "planned_nodes": [],
+      "native_obligations": [
+        "controller + single-integrator + fresh independent reviewer"
+      ],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-S01.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-S01.02",
+      "parent_id": "A31-S01",
+      "contract_sections": [
+        2,
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-S01.02",
+      "planned_nodes": [],
+      "native_obligations": [
+        "controller + single-integrator + fresh independent reviewer"
+      ],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-S01.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-S01.03",
+      "parent_id": "A31-S01",
+      "contract_sections": [
+        2,
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-S01.03",
+      "planned_nodes": [],
+      "native_obligations": [
+        "controller + single-integrator + fresh independent reviewer"
+      ],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-S01.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A31-S01.04",
+      "parent_id": "A31-S01",
+      "contract_sections": [
+        2,
+        3,
+        9
+      ],
+      "finite_case_ref": "A31-S01.04",
+      "planned_nodes": [],
+      "native_obligations": [
+        "controller + single-integrator + fresh independent reviewer"
+      ],
+      "must_assert_authority": "test-plan.json:audit_atoms:A31-S01.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-01.01",
+      "parent_id": "A32-01",
+      "contract_sections": [
+        6,
+        9
+      ],
+      "finite_case_ref": "A32-01.01",
+      "planned_nodes": [
+        "tests/unit/test_task_bundle_codec.py::test_chunk_wire_bounds_exact_raw_reassembly"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-01.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-01.02",
+      "parent_id": "A32-01",
+      "contract_sections": [
+        6,
+        9
+      ],
+      "finite_case_ref": "A32-01.02",
+      "planned_nodes": [
+        "tests/unit/test_task_bundle_codec.py::test_chunk_wire_bounds_exact_raw_reassembly"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-01.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-01.03",
+      "parent_id": "A32-01",
+      "contract_sections": [
+        6,
+        9
+      ],
+      "finite_case_ref": "A32-01.03",
+      "planned_nodes": [
+        "tests/unit/test_task_bundle_codec.py::test_chunk_wire_bounds_exact_raw_reassembly"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-01.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-01.04",
+      "parent_id": "A32-01",
+      "contract_sections": [
+        6,
+        9
+      ],
+      "finite_case_ref": "A32-01.04",
+      "planned_nodes": [
+        "tests/unit/test_task_bundle_codec.py::test_chunk_wire_bounds_exact_raw_reassembly"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-01.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-02.01",
+      "parent_id": "A32-02",
+      "contract_sections": [
+        6,
+        9
+      ],
+      "finite_case_ref": "A32-02.01",
+      "planned_nodes": [
+        "tests/unit/test_task_bundle_codec.py::test_strict_chunks_index_package_limits"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-02.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-02.02",
+      "parent_id": "A32-02",
+      "contract_sections": [
+        6,
+        9
+      ],
+      "finite_case_ref": "A32-02.02",
+      "planned_nodes": [
+        "tests/unit/test_task_bundle_codec.py::test_strict_chunks_index_package_limits"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-02.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-02.03",
+      "parent_id": "A32-02",
+      "contract_sections": [
+        6,
+        9
+      ],
+      "finite_case_ref": "A32-02.03",
+      "planned_nodes": [
+        "tests/unit/test_task_bundle_codec.py::test_strict_chunks_index_package_limits"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-02.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-02.04",
+      "parent_id": "A32-02",
+      "contract_sections": [
+        6,
+        9
+      ],
+      "finite_case_ref": "A32-02.04",
+      "planned_nodes": [
+        "tests/unit/test_task_bundle_codec.py::test_strict_chunks_index_package_limits"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-02.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-03.01",
+      "parent_id": "A32-03",
+      "contract_sections": [
+        1,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-03.01",
+      "planned_nodes": [
+        "tests/unit/test_receipt_components.py::test_component_semantics_legacy_v1_compatibility"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-03.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-03.02",
+      "parent_id": "A32-03",
+      "contract_sections": [
+        1,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-03.02",
+      "planned_nodes": [
+        "tests/unit/test_receipt_components.py::test_component_semantics_legacy_v1_compatibility",
+        "tests/integration/test_a32_joint_tls.py::test_real_accepted_wide_chain_256_items_component_export_offline"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-03.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-03.03",
+      "parent_id": "A32-03",
+      "contract_sections": [
+        1,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-03.03",
+      "planned_nodes": [
+        "tests/unit/test_receipt_components.py::test_component_semantics_legacy_v1_compatibility",
+        "tests/integration/test_a32_joint_tls.py::test_real_accepted_wide_chain_256_items_component_export_offline"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-03.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-03.04",
+      "parent_id": "A32-03",
+      "contract_sections": [
+        1,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-03.04",
+      "planned_nodes": [
+        "tests/unit/test_receipt_components.py::test_component_semantics_legacy_v1_compatibility",
+        "tests/integration/test_a32_joint_tls.py::test_real_accepted_wide_chain_256_items_component_export_offline"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-03.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-03.05",
+      "parent_id": "A32-03",
+      "contract_sections": [
+        1,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-03.05",
+      "planned_nodes": [
+        "tests/integration/test_a32_joint_tls.py::test_real_accepted_wide_chain_256_items_component_export_offline"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-03.05",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-04.01",
+      "parent_id": "A32-04",
+      "contract_sections": [
+        6,
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-04.01",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export_tls.py::test_export_tls_registered_audit_role_scope"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-04.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-04.02",
+      "parent_id": "A32-04",
+      "contract_sections": [
+        6,
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-04.02",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export_tls.py::test_export_tls_registered_audit_role_scope"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-04.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-04.03",
+      "parent_id": "A32-04",
+      "contract_sections": [
+        6,
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-04.03",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export_tls.py::test_export_tls_registered_audit_role_scope"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-04.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-04.04",
+      "parent_id": "A32-04",
+      "contract_sections": [
+        6,
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-04.04",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export_tls.py::test_export_tls_registered_audit_role_scope"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-04.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-05.01",
+      "parent_id": "A32-05",
+      "contract_sections": [
+        6,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-05.01",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_fixed_cutoff_during_concurrent_changes"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-05.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-05.02",
+      "parent_id": "A32-05",
+      "contract_sections": [
+        6,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-05.02",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_fixed_cutoff_during_concurrent_changes"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-05.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-05.03",
+      "parent_id": "A32-05",
+      "contract_sections": [
+        6,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-05.03",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_fixed_cutoff_during_concurrent_changes"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-05.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-05.04",
+      "parent_id": "A32-05",
+      "contract_sections": [
+        6,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-05.04",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_fixed_cutoff_during_concurrent_changes"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-05.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-06.01",
+      "parent_id": "A32-06",
+      "contract_sections": [
+        6,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-06.01",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_all_material_states_and_four_tools"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-06.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-06.02",
+      "parent_id": "A32-06",
+      "contract_sections": [
+        6,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-06.02",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_all_material_states_and_four_tools"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-06.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-06.03",
+      "parent_id": "A32-06",
+      "contract_sections": [
+        6,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-06.03",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_all_material_states_and_four_tools"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-06.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-06.04",
+      "parent_id": "A32-06",
+      "contract_sections": [
+        6,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-06.04",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_all_material_states_and_four_tools"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-06.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-07.01",
+      "parent_id": "A32-07",
+      "contract_sections": [
+        3,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-07.01",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_bootstrap_nonzero_opaque_gaps"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-07.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-07.02",
+      "parent_id": "A32-07",
+      "contract_sections": [
+        3,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-07.02",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_bootstrap_nonzero_opaque_gaps"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-07.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-07.03",
+      "parent_id": "A32-07",
+      "contract_sections": [
+        3,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-07.03",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_bootstrap_nonzero_opaque_gaps"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-07.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-07.04",
+      "parent_id": "A32-07",
+      "contract_sections": [
+        3,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-07.04",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_bootstrap_nonzero_opaque_gaps"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-07.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-08.01",
+      "parent_id": "A32-08",
+      "contract_sections": [
+        6,
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-08.01",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_wire_bounds_disconnect_synthetic_privacy"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-08.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-08.02",
+      "parent_id": "A32-08",
+      "contract_sections": [
+        6,
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-08.02",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_wire_bounds_disconnect_synthetic_privacy"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-08.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-08.03",
+      "parent_id": "A32-08",
+      "contract_sections": [
+        6,
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-08.03",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_wire_bounds_disconnect_synthetic_privacy"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-08.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-08.04",
+      "parent_id": "A32-08",
+      "contract_sections": [
+        6,
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-08.04",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_wire_bounds_disconnect_synthetic_privacy"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-08.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-09.01",
+      "parent_id": "A32-09",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-09.01",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_behind_independent_checkpoint_refused"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-09.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-09.02",
+      "parent_id": "A32-09",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-09.02",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_behind_independent_checkpoint_refused"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-09.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-09.03",
+      "parent_id": "A32-09",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-09.03",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_behind_independent_checkpoint_refused"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-09.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-09.04",
+      "parent_id": "A32-09",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-09.04",
+      "planned_nodes": [
+        "tests/integration/test_evidence_export.py::test_export_behind_independent_checkpoint_refused"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-09.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-10.01",
+      "parent_id": "A32-10",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-10.01",
+      "planned_nodes": [
+        "tests/integration/test_evidence_offline.py::test_offline_real_signed_task_four_tools_counters"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-10.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-10.02",
+      "parent_id": "A32-10",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-10.02",
+      "planned_nodes": [
+        "tests/integration/test_evidence_offline.py::test_offline_real_signed_task_four_tools_counters"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-10.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-10.03",
+      "parent_id": "A32-10",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-10.03",
+      "planned_nodes": [
+        "tests/integration/test_evidence_offline.py::test_offline_real_signed_task_four_tools_counters"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-10.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-10.04",
+      "parent_id": "A32-10",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-10.04",
+      "planned_nodes": [
+        "tests/integration/test_evidence_offline.py::test_offline_real_signed_task_four_tools_counters"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-10.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-11.01",
+      "parent_id": "A32-11",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-11.01",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_component_and_all_node_delta_mutations"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-11.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-11.02",
+      "parent_id": "A32-11",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-11.02",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_component_and_all_node_delta_mutations"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-11.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-11.03",
+      "parent_id": "A32-11",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-11.03",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_component_and_all_node_delta_mutations"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-11.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-11.04",
+      "parent_id": "A32-11",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-11.04",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_component_and_all_node_delta_mutations"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-11.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-12.01",
+      "parent_id": "A32-12",
+      "contract_sections": [
+        6,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-12.01",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_anchored_deletion_reordering_entire_operation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-12.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-12.02",
+      "parent_id": "A32-12",
+      "contract_sections": [
+        6,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-12.02",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_anchored_deletion_reordering_entire_operation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-12.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-12.03",
+      "parent_id": "A32-12",
+      "contract_sections": [
+        6,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-12.03",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_anchored_deletion_reordering_entire_operation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-12.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-12.04",
+      "parent_id": "A32-12",
+      "contract_sections": [
+        6,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-12.04",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_anchored_deletion_reordering_entire_operation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-12.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-13.01",
+      "parent_id": "A32-13",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-13.01",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_external_anchor_old_valid_checkpoint_rollback"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-13.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-13.02",
+      "parent_id": "A32-13",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-13.02",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_external_anchor_old_valid_checkpoint_rollback"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-13.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-13.03",
+      "parent_id": "A32-13",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-13.03",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_external_anchor_old_valid_checkpoint_rollback"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-13.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-13.04",
+      "parent_id": "A32-13",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-13.04",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_external_anchor_old_valid_checkpoint_rollback"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-13.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-14.01",
+      "parent_id": "A32-14",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-14.01",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_unanchored_tail_deletion_unknown_freshness"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-14.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-14.02",
+      "parent_id": "A32-14",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-14.02",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_unanchored_tail_deletion_unknown_freshness"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-14.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-14.03",
+      "parent_id": "A32-14",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-14.03",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_unanchored_tail_deletion_unknown_freshness"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-14.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-14.04",
+      "parent_id": "A32-14",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-14.04",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_unanchored_tail_deletion_unknown_freshness"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-14.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-15.01",
+      "parent_id": "A32-15",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-15.01",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_historical_keys_roles_registration_rotation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-15.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-15.02",
+      "parent_id": "A32-15",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-15.02",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_historical_keys_roles_registration_rotation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-15.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-15.03",
+      "parent_id": "A32-15",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-15.03",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_historical_keys_roles_registration_rotation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-15.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-15.04",
+      "parent_id": "A32-15",
+      "contract_sections": [
+        5,
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-15.04",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_historical_keys_roles_registration_rotation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-15.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-16.01",
+      "parent_id": "A32-16",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-16.01",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_limitations_legacy_current_auth_effect_truth"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-16.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-16.02",
+      "parent_id": "A32-16",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-16.02",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_limitations_legacy_current_auth_effect_truth"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-16.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-16.03",
+      "parent_id": "A32-16",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-16.03",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_limitations_legacy_current_auth_effect_truth"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-16.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-16.04",
+      "parent_id": "A32-16",
+      "contract_sections": [
+        7,
+        9
+      ],
+      "finite_case_ref": "A32-16.04",
+      "planned_nodes": [
+        "tests/unit/test_task_evidence_verify.py::test_limitations_legacy_current_auth_effect_truth"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-16.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-17.01",
+      "parent_id": "A32-17",
+      "contract_sections": [
+        7,
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-17.01",
+      "planned_nodes": [
+        "tests/integration/test_evidence_offline.py::test_verify_cli_source_wheel_no_network_trust_separation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-17.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-17.02",
+      "parent_id": "A32-17",
+      "contract_sections": [
+        7,
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-17.02",
+      "planned_nodes": [
+        "tests/integration/test_evidence_offline.py::test_verify_cli_source_wheel_no_network_trust_separation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-17.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-17.03",
+      "parent_id": "A32-17",
+      "contract_sections": [
+        7,
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-17.03",
+      "planned_nodes": [
+        "tests/integration/test_evidence_offline.py::test_verify_cli_source_wheel_no_network_trust_separation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-17.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-17.04",
+      "parent_id": "A32-17",
+      "contract_sections": [
+        7,
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-17.04",
+      "planned_nodes": [
+        "tests/integration/test_evidence_offline.py::test_verify_cli_source_wheel_no_network_trust_separation"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-17.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-18.01",
+      "parent_id": "A32-18",
+      "contract_sections": [
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-18.01",
+      "planned_nodes": [
+        "tests/integration/test_a32_joint_tls.py::test_real_export_independent_pin_offline_full_flow"
+      ],
+      "native_obligations": [],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-18.01",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-18.02",
+      "parent_id": "A32-18",
+      "contract_sections": [
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-18.02",
+      "planned_nodes": [],
+      "native_obligations": [
+        "controller + single-integrator + fresh independent reviewer"
+      ],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-18.02",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-18.03",
+      "parent_id": "A32-18",
+      "contract_sections": [
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-18.03",
+      "planned_nodes": [],
+      "native_obligations": [
+        "controller + single-integrator + fresh independent reviewer"
+      ],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-18.03",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    },
+    {
+      "assertion_id": "A32-18.04",
+      "parent_id": "A32-18",
+      "contract_sections": [
+        8,
+        9
+      ],
+      "finite_case_ref": "A32-18.04",
+      "planned_nodes": [],
+      "native_obligations": [
+        "controller + single-integrator + fresh independent reviewer"
+      ],
+      "must_assert_authority": "test-plan.json:audit_atoms:A32-18.04",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN"
+    }
+  ],
+  "verification": {
+    "performed": "Read-only source/API/text/JSON mapping and own-output full readback; no business tests/collect/DB/container/install/Git mutation/subagents",
+    "status": "DOCUMENT_ONLY",
+    "contract_sha256": "237f4fb234e27c7d00c0a521747a4256fa57cf6cae8de8f48340907ff1683e2f"
+  }
+}
