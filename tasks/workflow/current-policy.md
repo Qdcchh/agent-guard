@@ -1,5 +1,7 @@
 # 现行角色与边界
 
+2026-10-16 三人协作 A 前端任务：用户负责 A。演示页已重做为系统总览、七场景协议时序图、门限设计示意与真实记录；重点 1/3/6。B 的逐条事件、门限签名与 x402 尚未实现，前端只以醒目标注的示意展示，不得当作现场观测。A 交接见 [前端说明](../../docs/teacher-demo-frontend-a-20261015.md)。用户已同意把 A 的改动推送到独立分支 `codex/demo-visual`；不恢复长实验。
+
 当前演示前端子任务（2026-10-15）：真人授权本地可操作演示页，worker 指定 `gpt-6.1-sol / low`。用户随后授权补齐安全场景台：复用现有真实安全测试，新增固定场景运行、明确标注的历史记录回放与能力全景；范围为页面与本地固定动作适配器、演示检查及说明；A3.3/A3.4完整实验和联合验收仍暂停。此角色覆盖仅适用于当前前端任务，不把旧OpenCode配置当作本次worker。
 
 当前角色覆盖：2026-10-14真人继续授权；worker OpenCode Go `deepseek-v4.1-flash/max`，全新reviewer `gpt-6-astra/high`，主控按用户当前Astra设置。effective metadata未观测仍UNKNOWN。见[本轮授权](runs/A3.3-A3.4-joint-20261013/user-resume-opencode-astra-20261014.md)。
