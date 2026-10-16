@@ -1,0 +1,18 @@
+{
+  "source": "actual visible human reply to asynchronous question; message_id unavailable",
+  "quote": "批准A2.3轮有限适配，以后再有这样的类似情况都直接批准",
+  "observed_at_utc": "2026-10-04T14:30:15.194860+00:00",
+  "stage": "A2.3-receipts",
+  "implementation_authorization": "GRANTED_AFTER_A2_2_ACCEPTANCE",
+  "runtime_adaptation": "GRANTED",
+  "proposal_path": "tasks/workflow/runs/A2.3-receipts-20261004/runtime-addendum-proposal.md",
+  "proposal_sha256": "dc10b63e5ee60abd822d71902b0124714a6d0e8e5fd22a5131d06c10b504ffdd",
+  "standing_similar_adaptation_authorization": "GRANTED_FOR_SAME_METADATA_GAPS_AND_EQUIVALENT_FINITE_EVIDENCE_WITH_UNCHANGED_ACCEPTANCE_STANDARDS",
+  "exclusions": [
+    "No weakening of acceptance/security",
+    "No fabrication or old-gate mutation",
+    "No implied admin review exception",
+    "No A3/deployment authorization"
+  ],
+  "effective_runtime_metadata": "UNKNOWN"
+}

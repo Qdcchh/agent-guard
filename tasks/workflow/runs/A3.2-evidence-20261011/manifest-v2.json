@@ -1,0 +1,45 @@
+{
+  "kind": "V2_NEW_FILES_MANIFEST_NOT_CONTROLLER_FULLFREEZE",
+  "entries": [
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/package-v2.md",
+      "sha256": "54b667dcef42154f04e4467d819b22c67f5e4d40518481c74392ce07ce7bb84f",
+      "size": 7316
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/runtime-plan-v2.json",
+      "sha256": "3a46b0393c0ec2647ceb7e1d2bdde47a173291f6bbafc0d7353b9ae907c7524a",
+      "size": 13962
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/node-bindings-v2.json",
+      "sha256": "2fc8b09d34a1f2a706fe6bbce84b8ca288b664b7faf18e3d7e7f70704b1ca500",
+      "size": 64737
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/ownership-v2.json",
+      "sha256": "981b1f2cbec25bb1daa1cb3fcc9681e2177c4a311e656739fe17f8e672719cb9",
+      "size": 2767
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/task-package-review-v2.md",
+      "sha256": "8bcceec0f3c5ffbcbc352b64fa0751218a09e26b50c4b1c7c7d4810bd878f2eb",
+      "size": 1363
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/baseline-v2.json",
+      "sha256": "17a8096d73f3cb68858ab8635854d2a7813f624a84135bb215519acebc45e268",
+      "size": 43694
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/static-readback-v2.json",
+      "sha256": "68f2fb27aeadea1cbe3bd8ab09caa3989dafb28e8c6c44bb29d2463f148460cc",
+      "size": 1674
+    },
+    {
+      "path": "tasks/workflow/runs/A3.2-evidence-20261011/correction-report-r1.md",
+      "sha256": "0fefce5c3683bf315985fb0a73c9f1bfb5912da80f206d54a46bd91eadb04629",
+      "size": 881
+    }
+  ]
+}

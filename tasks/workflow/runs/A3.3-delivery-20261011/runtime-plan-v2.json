@@ -1,0 +1,138 @@
+{
+  "status": "FORMAL_V2_PLANNED_NOT_RUN_FROZEN_FOR_PACKAGE_REVIEW",
+  "upstream_gate": {
+    "A32_acceptance_path": "tasks/workflow/runs/A3.2-evidence-20261011/acceptance.json",
+    "A32_acceptance_SHA256": "8cdc3a48a4932b2b156bb89af8b1418d910b07fea213ffa0eefbca8445119329",
+    "A32_frozen_candidate_SHA256": "e680193204ef1c25eb656169a0470eb1672422d7549016454f50f7118633629c",
+    "A32_report_SHA256": "bbfdff45783277c8fb6bcd390c0e10752e309c6b6052101a8487a29590cd6d2b",
+    "A32_manifest_SHA256": "f75df2be2e6c66357ce8eeffda422399390f65549ecf1bf638d014d7fb3c9abf",
+    "A32_STOP_SHA256": "36b5a38d163253a0abb2ac41e92068dfb3b34364027c05e7e75edfbbf6db8f69",
+    "branch": "handoff/a23-local-20261005",
+    "HEAD_baseline_only": "2a8cc7da4867ad1876350855c0ed5569c5ce6472",
+    "dirty_accepted_source": "full candidate SHA plus current source/SQL/lock bindings; HEAD alone is not implementation",
+    "effective_metadata": "UNKNOWN"
+  },
+  "stages": [
+    "S0 serial reusable adapters/shared fixtures freeze",
+    "S1 scenarios and role/deployment test authors disjoint; separate resources; all STOP",
+    "S2 sole source+CLI+compose+docs integration; final freeze; complete source/wheel selfcheck",
+    "fresh independent implementation reviewer complete own source/wheel runs; root acceptance; exact owner cleanup"
+  ],
+  "roles": {
+    "operator": "short-lived owner initialization/provision/maintenance/approved trust; no artificial root/child",
+    "AS": "AS signer+all necessary client authentication hashes/secrets+authority DSN; never holder signing keys",
+    "GW": "public trust+authority DSN+current factory DSN/DS service credential; honest trusted worker boundary",
+    "planner": "own SM2/client Basic credential+public CA/trust only; distinct non-root process",
+    "selector": "own SM2/client Basic credential+public CA/trust only; distinct non-root process",
+    "executor": "own SM2/client Basic credential+public CA/trust only; distinct non-root process",
+    "execution_worker": "authority and DS credentials; bounded fair persistent intent scan; existing lease/fence run/reconcile semantics",
+    "publisher": "receipt private signer+authority role; no holder key",
+    "audit": "audit signer+independent audit PG+scoped writer/reader registration",
+    "export": "distinct audit-role HTTPS credential and SELECT-only authority connection; private bounded spool",
+    "offline": "bundle/public trust/external pin/report only; no network/DB/private files"
+  },
+  "network": {
+    "PG_domains": [
+      "authority AS/GW one shared transaction domain",
+      "DS independent PG16 instance/connection/TX",
+      "audit separate PG16 TLS verify-full instance/store/key"
+    ],
+    "holders": "fixed AS/GW/DID/approved handoff only. No database network attached. Internal role executes file-read and connect negative checks with exit+UID/PID/mount manifest. Shared host admin trusted.",
+    "TLS": "private run CA, exact SAN auth.agent-guard.test/gateway.agent-guard.test/identity.agent-guard.test/audit fixed configured origin; audit PG SAN exact sslmode verify-full. Hostname DNS through own container network; DID fixed DNS:443. WrongCA/SAN/redirect controls. RSA TLS + SM2 application explicitly not full GM TLS. No global hosts/trust modifications."
+  },
+  "bootstrap_sequence": [
+    "create exclusive owner private directories 0700 descriptor-bound; keys/secrets 0600/0400; public roles separately immutable",
+    "operator HTTPS fetch fixed DID documents; existing resolver purposes; approvals/newkid proof; approve/freeze public manifests; initialize three PG migrations/roles/catalog/users/principals/TaskPolicy, no create_task_root/child",
+    "AS verified HTTPS browser login/CSRF/state/nonce/PKCE root; planner->selector->executor two true exchanges/handoff; authority immutable first path exists",
+    "stop/drain all writers for journal bootstrap, obtain exact RegistrationDescriptor and register stream/key/scoped principals at audit through local operator; record maintenance boundary honestly; restart services/roles with frozen trust",
+    "four tools verified HTTPS + fresh proofs/current authorized query, persistent worker and receipt publisher; record READY only within live authorized window",
+    "bounded delivery/reconciliation to real independent audit; fixed reader latest/history public observation; drain/stop export assembly, capture and freeze scope/pin/history/public trust; restart current one-scope factory with SELECT-only export credential/TLS",
+    "export complete small-task profile; four-argument offline verifier; externally delivered trust+latest; after every synthetic token expiry/revoke public artifacts secret scan and publishable local synthetic materials",
+    "stop/reap every owned PID/container/network/volume/fullID; before/after unrelated resource control readback"
+  ],
+  "checks": {
+    "modes": [
+      "source noneditable installed outside repository",
+      "wheel noneditable installed outside repository"
+    ],
+    "environment": "Python3.11 exact locks/PEP517/wheel SHA/pip check, clean PYTHONPATH, no tests import, child module path/hash, all SQL resources/checksums; fresh actual architecture observations",
+    "suite": "full inherited A1 separately/A2-P01..P21+B67/A22/A23/A31/A32 all IDs and old defect/probe assertions+new14/71; ordinary+integration+quality+docs+README exact commands; preserve55 fresh A32 authority regression nodes explicitly",
+    "race": "each compatible security race/crash tuple ten valid rounds per mode; independent PG backend connections+barriers/event; actual old/new PID; all future SQLSTATE/errors/clock traces retained",
+    "oracle": "preapproved independent authority and RR READ ONLY all ancestors four counters/immutable intent/first bytes/events+deltas/proofs/lease/outbox/DS effects/result/journal/checkpoint; rejection zero acceptance/effect/reserve, staging separately; UNKNOWN retains; retry/query no replacement or duplicate effect",
+    "faults": "reserve-before-worker; DS-commit crash; terminal node/event/outbox rollback; late success after none; multiple recoverers/fence/expiry/revoke; immutable quote; publisher pre-sign/post-sign-before-save/READY response loss; audit persist then loss/restart; offline all mutations and honest unanchored controls",
+    "maintenance": "new AS/GW/audit kid historical JWS+READY bytes unchanged; holder newkid approved proof oldkey disabled fresh external denied, accepted internal recovery remains; upgrade old001/003 nonzero/revoked/seven evidence tables exact columns; backup as-of full domains/public latest not rolled back; GAP honest",
+    "capacity": "reachable 256SKU full true chain/body/result plus layer-specific rejection. Existing 256MiB small-task profile full bounded spool. A34 per-task/frozen-partition full export + complete experiment manifest/oracle is allowed by E4; pagination only conditional on an actually required single scope exceeding old caps and no allowed complete partition. Do not add functionality or review round when original full delivery is satisfied."
+  },
+  "limits_provisional": {
+    "connect_s": 5,
+    "lock_s": 3,
+    "statement_s": 30,
+    "barrier_s": 15,
+    "http_connect_s": 5,
+    "http_read_s": [
+      15,
+      30
+    ],
+    "child_stage_s": 120,
+    "child_total_s": 180,
+    "reap_s": 10,
+    "offline_s": 300,
+    "materialization_s": 600,
+    "capacity_preflight_s": 1800,
+    "intentional_token_expiry_child_s": 360,
+    "intentional_proof_expiry_child_s": 90
+  },
+  "limit_rule": "final package rebind exact finite group wall/time schedule to actual A32 accepted API. Intentional TTL waits explicit finite >expiry <transport/SQL timeout; never renew proof/token/lease to bypass. Full runs no hidden truncation. quota changes formal amendment.",
+  "resource_ownership": "UUID Compose project labels+config/full container/network/volume IDs; each writer/reviewer separate three PG16; only exclusive TEST config, no DSN fallback; no prune/shared down; zero leftovers native receipts.",
+  "requested_worker": "gpt-6.1-sol/low",
+  "fresh_reviewer": "gpt-6.1-sol/high",
+  "effective_metadata": "UNKNOWN",
+  "inherited_execution": {
+    "actual_registry": "node-bindings-v2.json",
+    "original_complete20_eachmode": "All current inherited groups freshly run for S2 complete selfcheck and independently by new reviewer; pinned historical probe inputs may be copied/owner-remapped in owned runtime with exact AST/source evidence, no old PASS reuse",
+    "deadlines_seconds": {
+      "PG5002": 10800,
+      "each_strict500": 3600,
+      "ordinary": 1800,
+      "remaining_original_groups": 3600,
+      "A33_specific_complete_groups": 14400
+    },
+    "strict_partition": "original disjoint two500 with same1000 union, real waiter/backend/clock evidence and ten rounds unchanged",
+    "A33_collection": "17 planned node roots; actual parameters and assertion-to-node inventory frozen after writer STOP before full runs; no invented collected IDs"
+  },
+  "deployment_image": {
+    "delivery_files": [
+      "deploy/demo/compose.yaml",
+      "deploy/demo/Dockerfile"
+    ],
+    "clean_source_wheel": "build from pinned Python3.11 compatible platform image and exact existing requirements locks, fresh noneditable package; no dependence on local A32 images/venvs/ignored artifacts for normal demo",
+    "model_API": "none",
+    "dependencies": "no new Python runtime dependency, production SQL migration or public protocol; base OS TLS/build utilities document actual versions/provenance",
+    "runtime_roles": "distinct nonroot UID/minimal file/network mounts; pair IPC GIDs/modes and SO_PEERCRED per interface-v1"
+  },
+  "audit_listener_adaptation": {
+    "issue": "A33-PR-R1-001",
+    "status": "PROPOSED_NOT_IMPLEMENTED_NOT_RUN",
+    "APIs": [
+      "AuditConfig.load(path: Path, *, approved_listener_host: str | None = None)",
+      "create_server(config, *, store=None, approved_listener_host: str | None = None)"
+    ],
+    "default": "UNCHANGED: load loopback only; server127.0.0.1 only; existing audit CLI uses default",
+    "opt_in": "exact canonical RFC1918 IPv4 assigned to own audit role in immutable operator-approved resource manifest; config.host exact equals supplied address, checked independently by both APIs",
+    "reject": [
+      "0.0.0.0",
+      "unspecified",
+      "public/global",
+      "multicast",
+      "link-local",
+      "unapproved address",
+      "wrong role/run address",
+      "hostnames",
+      "noncanonical",
+      "bool/non-string"
+    ],
+    "caller": "demo.__main__ trusted validated run/role mapping supplies same address to load/create_server; not HTTP/DID/env/holder input",
+    "security": "bind permission only, all TLS/authorization/schema/private/PG checks unchanged",
+    "tests": "all old test_audit_tls assertions retained plus S0 explicit opt-in negatives and S1 true separate-container DNS/TLS/role/scope/framing zero-write probes"
+  }
+}

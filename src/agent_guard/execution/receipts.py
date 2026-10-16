@@ -3,8 +3,8 @@
 The terminal gateway transaction writes this material together with the
 terminal ledger change. It is *material*, not a receipt: no signature, no SM3
 and no canonical encoding is produced here. ``receipt_jws`` stays NULL and
-``receipt_status`` stays ``PENDING`` because B's CryptoProvider is missing;
-A2.3 signs and flips it to ``READY``.
+``receipt_status`` stays ``PENDING`` until the internal publisher verifies
+and signs the complete original material, then atomically publishes ``READY``.
 
 ``receipt_id`` is derived deterministically from the operation id so a retried
 terminal transaction can never roll a second identifier, and ``iat`` is derived

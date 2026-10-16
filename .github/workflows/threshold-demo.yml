@@ -1,0 +1,39 @@
+name: Threshold prototype
+
+on:
+  pull_request:
+    paths:
+      - "tools/threshold_demo/**"
+      - ".github/workflows/threshold-demo.yml"
+  push:
+    branches: [main]
+    paths:
+      - "tools/threshold_demo/**"
+      - ".github/workflows/threshold-demo.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  threshold-demo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: tools/threshold_demo
+    env:
+      CARGO_TARGET_DIR: /tmp/agent-guard-threshold-target
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the locally verified Rust toolchain
+        run: |
+          rustup toolchain install 1.99.1 --profile minimal --component rustfmt
+          rustup override set 1.99.1
+      - name: Format check
+        run: cargo fmt --check
+      - name: Threshold signing and action binding tests
+        run: cargo test --locked
+      - name: Separate-process signing and nonce rejection
+        run: bash tests/process_flow.sh
+      - name: Independent OpenSSL verification and tamper rejection
+        run: python3 tests/verify_vector.py tests/public-vector.json

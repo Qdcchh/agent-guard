@@ -1,0 +1,29 @@
+{
+  "stage": "A3.1",
+  "status": "EXPLICIT_CURRENT_DEMO_CALLER_TO_SOLE_INTEGRATOR_TRANSFER",
+  "writer": "/root/a31_s2_integrator_sol_r1",
+  "requested_model": "gpt-6.1-sol/medium",
+  "effective_metadata": "UNKNOWN",
+  "exact_additional_path": "tools/a2_receipt_demo.py",
+  "before_sha256": "929ad20b0e8f17c4c8fc56587f894758c8870475354cd4860ebf1f00ca9f10d2",
+  "reason": "Actual current HTTPS closure and attacks blocked by predecessor-only publication/query persisted-state oracles, before intended flow; default demo caller requires strict A31 audit delta integration. No scope or API expansion.",
+  "allowed_change": "Only publication/query state oracles and their truthful output metadata/imports/helpers needed to validate exact new PUBLISH/QUERY audit records, continuous head/digest/xid, fresh proof/STAGED/evidence and actual receipt/body bindings. Preserve every existing business/DS refusal, complete state equality outside exact validated delta, repeated publication idempotence, original signatures/budgets/revocation and assertions. No broad pop/filter; no production tests-fixture imports. Preserve original A2 tool as immutable evidence.",
+  "runtime_stop_readbacks": [
+    {
+      "path": "artifacts/workflow/A3.1-audit-20261008/s2-integration-r1/source-actual-https-real-failure-stop-r1.json",
+      "sha256": "42283aab062db7b0c8bdb456886853b32900a40772f8d34c5bbed04e2bc66c82",
+      "py_fullID": "4623fde450c0db81e0bf2e04ae095bc780efb62e3aadaf1f12d183fe6db94853",
+      "native_exit": 0,
+      "live_uid501": []
+    },
+    {
+      "path": "artifacts/workflow/A3.1-audit-20261008/s2-integration-r1/wheel-actual-https-real-failure-stop-r1.json",
+      "sha256": "a99a1b440e3ea0be400b0d10f240874e4ee1eabaf7146dd12301b0e824b87623",
+      "py_fullID": "f89a404ae21f99862f2e53ab6346f2e216d1d54862833362128dad6355d70057",
+      "native_exit": 0,
+      "live_uid501": []
+    }
+  ],
+  "validation": "Whole current HTTPS module source/wheel native0, actual literal original demo source/wheel, effective positive/negative mutation controls for oracle rejection, then fresh complete4222 and every selected20 group; no partial borrowing. All unchanged evidence reuse must re-evaluate actual new tool dependency.",
+  "created": 1791597203.260182
+}

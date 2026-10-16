@@ -1,0 +1,210 @@
+{
+  "status": "FORMAL_V3_EXISTING_PARTIAL_S0_ACTUAL_API_PLUS_MINIMAL_CONFIRMATION_PROPOSAL",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "low",
+  "effective_metadata": "UNKNOWN",
+  "accepted_pins": {
+    "A32_acceptance_path": "tasks/workflow/runs/A3.2-evidence-20261011/acceptance.json",
+    "A32_acceptance_SHA256": "8cdc3a48a4932b2b156bb89af8b1418d910b07fea213ffa0eefbca8445119329",
+    "A32_frozen_candidate_SHA256": "e680193204ef1c25eb656169a0470eb1672422d7549016454f50f7118633629c",
+    "A32_report_SHA256": "bbfdff45783277c8fb6bcd390c0e10752e309c6b6052101a8487a29590cd6d2b",
+    "A32_manifest_SHA256": "f75df2be2e6c66357ce8eeffda422399390f65549ecf1bf638d014d7fb3c9abf",
+    "A32_STOP_SHA256": "36b5a38d163253a0abb2ac41e92068dfb3b34364027c05e7e75edfbbf6db8f69",
+    "branch": "handoff/a23-local-20261005",
+    "HEAD_baseline_only": "2a8cc7da4867ad1876350855c0ed5569c5ce6472",
+    "dirty_accepted_source": "full candidate SHA plus current source/SQL/lock bindings; HEAD alone is not implementation",
+    "effective_metadata": "UNKNOWN"
+  },
+  "observation_status": "ACCEPTED_UPSTREAM_ACTUAL_SHA_BOUND_A33_API_PROPOSED",
+  "api": {
+    "config": [
+      "load_run_config(raw: bytes, *, base_dir: Path) -> DemoRunConfig",
+      "load_role_config(raw: bytes, *, role: str, base_dir: Path) -> RoleConfig",
+      "check_config(config: DemoRunConfig) -> PublicCheckReport"
+    ],
+    "init": [
+      "init_run(out_dir: Path, *, run_id: str, owner_id: str, role_uids: Mapping[str,int], handoff_gids: Mapping[str,int]) -> InitManifest"
+    ],
+    "did_bootstrap": [
+      "approve_dids(config: DemoRunConfig, *, registry: ApprovedRegistry, proof_of_possession: Mapping[str,bytes]) -> ApprovedDIDSnapshot"
+    ],
+    "provision": [
+      "provision_run(config: DemoRunConfig, *, operator: OperatorSecrets, approved: ApprovedDIDSnapshot) -> ProvisionReport",
+      "bootstrap_journal(config: DemoRunConfig, *, stopped: DrainReceipt) -> RegistrationDescriptor"
+    ],
+    "client": [
+      "DemoClient(role: HolderConfig)",
+      "browser_root(self, *, login: SyntheticLogin, request: RootRequest) -> RootTokens",
+      "exchange(self, *, parent_token: str, request: DelegationRequest) -> ChildToken",
+      "invoke(self, *, token: str, body: dict) -> InvocationResponse",
+      "query(self, *, token: str, operation_id: str) -> QueryResponse"
+    ],
+    "handoff": [
+      "send_child(config: HandoffConfig, *, target: str, token: ChildToken) -> HandoffAck",
+      "receive_child(config: HandoffConfig, *, expected_parent: str) -> ChildToken"
+    ],
+    "worker": [
+      "Worker(config: WorkerConfig, *, operations: OwnedOperationRegistry)",
+      "step(self, *, batch_size: int) -> WorkerBatchReport",
+      "serve(self, *, stop_event: Event) -> WorkerStopReport"
+    ]
+  },
+  "schema": {
+    "DemoRunConfig": [
+      "version",
+      "run_id",
+      "owner_id",
+      "scope",
+      "endpoints",
+      "roles",
+      "public_manifest",
+      "approved_did_manifest",
+      "resource_manifest"
+    ],
+    "scope": [
+      "gateway_origin",
+      "tenant_id",
+      "task_id"
+    ],
+    "endpoints": [
+      "issuer",
+      "gateway_origin",
+      "audit_origin",
+      "did_urls"
+    ],
+    "RoleConfig": [
+      "version",
+      "run_id",
+      "owner_id",
+      "role",
+      "uid",
+      "public_config_file",
+      "private_files",
+      "handoff",
+      "gid",
+      "supplementary_gids"
+    ],
+    "private_files": "exact per-role allowlist; relative leaf paths, no inline secrets/DSNs",
+    "HandoffConfig": [
+      "socket_path",
+      "self_uid",
+      "peer_uid",
+      "self_client_id",
+      "peer_client_id",
+      "run_id",
+      "task_id",
+      "pair_gid",
+      "receiver_uid"
+    ]
+  },
+  "bindings": {
+    "as": "server.factory.build_app(config, secrets, dsn=dsn)",
+    "gw": "gateway.factory.build_app(config, secrets, gateway_dsn=authority_dsn, downstream_dsn=ds_dsn, export_connection_factory=readonly_factory, export_spool_parent=private_spool)",
+    "execution": "ExecutionService.run_operation(operation_id, owner_token=owner); reconcile(operation_id, owner_token=owner)",
+    "bootstrap": "audit.journal.bootstrap_task_tx(conn, scope_key=(gateway_origin(), tenant_id, task_id)); RegistrationDescriptor -> audit operator register-stream",
+    "export": "factory startup TaskTrust + external pin + load_checkpoint_history; fixed single scope; stop/refreeze/restart",
+    "sdk": "sign_ag_proof / verify_id_token / IdentityResolver.resolve_registered"
+  },
+  "no_scope_additions": [
+    "RPC",
+    "new resolver mode",
+    "production HTTP fault switch",
+    "pagination",
+    "dependency",
+    "schema/migration"
+  ],
+  "conflicts": [],
+  "handoff_permission_contract": {
+    "platform": "Linux only, actual SO_PEERCRED both directions",
+    "pairs": [
+      "planner->selector",
+      "selector->executor"
+    ],
+    "pair_directory": "0710 receiver UID and exact per-pair GID, mounted only pair endpoints; sender group has search but no directory write",
+    "socket": "0660 receiver UID and exact pair GID; no world permissions",
+    "pair_groups": "two nonzero distinct controlled GIDs; planner first group, selector both, executor second; no private-key/DB-secret files share these groups",
+    "secret_directories_files": "0700/0600 unchanged",
+    "initialization": "explicit trusted short-lived privileged init sets validated UID/GID/modes/mounts, then drops/removes privilege; runtime roles distinct non-root",
+    "peer_checks": "exact expected peer UID, run/task/client/sender/target, strict bounded envelope, reciprocal peer verification; unauthorized role/wrong UID connect denied",
+    "compatibility": "reconciles draft0600 socket with distinct UID; no existing protocol/core API change, first package review must verify"
+  },
+  "audit_listener_adaptation": {
+    "issue": "A33-PR-R1-001",
+    "status": "PROPOSED_NOT_IMPLEMENTED_NOT_RUN",
+    "APIs": [
+      "AuditConfig.load(path: Path, *, approved_listener_host: str | None = None)",
+      "create_server(config, *, store=None, approved_listener_host: str | None = None)"
+    ],
+    "default": "UNCHANGED: load loopback only; server127.0.0.1 only; existing audit CLI uses default",
+    "opt_in": "exact canonical RFC1918 IPv4 assigned to own audit role in immutable operator-approved resource manifest; config.host exact equals supplied address, checked independently by both APIs",
+    "reject": [
+      "0.0.0.0",
+      "unspecified",
+      "public/global",
+      "multicast",
+      "link-local",
+      "unapproved address",
+      "wrong role/run address",
+      "hostnames",
+      "noncanonical",
+      "bool/non-string"
+    ],
+    "caller": "demo.__main__ trusted validated run/role mapping supplies same address to load/create_server; not HTTP/DID/env/holder input",
+    "security": "bind permission only, all TLS/authorization/schema/private/PG checks unchanged",
+    "tests": "all old test_audit_tls assertions retained plus S0 explicit opt-in negatives and S1 true separate-container DNS/TLS/role/scope/framing zero-write probes"
+  },
+  "local_registration_confirmation": {
+    "issue": "A33-S0-001",
+    "status": "PROPOSED_NOT_IMPLEMENTED",
+    "module": "src/agent_guard/audit/delivery.py",
+    "signature": "confirm_registered_tx(conn, *, descriptor: RegistrationDescriptor) -> bool",
+    "caller": "trusted demo.provision.register_bootstrap; independent remote registration transaction commits first, then operator own authority transaction",
+    "trust_boundary": "local maintenance confirmation only; not an audit-signed receipt or authorization; no public HTTP/ENV/holder action",
+    "validation": [
+      "exact RegistrationDescriptor/JournalScope and strict original integer/digest/boundary bounds",
+      "full descriptor equals existing local committed bootstrap, every scope/epoch/genesis/bootstrap/index/count/bytes field",
+      "lock only exact delivery cursor; reject same-transaction/uncommitted bootstrap",
+      "REGISTRATION_REQUIRED: initial ack0/genesis/no checkpoint/no pending; update registration_state only",
+      "REGISTERED exact-descriptor repeat: return false without changing ack/head/pending even after later ACK",
+      "missing/mismatched/invalid cursor/type errors: zero writes; no implicit repair",
+      "remote success/local failure retry original descriptor; no new bootstrap overwrite"
+    ],
+    "return": "true for first transition; false already registered",
+    "transaction": "caller owned; no internal connect/network/commit; preserve all existing delivery and journal function ASTs",
+    "no_changes": [
+      "schema",
+      "migration",
+      "lockfiles",
+      "budget/revoke",
+      "checkpoint verification",
+      "normal audit CLI default",
+      "old assertions"
+    ]
+  },
+  "actual_S0_binding": "shared-interface-s0-r1.json",
+  "deployment_prerequisites": {
+    "PostgreSQL_initdb_args": "--locale=C --encoding=UTF8",
+    "publisher_keyshare_minimum": "GRANT UPDATE(evidence_ref) ON ag_verified_evidence TO demo_publisher; table UPDATE=false, all other columns UPDATE=false",
+    "normal_role_private_gid": "UID exactly",
+    "audit_listener": "explicit canonical owned RFC1918 IPv4 matched independently by load/create_server",
+    "gateway_export_account": "demo_gateway_export separate SELECT-only purpose account",
+    "role_UIDs": {
+      "as": 21000,
+      "audit": 21001,
+      "did": 21002,
+      "executor": 21003,
+      "export": 21004,
+      "gateway": 21005,
+      "offline": 21006,
+      "operator": 21007,
+      "planner": 21008,
+      "publisher": 21009,
+      "selector": 21010,
+      "worker": 21011
+    },
+    "pair_GIDs": {
+      "planner-selector": 22000,
+      "selector-executor": 22001
+    }
+  }
+}

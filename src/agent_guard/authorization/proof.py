@@ -32,6 +32,10 @@ class ProofInputError(ValueError):
 class ProofVerificationError(ValueError):
     """An AG-Proof does not verify or bind the expected request."""
 
+    def __init__(self, detail: str, *, code: str = "INVALID_SIGNATURE"):
+        self.code = code
+        super().__init__(detail)
+
 
 _PROOF_FIELDS = {
     "profile",
@@ -157,7 +161,7 @@ def verify_ag_proof(
     if type(iat) is not int or type(exp) is not int or not iat <= exp <= iat + 60:
         raise ProofVerificationError("invalid proof timestamps")
     if iat > now + 5 or now >= exp:
-        raise ProofVerificationError("stale proof")
+        raise ProofVerificationError("stale proof", code="STALE_REQUEST")
     expected_token_digest = None if token is None else sm3_b64url(token.encode("ascii"))
     if claims["token_sm3"] != expected_token_digest:
         raise ProofVerificationError("proof does not bind token")

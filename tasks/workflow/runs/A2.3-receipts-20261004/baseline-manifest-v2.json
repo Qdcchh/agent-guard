@@ -1,0 +1,1832 @@
+{
+  "kind": "ACTUAL_CURRENT_FULL_CANDIDATE_BASELINE",
+  "utc": "2026-10-04T21:40:15.015875+00:00",
+  "head": "138c08a3496eefb6ef2ceca0d694290dcb95c642",
+  "accepted_business_commit": "8e4e7a3eba6a3e3f0a6a3eb9c3745e2cf7f17d40",
+  "reviewed_CI_binding": {
+    "accepted_business_commit": "8e4e7a3eba6a3e3f0a6a3eb9c3745e2cf7f17d40",
+    "accepted_CI_only_commit": "138c08a3496eefb6ef2ceca0d694290dcb95c642",
+    "only_product_delta": ".github/workflows/ci.yml timeout-minutes 25 to45; no code/test/SQL/dependency change",
+    "review_report": "tasks/workflow/runs/A2.2-integration-20261004/ci-timeout-review-r1.md",
+    "review_sha256": "14410e9780f946a5ae6da76e483e57bded8a03c3a1051735e812cafa5f15ef95",
+    "required_remote_CI": "NEW_RUN_PENDING_NOT_STAGE_ACCEPTANCE",
+    "admin_exception": "NONE"
+  },
+  "branch": "codex/a2.3-receipts",
+  "entries": [
+    {
+      "path": ".editorconfig",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "6c2efed555a08e3b2a673dccaff9d2ea6234411b6cad992d15a54a092c20c882"
+    },
+    {
+      "path": ".env.example",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d5e3d7fe2a798490231aa1e3d848737d6dacb0e4b77e7fcc0ec73098ab98f772"
+    },
+    {
+      "path": ".github/CODEOWNERS",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "3dbb036f9099a47e340caaeeca3a30e1fa85a9d09604e123bf9219a5725105eb"
+    },
+    {
+      "path": ".github/pull_request_template.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "54d9821bd58fc03d27defedc721fdbce34b444dcd7d5775e3f7f61e66bf143ee"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "59bdca726234f47209ba239123c9a150513341ae0f18a9d23a733248733f24dd"
+    },
+    {
+      "path": ".gitignore",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "901a4fb1f89441e596ed8d8ae814dc6346661d3a989de5231027b7dec9f1a411"
+    },
+    {
+      "path": "AGENT.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "fd7a38b4ba1e0fe74d52cd77aa4fa6da1ffa9040f6280e8270f5cdc13f160862"
+    },
+    {
+      "path": "AGENTS.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "bff0879f590af57bfa0a80459e12f307cb9c5e4383aea53e3adffed8f01bc596"
+    },
+    {
+      "path": "HANDOFF.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "7619ab1c5ed3a174ce884874c7b9c8a71ad8d043322db7caf133c205dd69cb22"
+    },
+    {
+      "path": "README.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "e9309c2af298b1acb31f81e94daa97fc02087bdbaa5d5e9676cbcf7e3ac985da"
+    },
+    {
+      "path": "compose.a2.test.yaml",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "469ee1ed4ab2cb0aca83e5ddbbd69bae1e98150df6252c18b96f242db07aa20a"
+    },
+    {
+      "path": "compose.test.yaml",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "9a162fc7890c66f340d05a24c980d206f1c6fab9d346225b01a538257531ddf5"
+    },
+    {
+      "path": "constraints.txt",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "eb311d44165224a7698676ae542c4cee24d2f45094e6b1b3d1b24c52af1d0a68"
+    },
+    {
+      "path": "docs/acceptance.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "6bfba07c02eccfd2a0c88073b454856799658a008fdbee6c22a6fcbf5023ae33"
+    },
+    {
+      "path": "docs/crypto-profile-v1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "2f48d5f5c8ab344221bd9af8932a0d88be303597c3ae9cedf1b9598c8f7e35b1"
+    },
+    {
+      "path": "docs/oauth-oidc-sm2-mvp.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ff859cf5246c41eb0093738fdd3ef61e3f86d254147d351cd76133a33aab4cd2"
+    },
+    {
+      "path": "docs/security-model.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d1f37c4fedb95c1a261ff2c43f2783c14fd33005ca8a9fc0181914cf2d6b0916"
+    },
+    {
+      "path": "migrations/001_init.sql",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d5e7bb01b9713b7fd9f80b5da85ea039bdf311e2d4a8b6a191d7c48eb43b148c"
+    },
+    {
+      "path": "migrations/002_root_invariants.sql",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "bae1d72e1cf3dbe95ea73408e43196cdaa51297279319ac2dbf6111a68d44519"
+    },
+    {
+      "path": "migrations/003_root_delete_guard.sql",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "1d919f8f59a8d4f4bfe49a278006dd4b79f1bb8d791e701ec604ae051ec7527b"
+    },
+    {
+      "path": "migrations/004_execution_lifecycle.sql",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "41527dc2926c379895527b16d71c059d9bf8adac6d1f0a930d48361cbc964c98"
+    },
+    {
+      "path": "migrations/005_event_node_seal.sql",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "29529103ec7ffab8f785746edc4823a14e5e41d364010e3578e732e1a4e39c9e"
+    },
+    {
+      "path": "migrations/006_event_seal.sql",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "3abb279bc88b2fd7b2ff427a57fda407b77908182ec612334d500bea2f76760c"
+    },
+    {
+      "path": "migrations/b/004_authorization_code.sql",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ac8f9235fb5601453b225ff95a6ca16241a03c2ada0c0a6a8ae96cb7786c1957"
+    },
+    {
+      "path": "migrations/b/005_delegation.sql",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "176f3743702022ded8b0d0691e4456a92c392884152f9e9142ffba91a68350f3"
+    },
+    {
+      "path": "migrations/b/006_task_revocation.sql",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "39a5f4b2c632f86d3511c7d69db04f576d33dfe1bfdc7a868e685a55ebf37784"
+    },
+    {
+      "path": "migrations/b/007_admin_grant_revocation.sql",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "6d7d44a2056d25f7c085c734b7ead77ffc36b0bec2d6f82cf3542a4d63fb3820"
+    },
+    {
+      "path": "migrations/b/008_login_consent.sql",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "6bfd359aff88c69909995b85fc15434d07390b93e3d2da9daf10ffe88b5e579e"
+    },
+    {
+      "path": "migrations/b/009_consent_policy_snapshot.sql",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ee94ca3672497c0c0d5c67b04041afe12cf1618abb4f26363376dceea44974f1"
+    },
+    {
+      "path": "migrations/b/010_evidence_store.sql",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "a694e2f523b7c44f2ef1d17238552ddf98252d8d37b00d34f19342237dd927e0"
+    },
+    {
+      "path": "migrations/lineage/001_registry.sql",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "12da43d61229f481a3309e58ab73400615f8740644404e9698177942fe399a13"
+    },
+    {
+      "path": "product-manifest.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "31a83be39426202cef8e6ea72293bcca8fceba80b028de2b77d9d01209b84fe9"
+    },
+    {
+      "path": "pyproject.toml",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "3949c7fa056e62e9cb16f3451b6fd8bb812b92a6c240031473b9bef04cbdfd00"
+    },
+    {
+      "path": "requirements-dev.lock",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ecc00ea513d0be6de8b61a356bb159f6fd6deb137f13b92fa4eb21d7746d9e85"
+    },
+    {
+      "path": "requirements.lock",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "a98a20c56c0a2b28ade93843b7129224ed6049434be252a5961cad6fd48cfee1"
+    },
+    {
+      "path": "src/agent_guard/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "1cdb820b0234f5034ccd1933dcfac9f6dfbdb2a300ac7fc8a8690d56341ff795"
+    },
+    {
+      "path": "src/agent_guard/authorization/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "8d42a5f368eee93869640946af9459d0d215547b8e5551fd8473a21d800b17ab"
+    },
+    {
+      "path": "src/agent_guard/authorization/browser.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "e03caecc25f19db977e9956e7f3bd633fe4d951b71fbacbddf3b32a02e960ff9"
+    },
+    {
+      "path": "src/agent_guard/authorization/claims.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "553bc4b26fb9e2381676bfdedce6f69c8e4d3c4612e206267176cfa1b32fb282"
+    },
+    {
+      "path": "src/agent_guard/authorization/code.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "b09e1cc1c9f9aa569eb3b5b1232080456545e1eac606a27049531b91e8b3af32"
+    },
+    {
+      "path": "src/agent_guard/authorization/code_service.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "e2c435984311bbf00b1c4516b711b3f7d91ac80f166f04c1d680a50606f47779"
+    },
+    {
+      "path": "src/agent_guard/authorization/consent.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "b738750096ecec41438c2a372d7ce16b48d939c76d321052afb55b99d860cc97"
+    },
+    {
+      "path": "src/agent_guard/authorization/discovery.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "6f710d587be4be794aa9da1e534155d6db492a60e622a1958086f157ae8ea75a"
+    },
+    {
+      "path": "src/agent_guard/authorization/evidence_store.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "c9c2f1aa617e134c4ab3e849e7dfe106722f41d9b342594ba2282c1cb5c1e4e3"
+    },
+    {
+      "path": "src/agent_guard/authorization/exchange.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "b8d3852bbe49bb0a0ecd8112940bb92036814c445701d84db2f138ce2b8930b6"
+    },
+    {
+      "path": "src/agent_guard/authorization/exchange_service.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "1b3d139b4d9068e2f6302bbce643fa0513bb443a3d72cc477d7a4dd4948222cd"
+    },
+    {
+      "path": "src/agent_guard/authorization/forms.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "1a7489fb84f9bd7bc66a829f1888e4a2eeed3fb1ac5eb67940560fde50218e36"
+    },
+    {
+      "path": "src/agent_guard/authorization/grant_revocation_service.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "99e72954c9d36bf3686316b3fe40d6dd330d754560a8f3e8397c7b26de9fe8e1"
+    },
+    {
+      "path": "src/agent_guard/authorization/http_app.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "2db1cbd2be30d2df58ef39ebac73a750c931710245ecdf16d52e0e1e50ae6b3c"
+    },
+    {
+      "path": "src/agent_guard/authorization/introspection.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "4c919901585dc26cba6d2302d504fcd42db92c89ef76397f3b7e83aa4f58ddb7"
+    },
+    {
+      "path": "src/agent_guard/authorization/introspection_endpoint.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "eff48b1429684b02fa76e6298ae388a530109b45b04d566efd5e60a5fca86044"
+    },
+    {
+      "path": "src/agent_guard/authorization/login.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ca1d217ff0b79bf677c3bf90686702cddb55a2476305b243a45cb3dee35d35fd"
+    },
+    {
+      "path": "src/agent_guard/authorization/oidc.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ac8dc5334fa750159c84592dd819d609b1cfd98ed284b88bc09deaf785309bcf"
+    },
+    {
+      "path": "src/agent_guard/authorization/passwords.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "006afdca39e3997037ebb3da7f8b4bd441f014de61b3ab5cda0b8be601eb86db"
+    },
+    {
+      "path": "src/agent_guard/authorization/permission_snapshot.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "c064095c11686c9d6beb4eb7beefdd54d3d4e14971b912c97332b4fd99cd7640"
+    },
+    {
+      "path": "src/agent_guard/authorization/policy.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "bd3bfcdf27824faa70ec8f69d9b3567b0e8ec807a6fc71f1269ddc6e77e15fe9"
+    },
+    {
+      "path": "src/agent_guard/authorization/proof.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "b1a68aff814b0806f2c50cd46cf7daaa1327adcc14e452c0508df336fc2f5086"
+    },
+    {
+      "path": "src/agent_guard/authorization/provisioning.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "452919a869ebdd1c3dab16a3accf6d2e4ff36f886ba9e4bb22064ffd0d795dfe"
+    },
+    {
+      "path": "src/agent_guard/authorization/revocation_http.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "c6880aa77c8643c2ffb3600ad0eba7a0ebbe7a4fbf6ab5f0aa7c3e51c1876737"
+    },
+    {
+      "path": "src/agent_guard/authorization/revocation_service.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "bd7f2f8d17e055645d57f386e44e07669ea6aa9590167cd7a480d9c01ed7b738"
+    },
+    {
+      "path": "src/agent_guard/authorization/token_endpoint.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "13d1430795ed84dfc8a569719764e89a0451f61aab21fd2e2b7883d25e2c6506"
+    },
+    {
+      "path": "src/agent_guard/authorization/verifier.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "f676108f785dd6e2c8938a3f75dce1fd07653caf19d6b1719278f76117d0f1a7"
+    },
+    {
+      "path": "src/agent_guard/contracts/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "00bfd73c6f2c0242b1723e903b71e69385ba470cb8ad2244e5edbc707f3c500c"
+    },
+    {
+      "path": "src/agent_guard/contracts/encoding.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "aaa89677f767844f6a8c2e88c0be1f131b993964119b8c701ba3be0d6d9406ba"
+    },
+    {
+      "path": "src/agent_guard/contracts/execution.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "116cd4ab413499d460c0394c0b43d399d7ae826dec32eed8c8e918551ffebfa3"
+    },
+    {
+      "path": "src/agent_guard/contracts/ledger.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d3cd8bf586f4a63d5a6a51c8bb3efed4507cd7f6cd5f4b32576f8b1a041c1954"
+    },
+    {
+      "path": "src/agent_guard/contracts/ledger_changes.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d813e554f2acba560130c45269272521148ee4612bd12630a3a057084ff82fab"
+    },
+    {
+      "path": "src/agent_guard/contracts/verification.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "02d660caf8a3d15d21f66e8decbaf5b449d82bd45fccfa3281579f4a3299eae6"
+    },
+    {
+      "path": "src/agent_guard/crypto/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "21f9f6e4b38d0eac8fac8e8437d7df9bd2f43bdaf80a1bca69f04803867d33a9"
+    },
+    {
+      "path": "src/agent_guard/crypto/sm.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "2b00b5df65f741ccae706d89a6549027d30fc76cf5abbd3a838c3b83fbeddd79"
+    },
+    {
+      "path": "src/agent_guard/evidence/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "f77ca60edb03341d97171c696ccdcd7f09fa617d50a5f6b57ca0f3e91e52d30d"
+    },
+    {
+      "path": "src/agent_guard/evidence/receipt.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "cc5043d4e1a63db2f472a9751ccde7d05d6aa15614626936bf6eae203696a9c0"
+    },
+    {
+      "path": "src/agent_guard/execution/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "2d2fb6a8882acc18a779b37bdaca622619c9656732504fff6b4f34214ffe721c"
+    },
+    {
+      "path": "src/agent_guard/execution/query.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "bb2fd89dae9b5c775c25627e13893887568bb2ffc1f7e312af24ec541fd71d37"
+    },
+    {
+      "path": "src/agent_guard/execution/receipt_projection.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "4206cf65b9727c73bdbd1614d33fe1d87652ca55ce02f43e8bb8ea000ea28563"
+    },
+    {
+      "path": "src/agent_guard/execution/receipts.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "12d374951cb404a25b3ad0d609f9fc64ece89db9a87a99560a3fdb05c63fad30"
+    },
+    {
+      "path": "src/agent_guard/execution/service.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "5bd596722f99cc078cf3b5cacb6e91213062e73cbad99468979ec122079c4642"
+    },
+    {
+      "path": "src/agent_guard/execution/store.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d0975a55d7aea7c5e3f43714d08787f50d019af7edc7c391ecca047f22058a5c"
+    },
+    {
+      "path": "src/agent_guard/execution/verified.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "7014c54716df3a34dc9e6bff94881e1538b519346e1273ccbeae65705341c264"
+    },
+    {
+      "path": "src/agent_guard/execution/worker.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "c6ba7df9e9dc2fba568355de77a716e275c108a52cbd1f8f8d0eba34343ce277"
+    },
+    {
+      "path": "src/agent_guard/gateway/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "df99ae9977e1ef5543313be94fcef2e0c4afbb8a23832a9a0a347bbf819d8f65"
+    },
+    {
+      "path": "src/agent_guard/gateway/__main__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ca431683258e90163fa1ed3708f8c5c768e0e50478f5a833b09e15d88699e8cd"
+    },
+    {
+      "path": "src/agent_guard/gateway/config.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "bca657934dda9c2c56c4e58b3a224be3ab9c90313db84f6db33a2cf75be5144f"
+    },
+    {
+      "path": "src/agent_guard/gateway/endpoint.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "af289545bf75abdf3bf931d77b2446e6684977d98c9929cbfca3e2019e2c916a"
+    },
+    {
+      "path": "src/agent_guard/gateway/errors.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "2027769452c9c57450d9f5421e0e5b3ecd7b599bc572a9f7214ff70587f46ceb"
+    },
+    {
+      "path": "src/agent_guard/gateway/factory.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "cd2f9dd88c8de62338834919992422bf3e95c0edffb71144cfe88ac9bdc862d9"
+    },
+    {
+      "path": "src/agent_guard/gateway/http_app.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "2c9aaf642ffda30d01fd4f7b0698beee4bf8d3127f47b0854529a631d2d54097"
+    },
+    {
+      "path": "src/agent_guard/identity/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "c04e090dd90ac878d5117e7ff566b6acdbfeeac3d0f9800a01d764a6e06506b4"
+    },
+    {
+      "path": "src/agent_guard/identity/resolver.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ff34b1dbbe31cde68d8c7ebb4eb4179f6d1265cc3adcb55aec71c2b465b10c9e"
+    },
+    {
+      "path": "src/agent_guard/ledger/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "de5c60ac8b33f44f0ffd68921e6792018c39f1f8a45770c0c521ab73e122d76b"
+    },
+    {
+      "path": "src/agent_guard/ledger/lineage.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "036ddd3a02c1d4e3688e325b04e9e3db537872e1b42ad65a9371e7f38dbbae39"
+    },
+    {
+      "path": "src/agent_guard/ledger/migrate.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "fe55dd46350d3950f2237d3fa85ed87715228d46531f2da61c34bab309b18a2c"
+    },
+    {
+      "path": "src/agent_guard/ledger/provisioning.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "e16168f6397d3303ad2714c953e2e006502cc1996f1b8f649c45f54228b84d57"
+    },
+    {
+      "path": "src/agent_guard/ledger/service.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "5b208f73a59ca17bc149db1604ae6612ff9acb613ddc14bf159e3d7370cb108d"
+    },
+    {
+      "path": "src/agent_guard/ledger/store.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "f86b656ac481a1a2e5d8edcb4d598945ef944e154b0887a22d889a01f57ac4d8"
+    },
+    {
+      "path": "src/agent_guard/ledger/validation.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "5aee896e21f0fcabf3f5c62964608c8157aacf01693908959150288d22604bef"
+    },
+    {
+      "path": "src/agent_guard/server/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "7a4927eeae02cfcbe617710630c6279ef3c957485cadda884e6703f8125aaf9c"
+    },
+    {
+      "path": "src/agent_guard/server/__main__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "9572d0a1264bb80a58fa3f21eb81d0ee65568bacf827973ce24fc8aecc4e8e72"
+    },
+    {
+      "path": "src/agent_guard/server/config.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "0f52f235fa2066b55ebd06b6de1b63e1c77e4862deebde85314192d224683d3f"
+    },
+    {
+      "path": "src/agent_guard/server/factory.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "5c363cda42da8a248b19098e09252ab1ca09e0600e2fcc9fcc2089c46ad40e76"
+    },
+    {
+      "path": "src/agent_guard/server/middleware.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "877bbbddd0136f4c18dc5c416b2d71594980f8fdc0c30b11a5b681ebf0d89fad"
+    },
+    {
+      "path": "src/agent_guard/server/private_files.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "9b4debcd50b4cb380a7eb15a4fe5b277b560303bf31b41101c4dad1a5d43f5df"
+    },
+    {
+      "path": "src/agent_guard/tools/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ad30a8c1d11760a9a2454366b52d5d06a92e8e31775abf8807c4705785ad62e6"
+    },
+    {
+      "path": "src/agent_guard/tools/catalog.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d416b63d04a7529e968c8a1c79648c80efdc7630d836059387d218d5b87c3503"
+    },
+    {
+      "path": "src/agent_guard/tools/downstream.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "783b7ba5aa17023620666add0e41d597fee6169e5ea39b60c89e9ca2cb7ef2b3"
+    },
+    {
+      "path": "src/agent_guard/tools/params.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "37317abf9557c440fbdbe9bbe39fee108506e2e1fe63ead3fab5e4c6cae964a6"
+    },
+    {
+      "path": "src/agent_guard/tools/policy.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "8a70ff78216a5134ec6da028fcec678c8d4dea918bb9001ff19dfdcab808f553"
+    },
+    {
+      "path": "src/agent_guard/tools/results.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "8e9243ab9aeed8d73198fbaafc73e84e93adc0f1359a6df1758b42614b7aeccc"
+    },
+    {
+      "path": "tasks/A1-ledger.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "99170b6b32e8b58d3f1748d62fe45125b009daf428de6e290134463c4ec0dbb8"
+    },
+    {
+      "path": "tasks/A1-report.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "205374da9f9809330160266d945ef8a570f4b675cb33cd7f4a8b72e79f5beb29"
+    },
+    {
+      "path": "tasks/A1-review-r2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "c0bde014193899e06c8b3d9264bb37a29a344164c8b8ff49e217ef0313b3e915"
+    },
+    {
+      "path": "tasks/A1-review-r3.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "68b1172af91aff2a6e6b453067eefd4c1fe0615cc235342ce37deb2a7331e0b9"
+    },
+    {
+      "path": "tasks/A1-review-r4.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d1f02bdf6f73ab2510386f0002a27967b981bb25e249c15990f6fd0909fe18bb"
+    },
+    {
+      "path": "tasks/A1-review.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "3820ca3de8dff6eff601d212640e378d0602d3c3f9a9ae9b0fe5f0b29d0dfde3"
+    },
+    {
+      "path": "tasks/A2-execution-gateway.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ceab732b618de7b33a866a161a250349e447c8f62182c07405362990afa0abb4"
+    },
+    {
+      "path": "tasks/A2-report.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "052ca0cb1a96f1f266511ee5bf240d8bac08be2ac58405a89c836b450976210e"
+    },
+    {
+      "path": "tasks/A2-review-ckpt1-r2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d9ff41bd7a9a7694010628de5a96e3ac723aaa4d90c4347c550da7b339016e42"
+    },
+    {
+      "path": "tasks/A2-review-ckpt1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d68e5751b233202e01d19cc934a460afa29897458262e7f91f88801fafa203d7"
+    },
+    {
+      "path": "tasks/workflow/README.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "a7ad6f6bf28300f8de48f5f58a70d5b77383005e4efb302e26bf2529734c08fd"
+    },
+    {
+      "path": "tasks/workflow/context.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "1f0bfa1d0a985609b37db4eeb592b2e362c662b206df30b1d60179f8c3af894a"
+    },
+    {
+      "path": "tasks/workflow/continue-prompt.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "f1c676008181a54a113fd14c588d73e6ed2ab98e0c25a4233a9aeaf60d571164"
+    },
+    {
+      "path": "tasks/workflow/current-policy.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "fffa67b3a68ac859fb75bb0f65c15da904d9c51c95f29d01ed226c3b0b924190"
+    },
+    {
+      "path": "tasks/workflow/implementation-contract.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "b2f5d788e119d9b7d0c927930c0ccdbb66462f5029251437cc98674bb33562d9"
+    },
+    {
+      "path": "tasks/workflow/issues.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "359aad7fe1aac4227b72360f4727bcf4466337b2f18d4b71c388a602ddfdde24"
+    },
+    {
+      "path": "tasks/workflow/review-contract.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "bce6d2d40791b7c18a160a7cc63f8be36e4920d5f418ed02befd489a92c15acb"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/acceptance.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "78e682f52a7f86eab399333b2e534a9c6560d79395e2a8de6e047dbdd4229e03"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/correction-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "c6c27944f4d3750df18eff9505c884d9f6b74133c6b1ce350b3c906684d7f394"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/correction-r2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "8d3901e14a3c808a72bafdf0bf7c201d72de7af6d21df8070d72d326acb0a141"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/correction-r3.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "cedb802105131f77ca7a0e67c6b55c689ae8df2ffde7971871d97dd9fdc6076b"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/correction-r4.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "74223c6e07cdf0ef346dcfb50b381aa29df3c07efb5c03bcb2c757bd5792af73"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/implementation-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d57afb6de4f2c66a5eb65bdb95a00df256ea36456a9f7293e47c6214b643e608"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/implementation-r2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "70aebc00d0655093ee62730e2a1f482f4dcc624cf3c6bee3b4cc9a3034c66e68"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/implementation-r3.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "70027c61f50b1c7876cb004e8a5e577ac9a358915610ffc603b34e725c553117"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/implementation-r4.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "250c3e44c1d44573fe2a3eb5a8583cc5b7def27b3587abc6fd81e6217122a0cc"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/implementation-r5.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "fd264c1b34cfb0bc5821ab4da7e6bbd2493ae1f869ea7665f5232fd2e619b199"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/package-review-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "58f2dacc225bddab512512252addc979162953393b6189594ccc4dfcff73c61f"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/package-review-r2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "c1e5e9f741655ca091a0339bcbff5c0b05cbd3586aba25e0a27b1b0cd392db63"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/review-r2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "3e1224e20aae31af6ae8dbbddb898d5e3a5c0df70d6e8e1dc72d657df3ed504d"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/review-r3.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "a1de8580f0f50f39b3248741104700daf4da5f4fe0c3fac755604711daaebc06"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/review-r5.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ba09960b1c248d811452a4e35c33b386735be753de2e8050122971ea4398110c"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/review-r7.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "568592df1901dd2bb52a2ae540f4de6a8d9683d74d95bd7c0b258f5fff37eed6"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/review-r8.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "93c4b0d06f46a2ca1d9a6745091ae8b7408081717b22e5c07a881ed7c44a04a7"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.1-core/task-v1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "67896f80e7b80fe05087f88ef08576c805117bfdd12654addff03efadf2bfec4"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/acceptance.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "feb1d594b4535730562cc2ea236798aa9a8c50dc9593bb5e08ba9bbee7dfce2d"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/authorization-expansion-20261004.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "a544273e6f49e76786f63c03f377fa726f53c069e764961f75ef15adc2d4047b"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/authorization.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "fb79284323a41ffe1eaacda8b670c690180e3b9fc347dd5874e49cf863fe744a"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/baseline-manifest.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "3a3d72bc078a42b33a910bde471c00e04f1e6ee2817ca5cafd99b4731fd56a21"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/ci-timeout-publication-r1.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "607e203191056706838ec06fa552a415bb1fe1c13bd6a23467f16ad0950242c7"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/ci-timeout-review-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "14410e9780f946a5ae6da76e483e57bded8a03c3a1051735e812cafa5f15ef95"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/correction-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "653fa14a1e548c3a2af074313648b1c628597b65c51ee782df0a2c39b7a35856"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/implementation-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "161f5db928f2050ce28b2d93ad9d7ac20f370a0c3f656aa473f9580b3f64d410"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/implementation-r2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "804bde1f6bf0a3012b950c5a3de29721077a917d6b9f5a7e3a9411858817e418"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/implementation-r3.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "0eaecb27defcff3cf91f0b54d2b2414f0aea84026430f1533ea4e99db4505d18"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/implementation-r4.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "e24d0bce22289c93f7c4954a472d46b088966b17a364c6725a49ac9159d4dc44"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/package-review-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "7bebb1d01bb270aca7d0c215cc2c77b29767e2eec7c0fe74f54c7a1197567477"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/pause-r2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "5098ced956f44f50236ca2bbf7ab72a048acaad8fb9132d002cdaccf8cf9374d"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/pause.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "608429dbdb091c8d3c31c834509f953c1e9e0708c5deaf9ac753809a00efabe6"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/requirements-v1.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "78fbd45ab53a1e04631592d94b1b8e8d6ed13371579e7b015f96f810cf892704"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/review-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "49b4b4f638a095fea1432db61203af0666d770224fe1c6bf539242540a00712c"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/review-r2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "b9ae21a2c6537d0097e6d9a4e2b4da701953a24c496396b0aa2f1e77728cee13"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/runtime-addendum-proposal.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "1ea490abad1045b11774902faa4bc78b93ea9d64c1a44bc3bd406720b3141007"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/state.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "22c7219d81b8bc576c8f5f5468c431d9b391fd6d026737f3d98c8af01c35afc1"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.2-integration-20261004/task-v1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "4a04e50b7a67350ae4e29640cc798ceb6f0d83c19b86ee77e8d48a97ab4d8f32"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/authorization.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "a4b28cae5062a49aa76e7d06728ffe14a9cbfa3e188503b818b8375c4ab531c0"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/baseline-manifest-v1.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ff28c3e46bc20b01bf9530373a50512f7115e5240787d3af641fe9d9a90e74f5"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/inherited-bindings-v1.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "5964bea169f07496ed3eb72e1ace1811af9b7a9bb8ae138094bf5a3f31acc917"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/node-bindings-v1.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "2b0f86550e334d37846548ad0cbdd23e1d1bed9b5643f249ac16d9e501f3885b"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/node-bindings-v2.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ec64ac4c7dc74ffdbaf2b9de00dc2d8271402a1dad5c942b94cc253d9363d020"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/ownership-v1.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "bf1c789f1f1dc297db18dd86e917a118e98099521c3978c8e981d1195ad9c031"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/ownership-v2.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "a9e4803bb5d521860674c81b4497096a457dadfeca509eacefd79aa7b2e1b7b5"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/package-review-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d032bcaf0ab9d3cc6d906f2be61d81e6329bf88f3ef5480ced214cf15569ec71"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/requirements-v1.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "67bdc6d2fdf001b01ab9367fe3e788baa1c65c740f1160fc033881a8409c4f42"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/requirements-v2.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d7ca12f5f1b5f4fcfcf599e63bfc59c34a58a23c0de706fc20fa24aaf50f2354"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/runtime-addendum-proposal.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "dc10b63e5ee60abd822d71902b0124714a6d0e8e5fd22a5131d06c10b504ffdd"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/runtime-binding-v1.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "0e80dd0be0c1a6b792faea19169992a248e2b6576a338031c8b21e3d6cfcdd7d"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/runtime-binding-v2.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "de693fe2163f2a2952eb9a5e723e38169abd63ae7baadd4fe2afb71d3bdadb9c"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/task-v1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "04d85a2d09497e39c494a01cc6ef9bf23dc065b19a15f59d7230f19eec843e27"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/task-v2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "17d642e8a24b327ced5229005fe0c4401e1f11d5d918758d4fc4720fd62df5c6"
+    },
+    {
+      "path": "tasks/workflow/runs/A3-closure-20261004/authorization.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "169530496d6654fec081b8e0d0aa1a9d96ea68c0d5ff610c567f910dda874d3f"
+    },
+    {
+      "path": "tasks/workflow/runs/local-quality-20261004/requirements-matrix.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "daa9ce468efd2c0496d291a40942967760c8d27ab6d8aea8c4dcb209c3b17714"
+    },
+    {
+      "path": "tasks/workflow/runs/local-quality-20261004/review.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "0df3ddeaef9639ef800990d56d02c690e84a41b41959688ef4b5a13f8c3072b6"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/acceptance.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "37e55d6001d652ed05f89671cb90a7d222a3553bfea3844a16b1693edba3d508"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/authorization.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "0b9ab2724725b03459dc93503adad5ec0869aaea7c015cf47b100097e9ebefee"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/correction-docs-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "0b74f93af7d67d4494c0218d5b2150f98a6205dc578c040f5acfaf36238a03be"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/correction-r2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ede34a2f6cdc42c392ca78d1da64f4936ff94f21815d8a7e60815cd2c2bfb145"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/correction-r3.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "7d741ffb1f52a2a361a58daa8d05ae472c81fb3d67cecd772b09a7f5e434675e"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/diagnostic-r2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "61922ef87215ac6d247641d721d45243cfa02e15fd6fe8d61a19404cafc606f8"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "99591e8e27271f7dded1d522c11acc60931fb3d526b41c0d17ee206476d6272a"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/implementation-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "c29a8ea94823c238236ec522fe88761ea6de8806101de8e7265016f6eb6123ec"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/implementation-r2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "010ac8b6c3b3b6d41758117c52da707063cc623ce16a3e66e3f08ef8dab201ca"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/implementation-r3.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "6051ea41fc59623f69923901230959e3473796cc0198374c11b9b4c8bd247707"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/package-review-docs-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "799d5576334b7fb397605d6be6c7fe0cf93cc03f42c316d48a61a95a44192816"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/package-review-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "6efde8a11e9f2229cd3bfce0ed6adc26139e13cf0547c266eb26c6f0a698f490"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/requirements-v1.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "4e06f88b937d3caefd68a9c5ad053f48abc3c2c0691143fe64fba2bebe0266b4"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/review-r1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "f1a695a978df8d796c1937a6ee9cdc739e184ade5d109755f8e185fa2828af54"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/review-r2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "02e060952f1de4c45560a570791014080cb0713fe1e4169603e165019244cad2"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/runtime-addendum-proposal.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "943e23ec88f7c582ab51eff625ac4bc012ceeadd587d0bca9b4821e47b792701"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/state.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "e07e5a661b59344292fdf64919809c21c524aff18c2d5faf11f991433c766e00"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/task-v1.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "69d710fbdb23a4641b88959a48d6ae96d6d3ad18e9af4682e78a0628e53bcf09"
+    },
+    {
+      "path": "tasks/workflow/runs/local-remediation-20261004/task-v2.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ee552828ff420b126d9fb368bd839004c81d6fc9dd5ec04154f7a22d16f34a76"
+    },
+    {
+      "path": "tasks/workflow/runs/publication/20261002-A2.1-preflight.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "30881e892f5827b3b3ed895ba94cd750b42ed877a1a2404de4d1e1e7b4ec6d77"
+    },
+    {
+      "path": "tasks/workflow/runs/setup/codex-astra-sol-v1/workflow-contract.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "c542d3f9cc80f51712538942480aff7c423fa2ecfea5598f68c9e32f36c75845"
+    },
+    {
+      "path": "tasks/workflow/stages/A2.1-core.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "c1cf4cfdf17300652a8f937db606b098f51b5be91f012bd41ea38778031cc6b3"
+    },
+    {
+      "path": "tasks/workflow/stages/A2.2-integration.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "9ba24706a4bd49860e505b966b18fb23873dc9e4006dc6c490844cd0bde5fbef"
+    },
+    {
+      "path": "tasks/workflow/stages/A2.3-receipts.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "c62f49a45b83e614e62b90d9118900e9353cc7174068ab53bf051039afc6d35b"
+    },
+    {
+      "path": "tasks/workflow/stages/A3-closure.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ba24e280bf5b38704e2228aa7180a6b7b963744d5b892f1a1e650c8637b8e0e8"
+    },
+    {
+      "path": "tasks/workflow/state-guide.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "0c9bb4569c0a46cb7dcf0645c9e70dd09e901ccb555fa2427a7b35d759e2d02d"
+    },
+    {
+      "path": "tasks/workflow/state.json",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "0b015d6f4cb4de749825f633c75c0391aac5f5b4433348e5f4f050d8e9adb154"
+    },
+    {
+      "path": "tasks/workflow/templates/correction.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "8a0a797a3ef06b7538dc0bc000f820af5dd5a1baff6372faa1a853d4d05ee531"
+    },
+    {
+      "path": "tasks/workflow/templates/implementation-report.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "6d52805a760ad0cefa21489e6cbc582d7ec381f40dd827b1ec15bf1b91f7cad9"
+    },
+    {
+      "path": "tasks/workflow/templates/review.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "36dcbe65391daa2c6287ba7dc62b16ed297ca47924899188535242deba9274f1"
+    },
+    {
+      "path": "tasks/workflow/templates/task.md",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "5fac8bed783980b3555b2c135afbcda107104a7206ab1f2181aa7a471af39020"
+    },
+    {
+      "path": "tests/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tests/demo_b_flow.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "7dfac3e91d06862daa2bd19db7345c6fc5ebe39321d59214a88184136bb43dc9"
+    },
+    {
+      "path": "tests/fixtures/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tests/fixtures/dbstate.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "8abaa96eb04452497bd5de1dd3ca4fc1866ee867f24460f606418cb22daaa78c"
+    },
+    {
+      "path": "tests/fixtures/execution.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "c80ae05b03e19e668240069215e1d3e02cfdc681130cac3c2df404297c4b21ec"
+    },
+    {
+      "path": "tests/fixtures/gateway.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "cda0e6a65c19041893c0b16be3584a07498a4e8da83f2a97fe547704474e6839"
+    },
+    {
+      "path": "tests/fixtures/interop.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "b09b6aa2004148a90888757940c0c21cd2c948e61f9d896f113024ddaa9bb287"
+    },
+    {
+      "path": "tests/fixtures/isolation.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "de79104ae1c9320224a312f4c1ad4299ed7c9343ac02e0d4ce1f81222993697d"
+    },
+    {
+      "path": "tests/fixtures/state.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "19a6cb5ff9f0d1c893cd554ae0f1ca5c10b9f277230be34829db54db5ab6c892"
+    },
+    {
+      "path": "tests/integration/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tests/integration/conftest.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "383d1f9620057e821ae557a35514f641b5081bfe90699934329a350eefa0d000"
+    },
+    {
+      "path": "tests/integration/test_a2_migrations.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "dca69eaafbef2165e42fdd07834a85e1c769d82f0cb12595a1183a779102d237"
+    },
+    {
+      "path": "tests/integration/test_accept_core.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "256a232d4f8edf3e9b5ef08944c6833285e322024dc53111f2d784cde397eb48"
+    },
+    {
+      "path": "tests/integration/test_as_ledger_integration.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "32cf09597175ae36b6c487476feeb08d14c5dee035633ad4cf59f39094ae9179"
+    },
+    {
+      "path": "tests/integration/test_browser_boundary.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "98039c435e7a24b43a037780b39bfa234839a19df223ab187eb0e2d24ca5172e"
+    },
+    {
+      "path": "tests/integration/test_code_service.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "4b270bbabbee18a14ee80158f5acb3c751aaefedf6e7bcd48579fb496f34d687"
+    },
+    {
+      "path": "tests/integration/test_concurrency.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d2e554a7eedc04192e8d41c06888aee15a1791520cf1a46d674c637d9b6bcb51"
+    },
+    {
+      "path": "tests/integration/test_consent_final_decision.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "01b3e100e2abbc03ce283990fa181219ed9284ce55896447188909f09a89458c"
+    },
+    {
+      "path": "tests/integration/test_downstream.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "10df94451a9bdaa01e72bbcea0828c43b7cb6885af105a47362bd3ab8ba472e0"
+    },
+    {
+      "path": "tests/integration/test_evidence_binding.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "749010fb2d02c6a9faaed76a1f8d95ba6de3ffc40d257d8d62f60b8fc813f607"
+    },
+    {
+      "path": "tests/integration/test_exchange_service.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "fc8dcf5acda695037a70ad8e0eadaa70cdc830bb46ec10352db624da1867d4ef"
+    },
+    {
+      "path": "tests/integration/test_execution_concurrency.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "899919d979402679108a32983eefa9afc859d30e2d2bed97746345df1f6d42b1"
+    },
+    {
+      "path": "tests/integration/test_execution_core.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "be1c06fec4035d8590e7929a3d74392fd1a1ddcd61588ab954b98d499c73fa93"
+    },
+    {
+      "path": "tests/integration/test_execution_final_boundaries.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "3d406fece0d68f5d33cf7abc8f126dc22fad8ed0bb23b86caf2f3eda9a149466"
+    },
+    {
+      "path": "tests/integration/test_execution_quotes.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "48f8ed801e9ce9e905f466656f22ee7537e19cd2645ac125e8041b8567179b9f"
+    },
+    {
+      "path": "tests/integration/test_execution_r3_regressions.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "3ba094c731819848d5a6af29153428732553cbc87ebd1175952a10cd5ba7b5ae"
+    },
+    {
+      "path": "tests/integration/test_execution_r4_regressions.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "a4ebfe78e2d66ea30dbc515704ab70733a18abb1d4a24c00b724f4fa3a147004"
+    },
+    {
+      "path": "tests/integration/test_execution_r5_regressions.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "16bf703ac36286a8f212096e08136c9ad8bbf2f51b22426f1e1bd416cdbaed68"
+    },
+    {
+      "path": "tests/integration/test_execution_recovery.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "e454ee82c9a963e30570faab85392c12186b5adadf82809524bd06d64db138f7"
+    },
+    {
+      "path": "tests/integration/test_execution_regressions.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "f07ce0857ab344bc0975653878493b02aaa341cf2502acacdbb79ad3c0fef5dc"
+    },
+    {
+      "path": "tests/integration/test_execution_validation.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "6edf9c6d8918498b02e0485e56dd25471d2432d07b95cee3fbc2843f7e2540ff"
+    },
+    {
+      "path": "tests/integration/test_gateway_http.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "5702a53d29d0c2a85b02d3fdfa0b591067f0313b9f39abeacf3c442431c0b9e6"
+    },
+    {
+      "path": "tests/integration/test_gateway_query.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "63a49074ebbbee7e6d95d9f6dd57b41665bc5cc600a5587c7e54935fca4d53ff"
+    },
+    {
+      "path": "tests/integration/test_gateway_tls.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "de4967b63f540511a668e546290c5ead29f13d8a329bf0ae0565b39d7846ebcf"
+    },
+    {
+      "path": "tests/integration/test_grant_revocation_service.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "a8d1fcad73552bc40948cd08bc3416203d0db0c6550fb42751e14ea908b38a4a"
+    },
+    {
+      "path": "tests/integration/test_http_boundaries.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "9c6ae7683aaa07894c205ca449cc57e0403821d00bbb36a9cd7cabcbae304c00"
+    },
+    {
+      "path": "tests/integration/test_introspection.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "86652f5816e979b7bbf86ab9625dfdedb6c2b9b7df7eb460ee770c590671f945"
+    },
+    {
+      "path": "tests/integration/test_invariants.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "39e6b16cead4b90af3a1f7ec7afd84c7ee53b47db8fd1d68039c8c980f89ca88"
+    },
+    {
+      "path": "tests/integration/test_isolation.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "cebf12cd837f65307337a53efb76f6dc1aac580f95ca81d77dd7053c7a97fb92"
+    },
+    {
+      "path": "tests/integration/test_key_rotation.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "6ce27c0947673ced831c3ec78b062e0b9b8a44b30a461a60c75600454113e823"
+    },
+    {
+      "path": "tests/integration/test_lineage_migrations.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "bb82ee2f6991da40b565b3401a3d47c2edc452ec819d78e992071566f8a4bcc0"
+    },
+    {
+      "path": "tests/integration/test_login_consent.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d7a25d2044d583d322b20def6d419c6f6e54bc28122b4944cd22655777122e9c"
+    },
+    {
+      "path": "tests/integration/test_migrations.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "859344b5683f0068055ef6a96e76416396f1789566ce7973fad4b542bd864418"
+    },
+    {
+      "path": "tests/integration/test_rejects.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "a7c0a994b37b15b98960e6a8c6c840e2d600aa54dc574e6dace393f328602716"
+    },
+    {
+      "path": "tests/integration/test_revocation_http.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "3e9db21e7373c2cb411b770919e7536ac83acc6d83189b94206038e36e058ae9"
+    },
+    {
+      "path": "tests/integration/test_rollback.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "48147fc620a61f165b6c354989614b0fb6a366a865299b3f36a3ccc3322dcad4"
+    },
+    {
+      "path": "tests/integration/test_server_tls.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "cff16359f8e83a8602bd75b79d65606a08ca4e1e3c267fed44e0e400f126cb34"
+    },
+    {
+      "path": "tests/integration/test_sm2_interop.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "4c419c73e9117c54464f634b35e6d461ea46a89a7cd31af683c2ad55ffd6181f"
+    },
+    {
+      "path": "tests/integration/test_state_checks.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "4a4a7b973297b542544fa81d6299c267ad58c05cfd22a918ddcb8863398db231"
+    },
+    {
+      "path": "tests/integration/test_task_revocation_service.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "f41e9f7afb1f608230452d0a541190c7a945fef05e2c28eed0890219826e9be5"
+    },
+    {
+      "path": "tests/integration/test_token_endpoint.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "7d0ef8966ff4d46d53f3455620e9bf4c58054c51e9aae63b2cceb637db3df789"
+    },
+    {
+      "path": "tests/integration/test_verified_execution.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "2dbab1ab160204993e0506c36f26491bfac2de37f7889874f459c4f7071d9d21"
+    },
+    {
+      "path": "tests/test_authorization.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "f3bfdc43e376ffdf496653df78a60fbfd387c2fd63ad8d205995714260499693"
+    },
+    {
+      "path": "tests/test_code_exchange.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "b65b556bc3d9bd4ce49041471e15a1804a6b6ebbc68d296df735d6bf22174dfb"
+    },
+    {
+      "path": "tests/test_crypto_profile.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "9f7875301bf989c8e65b2bb607819f47ded01dcd04344ee3e8d46a7c62807cdb"
+    },
+    {
+      "path": "tests/test_demo_b_flow.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "5638abe11c7e720a981db11899beed1fc11e924d44ca90ac7bd769635c78fe4f"
+    },
+    {
+      "path": "tests/test_discovery.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "9679fce83b7ccb38290cb9effeabd5d77d21fab34000e0a1f114f8db15e32e8e"
+    },
+    {
+      "path": "tests/test_docs.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "73ceb4fdb126f6dde631e397f9d12dfdd571d61bdd95d148ed5bd642715220e8"
+    },
+    {
+      "path": "tests/test_encoding.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "4dd42697ad6b219d30911320389fba02b1709922f05be5808d769786ccd5b0f2"
+    },
+    {
+      "path": "tests/test_exchange.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "77e2d0ec9a4ce4a88c889658cffce8d7b3d0bd7a83154589faf67e23114bd999"
+    },
+    {
+      "path": "tests/test_http_app.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d773fe39ff2fd197a6ec7bda9c9b6ace4cdb7230ad1961129d8f21ed8cacbd3d"
+    },
+    {
+      "path": "tests/test_http_request_limits.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "79063e9a418a200941758b677b3bfd9ffd87746d3797edf495298356b8f7a7e6"
+    },
+    {
+      "path": "tests/test_interop_vectors.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "273711dd8e9564b1f899c3065c07dfd014b1eec96c737db442372bf6f14fe940"
+    },
+    {
+      "path": "tests/test_introspection_endpoint.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "1306cc6960c3d7824a9f06543a9d4c2b50c561a2fe19240b3a7dc9b762036970"
+    },
+    {
+      "path": "tests/test_login_consent.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "3b2783177b7ef522eaeb0df644bc3c483b413785eb0af20d2e3efdd3ef8b1398"
+    },
+    {
+      "path": "tests/test_permission_snapshot.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "8d3e3036154f7eef93c5ac40896ac7af18cc5e5c09770496d13c394076f0677f"
+    },
+    {
+      "path": "tests/test_private_file_primitives.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "d8294ce6c53ebecfe23fffd1b81a0bd2a475cd7450009de750ff655692fa6d2f"
+    },
+    {
+      "path": "tests/test_query_contract.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "bc380824626c592c710b7bcb9c54899ab6b9c5627a1e2177bb0408f083db2785"
+    },
+    {
+      "path": "tests/test_receipt.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "816e9f78fcdc27b47c9598e70e749e02cef389ce0c79bf5f95eeb7674107f1b7"
+    },
+    {
+      "path": "tests/test_receipt_paths.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ee3e172fb9cfd9fa5a86c896be953b8957654a53783f52959e81ada411f7045a"
+    },
+    {
+      "path": "tests/test_receipt_projection.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "75151023fdc6fccab54a796bf61da07c8a725fbfc8755bd56eeed4794e16e061"
+    },
+    {
+      "path": "tests/test_result_read_verifier.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "6e85ce2419f5c322d512f9d3d353778f2be0c777d53fc6cad1c056f94a2e66e4"
+    },
+    {
+      "path": "tests/test_revocation_http.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "f7f56f233bdcb6c74b22d60bb1e15d4e94c782ec6ca443064d0a5132d86eb13f"
+    },
+    {
+      "path": "tests/test_scaffold.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "a02263401b7e03bcab3f359f252a07b26bc2a7f295d2e876896132ae93a46f24"
+    },
+    {
+      "path": "tests/test_server_config.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "0072aa7e7ba395d413b608dfba11456d68441508794e1cbe12bd968baf0c52e6"
+    },
+    {
+      "path": "tests/test_server_factory.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "4fa88ccc00479662e3747d40fb8e06221ca0a8c6034564094b1fce5ea9dbaf32"
+    },
+    {
+      "path": "tests/test_server_private_files.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "7d53f45a8808d6fb5ba3efe0f90dafb84f6e0ed95a238c0539bb5d6a2bd20c80"
+    },
+    {
+      "path": "tests/test_token_endpoint.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "48b93d31d312bd0ba6fb9036ee89b4acbc9338693ba4a24f79ec74b6726d8681"
+    },
+    {
+      "path": "tests/unit/__init__.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "tests/unit/test_execution_concurrency_oracle.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ddb1abc52cee904825af3364e0b269f851880234006d4290e3399f048cc1a13e"
+    },
+    {
+      "path": "tests/unit/test_execution_contracts.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "f3d31cb27c8900a7d51913d7307f8835bec30f4cd34e5dfdd66e8ea95dc2cf35"
+    },
+    {
+      "path": "tests/unit/test_execution_result_variants.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "71109678ccbb0b04b7338b289c1aed53e6e3b8334a613dfc8acc3bd8bdbffdd7"
+    },
+    {
+      "path": "tests/unit/test_gateway_boundary.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "e0cefab776e5783058867762e939d9887e491f9e8de4a7ecd41d93d256383085"
+    },
+    {
+      "path": "tests/unit/test_gateway_config.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "dde8c83dcb51285fbd67c777934aaec8466d4e66bc1dfb7fa2a3e30350344e3e"
+    },
+    {
+      "path": "tests/unit/test_gateway_errors.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "e324212bb0115c3105f4949fcbb5d55d5f54fde69351cf300549cd58a803ae0b"
+    },
+    {
+      "path": "tests/unit/test_input_validation.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "6b45fe3285c5a2e6b0acd1422e0728f41aee962fd96d2992fc133c344407b54a"
+    },
+    {
+      "path": "tests/unit/test_migrate_config.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "fad7ba37e52dfe9ed0cc2a9e5d55621febf08a7e2683aa011a891e60d4554824"
+    },
+    {
+      "path": "tests/unit/test_service_config.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "9c5c5f093c8a520b49f50ff663a30412e26165babd3241c6d3129f7f26667787"
+    },
+    {
+      "path": "tests/unit/test_tool_validation.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "ecd3fb231f6dfd66c5239ca7fb873e9aca9a2419896bcdd54ed1cea341dfe453"
+    },
+    {
+      "path": "tools/workflow_gate.py",
+      "kind": "file",
+      "mode": "0o644",
+      "sha256": "bd3e1f99402afdbe9c98ae90bf4edb3b446a5aa53b474a924c3187ee7c9bae3a"
+    }
+  ],
+  "entry_count": 302,
+  "excluded": "Own manifest/state to avoid self-reference; ignored full package freeze covers both"
+}

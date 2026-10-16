@@ -1,16 +1,20 @@
 # Agent Guard
 
+A3.1与A3.2已正式独立接受；A3.3/A3.4联合v1已通过独立PACKAGE_REVIEW，S2正常装配必要自查已完成。完整联合自查及新独立IMPLEMENTATION_ACCEPTANCE尚未完成，项目仍PARTIAL。保留当前授权UNKNOWN、下游ATTESTED_NOT_INDEPENDENTLY_PROVEN、未锚尾部与bootstrap外部信任限制。
+
 **面向企业多智能体协同的可验证授权与可信执行系统。**
+
+本机演示页面：启动 Docker Desktop 后，在仓库根目录运行 `python3 tools/teacher_demo_server.py`，打开 `http://127.0.0.1:8765/`。支持真实演示启动、七类安全场景、带来源的验证记录回放和离线证据篡改对照；仅用于本地展示，不代表完整联合验收。见[演示操作稿](docs/teacher-demo-20261015.md)、[DemoEvent v1 接口](docs/teacher-demo-events-v1.md)和[当前状态与覆盖范围](docs/project-status-and-demo-coverage-20261015.md)。独立 [2-of-3 门限签名原型](tools/threshold_demo/README.md)尚未接入网关；[x402 适配设计](docs/x402-adapter-design-20261016.md)尚未实现支付。
 
 目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
 
-> 本轮补正（2026-10-04）：结果变体与工具绑定、统一 256 项边界、离线完整路径 grant 唯一性、P13 线程 oracle 和 future-token 分支已实施；v1实施交付时五项均为 **FIXED_PENDING_REVIEW**。实施证据与完整自查见 [implementation-r1](tasks/workflow/runs/local-remediation-20261004/implementation-r1.md)，后续验收状态见 [本轮控制状态](tasks/workflow/runs/local-remediation-20261004/state.json)。整体项目仍为 **PARTIAL**；后续接受与合并结论以本轮控制状态及主控关联的正式报告为准，须 fresh reviewer 完整复验后由主控决定。文档同步见 [implementation-docs-r1](tasks/workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。公开调用/最终动态查询（A2.2）、持续签名发布（A2.3）、独立锚定及完整演示（A3）尚未完成，outbox 保持 `PENDING`。局部测试通过不代表阶段验收。
+本轮 B 补正已独立验收并通过 CI，经 [PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 合并 main。67 项验收、60 项独立运行完成；见 [正式接受记录](tasks/workflow/runs/local-remediation-20261004/acceptance.md)及 [当前交接](tasks/workflow/context.md)。整体项目仍 **PARTIAL**：A2.2 已完成95项/88运行义务的独立验收，A2.3内部持续签名发布与真实HTTPS联合流程已完成完整119项/112运行义务独立复验并[正式接受](tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，原r1否决保留为历史；A3.1独立锚定与A3.2导出已接受；A3.3交付演示与A3.4实验未完成；旧无回执公钥配置保持PENDING兼容。阶段通过不代表绝对无缺陷。
 
 `product-manifest.json` 保留 2026-10-03 原始交付的 186 项文件哈希；本轮文档已更新，该清单仅用于核对历史传输快照，不是当前工作树清单。旧云端内部报告与原始证据没有随此分支完整交付，不能把旧工作流 `state.json` 的 A2.1 `ACCEPTED` 当作 B 整合放行。
 
 ## 1. 项目目标
 
-面向全国密码技术竞赛构建可运行、可测试、可复现的工程原型，于 **2026 年 10 月 20 日**前完成工程与材料。重点不是通用聊天平台，而是智能体到业务副作用之间的可信执行边界。
+面向全国密码技术竞赛构建可运行、可测试、可复现的工程原型。当前是初版；完整A3及最终材料按实际阶段验收推进，历史10月20日不作为本次全部A3完成期限。重点不是通用聊天平台，而是智能体到业务副作用之间的可信执行边界。
 
 1. 基于 SM2/SM3 的授权凭证、规范编码与请求持有者证明。
 2. 根授权、至少两级子委托、至少三个代理身份；逐级权限只能收窄。
@@ -86,7 +90,7 @@ constraints.txt              运行依赖可复现约束
 .github/workflows/ci.yml     lint + unit + 迁移 + 真实 PostgreSQL 集成测试
 ```
 
-已增加 `crypto/`、`authorization/`、`identity/`、`evidence/`、`server/`。其余网关、代理、审计与实验能力按后续范围实施，不以空目录充当实现。`VerifiedInvocation` / `TrustedPermissionSnapshot` 是**可信进程内输入**，由真实 B 验证适配器或可信初始化构造；不存在“已验权 JSON”直接入库的入口，也没有生产假验权开关。
+已增加 `crypto/`、`authorization/`、`identity/`、`evidence/`、`server/`、`gateway/`及`execution/query.py`。其余网关、代理、审计与实验能力按后续范围实施，不以空目录充当实现。`VerifiedInvocation` / `TrustedPermissionSnapshot` 是**可信进程内输入**，由真实 B 验证适配器或可信初始化构造；不存在“已验权 JSON”直接入库的入口，也没有生产假验权开关。
 
 文档按上述顺序阅读。旧通用凭证协议与重复架构文档已移除，可通过Git历史查看；威胁模型和执行状态机已合并。Markdown是唯一文档源，PDF仅作本地导出，不入库且需自行重新生成。
 
@@ -284,7 +288,7 @@ python -m pytest tests/integration
 docker rm -f agent-guard-a21c-pg
 ```
 
-下游认证只认独立的网关服务 secret（`AG_WORKER_SERVICE_SECRET` / `DownstreamPort(service_secret=...)`）；代理自身的凭据一律拒绝，认证失败不执行、不返回结果。**上面的 A2.1 示例是可信初始化驱动的底层执行演示，不是浏览器到采购的端到端链路**。真实 B 入口为 `InvocationVerifier.verify_bundle` 加 `VerifiedExecution.accept`；不能用测试回调或“已验权 JSON”绕过该适配器。回执 outbox 保持 `PENDING`、`receipt_jws` 为 NULL，直到 A2.3 用真实 SM2 签名。
+下游认证只认独立的网关服务 secret（`AG_WORKER_SERVICE_SECRET` / `DownstreamPort(service_secret=...)`）；代理自身的凭据一律拒绝，认证失败不执行、不返回结果。**上面的 A2.1 示例是可信初始化驱动的底层执行演示，不是浏览器到采购的端到端链路**。真实 B 入口为 `InvocationVerifier.verify_bundle` 加 `VerifiedExecution.accept`；不能用测试回调或“已验权 JSON”绕过该适配器。回执 outbox 保持 `PENDING`、`receipt_jws` 为 NULL，此底层示例没有配置A2.3回执信任；新内部发布流程见下文。
 
 ### 完整 B→A 测试、角色与 bundle 升级
 
@@ -321,8 +325,7 @@ provenance、触发器损坏亦拒绝。先备份并验证恢复；没有无损�
 
 `tests.demo_b_flow` 是合成数据的授权演示，真实数据库/SM2 签名支持根、两级
 委托、盗用拒绝及撤销；不冒充完整采购 HTTP 演示。四工具真实签名接入与恢复
-在 `tests/integration/test_verified_execution.py` 验证。公开 HTTP 网关和动态
-operation 查询仍待 A2.2，连续发布和导出待 A2.3。
+在 `tests/integration/test_verified_execution.py` 验证。公开HTTP网关和动态operation查询已完成A2.2独立验收；候选内部连续发布见A2.3流程，独立审计导出待A3.2。
 
 ### 私有配置与开发 HTTPS
 
@@ -368,6 +371,63 @@ exp 边界求一个共同可能的历史接受时刻，且不晚于已签 receip
 执行保持原行（含 applied_at）；独立 raw digest 防止执行前换字节。canonical bundle
 仍校验原 SQL 字节。迁移 CLI 显式 connect_timeout=5，失败固定脱敏诊断和非零退出。
 
+### A2.2 网关配置与 HTTPS 启动
+
+本段已完成95项/88运行义务的独立验收，见[接受记录](tasks/workflow/runs/A2.2-integration-20261004/acceptance.md)。网关只提供`POST /v1/invocations`与
+`POST /v1/operations/query`，使用规范中的固定HTTPS签名端点。
+Authorization须为`AGPoP <access-token>`，另带`AG-Proof`，body为严格JSON。
+invoke只原子接受并返回202，不自动调用下游；可信内部worker单独推进。
+query使用同一授权链的当前权限、当前key/撤销/时效及新proof，零业务金额/次数。
+未知或非本人operation统一403；终局前result为null，未配置receipt_keys的旧query仅兼容已有PENDING且回执null；持久READY需要可信回执公钥，否则query返回503；配置独立回执公钥后返回经过同事务原件/17claims验签的当前PENDING或READY，READY含原持久JWS。
+
+以下步骤可独立执行；所有路径/DSN由操作者自己的资源注入，不依赖artifacts。
+`init`生成合成公开信任与私有下游secret，AS/代理私钥不会写入网关目录。
+正式调用须把config里的issuer、AS公钥、历史身份登记、当前DID快照和catalog
+替换为批准的可信来源；AS及代理私钥由各自独立信任域保管。
+
+```bash
+export RUN_GATEWAY_CONFIG_DIR="$RUN_PRIVATE_PARENT/gateway-demo"
+(umask 022; python -m agent_guard.gateway init --out "$RUN_GATEWAY_CONFIG_DIR")
+python -m agent_guard.gateway check --config "$RUN_GATEWAY_CONFIG_DIR/config.json"
+# 使用独立的网关/下游数据库；管理员显式完成bundle/下游迁移和可信初始化。
+# factory/check/run不会reset、provision或隐式迁移数据库。
+export AG_GATEWAY_DATABASE_URL="$RUN_GATEWAY_DSN"
+export AG_GATEWAY_DOWNSTREAM_DATABASE_URL="$RUN_DOWNSTREAM_DSN"
+python -m agent_guard.gateway run --config "$RUN_GATEWAY_CONFIG_DIR/config.json" \
+  --host 127.0.0.1 --port 8444 --ssl-certfile "$TLS_CERT_FILE" --ssl-keyfile "$TLS_KEY_FILE"
+# Ctrl-C并等待退出；客户端以自己的可信CA校验TLS及gateway.agent-guard.test SAN。
+unset AG_GATEWAY_DATABASE_URL AG_GATEWAY_DOWNSTREAM_DATABASE_URL
+```
+
+没有默认DB或普通部署DSN回退，TLS证书/密钥必需，配置/私有文件失败关闭。
+请求最多65536字节、最多100个头且头累计65536字节；只接受JSON UTF-8。
+响应JSON沿用GM-MVP-1规范编码的65536字节上限，包含转义后的完整序列化大小；坏可信结果或超限
+返回503 TRUSTED_STATE_UNAVAILABLE。查询在提交前校验该上限，失败不消耗proof。
+同步DB工作在有界线程池执行，超时后容量直到真实线程退出才释放。
+已接受事务可在HTTP超时后完成，客户端用新proof和原业务幂等键重试。
+响应含服务生成的32位hex request_id，禁止缓存；401只声明AGPoP挑战。
+此私有GM-MVP-1协议不声明标准DPoP兼容。旧配置公开HTTP保留两条POST路径；内部签名发布使用独立receipt_worker CLI。配置独立 export_credentials 时，factory 同时装配 POST /v1/evidence/export，使用独立 SELECT-only 连接与私有临时目录。
+
+### A2.3 内部回执发布与真实 HTTPS 联合演示
+
+Use a current-owned 0700 parent with trusted ancestors. The old gateway config and its downstream secret remain private regular 0400/0600 files. `init` reads only public gateway configuration; it checks secret-reference metadata and never opens or copies the secret contents. It creates one new 0700 directory, three 0600 files, an independent CSPRNG SM2 key, and a gateway public copy preserving historical receipt keys. Existing paths or signing kids fail closed. An extreme umask may safely leave an empty inaccessible leaf; use a new target after operator cleanup.
+
+```sh
+python -m agent_guard.gateway.receipt_worker init --gateway-config "$PRIVATE/gateway/config.json" --out "$PRIVATE/receipt" --signing-kid gw-receipt-1
+python -m agent_guard.gateway.receipt_worker check --config "$PRIVATE/receipt/config.json"
+AG_RECEIPT_DATABASE_URL="$OWNED_TEST_DSN" python -m agent_guard.gateway.receipt_worker run --config "$PRIVATE/receipt/config.json"
+```
+
+Use `$PRIVATE/receipt/gateway-public.json` as the gateway's public configuration copy. This contains no signing private key. Receipt worker config contains public historical AS/holder/GW trust and the receipt signer path, with exact bounded integer settings. `check` uses the same loader and builder offline. `run` only accepts `AG_RECEIPT_DATABASE_URL`, never provisions or migrates a database, and publishes already committed terminal outbox rows. Poll/batch and SQL waits are bounded; corrupt rows stay PENDING while keyset rotation reaches later rows. Restart reads committed READY JWS/signed_at unchanged. `run --once` handles one page; `run --operation-id ID` internally returns the persistent publication for one operation. No public signing/recovery HTTP route is added. UNANCHORED receipts verify association and signature; full audit completeness remains A3.
+
+真实合成联合演示需要两条自有可丢弃TEST DSN：网关与下游分属独立数据库/事务。演示生成临时AS/GW/三holder密钥、CA和SAN证书，运行真实登录同意、PKCE、两次exchange、四工具、内部发布、当前query与独立SDK验签；退出回收临时配置和进程，结果为UNANCHORED。
+
+```bash
+AGENT_GUARD_TEST_DATABASE_URL="$RUN_GATEWAY_TEST_DSN" AGENT_GUARD_TEST_DOWNSTREAM_DATABASE_URL="$RUN_DOWNSTREAM_TEST_DSN" python -m tools.a2_receipt_demo
+```
+
+本轮source/noneditable-wheel完整独立复验覆盖119项/112运行义务，主控核证后[正式接受](tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)；原r1 NOT_ACCEPTED及所有失败保留，局部演示或自查不构成接受。真实HTTPS联合演示展示协议与业务链；部署、三代理编排及独立审计导出仍属A3。
+
 ### 非 editable wheel 复现
 
 构建后端固定 `setuptools==80.9.0`，仅构建 wheel。先从官方 PyPI 核对版本、
@@ -408,17 +468,9 @@ wheel 并检查全部成员，不构建/发布 sdist；这不是 macOS sdist 风
 
 ## 6. 实施计划
 
-| 日期（2026） | 交付与验收 |
-| --- | --- |
-| 9/23—9/25 | 协议、威胁模型、状态机、密码库验证及数据库设计 |
-| 9/26—9/30 | 三代理、两级委托、四工具完整链路；正常执行、越权拒绝、并发不超额、重试不重复 |
-| 10/1—10/7 | 祖先额度、撤销竞态、故障恢复、独立检查点与离线验证 |
-| 10/8—10/13 | 安全与故障矩阵、对照实验、性能开销拆分；10/13 功能冻结 |
-| 10/14—10/17 | 干净环境复现、工程文档、图表、演示材料 |
-| 10/18—10/20 | 缺陷修复、最终验收、固定版本与提交包 |
-| 10/21—10/23 | 提交缓冲，不安排关键研发 |
+当前由用户本人继续。完整A2已接受，A3依次为：原子日志与独立检查点、有界导出与离线验证、干净部署与三holder演示、规模公平实验和最终材料。详见[A3计划](tasks/A3-plan.md)及[本轮规划包](tasks/workflow/runs/A3-planning-20261008/package.md)。当前仅规划，不把旧日期排程或过去A/B/C分工作为已完成事实或本次授权。
 
-A 负责可信执行与集成；B 负责密码授权及审计核心；C 在后期负责材料整理与复现验收。每位开发者负责自身模块的测试与技术文档。详细内部排班不进入仓库。
+初版M1—M13与成熟版完整审计/规模实验分层验收；每段以实际接口、完整矩阵与独立接受为进入后段的依据。完整目标不因调整排期而削减。
 
 ## 7. 验收与研究重点
 
@@ -437,6 +489,47 @@ A 负责可信执行与集成；B 负责密码授权及审计核心；C 在后�
 
 OAuth/OIDC、SM2/SM3、Agent间委托与DID的唯一当前设计见 [实施及接口契约](docs/oauth-oidc-sm2-mvp.md)。不再并行维护父holder直接签发子凭证的旧路线。老师是否要求实改liboauth2本体仍需确认，该问题影响实现选型，不允许绕开既定安全契约。
 
-从最新 `main` 创建短期任务分支，提交 PR，CI通过后Squash merge。队友PR须由CODEOWNERS指定的仓库负责人 `Qdcchh` 审核批准；负责人自己的PR免审批，但合并前仍须确认CI通过、分支最新且讨论解决。历史仓库配置曾通过管理员豁免实现负责人的免审批；发布时由主控核实实际保护规则。本轮按用户授权的正常Git门处理，不自批或管理员绕过。禁止强推或删除main。
+从最新 `main` 创建短期任务分支，按已授权范围提交 PR，必需 CI 与实际分支审核条件满足后 Squash merge。不得自批、强推或删除 main；管理员审核豁免必须另有明确授权，不因作者是负责人而自动使用。PR #6 已获本次具体豁免并合并，后续 PR 不自动继承；当前角色、授权和交付见 [现行工作流约定](tasks/workflow/current-policy.md)。
 
 修改前先阅读 [AGENT.md](AGENT.md)、[实施与接口](docs/oauth-oidc-sm2-mvp.md)、[安全模型](docs/security-model.md)和[验收矩阵](docs/acceptance.md)。设计文档不代表实现完成；选型和契约变更需先明确边界、更新测试与文档，再进入真实实现。
+
+
+A2.3补正候选在真实签名/READY前复用原接受事实校验：对不可变报价执行精确总额、数量/原请求及cost currency/calls检查，并逐事件核对历史验真的完整root→leaf路径和四种delta。两列quote/result相互一致不能替代上述约束。校验读取均先于query最终DB时刻，不引入当前报价、下游结果或当前撤销/到期条件；合法零价及迟延终局仍可历史发布。失败保留PENDING/null及原ID/iat，当前query失败回滚proof/link，仅允许原契约的隔离STAGED证据。
+
+容量域分列：本轮独立依据实际validator、q≥1/p≥0/Σq*p≤MAX_SAFE及标识符长度推导，canonical producer订单公开响应包含上界为48187＋2724＋124＝51035字节；兼容真实有效非canonical raw JWS仍可到16384，公开包含上界为48187＋16384＋124＝64695。两者均非共同可达合法最大值。正price的digits(q)＋digits(p)≤17，zero price≤16＋1；旧58168为较松Cartesian/标识符公式，仅历史比较。九个各≤65536组件的outer保守上界589964；1MiB/+1纯codec点并非保留组件profile的合法SDK bundle。组件64KiB、JWS16KiB、公开65536和外壳1MiB守卫不变；真实256 SKU、原边界/故障/回滚探针及范围分类见[完整独立review-r2](tasks/workflow/runs/A2.3-receipts-20261004/review-r2.md)。本候选完整A2已[正式接受](tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，原r1否决保留。
+
+最新结论：[正式接受](tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)与[完整独立review-r2](tasks/workflow/runs/A2.3-receipts-20261004/review-r2.md)，原[r1否决](tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md)及[实施自查](tasks/workflow/runs/A2.3-receipts-20261004/implementation-remediation-r2.md)保留为历史。本轮依据[真人恢复](tasks/workflow/runs/A2.3-receipts-20261004/user-resume-sol-20261006.md)完成完整复核、证据、资源清理与交接后停止；未Git交付/远端CI/合并或实施A3。
+
+
+A3.2 export 的 `run` 装配显式要求 `AG_GATEWAY_EXPORT_DATABASE_URL`（独立 SELECT-only 身份）和 `--export-spool-parent`（当前操作者拥有的 0700 私有父目录）；不得复用 gateway/downstream 写身份。公开 trust、四字段 external pin 和独立 reader 捕获的 checkpoint history 通过配置的 evidence_local_inputs 加载。未登记 export_credentials 的旧配置沿用原调用方式。`check` 离线验证配置及私有 secret 文件，不要求运行时 DSN 或临时目录。
+
+```bash
+export AG_GATEWAY_EXPORT_DATABASE_URL="$RUN_SELECT_ONLY_EXPORT_DSN"
+python -m agent_guard.gateway run --config "$RUN_GATEWAY_CONFIG_DIR/config.json" --host 127.0.0.1 --port 8444 --ssl-certfile "$RUN_TLS_CERT" --ssl-keyfile "$RUN_TLS_KEY" --export-spool-parent "$RUN_EXPORT_PRIVATE_PARENT"
+```
+
+## 正常隔离演示
+
+需要Docker Desktop、Compose v2和宿主Python 3；正常容器使用Python3.11及现有锁。无需模型API。以下脚本逐字执行；现有最终测试环境只消费本owner已准备的12角色/3PG，独立运行则由有限可信supervisor新建并最终清理自有资源。
+
+```bash
+# A33-REPRODUCE-BEGIN
+AG33_REPOSITORY="${AG33_REPOSITORY:-$(pwd)}"
+if [ -n "${AG33_FINAL_RESOURCE_MANIFEST:-}" ]; then
+  AG33_PROJECT="$(python3 -c 'import json,os;print(json.load(open(os.environ["AG33_FINAL_RESOURCE_MANIFEST"]))["project"])')"
+  AG33_CONTROL="$(dirname "$AG33_FINAL_RESOURCE_MANIFEST")/control"
+  AG33_OPERATOR_ID="$(python3 -c 'import json,os;print(json.load(open(os.environ["AG33_FINAL_RESOURCE_MANIFEST"]))["roles"]["operator"]["container_id"])')"
+  AG33_IMAGE="$(docker inspect --format '{{.Config.Image}}' "$AG33_OPERATOR_ID")"
+  AG33_SUBNET_PREFIX="$(python3 -c 'import json,os;print(json.load(open(os.environ["AG33_FINAL_RESOURCE_MANIFEST"]))["roles"]["audit"]["listener_host"].rsplit(".",1)[0])')"
+  export AG33_PROJECT AG33_CONTROL AG33_IMAGE AG33_SUBNET_PREFIX
+  docker compose -f "$AG33_REPOSITORY/deploy/demo/compose.yaml" --project-name "$AG33_PROJECT" config -q
+  docker exec "$AG33_OPERATOR_ID" python -m agent_guard.demo normal --config /owned/run/run.json --out /tmp/readme-demo
+else
+  AG33_RUN_ID="$(python3 -c 'import uuid;print(uuid.uuid4())')"
+  AG33_OWNER_ID="demo-$AG33_RUN_ID"
+  python3 "$AG33_REPOSITORY/deploy/demo/supervisor.py" --run-id "$AG33_RUN_ID" --owner-id "$AG33_OWNER_ID" --evidence "$PWD/demo-$AG33_RUN_ID" --mode wheel
+fi
+# A33-REPRODUCE-END
+```
+
+正常命令是`python -m agent_guard.demo normal --config /owned/run/run.json --out /tmp/OUTPUT [--capacity-items 256]`。256必须在trusted owner启动supervisor时同时传`--capacity-items 256`，在provision前固定catalog/policy；不能临时扩大已准备的任务。详见[部署操作](docs/deployment-demo.md)和[技术材料](docs/technical-report.md)。

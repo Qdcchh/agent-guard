@@ -60,6 +60,10 @@ _QUOTE_VERSION = re.compile(r"[^@]+@[1-9][0-9]*\Z", re.ASCII)
 class ClaimsError(ValueError):
     """A signed claim set violates the fixed authorization profile."""
 
+    def __init__(self, detail: str, *, code: str = "INVALID_SIGNATURE"):
+        self.code = code
+        super().__init__(detail)
+
 
 def _object(value: object, fields: set[str], name: str) -> JsonObject:
     if type(value) is not dict or set(value) != fields:
@@ -149,7 +153,7 @@ def validate_access_claims(
     nbf = _integer(claims["nbf"], "nbf")
     exp = _integer(claims["exp"], "exp")
     if not iat <= now or not nbf <= now < exp or not iat <= nbf < exp:
-        raise ClaimsError("access token outside validity window")
+        raise ClaimsError("access token outside validity window", code="EXPIRED")
     if exp - iat > 300:
         raise ClaimsError("access token lifetime exceeds 300 seconds")
     remaining = _integer(claims["ag_delegation_remaining"], "delegation remaining")

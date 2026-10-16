@@ -1,0 +1,139 @@
+{
+  "status": "ACTIVATED_S2_SOLE_INTEGRATOR",
+  "writer": "/root/a31_s2_integrator_sol_r1",
+  "requested_model": "gpt-6.1-sol/medium",
+  "effective_metadata": "UNKNOWN",
+  "task": "tasks/workflow/runs/A3.1-audit-20261008/task-s2-integration-r1.md",
+  "task_sha256": "547294f6b9b6a706811ea1cf4ea2759bdc4e1cc779891bd8624ce34e3d03590e",
+  "ownership": "tasks/workflow/runs/A3.1-audit-20261008/ownership-s2-r1.json",
+  "exact_write_paths": [
+    "HANDOFF.md",
+    "README.md",
+    "docs/acceptance.md",
+    "docs/crypto-profile-v1.md",
+    "docs/oauth-oidc-sm2-mvp.md",
+    "docs/security-model.md",
+    "tasks/A3.1-report.md",
+    "tasks/workflow/README.md",
+    "tasks/workflow/context.md",
+    "tasks/workflow/current-policy.md",
+    "tasks/workflow/issues.md",
+    "tasks/workflow/stages/A3.1-audit.md",
+    "tests/fixtures/a31_joint.py",
+    "tests/integration/test_a31_joint_tls.py",
+    "tests/integration/test_a31_inherited_serialization.py",
+    "tests/integration/test_a31_inherited_trusted_material.py",
+    "tests/integration/test_a31_migration_inventory.py",
+    "tests/fixtures/a31_delivery.py",
+    "tests/integration/test_audit_delivery.py",
+    "src/agent_guard/audit/server.py",
+    "tests/integration/test_execution_r4_regressions.py",
+    "tools/a2_receipt_demo.py",
+    "tests/integration/test_gateway_receipt_query.py"
+  ],
+  "before_files": [
+    {
+      "path": "HANDOFF.md",
+      "sha256": "2cd7e619e7cecb1a273bb931af10859a8d0cb8775241343e35272d420b1d6847"
+    },
+    {
+      "path": "README.md",
+      "sha256": "b4f14152c2cc7da734f948b5924863193ed74705b10249beff85cfff72891227"
+    },
+    {
+      "path": "docs/acceptance.md",
+      "sha256": "c8c26cc340f01a04522e03fc8ac7e4027fc2ffb17407d51d232fd1f4868cbc92"
+    },
+    {
+      "path": "docs/crypto-profile-v1.md",
+      "sha256": "6cca7fc566cb21fa777c82162df8029d84b125f9e7bc0b8b070ed189530197f4"
+    },
+    {
+      "path": "docs/oauth-oidc-sm2-mvp.md",
+      "sha256": "1ab8d91458dab9c078be650b499a86ea69c8ba295b52ab82ea76e99eea44a26a"
+    },
+    {
+      "path": "docs/security-model.md",
+      "sha256": "c0f6bc125b6d80beac2f6c262e4ff5595b42929ac1a63b8d6c9d1f70e8c723c9"
+    },
+    {
+      "path": "tasks/A3.1-report.md",
+      "sha256": "NEW"
+    },
+    {
+      "path": "tasks/workflow/README.md",
+      "sha256": "48036ce695d272de3b1221b8763a036e50ccbb831016457d6111d4b6eb505f58"
+    },
+    {
+      "path": "tasks/workflow/context.md",
+      "sha256": "34d1321e177b5aa634d4ae93d557787b42fb6d9d3900bb0ea3437e8bcce518f5"
+    },
+    {
+      "path": "tasks/workflow/current-policy.md",
+      "sha256": "6070d164ac1fc5411da3e4867729113c48d47588d5bb2735d47d6c7c5710386d"
+    },
+    {
+      "path": "tasks/workflow/issues.md",
+      "sha256": "8c378d37d38f5c3aa6ad1fe75b326547be6ca1ca3d80a0273a3faad2c447d143"
+    },
+    {
+      "path": "tasks/workflow/stages/A3.1-audit.md",
+      "sha256": "NEW"
+    },
+    {
+      "path": "tests/fixtures/a31_joint.py",
+      "sha256": "NEW"
+    },
+    {
+      "path": "tests/integration/test_a31_joint_tls.py",
+      "sha256": "NEW"
+    },
+    {
+      "path": "tests/integration/test_a31_inherited_serialization.py",
+      "sha256": "NEW"
+    },
+    {
+      "path": "tests/integration/test_a31_inherited_trusted_material.py",
+      "sha256": "NEW"
+    },
+    {
+      "path": "tests/integration/test_a31_migration_inventory.py",
+      "sha256": "NEW"
+    },
+    {
+      "path": "tests/fixtures/a31_delivery.py",
+      "sha256": "a1cd6907adb1478b127547ffbf5d71e2277c348fd5c89b52cb0ec8770866f0ec"
+    },
+    {
+      "path": "tests/integration/test_audit_delivery.py",
+      "sha256": "398080f0847b0ae0cee130b74465fb9bf239dbbc268e7c673b172d0429124cfa"
+    }
+  ],
+  "preconditions": {
+    "all_S0_S1_correction_nativeSTOP": true,
+    "correction_full989_both_native0": true,
+    "actual_owned_resource0": true,
+    "readback": "artifacts/workflow/A3.1-audit-20261008/controller/reconcile-r5-final-stop-resource0-manifest-readback-r1.json"
+  },
+  "physical_resources": [
+    "integrator-source",
+    "integrator-wheel"
+  ],
+  "runtime_plan": "artifacts/workflow/A3.1-audit-20261008/controller/runtime_mode_helper.py",
+  "complete_scope": {
+    "parents": 141,
+    "runtime": 133,
+    "inherited_assertions": 269,
+    "new_atoms": 95
+  },
+  "implementation_acceptance": "NOT_RUN",
+  "created": 1791570759.600789,
+  "tls_remediation_transfer": "tasks/workflow/runs/A3.1-audit-20261008/ownership-s2-tls-remediation-r1.json",
+  "tls_remediation_transfer_sha256": "d1e35283dc61d86f2744947add9f1087a557db4a5e3a5fa2c4a4253a2082e2b3",
+  "current_caller_remediation_transfer": "tasks/workflow/runs/A3.1-audit-20261008/ownership-s2-current-caller-remediation-r1.json",
+  "current_caller_remediation_transfer_sha256": "ae1dba7f78d50fe68dbaceb2e4e741588399fac5dd6ffef92e5915d7c0dd325d",
+  "current_demo_remediation_transfer": "tasks/workflow/runs/A3.1-audit-20261008/ownership-s2-current-demo-remediation-r1.json",
+  "current_demo_remediation_transfer_sha256": "693c9a4a172baa89ae983aa6ab9a66564605b6c6656849d01dfb7e3c8fd25619",
+  "shared_query_remediation_transfer": "tasks/workflow/runs/A3.1-audit-20261008/ownership-s2-shared-query-remediation-r1.json",
+  "shared_query_remediation_transfer_sha256": "e8798df0198a930acb3b66c867c10dcab0437cd2f7e57b14ccb236cce4ddab1e"
+}

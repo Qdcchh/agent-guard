@@ -3,7 +3,7 @@
 - 同一阶段用户授权引用：
 - 对应完整review Markdown和独立review session：
 - 被review的snapshot/contract摘要：
-- 继续的新流程MiMo task_id（不得使用历史旧task_id）：
+- 本轮 worker 的原生 task/thread 身份（缺失字段如实记录，不混用旧平台身份）：
 
 ## 逐项补正
 

@@ -1,0 +1,255 @@
+{
+  "kind": "A33_A34_PLANNING_FINDINGS",
+  "status": "PLANNING_BASELINE",
+  "business_package_ready": false,
+  "business_runs": "NOT_RUN",
+  "implementation_authorized": false,
+  "effective_model": "UNKNOWN",
+  "effective_effort": "UNKNOWN",
+  "parents_retained": 26,
+  "assertions_retained": 131,
+  "contract": "delivery-experiment-contract.md",
+  "findings": [
+    {
+      "id": "D-F01",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "生产锁使只换budget表仍串行",
+      "evidence": [
+        "src/agent_guard/ledger/store.py:152",
+        "src/agent_guard/ledger/store.py:172",
+        "src/agent_guard/ledger/store.py:184",
+        "src/agent_guard/ledger/service.py:373"
+      ],
+      "planning_resolution": "E1/E2：独立research接受，authority FOR SHARE、不同业务键精确mutex、独立counter，不调生产final_bound_check",
+      "remaining_measured_gate": "真实pg_locks/backends/10轮双70000提交140000，生产至多一effect",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F02",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "独立接受后仍沿生产terminal会改ag_grants和假首次材料",
+      "evidence": [
+        "src/agent_guard/execution/service.py:686",
+        "src/agent_guard/execution/service.py:780",
+        "src/agent_guard/execution/store.py:391"
+      ],
+      "planning_resolution": "E1/E2、D4：精确research_contracts/store/service/worker/evidence候选家族，真实operation/event/lease/outbox成对独立",
+      "remaining_measured_gate": "UNKNOWN/迟到/双recoverer/过期lease/撤销恢复全counter和effect oracle",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F03",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "Bearer缺proof无法满足生产bundle/FK，server correlation不证明PoP",
+      "evidence": [
+        "src/agent_guard/gateway/http_app.py:143",
+        "src/agent_guard/authorization/verifier.py:202",
+        "src/agent_guard/authorization/verifier.py:361",
+        "src/agent_guard/contracts/ledger.py:139"
+      ],
+      "planning_resolution": "E1：ResearchBearerContext proof=None possession NOT_VERIFIED；真AS/token/source/currentstate保留，独立evidence",
+      "remaining_measured_gate": "盗有效token原scope真实effect与full零effect，valid-holder正控和篡改扩权负控",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F04",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "旧design与后续草案样本/seed/微基准数量矛盾",
+      "evidence": [
+        "artifacts/workflow/A3-planning-20261004/demo-experiment-design/design.md:100",
+        "artifacts/workflow/A3-planning-20261004/demo-experiment-design/design.md:120",
+        "artifacts/workflow/A3-planning-20261004/demo-experiment-design/task-A3.4-draft.md:9"
+      ],
+      "planning_resolution": "E3/E4：4×2×5000、2seed、each250warmup、crypto1000+50为最新候选；原3×10000仅历史建议",
+      "remaining_measured_gate": "正式manifest独立包审冻结，全部官方40000/完整10000真实attempt retained",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F05",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "AS层拒绝不能充当gateway调用，无child不得伪token",
+      "evidence": [
+        "artifacts/workflow/A3-planning-20261004/controller/A34-AS-layer-measured-invoke-followup-r1.json:12"
+      ],
+      "planning_resolution": "E3：冻真ancestor fallback+错holder+原expanded intent，AS另计，valid-holder predicate负控独立",
+      "remaining_measured_gate": "每计划行真实send/rejectlayer；无法发送INCOMPLETE，模式许可差异预审",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F06",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "freshidem可能误读为换业务键及未计准备调用",
+      "evidence": [
+        "src/agent_guard/ledger/service.py:278",
+        "src/agent_guard/ledger/service.py:450",
+        "artifacts/workflow/A3-planning-20261004/controller/A34-retry-oracle-clarification-draft-r1.json:14"
+      ],
+      "planning_resolution": "E3：250/100/100/50均原key/intent/holder/grant，targets固定legal3500，loss原row不替换",
+      "remaining_measured_gate": "每目标key/body/original operation及oneeffect；terminal依赖未满足完整保留",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F07",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "批量预签/先3500再500会跨root300/proof60窗口",
+      "evidence": [
+        "src/agent_guard/contracts/ledger.py:47",
+        "src/agent_guard/authorization/claims.py:155",
+        "src/agent_guard/authorization/code_service.py:305"
+      ],
+      "planning_resolution": "E3：每task真实初始化、task-local DAG/JITproof、240调度/120依赖/5重放目标/600drain候选；不renewgrant",
+      "remaining_measured_gate": "实际signed/send/DBclock及过期层、late event；missing不补造",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F08",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "50client不等于32server并行；timeout线程仍在途",
+      "evidence": [
+        "src/agent_guard/gateway/config.py:205",
+        "src/agent_guard/gateway/http_app.py:27",
+        "src/agent_guard/gateway/http_app.py:154"
+      ],
+      "planning_resolution": "E3/E4：保持50真实pending peak证据/server32、latefuture槽和drain，失败不筛",
+      "remaining_measured_gate": "50首波barrier send/end/active trace、真实capacity拒绝/迟到effect",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F09",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "AS/GW init不是安全角色装配；tests demo不随wheel部署",
+      "evidence": [
+        "src/agent_guard/server/private_files.py:119",
+        "src/agent_guard/server/private_files.py:184",
+        "tests/demo_b_flow.py:19",
+        "pyproject.toml:27"
+      ],
+      "planning_resolution": "D2/D3：role最小私有mount/不同UID、operator只初始化policy、真browser链，不fixture生产组装",
+      "remaining_measured_gate": "source/wheel仓库外PID/import证明，跨role文件/网络拒例",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F10",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "immutable DID是现有受控信任，不等于实时网络解析",
+      "evidence": [
+        "src/agent_guard/server/factory.py:98",
+        "artifacts/workflow/A3-planning-20261004/demo-experiment-design/design.md:12"
+      ],
+      "planning_resolution": "D2：operator真实HTTPS取得/用途校验/批准冻结分发；保现factory与B resolver回归",
+      "remaining_measured_gate": "wrongCA/SAN/redirect/keyreplace/hash失败，启动后远端和dict变化不影响捕获bytes",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F11",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "独立DS不要求凭空增加RPC；当前GW仍需DSN/secret",
+      "evidence": [
+        "src/agent_guard/gateway/factory.py:28",
+        "src/agent_guard/gateway/factory.py:34",
+        "src/agent_guard/gateway/factory.py:64",
+        "src/agent_guard/tools/downstream.py:166",
+        "src/agent_guard/tools/downstream.py:210"
+      ],
+      "planning_resolution": "D2：真实不同DS数据库/连接/TX/service secret；权限表诚实、holder不持材料/route",
+      "remaining_measured_gate": "真serviceauth execute/query拒例/effects/role网络；如需factory分离先审新scope",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F12",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "S1部署测试消费未生成CLI/compose会错误完整PASS",
+      "evidence": [
+        "tasks/workflow/runs/A3-planning-20261008/test-plan.json:6641",
+        "artifacts/workflow/A3-planning-20261004/controller/A33-A34-inherited-node-scope-followup-r1.json:13"
+      ],
+      "planning_resolution": "D4：S1仅PRECHECK_ONLY；全部STOP后S2唯一整合main/compose/pyproject/docs并完整重跑",
+      "remaining_measured_gate": "finalfreeze与source/wheel逐字README/E2E完整case，局部slice不可替父项",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F13",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "effective_at是事务内clock而非真实commit timestamp",
+      "evidence": [
+        "src/agent_guard/authorization/grant_revocation_service.py:122",
+        "src/agent_guard/authorization/revocation_service.py:124"
+      ],
+      "planning_resolution": "E2：独立backend/barrier及precommit/返回/postcommit可见monotonic bracket；不改SQL造精度",
+      "remaining_measured_gate": "撤销先拒与接受先允许恢复10轮、SQLSTATE/wait轨迹",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F14",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "固定工作负载export可能撞容量；单包上限不能放宽分项",
+      "evidence": [
+        "tasks/workflow/runs/A3-planning-20261008/test-plan.json:1508",
+        "tasks/workflow/runs/A3-planning-20261008/test-plan.json:5866"
+      ],
+      "planning_resolution": "D3/E4：最大256SKU真可达/层级负例，按task/预冻结分区全量导出与总spool峰值，超限显式拒",
+      "remaining_measured_gate": "accepted A32真实codec/cap、40000 workload逐包计数/bytes/hashes/外部trust/latest预检",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F15",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "性能公平不保证纯PoP差额，complete真实证据成本不可删",
+      "evidence": [
+        "artifacts/workflow/A3-planning-20261004/controller/a34-research-compatibility-preflight-r1.md:37",
+        "docs/acceptance.md:51"
+      ],
+      "planning_resolution": "E1/E4：capabilities/共同persistence及N/A透明，allfailure nearest-rank/分母分开、trace独立",
+      "remaining_measured_gate": "每mode正负efficacy/independent effects，全部2rep/raw和成本环境，禁止普适优越结论",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "D-F16",
+      "classification": "FUTURE_DESIGN_OR_ASSEMBLY_CONFLICT_NOT_CONFIRMED_CURRENT_PRODUCT_DEFECT",
+      "problem": "旧wrapper/角色/历史授权/机器资源不能自动有效",
+      "evidence": [
+        "artifacts/workflow/A3-planning-20261004/controller/A33-A34-inherited-node-scope-followup-r1.json:13",
+        "tasks/workflow/current-policy.md:5",
+        "docs/acceptance.md:25",
+        "docs/acceptance.md:61"
+      ],
+      "planning_resolution": "D1/D4/E4：保21P/30goal不造51wrapper，PLANNING_BASELINE与四业务正式门分开，modelUNKNOWN、历史硬件待新preflight、初版与成熟版分层无10月20日全A3截止",
+      "remaining_measured_gate": "正式逐ID/前段accepted hash/API/node重绑定，fresh独立完整source/wheel+官方run，缺run不ACCEPTED",
+      "business_status": "NOT_RUN",
+      "resolution_status": "DOCUMENTED_PENDING_FORMAL_BINDING_AND_EXECUTION"
+    },
+    {
+      "id": "PLAN-R2-REPLAY-01",
+      "classification": "CONFIRMED_PLANNING_SCHEDULE_CONTRADICTION",
+      "problem": "class2 dedicated fresh task one measured invoke with no priming cannot prove replay of consumed proof",
+      "resolution": "reuse fixed legal T0500..0599 request.read originals; exact bytes task-local resends; independent committed-consumption oracle and unchanged counts; prerequisites missing INCOMPLETE; nonPoP N/A; separate controlled10round probe",
+      "status": "FIXED_PENDING_FRESH_REVIEW",
+      "source": "r1 native interim observation plus controller direct schedule read; r1 interrupted without final conclusion"
+    }
+  ],
+  "source_limits": "Historical code line references are verified read-only planning anchors, not execution proof; future accepted predecessor interfaces must be rebound.",
+  "mapping_note": "A34-09 removed from official runner; real crypto09.01/.02/.05, independent DBtrace09.03/.05 and TLSRTT09.04/.05 are separate native planned nodes. A34-05 unit schema + actual official gateway/effect rows + independently approved policy/DS effect integration control form union; no local/native self-report whole-parent claim.",
+  "delivery_node_counts": {
+    "total": 33,
+    "core_requirement_nodes": 26,
+    "precheck_nodes": 3,
+    "native_obligations": 4,
+    "new_independent_native_nodes": 2,
+    "new_nodes_are_planned_not_implemented": true
+  }
+}

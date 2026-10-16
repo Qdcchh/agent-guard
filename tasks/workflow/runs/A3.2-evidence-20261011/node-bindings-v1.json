@@ -1,0 +1,1465 @@
+{
+  "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+  "planned_nodes": [
+    {
+      "planned_node": "tests/unit/test_task_bundle_codec.py::test_chunk_wire_bounds_exact_raw_reassembly",
+      "file": "tests/unit/test_task_bundle_codec.py",
+      "function": "test_chunk_wire_bounds_exact_raw_reassembly",
+      "sole_initial_owner": "a32-shared",
+      "phase": "S0_SERIAL",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-01.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-01",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 小切片wire/defaultcodec及原件重组 observation: A32-01.01",
+          "finite_case_ref": "A32-01.01",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-01.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-01",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 小切片wire/defaultcodec及原件重组 observation: A32-01.02",
+          "finite_case_ref": "A32-01.02",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-01.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-01",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 小切片wire/defaultcodec及原件重组 observation: A32-01.03",
+          "finite_case_ref": "A32-01.03",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-01.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-01",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 小切片wire/defaultcodec及原件重组 observation: A32-01.04",
+          "finite_case_ref": "A32-01.04",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "maxbody_result",
+        "maxtoken",
+        "journal",
+        "framebounds",
+        "noncanonicalraw"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": null,
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-shared",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/unit/test_task_bundle_codec.py::test_strict_chunks_index_package_limits",
+      "file": "tests/unit/test_task_bundle_codec.py",
+      "function": "test_strict_chunks_index_package_limits",
+      "sole_initial_owner": "a32-shared",
+      "phase": "S0_SERIAL",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-02.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-02",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local strictchunks索引fold/总wire/断包 observation: A32-02.01",
+          "finite_case_ref": "A32-02.01",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-02.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-02",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local strictchunks索引fold/总wire/断包 observation: A32-02.02",
+          "finite_case_ref": "A32-02.02",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-02.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-02",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local strictchunks索引fold/总wire/断包 observation: A32-02.03",
+          "finite_case_ref": "A32-02.03",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-02.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-02",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local strictchunks索引fold/总wire/断包 observation: A32-02.04",
+          "finite_case_ref": "A32-02.04",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "missing",
+        "duplicate",
+        "splice",
+        "long_noLF",
+        "CRLF",
+        "footer",
+        "encodedoverhead"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": null,
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-shared",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/unit/test_receipt_components.py::test_component_semantics_legacy_v1_compatibility",
+      "file": "tests/unit/test_receipt_components.py",
+      "function": "test_component_semantics_legacy_v1_compatibility",
+      "sole_initial_owner": "a32-shared",
+      "phase": "S0_SERIAL",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-03.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-03",
+            "assertindex_1based": 1
+          },
+          "local_slice": "same accepted helper signature and semantic inputs",
+          "finite_case_ref": "A32-03.01",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-03.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-03",
+            "assertindex_1based": 2
+          },
+          "local_slice": "per component bounds and aggregate arithmetic",
+          "finite_case_ref": "A32-03.02",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-03.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-03",
+            "assertindex_1based": 3
+          },
+          "local_slice": "v1 wrapper default behavior",
+          "finite_case_ref": "A32-03.03",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-03.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-03",
+            "assertindex_1based": 4
+          },
+          "local_slice": "actual accepted compatibility probe binding remains pending",
+          "finite_case_ref": "A32-03.04",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "widelegalchain",
+        "maxlegalsinglebodyresult",
+        "v1wrapper",
+        "rawaggregate"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": null,
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-shared",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_a32_joint_tls.py::test_real_accepted_wide_chain_256_items_component_export_offline",
+      "file": "tests/integration/test_a32_joint_tls.py",
+      "function": "test_real_accepted_wide_chain_256_items_component_export_offline",
+      "sole_initial_owner": "single-integrator",
+      "phase": "S2_SERIAL_INTEGRATION",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-03.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-03",
+            "assertindex_1based": 2
+          },
+          "local_slice": "real public reachable components/rawaggregate",
+          "finite_case_ref": "A32-03.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-03.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-03",
+            "assertindex_1based": 3
+          },
+          "local_slice": "actual v1 UNANCHORED output unchanged",
+          "finite_case_ref": "A32-03.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-03.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-03",
+            "assertindex_1based": 4
+          },
+          "local_slice": "accepted legal width boundary evidence",
+          "finite_case_ref": "A32-03.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-03.05",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-03",
+            "assertindex_1based": 5
+          },
+          "local_slice": "genuine AS root+two delegations; 256 short legal SKU; PG terminal/receipt/export/offline/source+wheel",
+          "finite_case_ref": "A32-03.05",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "as_signed_three_level_wide_legal_chain",
+        "real_256_unique_items_legal_order",
+        "actual_reachable_max_body_result",
+        "accepted_pg_material_export_pure_offline",
+        "accepted_v1_capacity_compatibility"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "single-integrator",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_evidence_export_tls.py::test_export_tls_registered_audit_role_scope",
+      "file": "tests/integration/test_evidence_export_tls.py",
+      "function": "test_export_tls_registered_audit_role_scope",
+      "sole_initial_owner": "a32-export",
+      "phase": "S1_PARALLEL_EXPORT",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-04.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-04",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local export独立审计roleTLS及tenanttask observation: A32-04.01",
+          "finite_case_ref": "A32-04.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-04.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-04",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local export独立审计roleTLS及tenanttask observation: A32-04.02",
+          "finite_case_ref": "A32-04.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-04.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-04",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local export独立审计roleTLS及tenanttask observation: A32-04.03",
+          "finite_case_ref": "A32-04.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-04.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-04",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local export独立审计roleTLS及tenanttask observation: A32-04.04",
+          "finite_case_ref": "A32-04.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "allowed",
+        "cross_tenant_same_task",
+        "wrongrole",
+        "badTLS",
+        "framing"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-export",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_evidence_export.py::test_export_fixed_cutoff_during_concurrent_changes",
+      "file": "tests/integration/test_evidence_export.py",
+      "function": "test_export_fixed_cutoff_during_concurrent_changes",
+      "sole_initial_owner": "a32-export",
+      "phase": "S1_PARALLEL_EXPORT",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-05.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-05",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local read-only snapshotcutoff并发一致 observation: A32-05.01",
+          "finite_case_ref": "A32-05.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-05.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-05",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local read-only snapshotcutoff并发一致 observation: A32-05.02",
+          "finite_case_ref": "A32-05.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-05.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-05",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local read-only snapshotcutoff并发一致 observation: A32-05.03",
+          "finite_case_ref": "A32-05.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-05.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-05",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local read-only snapshotcutoff并发一致 observation: A32-05.04",
+          "finite_case_ref": "A32-05.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "accept",
+        "query",
+        "terminal",
+        "publish",
+        "keyrotate",
+        "same_other_task",
+        "first_without_successful_query",
+        "claim_runtime_transition",
+        "unknown_runtime_transition",
+        "same_SH_distinct_asof_observation"
+      ],
+      "additional_cases_preserved": [
+        "FIRST no successful QUERY; same S/H RESERVED→EXECUTING→UNKNOWN as-of observation differs; reservations unchanged",
+        "same RR S/H/bootstrap/journal/material/runtime observed before full bounded spool TX ends; no future READY/JWS"
+      ],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-export",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_evidence_export.py::test_export_all_material_states_and_four_tools",
+      "file": "tests/integration/test_evidence_export.py",
+      "function": "test_export_all_material_states_and_four_tools",
+      "sole_initial_owner": "a32-export",
+      "phase": "S1_PARALLEL_EXPORT",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-06.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-06",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 全部状态完整材料原件关联 observation: A32-06.01",
+          "finite_case_ref": "A32-06.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-06.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-06",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 全部状态完整材料原件关联 observation: A32-06.02",
+          "finite_case_ref": "A32-06.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-06.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-06",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 全部状态完整材料原件关联 observation: A32-06.03",
+          "finite_case_ref": "A32-06.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-06.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-06",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 全部状态完整材料原件关联 observation: A32-06.04",
+          "finite_case_ref": "A32-06.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "allstates",
+        "PENDING_READY",
+        "fourtools",
+        "retryquery",
+        "quoteeditdelete",
+        "anchored_nonterminal_runtime_reserved_executing_unknown",
+        "terminal_pending_publish_ready"
+      ],
+      "additional_cases_preserved": [
+        "nonterminal no final receipt; actual runtime observation remains unanchored even N=S",
+        "prefix execution derivation vs RR runtime snapshot; pending terminal publication boundary"
+      ],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-export",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_evidence_export.py::test_export_bootstrap_nonzero_opaque_gaps",
+      "file": "tests/integration/test_evidence_export.py",
+      "function": "test_export_bootstrap_nonzero_opaque_gaps",
+      "sole_initial_owner": "a32-export",
+      "phase": "S1_PARALLEL_EXPORT",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-07.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-07",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 历史bootstrap/nonzero/opaque准确gap observation: A32-07.01",
+          "finite_case_ref": "A32-07.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-07.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-07",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 历史bootstrap/nonzero/opaque准确gap observation: A32-07.02",
+          "finite_case_ref": "A32-07.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-07.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-07",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 历史bootstrap/nonzero/opaque准确gap observation: A32-07.03",
+          "finite_case_ref": "A32-07.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-07.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-07",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 历史bootstrap/nonzero/opaque准确gap observation: A32-07.04",
+          "finite_case_ref": "A32-07.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "nonzerobaseline",
+        "opaque",
+        "short",
+        "missingoriginal"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-export",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_evidence_export.py::test_export_wire_bounds_disconnect_synthetic_privacy",
+      "file": "tests/integration/test_evidence_export.py",
+      "function": "test_export_wire_bounds_disconnect_synthetic_privacy",
+      "sole_initial_owner": "a32-export",
+      "phase": "S1_PARALLEL_EXPORT",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-08.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-08",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local export总wire/断连/合成secret限制 observation: A32-08.01",
+          "finite_case_ref": "A32-08.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-08.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-08",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local export总wire/断连/合成secret限制 observation: A32-08.02",
+          "finite_case_ref": "A32-08.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-08.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-08",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local export总wire/断连/合成secret限制 observation: A32-08.03",
+          "finite_case_ref": "A32-08.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-08.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-08",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local export总wire/断连/合成secret限制 observation: A32-08.04",
+          "finite_case_ref": "A32-08.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "fixed10000",
+        "maxsinglereallegal",
+        "overwire",
+        "disconnect",
+        "spoolprivacy"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-export",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_evidence_export.py::test_export_behind_independent_checkpoint_refused",
+      "file": "tests/integration/test_evidence_export.py",
+      "function": "test_export_behind_independent_checkpoint_refused",
+      "sole_initial_owner": "a32-export",
+      "phase": "S1_PARALLEL_EXPORT",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-09.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-09",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local export对independentpin落后拒绝 observation: A32-09.01",
+          "finite_case_ref": "A32-09.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-09.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-09",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local export对independentpin落后拒绝 observation: A32-09.02",
+          "finite_case_ref": "A32-09.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-09.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-09",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local export对independentpin落后拒绝 observation: A32-09.03",
+          "finite_case_ref": "A32-09.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-09.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-09",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local export对independentpin落后拒绝 observation: A32-09.04",
+          "finite_case_ref": "A32-09.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "behind",
+        "fork",
+        "missinglatest",
+        "minimumonly"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-export",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_evidence_offline.py::test_offline_real_signed_task_four_tools_counters",
+      "file": "tests/integration/test_evidence_offline.py",
+      "function": "test_offline_real_signed_task_four_tools_counters",
+      "sole_initial_owner": "a32-verify",
+      "phase": "S1_PARALLEL_VERIFY",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-10.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-10",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local offline真实全签名四工具预算 observation: A32-10.01",
+          "finite_case_ref": "A32-10.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-10.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-10",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local offline真实全签名四工具预算 observation: A32-10.02",
+          "finite_case_ref": "A32-10.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-10.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-10",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local offline真实全签名四工具预算 observation: A32-10.03",
+          "finite_case_ref": "A32-10.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-10.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-10",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local offline真实全签名四工具预算 observation: A32-10.04",
+          "finite_case_ref": "A32-10.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "fourtools",
+        "nonzerobootstrap",
+        "PENDING_UNKNOWN_READY",
+        "source_wheel"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-verify",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/unit/test_task_evidence_verify.py::test_component_and_all_node_delta_mutations",
+      "file": "tests/unit/test_task_evidence_verify.py",
+      "function": "test_component_and_all_node_delta_mutations",
+      "sole_initial_owner": "a32-verify",
+      "phase": "S1_PARALLEL_VERIFY",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-11.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-11",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 全部原件及每节点delta篡改 observation: A32-11.01",
+          "finite_case_ref": "A32-11.01",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-11.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-11",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 全部原件及每节点delta篡改 observation: A32-11.02",
+          "finite_case_ref": "A32-11.02",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-11.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-11",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 全部原件及每节点delta篡改 observation: A32-11.03",
+          "finite_case_ref": "A32-11.03",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-11.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-11",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 全部原件及每节点delta篡改 observation: A32-11.04",
+          "finite_case_ref": "A32-11.04",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "eachcomponent",
+        "eachcontextsourcefield",
+        "eachnodedelta",
+        "eachscope",
+        "sigtypalgkid"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": null,
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-verify",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/unit/test_task_evidence_verify.py::test_anchored_deletion_reordering_entire_operation",
+      "file": "tests/unit/test_task_evidence_verify.py",
+      "function": "test_anchored_deletion_reordering_entire_operation",
+      "sole_initial_owner": "a32-verify",
+      "phase": "S1_PARALLEL_VERIFY",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-12.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-12",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 已锚删除重排gap/整op遗漏 observation: A32-12.01",
+          "finite_case_ref": "A32-12.01",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-12.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-12",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 已锚删除重排gap/整op遗漏 observation: A32-12.02",
+          "finite_case_ref": "A32-12.02",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-12.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-12",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 已锚删除重排gap/整op遗漏 observation: A32-12.03",
+          "finite_case_ref": "A32-12.03",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-12.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-12",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 已锚删除重排gap/整op遗漏 observation: A32-12.04",
+          "finite_case_ref": "A32-12.04",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "requiredrecordkinds",
+        "entireop",
+        "reordergap",
+        "recomputeinternalroots"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": null,
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-verify",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/unit/test_task_evidence_verify.py::test_external_anchor_old_valid_checkpoint_rollback",
+      "file": "tests/unit/test_task_evidence_verify.py",
+      "function": "test_external_anchor_old_valid_checkpoint_rollback",
+      "sole_initial_owner": "a32-verify",
+      "phase": "S1_PARALLEL_VERIFY",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-13.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-13",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 外部latest/minimum与旧合法锚回滚 observation: A32-13.01",
+          "finite_case_ref": "A32-13.01",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-13.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-13",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 外部latest/minimum与旧合法锚回滚 observation: A32-13.02",
+          "finite_case_ref": "A32-13.02",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-13.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-13",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 外部latest/minimum与旧合法锚回滚 observation: A32-13.03",
+          "finite_case_ref": "A32-13.03",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-13.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-13",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 外部latest/minimum与旧合法锚回滚 observation: A32-13.04",
+          "finite_case_ref": "A32-13.04",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "exactlatest",
+        "minimum",
+        "oldvalidcp",
+        "sameseqfork",
+        "missinganchor"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": null,
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-verify",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/unit/test_task_evidence_verify.py::test_unanchored_tail_deletion_unknown_freshness",
+      "file": "tests/unit/test_task_evidence_verify.py",
+      "function": "test_unanchored_tail_deletion_unknown_freshness",
+      "sole_initial_owner": "a32-verify",
+      "phase": "S1_PARALLEL_VERIFY",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-14.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-14",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 未锚tail删除缺最新锚不能伪检测 observation: A32-14.01",
+          "finite_case_ref": "A32-14.01",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-14.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-14",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 未锚tail删除缺最新锚不能伪检测 observation: A32-14.02",
+          "finite_case_ref": "A32-14.02",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-14.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-14",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 未锚tail删除缺最新锚不能伪检测 observation: A32-14.03",
+          "finite_case_ref": "A32-14.03",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-14.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-14",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 未锚tail删除缺最新锚不能伪检测 observation: A32-14.04",
+          "finite_case_ref": "A32-14.04",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "tailpresent",
+        "taildeleted",
+        "missinglatest",
+        "minimumpin",
+        "allanchored"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": null,
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-verify",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/unit/test_task_evidence_verify.py::test_historical_keys_roles_registration_rotation",
+      "file": "tests/unit/test_task_evidence_verify.py",
+      "function": "test_historical_keys_roles_registration_rotation",
+      "sole_initial_owner": "a32-verify",
+      "phase": "S1_PARALLEL_VERIFY",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-15.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-15",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local 可信历史key角色轮换注册 observation: A32-15.01",
+          "finite_case_ref": "A32-15.01",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-15.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-15",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local 可信历史key角色轮换注册 observation: A32-15.02",
+          "finite_case_ref": "A32-15.02",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-15.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-15",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local 可信历史key角色轮换注册 observation: A32-15.03",
+          "finite_case_ref": "A32-15.03",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-15.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-15",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local 可信历史key角色轮换注册 observation: A32-15.04",
+          "finite_case_ref": "A32-15.04",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "bundlekey",
+        "currentDID",
+        "wrongrole",
+        "keyrotate",
+        "unknownkidrange"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": null,
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-verify",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/unit/test_task_evidence_verify.py::test_limitations_legacy_current_auth_effect_truth",
+      "file": "tests/unit/test_task_evidence_verify.py",
+      "function": "test_limitations_legacy_current_auth_effect_truth",
+      "sole_initial_owner": "a32-verify",
+      "phase": "S1_PARALLEL_VERIFY",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-16.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-16",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local LIMITATIONS报告gap/current授权/现实效果 observation: A32-16.01",
+          "finite_case_ref": "A32-16.01",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-16.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-16",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local LIMITATIONS报告gap/current授权/现实效果 observation: A32-16.02",
+          "finite_case_ref": "A32-16.02",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-16.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-16",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local LIMITATIONS报告gap/current授权/现实效果 observation: A32-16.03",
+          "finite_case_ref": "A32-16.03",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-16.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-16",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local LIMITATIONS报告gap/current授权/现实效果 observation: A32-16.04",
+          "finite_case_ref": "A32-16.04",
+          "oracle_scope": "codec-only",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "currentrevoke",
+        "expiredafteraccept",
+        "opaquegap",
+        "attestedtruth",
+        "missinghistory",
+        "runtime_legal_value_mutation_recomputed_unsigned_footer",
+        "bound_first_terminal_delta_mutation"
+      ],
+      "additional_cases_preserved": [
+        "legal unsigned observation edited + internal footer recomputed cannot claim independent detection",
+        "anchored FIRST/TERMINAL/delta tamper rejected; current_auth UNKNOWN and downstream truth attested only"
+      ],
+      "rounds": null,
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-verify",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_evidence_offline.py::test_verify_cli_source_wheel_no_network_trust_separation",
+      "file": "tests/integration/test_evidence_offline.py",
+      "function": "test_verify_cli_source_wheel_no_network_trust_separation",
+      "sole_initial_owner": "a32-verify",
+      "phase": "S1_PARALLEL_VERIFY",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-17.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-17",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Local verifyCLI/sourcewheel真实离线 observation: A32-17.01",
+          "finite_case_ref": "A32-17.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-17.02",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-17",
+            "assertindex_1based": 2
+          },
+          "local_slice": "Local verifyCLI/sourcewheel真实离线 observation: A32-17.02",
+          "finite_case_ref": "A32-17.02",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-17.03",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-17",
+            "assertindex_1based": 3
+          },
+          "local_slice": "Local verifyCLI/sourcewheel真实离线 observation: A32-17.03",
+          "finite_case_ref": "A32-17.03",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        },
+        {
+          "atom_ref": "A32-17.04",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-17",
+            "assertindex_1based": 4
+          },
+          "local_slice": "Local verifyCLI/sourcewheel真实离线 observation: A32-17.04",
+          "finite_case_ref": "A32-17.04",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "source",
+        "wheel",
+        "networkdenied",
+        "missingtrust",
+        "badbundle",
+        "unknownfreshness"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "a32-verify",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    },
+    {
+      "planned_node": "tests/integration/test_a32_joint_tls.py::test_real_export_independent_pin_offline_full_flow",
+      "file": "tests/integration/test_a32_joint_tls.py",
+      "function": "test_real_export_independent_pin_offline_full_flow",
+      "sole_initial_owner": "single-integrator",
+      "phase": "S2_SERIAL_INTEGRATION",
+      "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+      "local_assertion_atoms": [
+        {
+          "atom_ref": "A32-18.01",
+          "exact_parent_and_assertindex": {
+            "parent": "A32-18",
+            "assertindex_1based": 1
+          },
+          "local_slice": "Real joint TLS/public flow only; inherited/full review assertions assigned to native stage obligations",
+          "finite_case_ref": "A32-18.01",
+          "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+          "no_whole_parent_claim": true
+        }
+      ],
+      "declared_dimensions_preserved": [
+        "source",
+        "wheel",
+        "fourtools"
+      ],
+      "additional_cases_preserved": [],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_wheel": [
+        "source",
+        "noneditablewheel"
+      ],
+      "execution_case_binding": "After native implementation STOP actual collect binds exact node/parameter to these local atoms; inherited actual tests rebound after fullA2 accepted. No execution during planning.",
+      "resource_owner": "single-integrator",
+      "write_transfer": "Initial owner native STOP -> controller full source+SHA readback and concrete S2 exact allowlist transfer -> sole single-integrator; no concurrent writes or reading peer unfinished outputs."
+    }
+  ],
+  "native_obligations": [
+    {
+      "atom_ref": "A32-18.02",
+      "owner": "controller + single-integrator + fresh independent reviewer",
+      "status": "PLANNED_NATIVE_OBLIGATION_NOT_RUN",
+      "why_no_pytest_node": "Native workflow/full inherited matrix/static clause decision cannot be truthfully proved by invented runtime function.",
+      "finite_case_ref": "A32-18.02"
+    },
+    {
+      "atom_ref": "A32-18.03",
+      "owner": "controller + single-integrator + fresh independent reviewer",
+      "status": "PLANNED_NATIVE_OBLIGATION_NOT_RUN",
+      "why_no_pytest_node": "Native workflow/full inherited matrix/static clause decision cannot be truthfully proved by invented runtime function.",
+      "finite_case_ref": "A32-18.03"
+    },
+    {
+      "atom_ref": "A32-18.04",
+      "owner": "controller + single-integrator + fresh independent reviewer",
+      "status": "PLANNED_NATIVE_OBLIGATION_NOT_RUN",
+      "why_no_pytest_node": "Native workflow/full inherited matrix/static clause decision cannot be truthfully proved by invented runtime function.",
+      "finite_case_ref": "A32-18.04"
+    }
+  ],
+  "actual_nodeids": null,
+  "binding_rule": "Every listed finite alternative retained. Every compatible race/fault tuple rounds0..9 source/noneditablewheel; exact collected nodeids/assertions/oracle/commands/XML bind after authorized implementation STOP. Local node slices never claim whole parent.",
+  "stage": "A3.2-evidence",
+  "accepted_upstream": "A3.1 ACCEPTED; acceptance.md",
+  "inherited_bindings": {
+    "source": "tasks/workflow/runs/A3.1-audit-20261008/inherited-bindings-v1.json",
+    "sha256": "72ce3a703688cc7a928edf32ffbaec783dc140582f1d12154f75f40295d092c5",
+    "A31_requirements": "tasks/workflow/runs/A3.1-audit-20261008/requirements-v1.json",
+    "A31_full_runtime": "tasks/workflow/runs/A3.1-audit-20261008/review-r2.md",
+    "recipe": [
+      "tasks/workflow/runs/A3.1-audit-20261008/inherited-plan-v2.md",
+      "tasks/workflow/runs/A3.1-audit-20261008/inherited-plan-v3.md",
+      "tasks/workflow/runs/A3.1-audit-20261008/task-s2-runner-assembly-r1.md"
+    ],
+    "rule": "Retain mature20groups/mode/full20 closures/10round/sign-once originalTTL/truekill/legacy probes and equivalent tests. Rebind actual collected nodes and new installed module inventory after implementation STOP, never import ignored runtime sources from repository tests."
+  }
+}

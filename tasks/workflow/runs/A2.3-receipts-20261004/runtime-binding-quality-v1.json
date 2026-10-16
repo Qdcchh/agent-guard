@@ -1,0 +1,65 @@
+{
+  "stage": "A2.3-receipts",
+  "utc": "2026-10-04T23:49:43.721935+00:00",
+  "kind": "SPECIFIC_APPROVED_FINITE_RUNTIME_BINDING",
+  "human_quote": "批准A2.3轮有限适配，以后再有这样的类似情况都直接批准",
+  "human_source": "actual visible human reply to asynchronous question; message_id unavailable",
+  "authorization_path": "tasks/workflow/runs/A2.3-receipts-20261004/authorization.json",
+  "authorization_sha256": "a4b28cae5062a49aa76e7d06728ffe14a9cbfa3e188503b818b8375c4ab531c0",
+  "proposal_sha256": "dc10b63e5ee60abd822d71902b0124714a6d0e8e5fd22a5131d06c10b504ffdd",
+  "implementation_authorization": "GRANTED_NOW_A22_ACCEPTED",
+  "actual_accepted_A22_commit": "8e4e7a3eba6a3e3f0a6a3eb9c3745e2cf7f17d40",
+  "effective_model_metadata": "UNKNOWN",
+  "old_machine_gate_binding": "UNAVAILABLE_NOT_MIGRATED",
+  "requested_roles": {
+    "controller": "gpt-6.1-sol/high",
+    "worker": "gpt-6.1-sol/medium",
+    "new_package_and_acceptance_reviewers": "gpt-6.1-sol/xhigh"
+  },
+  "allowed_evidence": [
+    "actual native dispatch and completion",
+    "all writers stop and owned process drain",
+    "complete SHA/mode/pathset/Git/contract freeze",
+    "exact scope/resource labels/fullIDs/private domains",
+    "fresh independent119/112 full source+wheel Py3.11 PG16 TLS/SM2/SM3/A1/B/history/oracle and all real signature/process/race/negative tests"
+  ],
+  "unchanged_standards": true,
+  "excluded": [
+    "fake metadata",
+    "old gate/history mutation",
+    "skipped/weakened tests",
+    "admin review bypass",
+    "external production deployment"
+  ],
+  "A3": "Separately actually authorized in A3-closure authorization; this record limitedA23/fullA2",
+  "version": "quality-v1",
+  "actual_reviewed_CI_binding": {
+    "accepted_business_commit": "8e4e7a3eba6a3e3f0a6a3eb9c3745e2cf7f17d40",
+    "accepted_CI_only_commit": "138c08a3496eefb6ef2ceca0d694290dcb95c642",
+    "only_product_delta": ".github/workflows/ci.yml timeout-minutes 25 to45; no code/test/SQL/dependency change",
+    "review_report": "tasks/workflow/runs/A2.2-integration-20261004/ci-timeout-review-r1.md",
+    "review_sha256": "14410e9780f946a5ae6da76e483e57bded8a03c3a1051735e812cafa5f15ef95",
+    "required_remote_CI": "ACTUAL_SUCCESS_37235233187_HEAD138c08a_REVIEW_REQUIRED",
+    "admin_exception": "NONE"
+  },
+  "baseline": "138c08a3496eefb6ef2ceca0d694290dcb95c642",
+  "formal_package_status": "PENDING_NEW_PACKAGE_REVIEW",
+  "same_actual_human_authority": "authorization.json; same finite adaptation standing actual human approval, no model metadata fabrication",
+  "new_scope": [
+    "src/agent_guard/evidence/receipt.py",
+    "tests/fixtures/receipts.py",
+    "tests/unit/test_receipt_publication.py",
+    "tests/integration/test_receipt_publication.py",
+    "tests/integration/test_gateway_receipt_query.py",
+    "src/agent_guard/execution/receipt_publication.py",
+    "src/agent_guard/execution/verified.py",
+    "src/agent_guard/gateway/factory.py"
+  ],
+  "status": "CORE_QUALITY_PACKAGE_REVIEW_PENDING",
+  "actual_current_partial_core_readback": "artifacts/workflow/A2.3-receipts-20261004/controller/core-capacity-r1-controller-readback.json",
+  "actual_current_partial_core_readback_sha256": "36668003a0566f53db300e0525f2f42721ab3474f653ec69c2b1398094c104f1",
+  "actual_partial_core_status": "CAPACITY_SOURCE_WHEEL_POSITIVES_PASSED_FULLCORE_NOT_RUN_NEEDS_REPLAN_FORMAT3",
+  "readonly_dependency_sha": "baseline-manifest-quality-v1.json; complete ignored quality-package-freeze-v1 additionally binds self and state/Git/raw",
+  "task_package": "task-quality-v1.md",
+  "same_finite_adaptation_unchanged": "Same actual standing human authority; only precise format scope expansion, no runtime reduction/admin exemption"
+}

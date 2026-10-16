@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-04T21:14:09.478080+00:00",
+  "accepted_business_commit": "8e4e7a3eba6a3e3f0a6a3eb9c3745e2cf7f17d40",
+  "CI_only_reviewed_commit": "138c08a3496eefb6ef2ceca0d694290dcb95c642",
+  "changed_paths": [
+    ".github/workflows/ci.yml"
+  ],
+  "native_review": "/root/a22_ci_timeout_review_r1 COMPLETED ACTUAL_PARENT_FINAL",
+  "review_sha256": "14410e9780f946a5ae6da76e483e57bded8a03c3a1051735e812cafa5f15ef95",
+  "review_scope": "PACKAGE_READY and CI_ONLY_CHANGE_REVIEWED; no new product acceptance",
+  "push": "ACTUAL_SUCCESS_FAST_FORWARD",
+  "PR": "https://github.com/Qdcchh/agent-guard/pull/7",
+  "CI_run": 37235233187,
+  "CI_job": 111532894559,
+  "CI_status": "IN_PROGRESS",
+  "reviewDecision": "REVIEW_REQUIRED",
+  "merge": "NOT_MERGED_NO_ADMIN_EXCEPTION",
+  "A23_candidate": "UNCHANGED_FROZEN8e4; incorporate reviewedCI after formalreview nativeSTOP with newfreeze/review"
+}

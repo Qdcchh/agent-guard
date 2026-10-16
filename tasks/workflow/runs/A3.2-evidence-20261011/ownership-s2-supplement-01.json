@@ -1,0 +1,13 @@
+{
+  "phase": "S2_SOLE_INTEGRATION",
+  "supplement": 1,
+  "exclusive_transfer_to": "a32-integrator-sol-low-r1",
+  "path": "src/agent_guard/audit/journal.py",
+  "before_sha256": "9cbe77bd1e24be71ca174a56bf4c344e6978b1606eaf6c6ef1752b743d644c17",
+  "reason": "Required real10000 native generation fails original300s window; root observed capture_introduced_tx decodes all prior FIRST even when all current path grants already authenticated in original bootstrap. Permit only reproduced cost-source correction preserving complete introduced-grant semantics, original cap, locks, TTL, SQL, shared interfaces and every rejection. No speculative broad optimization.",
+  "necessary_scope": "First preserve failed native and profile/evidence, then early return only when complete current path is already in authenticated immutable bootstrap; original missing/introduced-node path remains unchanged. Add meaningful regression under existing S2 allowed tests; full A31 and wholeS2 independent acceptance remains mandatory.",
+  "no_concurrent_writer": true,
+  "root_current_time": "2026-10-11T00:52:54.348915+00:00",
+  "prior_ownership": "ownership-s2-r1.json",
+  "full_A32_acceptance": "NOT_ASSERTED"
+}

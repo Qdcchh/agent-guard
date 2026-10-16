@@ -1,0 +1,24 @@
+{
+  "phase": "S0_SHARED_INTERFACE",
+  "controller_verified_native_stop": true,
+  "writers": [
+    {
+      "task": "/root/a31_shared_correction_sol_r4",
+      "requested": "gpt-6.1-sol/medium",
+      "effective_metadata": "UNKNOWN",
+      "native_status": "COMPLETED_STOPPED",
+      "native_observation": "collaboration.list_agents completed and FINAL_ANSWER received",
+      "owned_resources_remaining": 0
+    }
+  ],
+  "readbacks": [
+    "artifacts/workflow/A3.1-audit-20261008/controller/r4-final-resource0-independent-readback.json",
+    "artifacts/workflow/A3.1-audit-20261008/controller/r4-final-readonly389-shared32-sixpath-readback.json",
+    "artifacts/workflow/A3.1-audit-20261008/controller/r4-final1452-evidence22-native46-failures-readback.json"
+  ],
+  "report_sha256": "85d5b894b6f348e3ba3cd2b6d2786393d9cb60de03972272e3b459f2db260e24",
+  "current_shared_paths": 32,
+  "existing_API_count": 41,
+  "full_A31_acceptance": false,
+  "physical400001chunks_256MiB_PG_highwater": "NOT_RUN_HONEST_LIMIT_NOT_PERFORMANCE_CLAIM"
+}

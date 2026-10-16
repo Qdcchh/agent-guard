@@ -52,6 +52,7 @@ from dataclasses import dataclass
 
 import psycopg
 
+from agent_guard.audit import journal
 from agent_guard.contracts.execution import (
     DownstreamOutcome,
     DownstreamPort,
@@ -199,6 +200,8 @@ class ExecutionService:
         snapshot: TrustedPermissionSnapshot,
         *,
         binding=None,
+        before_create=None,
+        after_link=None,
     ) -> AcceptResult:
         """Reserve budget for one invocation through the full A2 accept flow."""
         tool = parse_tool_id(verified.tool_id)
@@ -225,7 +228,14 @@ class ExecutionService:
         # (2) read-only candidate lookup; the row is an immutable accept fact.
         existing = self._find_candidate(verified)
         if existing is not None:
-            return self._accept_from_candidate(verified, existing, db_path, binding=binding)
+            return self._accept_from_candidate(
+                verified,
+                existing,
+                db_path,
+                binding=binding,
+                before_create=before_create,
+                after_link=after_link,
+            )
 
         # (3) only a new intent resolves the current trusted quote.
         try:
@@ -246,12 +256,25 @@ class ExecutionService:
             existing = self._find_candidate(verified)
             if existing is None:
                 raise
-            return self._accept_from_candidate(verified, existing, db_path, binding=binding)
+            return self._accept_from_candidate(
+                verified,
+                existing,
+                db_path,
+                binding=binding,
+                before_create=before_create,
+                after_link=after_link,
+            )
 
         # A concurrent accept may have committed this business key while the
         # quote was being resolved. The check therefore belongs *inside* the
         # accept transaction, not in another non-locking lookup afterwards.
-        return self._accept_checked(verified, self._cost_for_new(quote_snapshot), binding=binding)
+        return self._accept_checked(
+            verified,
+            self._cost_for_new(quote_snapshot),
+            binding=binding,
+            before_create=before_create,
+            after_link=after_link,
+        )
 
     def _read_path_ids(self, grant_id: str) -> tuple[str, ...]:
         with self._read() as conn:
@@ -288,7 +311,16 @@ class ExecutionService:
                 verified.idempotency_key,
             )
 
-    def _accept_from_candidate(self, verified, row, db_path, *, binding=None) -> AcceptResult:
+    def _accept_from_candidate(
+        self,
+        verified,
+        row,
+        db_path,
+        *,
+        binding=None,
+        before_create=None,
+        after_link=None,
+    ) -> AcceptResult:
         """Use the persisted accept facts and still go through A1 accept.
 
         The complete accept material is verified automatically on this path
@@ -308,9 +340,23 @@ class ExecutionService:
             quote_version=row.quote_version,
             quote_snapshot=row.quote_snapshot,
         )
-        return self._accept_checked(verified, cost, binding=binding)
+        return self._accept_checked(
+            verified,
+            cost,
+            binding=binding,
+            before_create=before_create,
+            after_link=after_link,
+        )
 
-    def _accept_checked(self, verified, cost: TrustedCost, *, binding=None) -> AcceptResult:
+    def _accept_checked(
+        self,
+        verified,
+        cost: TrustedCost,
+        *,
+        binding=None,
+        before_create=None,
+        after_link=None,
+    ) -> AcceptResult:
         """Enter the accept transaction with an atomic existing-material check.
 
         The validator is created per call and closed over a local holder, so
@@ -341,9 +387,20 @@ class ExecutionService:
         try:
             if binding is not None:
                 return self._ledger.accept_bound(
-                    verified, cost, existing_validator=validator, binding=binding
+                    verified,
+                    cost,
+                    existing_validator=validator,
+                    binding=binding,
+                    before_create=before_create,
+                    after_link=after_link,
                 )
-            return self._ledger.accept_checked(verified, cost, existing_validator=validator)
+            return self._ledger.accept_checked(
+                verified,
+                cost,
+                existing_validator=validator,
+                before_create=before_create,
+                after_link=after_link,
+            )
         except ExecutionError as exc:
             # only material refusals are converted into a durable quarantine;
             # real database faults must propagate untouched
@@ -724,6 +781,12 @@ class ExecutionService:
                     owner_token=claim.lease.owner_token,
                     fencing_version=claim.lease.fencing_version,
                 )
+                fence = exec_store.capture_write_fence(
+                    conn,
+                    operation_id=operation_id,
+                    owner_token=claim.lease.owner_token,
+                    fencing_version=claim.lease.fencing_version,
+                )
                 events = exec_store.fetch_event_nodes(conn, operation_id)
                 reserve = next((e for e in events if e.phase == "RESERVE"), None)
                 if reserve is None:
@@ -765,6 +828,18 @@ class ExecutionService:
                     operation_id=operation_id,
                     from_status=current.status,
                     to_status=_TERMINAL_FOR_ACTION[action],
+                )
+                journal.append_terminal_tx(
+                    conn,
+                    current,
+                    material,
+                    fence,
+                    tuple(g.grant_id for g in grants),
+                    action,
+                )
+                conn.execute("SET CONSTRAINTS ALL IMMEDIATE")
+                exec_store.assert_write_fence_current(
+                    conn, fence, expected_terminal=_TERMINAL_FOR_ACTION[action]
                 )
         return RunResult(
             operation_id=operation_id,

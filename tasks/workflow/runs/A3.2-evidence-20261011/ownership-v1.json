@@ -1,0 +1,52 @@
+{
+  "status": "PROPOSED_FOR_PACKAGE_REVIEW_EXACT_CANDIDATE_ALLOWLIST",
+  "owners": {
+    "a32-shared": [
+      "src/agent_guard/evidence/receipt.py",
+      "src/agent_guard/evidence/receipt_semantics.py",
+      "src/agent_guard/evidence/task_bundle.py",
+      "src/agent_guard/gateway/__main__.py",
+      "src/agent_guard/gateway/config.py",
+      "src/agent_guard/gateway/evidence_auth.py",
+      "tests/fixtures/a32_common.py",
+      "tests/unit/test_receipt_components.py",
+      "tests/unit/test_task_bundle_codec.py"
+    ],
+    "a32-export": [
+      "src/agent_guard/evidence/export.py",
+      "src/agent_guard/gateway/evidence_endpoint.py",
+      "src/agent_guard/gateway/evidence_http_app.py",
+      "tests/fixtures/a32_export.py",
+      "tests/integration/test_evidence_export.py",
+      "tests/integration/test_evidence_export_tls.py"
+    ],
+    "a32-verify": [
+      "src/agent_guard/evidence/task_verify.py",
+      "src/agent_guard/evidence/verify_cli.py",
+      "tests/fixtures/a32_offline.py",
+      "tests/integration/test_evidence_offline.py",
+      "tests/unit/test_task_evidence_verify.py"
+    ],
+    "a32-integrator": [
+      "src/agent_guard/gateway/factory.py",
+      "tests/fixtures/a32_joint.py",
+      "tests/integration/test_a32_joint_tls.py",
+      "HANDOFF.md",
+      "README.md",
+      "docs/acceptance.md",
+      "docs/crypto-profile-v1.md",
+      "docs/oauth-oidc-sm2-mvp.md",
+      "docs/security-model.md",
+      "tasks/A3.2-report.md",
+      "tasks/workflow/README.md",
+      "tasks/workflow/context.md",
+      "tasks/workflow/current-policy.md",
+      "tasks/workflow/issues.md",
+      "tasks/workflow/stages/A3.2-evidence.md"
+    ]
+  },
+  "transfer": "S0 STOP + root readback/hash freeze; S1 disjoint. S1 all STOP/resources0 then root transfers named paths to sole S2; no concurrent write. Root administrative policy/state changes separately owned.",
+  "actual_namespaces_ports_roles_timeouts": "PENDING_ROOT_RUNTIME_PREFLIGHT; no resources allocated",
+  "root_administration": "state/authorization/policy/issues remain controller-owned; S2 current policy/docs paths require explicit transfer before writing. No simultaneous root hotspot write.",
+  "resource_plan": "runtime-plan-v1.json"
+}

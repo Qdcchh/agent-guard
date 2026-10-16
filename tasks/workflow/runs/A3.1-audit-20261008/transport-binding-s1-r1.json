@@ -1,0 +1,21 @@
+{
+  "kind": "S1_TRANSPORT_SERIAL_BINDING",
+  "status": "EXISTING_CONTRACT_ASSEMBLY_CHOICE_NO_SECURITY_SCOPE_CHANGE",
+  "date": "2026-10-09",
+  "authority": "root controller serial decision, acknowledged by both exact-owned workers",
+  "authorization": "Bearer <credential_id>:<secret>, split at final colon",
+  "credential_id": "existing printableASCII identifier 1..512",
+  "secret": "ASCII regex [A-Za-z0-9_-]{32,512}; no colon",
+  "request_content_type": "application/json",
+  "success": "HTTP200 canonical {checkpoint_jws} or exact canonical page DTO",
+  "errors": {
+    "404 NO_CHECKPOINT": "latest has no checkpoint; return None only exact canonical body",
+    "404 REGISTRATION_REQUIRED": "unknown stream",
+    "401 UNAUTHORIZED": "unknown credential or wrong secret",
+    "403 FORBIDDEN": "wrong role or cross scope",
+    "409 RECONCILE_REQUIRED": "append old range, triggers full pinned reconcile; never ACK on status alone"
+  },
+  "tls": "fixed HTTPS origin/CA/hostname, no redirects/insecure/proxy business fallback",
+  "original_interfaces_unchanged": true,
+  "independent_acceptance": "NOT_RUN"
+}
