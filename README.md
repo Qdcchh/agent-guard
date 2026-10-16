@@ -4,7 +4,7 @@ A3.1与A3.2已正式独立接受；A3.3/A3.4联合v1已通过独立PACKAGE_REVIE
 
 **面向企业多智能体协同的可验证授权与可信执行系统。**
 
-本机演示页面：启动 Docker Desktop 后，在仓库根目录运行 `python3 tools/teacher_demo_server.py`，打开 `http://127.0.0.1:8765/`。支持真实演示启动、七类安全场景、带来源的验证记录回放和离线证据篡改对照；仅用于本地展示，不代表完整联合验收。见[演示操作稿](docs/teacher-demo-20261015.md)和[当前状态与覆盖范围](docs/project-status-and-demo-coverage-20261015.md)。
+本机演示页面：启动 Docker Desktop 后，在仓库根目录运行 `python3 tools/teacher_demo_server.py`，打开 `http://127.0.0.1:8765/`。支持真实演示启动、七类安全场景、带来源的验证记录回放和离线证据篡改对照；仅用于本地展示，不代表完整联合验收。见[演示操作稿](docs/teacher-demo-20261015.md)、[DemoEvent v1 接口](docs/teacher-demo-events-v1.md)和[当前状态与覆盖范围](docs/project-status-and-demo-coverage-20261015.md)。独立 [2-of-3 门限签名原型](tools/threshold_demo/README.md)尚未接入网关；[x402 适配设计](docs/x402-adapter-design-20261016.md)尚未实现支付。
 
 目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
 

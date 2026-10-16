@@ -11,10 +11,12 @@ import time
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
 
 REPO = Path(__file__).resolve().parents[1]
 STATIC = REPO / "web/teacher-demo"
 sys.path.insert(0, str(REPO))
+from tools import teacher_demo_events as events  # noqa: E402
 from tools import teacher_demo_scenarios as scenarios  # noqa: E402
 
 
@@ -107,6 +109,7 @@ class DemoApp:
         self.last_verification = None
         self.history = None
         self.scenario_results = {}
+        self.runs = {}
         try:
             pointer = safe_path(REPO / "artifacts/teacher-demo-live/latest-run.txt")
             if not pointer.exists():
@@ -157,8 +160,22 @@ class DemoApp:
                 target_run_id = summary(target)["run_id"] if action == "verify" else None
             except (OSError, ValueError, KeyError, TypeError) as exc:
                 raise ValueError("invalid verification target") from exc
+            job_id = str(uuid.uuid4())
+            event_run_id = job_id
+            replay_folder = None
+            if action == "scenario-replay":
+                replay_folder = safe_path(REPO / scenarios.HISTORY)
+                saved = replay_folder / events.FILE
+                try:
+                    if not saved.is_symlink() and saved.stat().st_size <= events.MAX_FILE_BYTES:
+                        candidate = str(uuid.UUID(json.loads(saved.read_text())["run_id"]))
+                        events.page(replay_folder, candidate, scenario_id, replay=True)
+                        event_run_id = candidate
+                except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError):
+                    pass
             self.job = {
-                "id": str(uuid.uuid4()),
+                "id": job_id,
+                "run_id": event_run_id,
                 "action": action,
                 "status": "running",
                 "started": time.time(),
@@ -170,6 +187,22 @@ class DemoApp:
                 self.job["stage"] = (
                     "校验历史记录" if action == "scenario-replay" else "准备固定场景独占环境"
                 )
+                self.runs[event_run_id] = (
+                    replay_folder
+                    if action == "scenario-replay"
+                    else safe_path(REPO / "artifacts/teacher-scenarios-live" / event_run_id),
+                    scenario_id,
+                    action == "scenario-replay",
+                )
+            else:
+                self.runs[event_run_id] = (
+                    safe_path(REPO / "artifacts/teacher-demo-live" / event_run_id),
+                    "normal" if action == "run" else "verification",
+                    False,
+                )
+            if len(self.runs) > 32:
+                oldest = next(iter(self.runs))
+                del self.runs[oldest]
             target = self.live_folder or self.history
             if action == "verify":
                 self.job["target_run_id"] = target_run_id
@@ -177,6 +210,21 @@ class DemoApp:
                 target=self._work, args=(action, target, scenario_id), daemon=True
             ).start()
             return True
+
+    def event_page(self, run_id, after_seq, limit):
+        with self.lock:
+            target = self.runs.get(run_id)
+        if target is None:
+            raise KeyError("unknown run")
+        folder, scenario_id, replay = target
+        return events.page(
+            safe_path(folder),
+            run_id,
+            scenario_id,
+            after_seq=after_seq,
+            limit=limit,
+            replay=replay,
+        )
 
     def _work(self, action, target, scenario_id=None):
         try:
@@ -201,6 +249,8 @@ class DemoApp:
                     str(REPO / "tools/teacher_demo_scenarios.py"),
                     "--scenario",
                     scenario_id,
+                    "--run-id",
+                    self.job["run_id"],
                 ]
             if action == "verify":
                 command += ["--verify", str(safe_path(target))]
@@ -272,6 +322,16 @@ class DemoApp:
             # Keep exclusivity until any launched child has actually exited.
             if "process" in locals():
                 process.wait()
+            if action == "scenario-run" and scenario_id in events.CASES:
+                try:
+                    run_id = self.job["run_id"]
+                    events.fail(
+                        safe_path(REPO / "artifacts/teacher-scenarios-live" / run_id),
+                        run_id,
+                        scenario_id,
+                    )
+                except (OSError, ValueError, KeyError, TypeError):
+                    pass
             with self.lock:
                 self.job.update(
                     status="failed",
@@ -310,10 +370,34 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if not self.valid_host():
             return self.reply(403, {"error": "仅允许本机地址"})
+        if len(self.path) > 256:
+            return self.reply(400, {"error": "请求路径过长"})
+        origin = self.headers.get_all("Origin", [])
+        if origin and origin != [f"http://127.0.0.1:{self.server.server_port}"]:
+            return self.reply(403, {"error": "请求来源未获允许"})
+        if self.headers.get("Sec-Fetch-Site") not in (None, "same-origin"):
+            return self.reply(403, {"error": "请求来源未获允许"})
         if self.path == "/api/state":
             return self.reply(200, self.server.app.state())
         if self.path == "/api/session":
             return self.reply(200, {"token": self.server.app.token})
+        url = urlsplit(self.path)
+        match = re.fullmatch(r"/api/runs/([0-9a-f-]{36})/events", url.path)
+        if match:
+            try:
+                run_id = str(uuid.UUID(match[1]))
+                if run_id != match[1]:
+                    raise ValueError("invalid run id")
+                query = parse_qs(url.query, strict_parsing=True)
+                if set(query) - {"after_seq", "limit"} or any(len(v) != 1 for v in query.values()):
+                    raise ValueError("invalid query")
+                after_seq = int(query.get("after_seq", ["0"])[0])
+                limit = int(query.get("limit", ["200"])[0])
+                return self.reply(200, self.server.app.event_page(run_id, after_seq, limit))
+            except KeyError:
+                return self.reply(404, {"error": "运行不存在"})
+            except (OSError, ValueError, TypeError, json.JSONDecodeError):
+                return self.reply(400, {"error": "事件查询无效"})
         files = {
             "/": ("index.html", "text/html; charset=utf-8"),
             "/style.css": ("style.css", "text/css; charset=utf-8"),

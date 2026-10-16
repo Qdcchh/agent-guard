@@ -5,6 +5,7 @@ import hashlib
 import json
 import shutil
 import sys
+import threading
 import time
 import uuid
 import xml.etree.ElementTree as ET
@@ -13,6 +14,9 @@ from pathlib import Path
 from types import SimpleNamespace
 
 REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO))
+from tools import teacher_demo_events as demo_events  # noqa: E402
+
 HISTORY = Path(
     "artifacts/workflow/A3.3-delivery-20261011/s1-scenarios-resume-r3-2d20e49c-4419-4786-882b-248356c1b44b/source-complete-r14"
 )
@@ -226,10 +230,10 @@ class DeadlineCalls:
         return super().call(argv, timeout=timeout, **kwargs)
 
 
-def run(scenarios):
+def run(scenarios, run_id=None):
     from deploy.demo.supervisor import Owner, atomic
 
-    ident = str(uuid.uuid4())
+    ident = str(uuid.UUID(run_id)) if run_id is not None else str(uuid.uuid4())
     folder = REPO / "artifacts/teacher-scenarios-live" / ident
     print("结果目录：" + str(folder), flush=True)
 
@@ -250,7 +254,7 @@ def run(scenarios):
     atomic(
         folder / "test-snapshot-sha256.json",
         {
-            str(p.relative_to(snapshot)): hashlib.sha256(p.read_bytes()).hexdigest()
+            p.relative_to(snapshot).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in snapshot.rglob("*.py")
         },
     )
@@ -330,9 +334,30 @@ raise SystemExit(subprocess.run(command,cwd='/testsource').returncode)
                     owner.ids["scenario-controller"],
                 ]
             )
-        completed = owner.call(
-            ["docker", "start", "-a", owner.ids["scenario-controller"]], timeout=600, allow=True
-        )
+        stop_events = threading.Event()
+
+        def collect_events():
+            while not stop_events.wait(0.25):
+                try:
+                    demo_events.persist(folder, ident, scenarios[0])
+                except (OSError, ValueError, json.JSONDecodeError):
+                    # A witness may still be being written; final validation is strict.
+                    pass
+
+        collector = None
+        if len(scenarios) == 1 and scenarios[0] in demo_events.CASES:
+            collector = threading.Thread(target=collect_events, daemon=True)
+            collector.start()
+        try:
+            completed = owner.call(
+                ["docker", "start", "-a", owner.ids["scenario-controller"]],
+                timeout=600,
+                allow=True,
+            )
+        finally:
+            stop_events.set()
+            if collector is not None:
+                collector.join(timeout=2)
         code = completed.returncode
         if code:
             raise ValueError("scenario controller failed")
@@ -346,14 +371,31 @@ raise SystemExit(subprocess.run(command,cwd='/testsource').returncode)
         atomic(folder / "scenario-native-exit.json", dict(native_exit=code, actual_wait=True))
     for scenario in scenarios:
         result(folder, scenario)
+        recorded = demo_events.persist(folder, ident, scenario, terminal=True)
+        if scenario in demo_events.CASES and not recorded:
+            raise ValueError("required event witness absent")
     return 0
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--scenario", choices=tuple(SPECS), required=True)
+    parser.add_argument("--run-id", type=uuid.UUID)
     args = parser.parse_args()
-    return run([args.scenario])
+    ident = str(args.run_id or uuid.uuid4())
+    try:
+        return run([args.scenario], ident)
+    except Exception:
+        if args.scenario in demo_events.CASES:
+            try:
+                demo_events.fail(
+                    REPO / "artifacts/teacher-scenarios-live" / ident,
+                    ident,
+                    args.scenario,
+                )
+            except (OSError, ValueError):
+                pass
+        raise
 
 
 if __name__ == "__main__":

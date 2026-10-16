@@ -236,6 +236,52 @@ class DemoTests(unittest.TestCase):
             server.server_close()
             thread.join()
 
+    def test_event_endpoint_is_bounded_read_only_and_host_checked(self):
+        app = demo.DemoApp()
+        self.assertTrue(app.start("scenario-replay", "stolen-token"))
+        self.complete(app)
+        run_id = app.state()["job"]["run_id"]
+        server = demo.make_server(0, app)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+
+        def request(path, headers=None):
+            conn = http.client.HTTPConnection("127.0.0.1", server.server_port)
+            conn.request("GET", path, headers=headers or {})
+            response = conn.getresponse()
+            result = response.status, response.read()
+            conn.close()
+            return result
+
+        try:
+            path = f"/api/runs/{run_id}/events"
+            status, raw = request(path + "?after_seq=0&limit=20")
+            self.assertEqual(status, 200)
+            value = json.loads(raw)
+            self.assertEqual(value["events"], [])
+            self.assertFalse(value["complete"])
+            self.assertEqual(value["source"], "replay")
+            self.assertEqual(request(path, {"Host": "evil.test"})[0], 403)
+            self.assertEqual(request(path, {"Origin": "https://evil.test"})[0], 403)
+            self.assertEqual(request(path + "?limit=201")[0], 400)
+            self.assertEqual(request(path + "?limit=1&limit=2")[0], 400)
+            self.assertEqual(request(path + "?after_seq=-1")[0], 400)
+            self.assertEqual(request(f"/api/runs/{uuid.uuid4()}/events")[0], 404)
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join()
+
+    def test_failed_scenario_records_program_error(self):
+        app = demo.DemoApp(launcher=lambda *_args, **_kwargs: FakeProcess(code=7))
+        self.assertTrue(app.start("scenario-run", "stolen-token"))
+        self.complete(app)
+        self.assertEqual(app.job["status"], "failed")
+        page = app.event_page(app.job["run_id"], 0, 200)
+        self.assertTrue(page["terminal"])
+        self.assertFalse(page["complete"])
+        self.assertEqual(page["events"][-1]["event_type"], "run.error")
+
 
 if __name__ == "__main__":
     unittest.main()
