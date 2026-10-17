@@ -30,6 +30,8 @@ from agent_guard.threshold.contracts import (
     ACTION_DOMAIN_V3,
     ACTION_VERSION,
     ACTION_VERSION_V3,
+    COSM2_DOMAIN,
+    COSM2_PROFILE,
     CURRENCY,
     MAX_ACTION_ITEMS,
     MAX_ENVELOPE_BYTES,
@@ -280,7 +282,12 @@ def action_message(action: dict) -> bytes:
     return domain + _serialize(ordered)
 
 
-def build_envelope(action: dict, signature: bytes) -> bytes:
+def cosm2_message(action: dict) -> bytes:
+    """COSM2 signs strictly validated V3 fields under its own domain."""
+    return COSM2_DOMAIN + _serialize(parse_action_v3(action))
+
+
+def build_envelope(action: dict, signature: bytes, *, profile: str = PROFILE) -> bytes:
     """Canonical detached envelope for tests/demo; never used to trust a call."""
     if type(action) is not dict:
         raise _schema("exact threshold action fields required")
@@ -297,9 +304,13 @@ def build_envelope(action: dict, signature: bytes) -> bytes:
         raise _schema("exact threshold action fields required")
     if type(signature) is not bytes or len(signature) != 64:
         raise _schema("invalid threshold signature material")
+    if profile not in (PROFILE, COSM2_PROFILE):
+        raise _schema("unsupported approval profile")
+    if profile == COSM2_PROFILE:
+        parse_action_v3(action)
     ordered = {name: action[name] for name in order}
     return canonical_json_bytes(
-        {"profile": PROFILE, "action": ordered, "signature": b64url_encode(signature)}
+        {"profile": profile, "action": ordered, "signature": b64url_encode(signature)}
     )
 
 
@@ -320,7 +331,7 @@ def decode_header(header: bytes) -> bytes:
         raise _schema("invalid approval header encoding") from exc
 
 
-def parse_envelope(envelope: bytes) -> tuple[dict, bytes]:
+def parse_envelope(envelope: bytes, *, profile: str = PROFILE) -> tuple[dict, bytes]:
     """Parse the canonical envelope; returns ``(action, signature_bytes)``."""
     if type(envelope) is not bytes or not 1 <= len(envelope) <= MAX_ENVELOPE_BYTES:
         raise _schema("invalid approval envelope")
@@ -328,10 +339,14 @@ def parse_envelope(envelope: bytes) -> tuple[dict, bytes]:
         value = load_strict_json(envelope)
     except EncodingError as exc:
         raise _schema("invalid approval envelope JSON") from exc
-    if type(value) is not dict or set(value) != _ENVELOPE_FIELDS or value["profile"] != PROFILE:
+    if profile not in (PROFILE, COSM2_PROFILE):
+        raise _schema("unsupported approval profile")
+    if type(value) is not dict or set(value) != _ENVELOPE_FIELDS or value["profile"] != profile:
         raise _schema("exact approval envelope fields required")
     raw_action = value["action"]
-    if type(raw_action) is dict and raw_action.get("version") == ACTION_VERSION_V3:
+    if profile == COSM2_PROFILE:
+        action = parse_action_v3(raw_action)
+    elif type(raw_action) is dict and raw_action.get("version") == ACTION_VERSION_V3:
         action = parse_action_v3(raw_action)
     else:
         action = parse_action(raw_action)

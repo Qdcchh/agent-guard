@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "run_id": "20261017-measure-a3a4-01",
+  "environment_id": "7359d4b1f88694fefa61b2f7ce8123835286b4e658fcb6ff1ec58b06d8c3cf13",
+  "environment": {
+    "cpu": ": VirtualApple @ 2.50GHz",
+    "python": "3.11.17",
+    "machine": "x86_64",
+    "tongsuopy": "1.0.1",
+    "image": "agent-guard-threshold-gateway-runner:20261017",
+    "image_id": "sha256:997ccb375167a46fb019795a3a59da2d9bc59778b1027e8da85c4f603e8ec567",
+    "host_cpu": "Apple M5 Pro",
+    "host_arch": "arm64",
+    "emulation": "amd64 runner on ARM host (Docker emulation)",
+    "frost_binary_sha256": "32282203d3fd11e39edf0547e297c6fc65e56fdfbb7585e156039da3b898903b"
+  },
+  "recorded_at": "2026-10-17T10:09:52.259192+00:00",
+  "requested_samples": 100,
+  "warmup": 10,
+  "unit": "ms",
+  "percentile": "nearest-rank ceil(0.95*n)",
+  "status": "PARTIAL",
+  "boundaries": {
+    "sm2_sign": "mature Tongsuo sign only; ephemeral key generation excluded",
+    "sm2_verify": "mature Tongsuo verification incl public_key() retrieval",
+    "frost_sign_quorum": "real Rust 2-of-3 V1 action; Python file I/O + process startup + native quorum + Python Ed25519 verification; enrollment excluded"
+  },
+  "metrics": {
+    "cosm2_round1": {
+      "n": 0,
+      "median": null,
+      "p95": null,
+      "min": null,
+      "max": null,
+      "status": "NOT_MEASURED",
+      "reason": "B1 core/API absent; no reference performance substitute",
+      "attempts": 0,
+      "failures": 0
+    },
+    "cosm2_round2": {
+      "n": 0,
+      "median": null,
+      "p95": null,
+      "min": null,
+      "max": null,
+      "status": "NOT_MEASURED",
+      "reason": "B1 core/API absent; no reference performance substitute",
+      "attempts": 0,
+      "failures": 0
+    },
+    "cosm2_round3": {
+      "n": 0,
+      "median": null,
+      "p95": null,
+      "min": null,
+      "max": null,
+      "status": "NOT_MEASURED",
+      "reason": "B1 core/API absent; no reference performance substitute",
+      "attempts": 0,
+      "failures": 0
+    },
+    "cosm2_total": {
+      "n": 0,
+      "median": null,
+      "p95": null,
+      "min": null,
+      "max": null,
+      "status": "NOT_MEASURED",
+      "reason": "B1 core/API absent; no reference performance substitute",
+      "attempts": 0,
+      "failures": 0
+    },
+    "cosm2_round2_db": {
+      "n": 0,
+      "median": null,
+      "p95": null,
+      "min": null,
+      "max": null,
+      "status": "NOT_MEASURED",
+      "reason": "B3 predicate signer/database integration absent",
+      "attempts": 0,
+      "failures": 0
+    },
+    "sm2_sign": {
+      "n": 100,
+      "median": 0.237792,
+      "p95": 0.253583,
+      "min": 0.235,
+      "max": 0.280834,
+      "status": "MEASURED",
+      "reason": null,
+      "attempts": 100,
+      "failures": 0
+    },
+    "sm2_verify": {
+      "n": 100,
+      "median": 0.2410835,
+      "p95": 0.263417,
+      "min": 0.236166,
+      "max": 0.287167,
+      "status": "MEASURED",
+      "reason": null,
+      "attempts": 100,
+      "failures": 0
+    },
+    "frost_sign_quorum": {
+      "n": 0,
+      "median": null,
+      "p95": null,
+      "min": null,
+      "max": null,
+      "status": "ERROR",
+      "reason": "sample/warmup failure; inspect raw.csv and warmup.csv",
+      "attempts": 100,
+      "failures": 110
+    },
+    "gateway_e2e": {
+      "n": 0,
+      "median": null,
+      "p95": null,
+      "min": null,
+      "max": null,
+      "status": "NOT_MEASURED",
+      "reason": "B7 unavailable; B7 timing_ms only has rounds, not gateway e2e",
+      "attempts": 0,
+      "failures": 0
+    }
+  }
+}

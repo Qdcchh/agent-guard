@@ -2,11 +2,11 @@
 
 The approval is a *separate* credential from the SM2 token/AGPoP pair. It never
 replaces current authorization, revocation, budget or proof-freshness checks:
-it only proves that a 2-of-3 FROST-Ed25519 quorum approved the exact action the
+it proves that the configured FROST quorum or COSM2 parties approved the exact action the
 gateway is about to accept.
 
 Trust boundary: :class:`VerifiedThresholdApproval` is produced only by
-``agent_guard.threshold.verifier`` after an actual Ed25519 group-signature
+``agent_guard.threshold.verifier`` after an actual configured Ed25519 or mature SM2 signature
 check. A request can never deserialize directly into it; the HTTP layer only
 passes opaque header bytes.
 """
@@ -18,6 +18,8 @@ from dataclasses import dataclass
 from agent_guard.authorization.claims import GATEWAY_AUDIENCE
 
 PROFILE = "AG-THRESHOLD-APPROVAL-1"
+COSM2_PROFILE = "AG-COSM2-APPROVAL-1"
+COSM2_DOMAIN = b"AGENT-GUARD-COSM2-ACTION-V1\n"
 ACTION_DOMAIN = b"AGENT-GUARD-THRESHOLD-ACTION-V2\n"
 ACTION_VERSION = 2
 #: x402-bound action: V2 fields plus the payment-intent digest as the last
@@ -47,6 +49,13 @@ class ThresholdApprovalError(ValueError):
         super().__init__(detail)
 
 
+class COSM2ApprovalExpired(ThresholdApprovalError):
+    """COSM2 approval expiry, distinct from authorization and FROST expiry."""
+
+    def __init__(self):
+        super().__init__("COSM2 approval expired", code="EXPIRED")
+
+
 @dataclass(frozen=True)
 class ThresholdApprovalPolicy:
     """Trusted operator configuration; the request never supplies any of it."""
@@ -58,9 +67,21 @@ class ThresholdApprovalPolicy:
     tool_id: str = TOOL_ID
     audience: str = GATEWAY_AUDIENCE
 
+    scheme: str = "frost-ed25519"
+
     def __post_init__(self):
-        if type(self.group_public_key) is not bytes or len(self.group_public_key) != 32:
-            raise ThresholdApprovalError("group public key must be 32 raw bytes")
+        if self.scheme == "frost-ed25519":
+            if type(self.group_public_key) is not bytes or len(self.group_public_key) != 32:
+                raise ThresholdApprovalError("group public key must be 32 raw bytes")
+        elif self.scheme == "sm2-2p":
+            from agent_guard.crypto.sm import load_sm2_public_key
+
+            try:
+                load_sm2_public_key(self.group_public_key)
+            except (ValueError, TypeError) as exc:
+                raise ThresholdApprovalError("canonical SM2 SPKI required") from exc
+        else:
+            raise ThresholdApprovalError("unsupported trusted approval scheme")
         for name in ("policy_version", "key_epoch", "max_lifetime_seconds"):
             value = getattr(self, name)
             if (
@@ -90,6 +111,7 @@ class ThresholdApprovalExpectation:
     idempotency_key: str
     canonical_params: bytes
     path_grant_ids: tuple[str, ...] | None = None
+    amount_fen: int | None = None
 
 
 @dataclass(frozen=True)

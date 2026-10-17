@@ -112,3 +112,16 @@ console.log('teacher demo frontend logic: passed');
   assert.equal(store.nextAfterSeq(), 3);
   assert.ok(m.SCENES.s1.narrate(ev(1, {event_type: 'accept.rejected'})));
 }
+
+// B7 saved summaries are never promoted to native jobs or live event frames.
+{
+  const js = fs.readFileSync(path.join(__dirname, '..', 'web', 'teacher-demo', 'app.js'), 'utf8');
+  assert.ok(js.includes("title: '双域共签', action: 'cosm2-run'"));
+  for (const name of ['cosign-valid-one-order', 'missing-approval', 'exec-domain-alone', 'tampered-amount', 'revoked-before-cosign', 'revoked-after-cosign']) assert.ok(js.includes("'" + name + "':"));
+  assert.ok(js.includes("btn.disabled = !canAct() || (kind === 'cosign' && !ui.state?.cosign_ready)"));
+  assert.ok(js.includes("start((kind === 'cosign' ? 'cosm2' : kind) + '/run')"));
+  assert.ok(js.includes('单次运行，非统计结果'));
+  assert.ok(js.includes('原 completed_at: ${demo.completed_at}'));
+  assert.ok(js.includes("demo.source === 'current-run' ? '本次现场运行' : '保存结果回放'"));
+  assert.ok(m.SCENES.cosign.events.every(e => e.source === 'illustrative'));
+}

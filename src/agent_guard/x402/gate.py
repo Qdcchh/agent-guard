@@ -26,7 +26,9 @@ import hashlib
 import json
 
 from agent_guard.contracts.execution import DownstreamOutcome
+from agent_guard.cosign.effect import check_effect_approval
 from agent_guard.execution import store as exec_store
+from agent_guard.threshold.contracts import ThresholdApprovalPolicy
 from agent_guard.x402 import intent as intent_module
 from agent_guard.x402 import state, wire
 from agent_guard.x402.chain import ChainReader
@@ -49,6 +51,7 @@ class PaymentGatedDownstream:
         payer: X402Payer,
         reader: ChainReader,
         connector=None,
+        cosign_policy=None,
     ):
         if type(deployment) is not X402Deployment:
             raise X402Error("trusted deployment required", code="CONFIG_INVALID")
@@ -60,6 +63,11 @@ class PaymentGatedDownstream:
             raise X402Error("real chain reader required", code="CONFIG_INVALID")
         if not downstream_secret:
             raise X402Error("downstream secret required", code="CONFIG_INVALID")
+        if cosign_policy is not None and (
+            type(cosign_policy) is not ThresholdApprovalPolicy or cosign_policy.scheme != "sm2-2p"
+        ):
+            raise X402Error("COSM2 policy required", code="CONFIG_INVALID")
+        self._cosign_policy = cosign_policy
         self._deployment = deployment
         self._downstream = downstream
         self._secret = downstream_secret
@@ -87,6 +95,10 @@ class PaymentGatedDownstream:
         canonical_params: bytes,
         quote,
         expected_amount_fen: int,
+        approval_envelope=None,
+        idempotency_key=None,
+        tenant_id=None,
+        task_id=None,
     ) -> DownstreamOutcome:
         del tool_id  # the API shape is fixed; facts are re-read from the operation
         record = state.load_payment(
@@ -97,6 +109,34 @@ class PaymentGatedDownstream:
         self._assert_operation(
             operation=operation, intent=intent, canonical_params=canonical_params
         )
+        if self._cosign_policy is not None:
+            import psycopg
+
+            connect = self._connector if self._connector is not None else psycopg.connect
+            with connect(self._deployment.gateway_dsn, connect_timeout=5) as conn:
+                row = conn.execute(
+                    "SELECT envelope_bytes FROM ag_threshold_approvals WHERE operation_id=%s",
+                    (operation_id,),
+                ).fetchone()
+            if (
+                row is None
+                or bytes(row[0]) != approval_envelope
+                or (tenant_id, task_id, idempotency_key)
+                != (operation.tenant_id, operation.task_id, operation.idempotency_key)
+            ):
+                raise X402Error(
+                    "original COSM2 approval required", code="PAYMENT_APPROVAL_MISMATCH"
+                )
+            check_effect_approval(
+                self._cosign_policy,
+                envelope=approval_envelope,
+                tenant_id=tenant_id,
+                task_id=task_id,
+                idempotency_key=idempotency_key,
+                canonical_params=canonical_params,
+                quote=quote,
+                expected_amount_fen=expected_amount_fen,
+            )
 
         if record.status is PaymentStatus.FAILED:
             raise X402Error("payment was refused for this operation", code="PAYMENT_REFUSED")

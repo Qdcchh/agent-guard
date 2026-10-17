@@ -25,6 +25,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlsplit
 
 from agent_guard.execution import store as exec_store
+from agent_guard.threshold.contracts import ThresholdApprovalPolicy
 from agent_guard.tools import parse_tool_id, snapshot_from_bytes
 from agent_guard.x402 import intent as intent_module
 from agent_guard.x402 import state, wire
@@ -70,6 +71,7 @@ class X402ResourceServer:
         downstream,
         downstream_secret: str,
         connector=None,
+        cosign_policy=None,
     ):
         if type(deployment) is not X402Deployment:
             raise X402Error("trusted deployment required", code="CONFIG_INVALID")
@@ -79,6 +81,11 @@ class X402ResourceServer:
             raise X402Error("real chain reader required", code="CONFIG_INVALID")
         if not downstream_secret:
             raise X402Error("downstream secret required", code="CONFIG_INVALID")
+        if cosign_policy is not None and (
+            type(cosign_policy) is not ThresholdApprovalPolicy or cosign_policy.scheme != "sm2-2p"
+        ):
+            raise X402Error("COSM2 policy required", code="CONFIG_INVALID")
+        self._cosign_policy = cosign_policy
         self._deployment = deployment
         self._facilitator = facilitator
         self._reader = reader
@@ -127,6 +134,23 @@ class X402ResourceServer:
     def _operation_facts(self, operation_id: str):
         with self._connect() as conn:
             return exec_store.fetch_operation(conn, operation_id)
+
+    def _effect_approval(self, facts):
+        if self._cosign_policy is None:
+            return {}
+        with self._connect() as conn:
+            row = conn.execute(
+                "SELECT envelope_bytes FROM ag_threshold_approvals WHERE operation_id=%s",
+                (facts.operation_id,),
+            ).fetchone()
+        if row is None:
+            raise X402Error("original COSM2 approval unavailable", code="PAYMENT_APPROVAL_MISMATCH")
+        return {
+            "approval_envelope": bytes(row[0]),
+            "tenant_id": facts.tenant_id,
+            "task_id": facts.task_id,
+            "idempotency_key": facts.idempotency_key,
+        }
 
     def _payment(self, operation_id: str) -> state.PaymentRecord:
         return state.load_payment(
@@ -212,6 +236,7 @@ class X402ResourceServer:
                 canonical_params=bytes(facts.canonical_params),
                 quote=quote,
                 expected_amount_fen=facts.amount_fen,
+                **self._effect_approval(facts),
             )
         except X402Error:
             raise

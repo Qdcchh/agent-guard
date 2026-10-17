@@ -68,13 +68,17 @@ def build_app(
         permission_provider=provider,
         evidence_store=evidence,
     )
-    downstream = MockDownstream(downstream_dsn, service_secret=secrets.downstream_secret)
+    cosign_policy = policy if policy is not None and policy.scheme == "sm2-2p" else None
+    downstream = MockDownstream(
+        downstream_dsn, service_secret=secrets.downstream_secret, cosign_policy=cosign_policy
+    )
     service = ExecutionService(
         gateway_dsn=gateway_dsn,
         ledger=ExecutionLedger(gateway_dsn),
         catalog=catalog,
         downstream=downstream,
         downstream_secret=secrets.downstream_secret,
+        cosign_policy=cosign_policy,
     )
     endpoint = GatewayEndpoint(
         verifier=verifier,

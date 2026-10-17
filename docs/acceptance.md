@@ -111,3 +111,7 @@ A2.3补正候选在真实签名/READY前复用原接受事实校验：对不可�
 容量域分列：本轮独立依据实际validator、q≥1/p≥0/Σq*p≤MAX_SAFE及标识符长度推导，canonical producer订单公开响应包含上界为48187＋2724＋124＝51035字节；兼容真实有效非canonical raw JWS仍可到16384，公开包含上界为48187＋16384＋124＝64695。两者均非共同可达合法最大值。正price的digits(q)＋digits(p)≤17，zero price≤16＋1；旧58168为较松Cartesian/标识符公式，仅历史比较。九个各≤65536组件的outer保守上界589964；1MiB/+1纯codec点并非保留组件profile的合法SDK bundle。组件64KiB、JWS16KiB、公开65536和外壳1MiB守卫不变；真实256 SKU、原边界/故障/回滚探针及范围分类见[完整独立review-r2](../tasks/workflow/runs/A2.3-receipts-20261004/review-r2.md)。本候选完整A2已[正式接受](../tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，原r1否决保留。
 
 最新结论：[正式接受](../tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)与[完整独立review-r2](../tasks/workflow/runs/A2.3-receipts-20261004/review-r2.md)，原[r1否决](../tasks/workflow/runs/A2.3-receipts-20261004/review-r1.md)及[实施自查](../tasks/workflow/runs/A2.3-receipts-20261004/implementation-remediation-r2.md)保留为历史。本轮依据[真人恢复](../tasks/workflow/runs/A2.3-receipts-20261004/user-resume-sol-20261006.md)完成完整复核、证据、资源清理与交接后停止；未Git交付/远端CI/合并或实施A3。
+
+## COSM2本轮验收入口（2026-10-17）
+
+当前完整范围为原COSM2规划A1–A7/B1–B9，包审已PACKAGE_READY，自查门G1/B6及B9/B8已有真实输出，最终fresh实施独验r2已完整ACCEPTED（非PG2072+host补闭、真实PG552、x402142），[正式接受](../tasks/workflow/runs/cosm2-full-20261017/acceptance.md)；r1失败及补正保留。C1–C11、C12、原FROST/x402回归、真实只读角色、OpenSSL、九项基准、四图/现场视频/C来源表均必须闭合；以[tasks阶段包](../tasks/workflow/runs/cosm2-full-20261017/package-v1.md)、[可写清单](cosm2-paper-claims-20261017.md)及该目录最终acceptance.md为准，不重开旧四万次实验。

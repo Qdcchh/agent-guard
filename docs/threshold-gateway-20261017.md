@@ -23,9 +23,9 @@ A3.3/A3.4 长实验、不 Git 发布。本页描述**本轮已实现内容、可
 
 ## 2. 批准凭据契约（V2）
 
-`ag-approval` 头是 base64url（无填充）编码的规范 JSON：
+`ag-approval` 头是 base64url（无填充）编码的规范 JSON。以下省略行动字段的结构示意不是可直接解析的 JSON；完整可解析示例见 `tools/threshold_demo/tests/public-vector-v2.json`：
 
-```json
+```text
 {"profile":"AG-THRESHOLD-APPROVAL-1",
  "action":{...24 个固定字段...},
  "signature":"<64 字节 Ed25519 组签名的 base64url>"}
@@ -53,11 +53,13 @@ root/leaf 不一致、重复 SKU/参与者、错误摘要、未知版本。
 可信配置（私有 config.json，示例值非密钥）：
 
 ```json
+{
 "threshold_approval": {
   "group_public_key": "<32 字节小写 hex>",
   "policy_version": 3,
   "key_epoch": 5,
   "max_lifetime_seconds": 300
+}
 }
 ```
 

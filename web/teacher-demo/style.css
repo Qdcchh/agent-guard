@@ -138,7 +138,7 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--hair)
 .module-list dd { margin: 0; color: var(--ink-2); }
 
 /* ---------- 右侧 ---------- */
-.stage { min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr) 64px; }
+.stage { min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; }
 .canvas { min-height: 0; position: relative; }
 .canvas svg { width: 100%; height: 100%; display: block; }
 
@@ -293,8 +293,26 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--hair)
 .verify-line .ok { color: var(--jade); font-weight: 600; }
 .verify-line .bad { color: var(--seal); font-weight: 600; }
 
+/* 固定演示的用例列表（门限 / x402），与场景记录同一套状态胶囊 */
+.case-list { list-style: none; margin: 12px 0 4px; padding: 0; border-top: 1px solid var(--hair); }
+.case-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(7em, auto); align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--hair); font-size: 13.5px; }
+.case-list .cn { color: var(--ink); }
+.case-list .code { font-family: var(--mono); font-size: 12px; color: var(--ink-2); text-align: right; white-space: nowrap; }
+.pill { justify-self: start; border-radius: 999px; padding: 1px 10px; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+.pill.ok { color: var(--jade); background: var(--jade-tint); }
+.pill.bad { color: var(--seal); background: var(--seal-tint); }
+.fixed-demo { padding: 4px 0 18px; }
+.fixed-demo + .fixed-demo { border-top: 1px dashed var(--hair); padding-top: 16px; }
+.fixed-demo h4 { font-family: var(--serif); font-size: 17px; margin: 0 0 8px; letter-spacing: .02em; }
+.records .fixed-demo .case-list { max-width: 640px; }
+
+/* 长时序图：参与方一栏固定在顶部，下面的消息在其后滚动 */
+.heads-bg { fill: var(--bg); fill-opacity: .97; }
+.heads-rule { stroke: var(--hair); stroke-width: 1; }
+
 /* ---------- 底部说明条 ---------- */
-.caption { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 24px; border-top: 1px solid var(--hair); }
+.caption { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 24px; border-top: 1px solid var(--hair); min-height: 64px; padding: 10px 0; }
+.caption p { line-height: 1.5; }
 .caption p { margin: 0; min-width: 0; font-size: 15px; }
 .caption p strong { font-family: var(--serif); font-size: 19px; font-weight: 700; margin-right: 12px; letter-spacing: .02em; }
 .caption p span { color: var(--ink-2); }
@@ -360,3 +378,12 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--hair)
   .seal-g.stamp { animation: none; opacity: 1; }
   .next-hint { animation: none; }
 }
+
+/* 新增共签章节后，顶栏保留来源徽章与可滚动导航各自空间。 */
+@media (min-width: 1101px) and (max-width: 1450px) {
+  .top { gap: 14px; }
+  .chapters button { padding-inline: 9px; font-size: 13px; }
+  .source { max-width: 260px; font-size: 12px; }
+}
+
+.cosign-refusal .tick circle { fill: var(--seal); }

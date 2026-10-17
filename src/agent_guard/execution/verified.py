@@ -29,6 +29,12 @@ class VerifiedExecution:
         self._service = service
         self._evidence = evidence_store
 
+    def approval_amount(self, bundle: VerifiedInvocationBundle) -> int:
+        """Resolve the independently trusted amount for an approval preflight."""
+        if type(bundle) is not VerifiedInvocationBundle:
+            raise ValueError("a signed-source invocation bundle is required")
+        return self._service.approval_amount(bundle.invocation, bundle.permissions)
+
     def accept(
         self,
         bundle: VerifiedInvocationBundle,

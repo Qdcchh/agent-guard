@@ -8,6 +8,7 @@ from agent_guard.authorization.verifier import VerificationError
 from agent_guard.contracts.execution import ExecutionError
 from agent_guard.contracts.ledger import LedgerError
 from agent_guard.execution.receipt_projection import ReceiptProjectionError
+from agent_guard.threshold.contracts import COSM2ApprovalExpired
 from agent_guard.x402.contracts import X402Error
 
 _STATUS = {
@@ -75,6 +76,8 @@ class GatewayError(Exception):
 
 
 def classify(exc: Exception) -> tuple[int, str]:
+    if isinstance(exc, COSM2ApprovalExpired):
+        return 401, "EXPIRED"
     if isinstance(exc, GatewayError):
         code = exc.code
     elif isinstance(exc, VerificationError):

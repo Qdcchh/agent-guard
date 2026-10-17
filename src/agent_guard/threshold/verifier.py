@@ -15,14 +15,24 @@ from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 
 from agent_guard.contracts.execution import ExecutionError, ToolId
-from agent_guard.crypto.sm import sm3_b64url
+from agent_guard.cosign.encoding import signature_rs_to_der
+from agent_guard.crypto.sm import (
+    InvalidSm2Signature,
+    load_sm2_public_key,
+    sm3_b64url,
+    verify_sm2_message,
+)
 from agent_guard.threshold.codec import (
     action_message,
     compute_params_digest,
+    cosm2_message,
     decode_header,
     parse_envelope,
 )
 from agent_guard.threshold.contracts import (
+    COSM2_PROFILE,
+    PROFILE,
+    COSM2ApprovalExpired,
     ThresholdApprovalError,
     ThresholdApprovalExpectation,
     ThresholdApprovalPolicy,
@@ -56,9 +66,10 @@ class ThresholdApprovalVerifier:
             raise ThresholdApprovalError("invalid verification time", code="INVALID_APPROVAL")
 
         envelope = decode_header(header)
-        action, signature = parse_envelope(envelope)
-
         policy = self._policy
+        is_cosm2 = policy.scheme == "sm2-2p"
+        action, signature = parse_envelope(envelope, profile=COSM2_PROFILE if is_cosm2 else PROFILE)
+
         if (
             action["audience"] != policy.audience
             or action["policy_version"] != policy.policy_version
@@ -73,6 +84,8 @@ class ThresholdApprovalVerifier:
 
         expires_at = action["expires_at"]
         if now >= expires_at:
+            if is_cosm2:
+                raise COSM2ApprovalExpired()
             raise ThresholdApprovalError("threshold approval expired", code="EXPIRED")
         if expires_at - now > policy.max_lifetime_seconds:
             raise ThresholdApprovalError(
@@ -80,10 +93,19 @@ class ThresholdApprovalVerifier:
                 code="INVALID_APPROVAL",
             )
 
-        message = action_message(action)
+        message = cosm2_message(action) if is_cosm2 else action_message(action)
         try:
-            Ed25519PublicKey.from_public_bytes(policy.group_public_key).verify(signature, message)
-        except InvalidSignature as exc:
+            if is_cosm2:
+                verify_sm2_message(
+                    load_sm2_public_key(policy.group_public_key),
+                    message,
+                    signature_rs_to_der(signature),
+                )
+            else:
+                Ed25519PublicKey.from_public_bytes(policy.group_public_key).verify(
+                    signature, message
+                )
+        except (InvalidSignature, InvalidSm2Signature) as exc:
             raise ThresholdApprovalError(
                 "threshold group signature is invalid", code="INVALID_SIGNATURE"
             ) from exc
@@ -121,6 +143,11 @@ class ThresholdApprovalVerifier:
 
     @staticmethod
     def _check_expectation(action: dict, expected: ThresholdApprovalExpectation) -> None:
+        if expected.amount_fen is not None:
+            if type(expected.amount_fen) is not int or expected.amount_fen < 0:
+                raise ValueError("trusted integer approval amount required")
+            if action["amount_fen"] != expected.amount_fen:
+                raise ThresholdApprovalError("approval amount mismatch", code="APPROVAL_MISMATCH")
         if (
             action["tenant_id"] != expected.tenant_id
             or action["task_id"] != expected.task_id

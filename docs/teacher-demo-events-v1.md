@@ -6,7 +6,7 @@
 
 在仓库根目录启动 `python tools/teacher_demo_server.py`，仅监听 `127.0.0.1:8765`。沿用现有固定动作接口：`POST /api/scenarios/{scenario_id}/run` 或 `/replay`，请求体必须是 `{}`，并遵守演示页的同源会话令牌要求。`GET /api/state` 的 `job.run_id` 是事件运行 ID；成功或失败后同一服务进程内仍可按此 ID 查询。
 
-`GET /api/runs/{run_id}/events?after_seq=0&limit=200` 返回一页。`run_id` 为小写标准 UUID；`after_seq` 为非负整数，`limit` 为 1–200。前端轮询时把上页的 `next_after_seq` 作为下一次 `after_seq`；事件的 `seq` 从 1 连续递增。未知运行 ID 返回 404，无效查询返回 400。服务重启后不恢复运行索引；历史回放须重新发起 `/replay` 才会建立新的查询索引。
+`GET /api/runs/{run_id}/events?after_seq=0&limit=200` 返回一页。`run_id` 为小写标准 UUID；`after_seq` 为非负整数，`limit` 为 1–200。前端轮询时把上页的 `next_after_seq` 作为下一次 `after_seq`；事件的 `seq` 从 1 连续递增。格式合法但未知的运行 ID 返回 404；`run_id` 格式错误或不是规范小写 UUID 返回 400。查询参数语法错误返回 400；游标/条数范围在找到运行后校验，已知运行越界返回 400，未知运行仍优先返回 404。服务重启后不恢复运行索引；历史回放须重新发起 `/replay` 才会建立新的查询索引。
 
 响应字段：`schema_version`（固定 1）、`run_id`、`scenario_id`、`source`（`live` 或 `replay`）、`events`、`next_after_seq`、`terminal`、`complete`。事件字段：`schema_version`、`run_id`、`scenario_id`、`seq`、`event_id`、`cause_id`、`source`、`actor`、`target`、`stage`、`event_type`、`status`、`reason_code`、`observed_at`（UTC ISO 8601）、`monotonic_ms`、`safe_payload`、`evidence_ref`。前端应以 `event_type` 和 `safe_payload` 渲染，不解析原始日志。
 

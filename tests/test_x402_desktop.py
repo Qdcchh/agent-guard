@@ -256,6 +256,34 @@ class LauncherCase(unittest.TestCase):
         return [call[0] for call in self.fake.calls]
 
 
+class ApprovalSchemeTests(LauncherCase):
+    def test_sm2_scheme_is_passed_only_through_private_runner_env(self):
+        launcher = self.new_launcher(approval_scheme="sm2-2p")
+        folder = self.attach_success(launcher)
+        code, out, err = self.run_launcher(launcher)
+        self.assertEqual(code, 0, err)
+        self.assertIn(f"结果目录： {folder}", out)
+        lines = dict(
+            line.split("=", 1) for line in self.runner_env_text.splitlines() if "=" in line
+        )
+        self.assertEqual(
+            set(lines), {desktop.DEMO_DSN_ENV, "PYTHONPATH", desktop.APPROVAL_SCHEME_ENV}
+        )
+        self.assertEqual(lines[desktop.APPROVAL_SCHEME_ENV], "sm2-2p")
+        self.assertEqual(self.runner_env_mode, 0o600)
+        self.assertFalse((launcher.scratch / "runner.env").exists())
+
+    def test_unknown_scheme_is_rejected_before_any_docker_call(self):
+        with self.assertRaises(ValueError):
+            self.new_launcher(approval_scheme="ed25519-single")
+        self.assertEqual(self.fake.calls, [])
+
+    def test_cli_rejects_unknown_scheme(self):
+        err = io.StringIO()
+        with redirect_stderr(err), self.assertRaises(SystemExit):
+            desktop.main(["--approval-scheme", "bogus"])
+
+
 class SuccessTests(LauncherCase):
     def test_success_translates_host_path_and_cleans_exact_owned_ids(self):
         launcher = self.new_launcher()

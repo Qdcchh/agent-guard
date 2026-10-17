@@ -289,7 +289,15 @@ class DemoTests(unittest.TestCase):
         self.assertTrue(app.start("x402-run"))
         self.complete(app)
         self.assertEqual(app.job["status"], "success")
-        self.assertEqual(calls[0], [demo.sys.executable, str(self.repo / "tools/x402_desktop.py")])
+        self.assertEqual(
+            calls[0],
+            [
+                demo.sys.executable,
+                str(self.repo / "tools/x402_desktop.py"),
+                "--approval-scheme",
+                "sm2-2p",
+            ],
+        )
         state = app.state()
         self.assertTrue(state["x402"]["passed"])
         self.assertEqual(state["x402"]["orders"], 1)
@@ -347,11 +355,13 @@ class DemoTests(unittest.TestCase):
             self.assertEqual(request("POST", "/api/other", valid, "{}")[0], 404)
             self.assertEqual(request("POST", "/api/threshold/run", {}, "{}")[0], 403)
             self.assertEqual(request("POST", "/api/x402/run", {}, "{}")[0], 403)
+            self.assertEqual(request("POST", "/api/cosm2/run", {}, "{}")[0], 403)
             self.assertEqual(request("POST", "/api/run", valid, "{}")[0], 202)
             self.assertEqual(request("POST", "/api/run", valid, "{}")[0], 409)
             self.assertEqual(request("POST", "/api/verify", valid, "{}")[0], 409)
             self.assertEqual(request("POST", "/api/threshold/run", valid, "{}")[0], 409)
             self.assertEqual(request("POST", "/api/x402/run", valid, "{}")[0], 409)
+            self.assertEqual(request("POST", "/api/cosm2/run", valid, "{}")[0], 409)
         finally:
             release.set()
             self.complete(app)
@@ -389,7 +399,16 @@ class DemoTests(unittest.TestCase):
             self.assertEqual(request(path + "?limit=201")[0], 400)
             self.assertEqual(request(path + "?limit=1&limit=2")[0], 400)
             self.assertEqual(request(path + "?after_seq=-1")[0], 400)
+            # A well-formed but unknown UUID stays 404; a malformed or
+            # non-canonical run id is an invalid query and must be 400.
             self.assertEqual(request(f"/api/runs/{uuid.uuid4()}/events")[0], 404)
+            for invalid_run in (
+                "not-a-uuid",
+                "12345678-1234-1234-1234-12345678901",
+                "zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz",
+                "ABCDEF12-1234-1234-1234-123456789012",
+            ):
+                self.assertEqual(request(f"/api/runs/{invalid_run}/events")[0], 400)
         finally:
             server.shutdown()
             server.server_close()

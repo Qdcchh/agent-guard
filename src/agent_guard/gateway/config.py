@@ -229,11 +229,34 @@ def threshold_policy(value):
     if "threshold_approval" not in value:
         return None
     data = value["threshold_approval"]
-    if type(data) is not dict or set(data) != _THRESHOLD_FIELDS:
+    if type(data) is not dict:
         raise ConfigError("exact threshold approval fields required")
-    key = data["group_public_key"]
-    if type(key) is not str or re.fullmatch(r"[0-9a-f]{64}", key) is None:
-        raise ConfigError("threshold group public key must be 32 raw bytes in lowercase hex")
+    scheme = data.get("scheme", "frost-ed25519")
+    if scheme == "frost-ed25519":
+        fields = _THRESHOLD_FIELDS | ({"scheme"} if "scheme" in data else set())
+        if set(data) != fields:
+            raise ConfigError("exact threshold approval fields required")
+        key = data["group_public_key"]
+        if type(key) is not str or re.fullmatch(r"[0-9a-f]{64}", key) is None:
+            raise ConfigError("threshold group public key must be 32 raw bytes in lowercase hex")
+        public_key = bytes.fromhex(key)
+    elif scheme == "sm2-2p":
+        from agent_guard.contracts.encoding import b64url_decode
+        from agent_guard.crypto.sm import load_sm2_public_key
+
+        fields = (_THRESHOLD_FIELDS - {"group_public_key"}) | {
+            "scheme",
+            "group_public_key_spki_b64url",
+        }
+        if set(data) != fields:
+            raise ConfigError("exact COSM2 approval fields required")
+        try:
+            public_key = b64url_decode(data["group_public_key_spki_b64url"])
+            load_sm2_public_key(public_key)
+        except (ValueError, TypeError) as exc:
+            raise ConfigError("canonical SM2 SPKI base64url required") from exc
+    else:
+        raise ConfigError("unsupported trusted approval scheme")
     for name, upper in (
         ("policy_version", MAX_VERSION),
         ("key_epoch", MAX_VERSION),
@@ -242,7 +265,8 @@ def threshold_policy(value):
         if type(data[name]) is not int or not 1 <= data[name] <= upper:
             raise ConfigError(f"bounded trusted threshold {name} required")
     return ThresholdApprovalPolicy(
-        group_public_key=bytes.fromhex(key),
+        group_public_key=public_key,
+        scheme=scheme,
         policy_version=data["policy_version"],
         key_epoch=data["key_epoch"],
         max_lifetime_seconds=data["max_lifetime_seconds"],

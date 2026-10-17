@@ -23,8 +23,13 @@ import psycopg
 from agent_guard.contracts.execution import ToolId
 from agent_guard.contracts.ledger import ErrorCode, LedgerError
 from agent_guard.ledger import store as ledger_store
-from agent_guard.threshold.codec import compute_params_digest
-from agent_guard.threshold.contracts import VerifiedThresholdApproval
+from agent_guard.threshold.codec import compute_params_digest, parse_envelope
+from agent_guard.threshold.contracts import (
+    COSM2_PROFILE,
+    COSM2ApprovalExpired,
+    ThresholdApprovalError,
+    VerifiedThresholdApproval,
+)
 from agent_guard.tools.params import parse_tool_params
 
 _INSERT = (
@@ -108,6 +113,12 @@ def approval_binding(approval: VerifiedThresholdApproval):
                 "threshold approval binding disappeared or changed",
             )
         if ledger_store.db_now_epoch(conn) >= approval.expires_at:
+            try:
+                parse_envelope(approval.envelope_bytes, profile=COSM2_PROFILE)
+            except ThresholdApprovalError:
+                pass
+            else:
+                raise COSM2ApprovalExpired()
             raise LedgerError(ErrorCode.EXPIRED, "threshold approval expired before commit")
 
     return callback, final_check

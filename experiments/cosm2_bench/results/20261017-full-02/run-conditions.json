@@ -1,0 +1,11 @@
+{
+  "run_id": "20261017-full-02",
+  "source": "controller observed orchestration; supplemental conditions, immutable raw/summary unchanged",
+  "conditions": [
+    "Fixed Python3.11/tongsuopy1.0.1 amd64 Docker image on Apple M5 Pro arm64 under emulation.",
+    "Other owned integration tests and front-end recording preparation ran concurrently on the same host; CPU isolation/frequency and unrelated user workload were not controlled.",
+    "PostgreSQL used a dedicated owned instance; adapters used separately owned schemas/downstream databases/SELECT-only principals.",
+    "No outlier or error-duration selection; all100formal+10warmup attempts per metric preserved.",
+    "Separate timing boundaries; e2e is new acceptance HTTP->202, excludes preparation and downstream effects; no throughput/production performance claim."
+  ]
+}

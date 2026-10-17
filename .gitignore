@@ -41,3 +41,9 @@ node_modules/
 # Internal documents must remain outside the repository
 01-协作规范与分工.md
 02-自命题填写说明.md
+
+# Large local delivery bundles (kept on disk, not in Git)
+复赛冲刺材料-*/*.zip
+复赛冲刺材料-*/C交付-*/
+复赛冲刺材料-*/A交付-*/
+~$*

@@ -145,9 +145,19 @@ class ExecutionService:
         connector: Callable[..., psycopg.Connection] | None = None,
         lock_timeout_ms: int = DEFAULT_LOCK_TIMEOUT_MS,
         statement_timeout_ms: int = DEFAULT_STATEMENT_TIMEOUT_MS,
+        cosign_policy=None,
     ) -> None:
         if not downstream_secret:
             raise ValueError("downstream_secret must be configured")
+        if cosign_policy is not None:
+            from agent_guard.threshold.contracts import ThresholdApprovalPolicy
+
+            if (
+                type(cosign_policy) is not ThresholdApprovalPolicy
+                or cosign_policy.scheme != "sm2-2p"
+            ):
+                raise ValueError("COSM2 policy required")
+        self._cosign_policy = cosign_policy
         self._dsn = gateway_dsn
         self._ledger = ledger
         self._catalog = catalog
@@ -275,6 +285,50 @@ class ExecutionService:
             before_create=before_create,
             after_link=after_link,
         )
+
+    def approval_amount(self, verified, snapshot) -> int:
+        """Read trusted order cost; retries use their validated persisted cost.
+
+        This preflight supplies a mismatch diagnostic only. Acceptance still
+        repeats all authoritative intent, budget and expiry checks in its TX.
+        """
+        tool = parse_tool_id(verified.tool_id)
+        parse_tool_version(verified.tool_version)
+        params = parse_tool_params(tool, verified.canonical_params)
+        policy.check_static_authorization(
+            snapshot,
+            grant_id=verified.grant_id,
+            root_id=verified.root_id,
+            tenant_id=verified.tenant_id,
+            task_id=verified.task_id,
+            subject=verified.subject,
+            tool_id=tool,
+            params=params,
+            db_path=self._read_path_ids(verified.grant_id),
+        )
+        existing = self._find_candidate(verified)
+        if existing is not None:
+            self._ensure_accept_material(existing.operation_id, row=existing)
+            return existing.amount_fen
+        try:
+            quote = policy.resolve_tool_resources(
+                self._catalog,
+                tenant_id=verified.tenant_id,
+                task_id=verified.task_id,
+                tool_id=tool,
+                params=params,
+                operation_facts=self._operation_facts,
+                caller_grant_id=verified.grant_id,
+                caller_holder_client_id=verified.holder_client_id,
+                caller_holder_kid=verified.holder_kid,
+            )
+        except ExecutionError:
+            existing = self._find_candidate(verified)
+            if existing is None:
+                raise
+            self._ensure_accept_material(existing.operation_id, row=existing)
+            return existing.amount_fen
+        return self._cost_for_new(quote).amount_fen
 
     def _read_path_ids(self, grant_id: str) -> tuple[str, ...]:
         with self._read() as conn:
@@ -507,6 +561,7 @@ class ExecutionService:
                     canonical_params=claim.operation.canonical_params,
                     quote=self._quote_of(claim.operation),
                     expected_amount_fen=claim.operation.amount_fen,
+                    **self._effect_approval(claim.operation),
                 )
             )
         else:
@@ -524,11 +579,32 @@ class ExecutionService:
                         canonical_params=claim.operation.canonical_params,
                         quote=self._quote_of(claim.operation),
                         expected_amount_fen=claim.operation.amount_fen,
+                        **self._effect_approval(claim.operation),
                     )
                 )
         if pause is not None:
             pause(claim, outcome)
         return self._finalize(claim, outcome, downstream_called=called, reason=reason)
+
+    def _effect_approval(self, operation):
+        """Forward only the original immutable acceptance envelope, also on recovery."""
+        if self._cosign_policy is None or operation.tool_id != ToolId.ORDER_CREATE.value:
+            return {}
+        with self._connect() as conn:
+            row = conn.execute(
+                "SELECT envelope_bytes FROM ag_threshold_approvals WHERE operation_id=%s",
+                (operation.operation_id,),
+            ).fetchone()
+        if row is None:
+            raise ExecutionError(
+                ExecutionErrorCode.DOWNSTREAM_UNAUTHORIZED, "accepted COSM2 approval unavailable"
+            )
+        return {
+            "approval_envelope": bytes(row[0]),
+            "idempotency_key": operation.idempotency_key,
+            "tenant_id": operation.tenant_id,
+            "task_id": operation.task_id,
+        }
 
     def reconcile(
         self,

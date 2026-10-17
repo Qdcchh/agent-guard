@@ -1,7 +1,7 @@
 """Fixed local x402 exact/EVM/EIP-3009 purchase demo over the real gateway.
 
 This is a *local teaching demo*: it uses the real signed AS root->leaf chain,
-the real SM2/AGPoP + FROST threshold gateway, the real PostgreSQL ledger, the
+the real SM2/AGPoP + configured FROST or COSM2 approval gateway, the real PostgreSQL ledger, the
 real x402 HTTP resource server, a real local Anvil chain with the real
 FiatToken bytecode and real EIP-3009 signatures. It never pretends to be a
 production deployment, never touches real funds and writes sanitized JSON
@@ -31,11 +31,14 @@ import psycopg
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 
+from agent_guard.contracts.encoding import b64url_encode  # noqa: E402
+from agent_guard.cosign.authz_domain import CosignRefused  # noqa: E402
 from agent_guard.execution.service import ExecutionService  # noqa: E402
 from agent_guard.ledger.lineage import apply_bundle_migrations  # noqa: E402
 from agent_guard.ledger.service import ExecutionLedger  # noqa: E402
 from agent_guard.threshold.contracts import ThresholdApprovalPolicy  # noqa: E402
 from agent_guard.threshold.verifier import ThresholdApprovalVerifier  # noqa: E402
+from agent_guard.tools.downstream import MockDownstream  # noqa: E402
 from agent_guard.x402 import state, wire  # noqa: E402
 from agent_guard.x402.chain import AUTHORIZATION_USED_TOPIC, ChainReader  # noqa: E402
 from agent_guard.x402.client import X402HttpClient  # noqa: E402
@@ -46,6 +49,7 @@ from agent_guard.x402.gate import PaymentGatedDownstream  # noqa: E402
 from agent_guard.x402.localchain import AnvilService, bootstrap_token  # noqa: E402
 from agent_guard.x402.resource import X402ResourceServer  # noqa: E402
 from agent_guard.x402.signer import X402Payer, create_nonce  # noqa: E402
+from tests.fixtures.cosm2 import CosignSigner, readonly_provider, readonly_role  # noqa: E402
 from tests.fixtures.execution import DOWNSTREAM_SECRET, build_catalog  # noqa: E402
 from tests.fixtures.gateway import app_for, raw_material, request  # noqa: E402
 from tests.fixtures.isolation import (  # noqa: E402
@@ -98,7 +102,14 @@ class CaseWorld:
         offer_amount: str,
         payer_address: str,
         budget_limit: str | None = None,
+        approval_scheme: str = "frost-ed25519",
     ):
+        if approval_scheme not in {"frost-ed25519", "sm2-2p"}:
+            raise ValueError("invalid approval scheme")
+        self.approval_scheme = approval_scheme
+        self._readonly = None
+        self._approval_contexts = {}
+        self.cosm2_evidence = []
         self.label = label
         self.payer_address = payer_address
         self._base_dsn = base_dsn
@@ -113,13 +124,36 @@ class CaseWorld:
             self.downstream = create_downstream_database(self.namespace.base_dsn)
             self.env = signed_env(self.namespace.dsn, self.downstream.dsn, leaf_ttl=180)
             self.private = private_root / label
-            self.signer = RustThresholdSigner(self.private)
-            self.policy = ThresholdApprovalPolicy(
-                group_public_key=bytes.fromhex(self.signer.enroll()),
-                policy_version=POLICY_VERSION,
-                key_epoch=KEY_EPOCH,
-                max_lifetime_seconds=3600,
-            )
+            if approval_scheme == "sm2-2p":
+                self._readonly = readonly_role(self.namespace.dsn)
+                ro = self._readonly.__enter__()
+                self.signer = CosignSigner(
+                    self.private,
+                    dsn_readonly=ro,
+                    snapshot_provider=readonly_provider(self.env.verifier._permission_provider, ro),
+                    token_provider=lambda bundle: self.env.token,
+                    catalog=self.env.service._catalog,
+                    payment_digest_provider=self._trusted_payment_digest,
+                )
+                self.signer.enroll()
+                self.policy = self.signer.policy
+                self.env.downstream = MockDownstream(
+                    self.downstream.dsn,
+                    service_secret=DOWNSTREAM_SECRET,
+                    approved_suppliers={"supplier-001"},
+                    approved_recipients={"user-demo-001"},
+                    served_requests={"req-001"},
+                    cosign_policy=self.policy,
+                )
+                self.env.downstream.provision()
+            else:
+                self.signer = RustThresholdSigner(self.private)
+                self.policy = ThresholdApprovalPolicy(
+                    group_public_key=bytes.fromhex(self.signer.enroll()),
+                    policy_version=POLICY_VERSION,
+                    key_epoch=KEY_EPOCH,
+                    max_lifetime_seconds=3600,
+                )
             self.port = _free_port()
             self.deployment = X402Deployment(
                 gateway_dsn=self.namespace.dsn,
@@ -151,6 +185,7 @@ class CaseWorld:
                 client=self.client,
                 payer=chain.payer,
                 reader=reader,
+                cosign_policy=self.policy if approval_scheme == "sm2-2p" else None,
             )
             self.service = ExecutionService(
                 gateway_dsn=self.namespace.dsn,
@@ -158,6 +193,7 @@ class CaseWorld:
                 catalog=build_catalog(TENANT, TASK),
                 downstream=self.gate,
                 downstream_secret=DOWNSTREAM_SECRET,
+                cosign_policy=self.policy if approval_scheme == "sm2-2p" else None,
             )
             self.verifier = ThresholdApprovalVerifier(policy=self.policy)
             self.server = X402ResourceServer(
@@ -166,6 +202,7 @@ class CaseWorld:
                 reader=reader,
                 downstream=self.env.downstream,
                 downstream_secret=DOWNSTREAM_SECRET,
+                cosign_policy=self.policy if approval_scheme == "sm2-2p" else None,
             )
             self.app = app_for(
                 self.env,
@@ -187,11 +224,38 @@ class CaseWorld:
 
     # ------------------------------------------------------------- helpers
 
-    def accept_paid(self, key, *, deployment=None, app=None, **overrides):
+    def _trusted_payment_digest(self, bundle):
+        # Rebuild independently from trusted deployment/request facts; never
+        # return an action-provided digest or accept one from the other party.
+        dep, expires_at = self._approval_contexts[bundle.invocation.idempotency_key]
+        invocation = bundle.invocation
+        return build_intent(
+            profile=dep.profile,
+            tenant_id=invocation.tenant_id,
+            task_id=invocation.task_id,
+            grant_id=invocation.grant_id,
+            root_grant_id=invocation.root_id,
+            tool_id=invocation.tool_id,
+            idempotency_key=invocation.idempotency_key,
+            quote_id=dep.offer.quote_id,
+            quote_version=dep.offer.quote_version,
+            amount_fen=70_000,
+            valid_before=expires_at,
+        ).digest
+
+    def accept_paid(
+        self, key, *, deployment=None, app=None, tamper_payment_digest=False, **overrides
+    ):
         bundle = self.env.bundle(key)
         dep = deployment or self.deployment
         invocation = bundle.invocation
-        expires_at = int(time.time()) + APPROVAL_LIFETIME
+        lifetime = (
+            min(APPROVAL_LIFETIME, self.policy.max_lifetime_seconds - 5)
+            if self.approval_scheme == "sm2-2p"
+            else APPROVAL_LIFETIME
+        )
+        expires_at = int(time.time()) + lifetime
+        self._approval_contexts[key] = (dep, expires_at)
         intent = build_intent(
             profile=dep.profile,
             tenant_id=invocation.tenant_id,
@@ -215,7 +279,15 @@ class CaseWorld:
         )
         action_kwargs.update(overrides)
         action = approval_action(bundle, **action_kwargs)
-        header = self.signer.header_for(action, self.signer.sign(action))
+        signature = (
+            self.signer.sign(action, bundle=bundle)
+            if self.approval_scheme == "sm2-2p"
+            else self.signer.sign(action)
+        )
+        if tamper_payment_digest:
+            digest = action["payment_digest"]
+            action = {**action, "payment_digest": ("1" if digest[0] != "1" else "2") + digest[1:]}
+        header = self.signer.header_for(action, signature)
         token, proof, body = raw_material(self.namespace.dsn, bundle)
         status, accepted, _headers = request(
             app if app is not None else self.app,
@@ -327,6 +399,9 @@ class CaseWorld:
                 executor.shutdown()
         if self.downstream is not None:
             drop_downstream_database(self.namespace.base_dsn, self.downstream)
+        if self._readonly is not None:
+            self._readonly.__exit__(None, None, None)
+            self._readonly = None
         release_namespace(self.namespace)
         shutil.rmtree(getattr(self, "private", self._private_root / self.label), ignore_errors=True)
         remaining = []
@@ -368,6 +443,24 @@ def _code_of(body):
 
 
 def case_paid(world: CaseWorld, cases: list[dict]) -> None:
+    if world.approval_scheme == "sm2-2p":
+        before = world.counts()
+        _, _, tampered_status, tampered_body = world.accept_paid(
+            "demo-tampered-payment-digest", tamper_payment_digest=True
+        )
+        after = world.counts()
+        world.cosm2_evidence.append(
+            {
+                "name": "tampered-cosm2-payment-digest",
+                "http_status": tampered_status,
+                "code": _code_of(tampered_body),
+                "before": before,
+                "after": after,
+                "passed": tampered_status == 401
+                and _code_of(tampered_body) == "INVALID_SIGNATURE"
+                and before == after,
+            }
+        )
     _b, _i, status, accepted = world.accept_paid("demo-paid")
     valid = status == 202 and accepted.get("status") == "RESERVED"
     operation_id = accepted.get("operation_id") if isinstance(accepted, dict) else None
@@ -404,6 +497,20 @@ def case_paid(world: CaseWorld, cases: list[dict]) -> None:
 
 
 def case_v2(world: CaseWorld, cases: list[dict]) -> None:
+    if world.approval_scheme == "sm2-2p":
+        try:
+            world.accept_paid("demo-v2", version=2)
+            refused = None
+        except CosignRefused as exc:
+            refused = exc.code
+        _record(
+            cases,
+            "v2-approval-refused",
+            refused == "EXEC_MISMATCH",
+            code=refused,
+            refused_by="exec",
+        )
+        return
     _b, _i, status, body = world.accept_paid("demo-v2", version=2)
     _record(
         cases,
@@ -537,7 +644,7 @@ CASES = (
 )
 
 
-def run_demo(dsn: str) -> tuple[int, dict]:
+def run_demo(dsn: str, *, approval_scheme="frost-ed25519") -> tuple[int, dict]:
     run_id = str(uuid.uuid4())
     outdir = DEMO_ROOT / run_id
     private_root = outdir / "private"
@@ -545,6 +652,8 @@ def run_demo(dsn: str) -> tuple[int, dict]:
     private_root.mkdir(mode=0o700)
     anvil = None
     cases: list[dict] = []
+    cosm2_evidence = []
+    cosm2_public = []
     totals = {"operations": 0, "approvals": 0, "orders": 0, "payments": 0, "transactions": 0}
     budgets: list[list[str]] = []
     remaining: list[str] = []
@@ -595,6 +704,7 @@ def run_demo(dsn: str) -> tuple[int, dict]:
                 quote_id="quote-001",
                 offer_amount=offer_amount,
                 payer_address=chain.payer.address,
+                approval_scheme=approval_scheme,
             )
             try:
                 world.server.__enter__()
@@ -603,6 +713,16 @@ def run_demo(dsn: str) -> tuple[int, dict]:
                 finally:
                     world.server.stop()
                 counts = world.counts()
+                cosm2_evidence.extend(world.cosm2_evidence)
+                if approval_scheme == "sm2-2p":
+                    cosm2_public.append(
+                        {
+                            "case": label,
+                            "public_key_spki_b64url": b64url_encode(world.policy.group_public_key),
+                            "policy_version": world.policy.policy_version,
+                            "key_epoch": world.policy.key_epoch,
+                        }
+                    )
                 for key, value in counts.items():
                     totals[key] += value
                 budgets.append([label] + world.budget_row())
@@ -617,6 +737,7 @@ def run_demo(dsn: str) -> tuple[int, dict]:
         if anvil is not None and getattr(anvil, "_process", None) is not None:
             remaining.append("anvil_process")
     passed = bool(cases) and all(case["passed"] for case in cases) and not remaining
+    passed &= all(row["passed"] for row in cosm2_evidence)
     result = {
         "demo": "x402-gateway-purchase",
         "run_id": run_id,
@@ -632,10 +753,31 @@ def run_demo(dsn: str) -> tuple[int, dict]:
         "resources_remaining": remaining,
         "limitations": limitations,
     }
+    if approval_scheme == "sm2-2p":
+        (outdir / "cosm2-payment-binding.json").write_text(
+            json.dumps(
+                {
+                    "version": 1,
+                    "run_id": run_id,
+                    "approval_scheme": approval_scheme,
+                    "approval_profile": "AG-COSM2-APPROVAL-1",
+                    "public_keys": cosm2_public,
+                    "settlement_signature": "EIP-3009/secp256k1",
+                    "observations": cosm2_evidence,
+                },
+                indent=2,
+            )
+            + "\n"
+        )
     (outdir / "result.json").write_text(
         json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     return (0 if passed else 1), result
+
+
+#: Trusted launcher-only override (written by tools/x402_desktop.py into its
+#: private runner env file); an explicit --approval-scheme still wins.
+APPROVAL_SCHEME_ENV = "AGENT_GUARD_X402_APPROVAL_SCHEME"
 
 
 def _free_port() -> int:
@@ -649,7 +791,15 @@ def _free_port() -> int:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dsn", default=None)
+    parser.add_argument(
+        "--approval-scheme",
+        choices=["frost-ed25519", "sm2-2p"],
+        default=os.environ.get(APPROVAL_SCHEME_ENV, "frost-ed25519"),
+    )
     args = parser.parse_args(argv)
+    if args.approval_scheme not in {"frost-ed25519", "sm2-2p"}:
+        print("x402 支付演示未完成：批准方案无效", file=sys.stderr)
+        return 2
     dsn = (
         args.dsn
         or os.environ.get("AGENT_GUARD_X402_DEMO_DSN")
@@ -663,7 +813,7 @@ def main(argv=None) -> int:
         return 2
     run_id = None
     try:
-        code, result = run_demo(dsn)
+        code, result = run_demo(dsn, approval_scheme=args.approval_scheme)
         run_id = result["run_id"]
     except BaseException as exc:  # noqa: BLE001 - never leak DSN/raw exception text
         print(f"x402 支付演示未完成：{type(exc).__name__}", file=sys.stderr)

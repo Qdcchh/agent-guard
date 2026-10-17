@@ -540,3 +540,7 @@ fi
 ```
 
 正常命令是`python -m agent_guard.demo normal --config /owned/run/run.json --out /tmp/OUTPUT [--capacity-items 256]`。256必须在trusted owner启动supervisor时同时传`--capacity-items 256`，在provision前固定catalog/policy；不能临时扩大已准备的任务。详见[部署操作](docs/deployment-demo.md)和[技术材料](docs/technical-report.md)。
+
+## 2026-10-17 COSM2全量实施
+
+双域协同SM2原规划A1–A7/B1–B9及完整C候选包已真实自查闭合（含独立效果端验签、x402共签付款意图、九项正式基准和185.4秒现场媒体）；已通过全新gpt-6.1-sol/high完整r2独立验收并[正式接受](tasks/workflow/runs/cosm2-full-20261017/acceptance.md)，r1失败及最小补正历史保留。见[实现和启动说明](docs/cosm2-gateway-20261020.md)、[可写清单](docs/cosm2-paper-claims-20261017.md)。旧A3长实验不在本范围。

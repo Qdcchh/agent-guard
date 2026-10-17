@@ -16,6 +16,7 @@ from agent_guard.threshold.contracts import (
     TOOL_ID as THRESHOLD_TOOL_ID,
 )
 from agent_guard.threshold.contracts import (
+    COSM2ApprovalExpired,
     ThresholdApprovalError,
     ThresholdApprovalExpectation,
 )
@@ -131,6 +132,12 @@ class GatewayEndpoint:
         verified_approval = None
         if requires_approval:
             verified_approval = self._verify_approval(approval, bundle)
+            if (
+                self._threshold.policy.scheme == "sm2-2p"
+                and not requires_payment
+                and verified_approval.payment_digest != "0" * 64
+            ):
+                raise GatewayError("APPROVAL_MISMATCH")
         extra_binding = extra_final_check = None
         if requires_payment:
             if verified_approval is None:
@@ -161,8 +168,15 @@ class GatewayEndpoint:
             idempotency_key=invocation.idempotency_key,
             canonical_params=invocation.canonical_params,
             path_grant_ids=tuple(path_ids) if path_ids is not None else None,
+            amount_fen=(
+                self._execution.approval_amount(bundle)
+                if self._threshold.policy.scheme == "sm2-2p"
+                else None
+            ),
         )
         try:
             return self._threshold.verify(header, expected=expected, now=self._now())
+        except COSM2ApprovalExpired:
+            raise
         except ThresholdApprovalError as exc:
             raise VerificationError("invalid threshold approval", code=exc.code) from exc

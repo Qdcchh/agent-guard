@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import math
 import re
 import secrets
 import subprocess
@@ -70,6 +71,136 @@ def summary(folder):
         "counters": counters,
         "resources_remaining": integer(read(folder / "cleanup.json")["resources_remaining"]),
     }
+
+
+COSM2_CASES = {
+    "cosign-valid-one-order": {"http_status": 202},
+    "missing-approval": {"http_status": 401, "code": "APPROVAL_REQUIRED"},
+    "exec-domain-alone": {"http_status": 401, "code": "INVALID_SIGNATURE"},
+    "tampered-amount": {"http_status": 409, "code": "APPROVAL_MISMATCH"},
+    "revoked-before-cosign": {"refused_by": "authz", "code": "AUTHZ_REVOKED"},
+    "revoked-after-cosign": {"http_status": 403, "code": "REVOKED"},
+}
+
+
+def unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError("duplicate JSON key")
+        result[key] = value
+    return result
+
+
+def cosm2_result(folder):
+    """Strict B7 saved-result reader. Summary evidence never implies live events."""
+    folder = safe_path(folder)
+    root = safe_path(REPO / "artifacts/cosm2-gateway-demo-live")
+    if folder.parent != root or str(uuid.UUID(folder.name)) != folder.name:
+        raise ValueError("invalid COSM2 result directory")
+    path = safe_path(folder / "result.json")
+    if path.stat().st_size > 65536:
+        raise ValueError("oversized COSM2 result")
+    data = json.loads(path.read_text(), object_pairs_hook=unique_object)
+    validate_cosm2_result(data, folder.name)
+    return {
+        **data,
+        "source": "saved-result",
+        "source_label": "保存结果回放（本地文件，非独立证明）",
+    }
+
+
+def validate_cosm2_result(data, run_id):
+    """Shared strict B7 wire contract; no extra output or private fields."""
+    fields = {
+        "run_id",
+        "passed",
+        "completed_at",
+        "scheme",
+        "public_key_fingerprint",
+        "orders",
+        "operations",
+        "approvals",
+        "resources_remaining",
+        "cases",
+        "timing_ms",
+    }
+    if type(data) is not dict or set(data) != fields:
+        raise ValueError("invalid COSM2 fields")
+    if data["run_id"] != run_id or data["scheme"] != "sm2-2p":
+        raise ValueError("invalid COSM2 source")
+    if (
+        type(data["passed"]) is not bool
+        or type(data["public_key_fingerprint"]) is not str
+        or not re.fullmatch(r"[0-9a-f]{16}", data["public_key_fingerprint"])
+    ):
+        raise ValueError("invalid COSM2 summary")
+    integer(data["completed_at"])
+    if not 0 < data["completed_at"] <= 253402300799:
+        raise ValueError("invalid completion time")
+    for field in ("orders", "operations", "approvals", "resources_remaining"):
+        integer(data[field])
+    cases = data["cases"]
+    if type(cases) is not list or len(cases) != len(COSM2_CASES):
+        raise ValueError("incomplete COSM2 cases")
+    seen = set()
+    for case in cases:
+        if type(case) is not dict or type(case.get("name")) is not str:
+            raise ValueError("invalid COSM2 case")
+        name = case["name"]
+        if name not in COSM2_CASES or name in seen:
+            raise ValueError("unknown or duplicate COSM2 case")
+        expected = COSM2_CASES[name]
+        if set(case) != {"name", "passed", *expected} or type(case["passed"]) is not bool:
+            raise ValueError("invalid COSM2 case fields")
+        if any(type(case[k]) is not type(v) or case[k] != v for k, v in expected.items()):
+            raise ValueError("inconsistent COSM2 refusal")
+        seen.add(name)
+    success = all(case["passed"] for case in cases)
+    if data["passed"] != success or (
+        success
+        and any(
+            data[k] != v
+            for k, v in {
+                "orders": 1,
+                "operations": 1,
+                "approvals": 1,
+                "resources_remaining": 0,
+            }.items()
+        )
+    ):
+        raise ValueError("inconsistent COSM2 aggregate")
+    timing = data["timing_ms"]
+    if (
+        type(timing) is not dict
+        or set(timing) != {"round1", "round2_with_checks", "round3_with_verify"}
+        or any(
+            type(v) not in (int, float) or not math.isfinite(v) or v < 0 for v in timing.values()
+        )
+    ):
+        raise ValueError("invalid COSM2 timing")
+
+
+def cosm2_saved_state():
+    """Read only the fixed root; no pointer, arbitrary path, or job execution."""
+    try:
+        root = safe_path(REPO / "artifacts/cosm2-gateway-demo-live")
+        candidates = []
+        rejected = 0
+        for folder in root.iterdir():
+            if re.fullmatch(r"[0-9a-f-]{36}", folder.name):
+                try:
+                    candidates.append(cosm2_result(folder))
+                except (OSError, ValueError, KeyError, TypeError, OverflowError):
+                    rejected += 1
+        if candidates:
+            return max(candidates, key=lambda item: (item["completed_at"], item["run_id"])), (
+                "保存结果回放；可在本机重新运行"
+                + (f"；{rejected} 份未通过格式校验的历史结果未采用" if rejected else "")
+            )
+        return None, "未就绪：尚无 B7 保存结果；继续示意推演"
+    except (OSError, ValueError, KeyError, TypeError, OverflowError):
+        return None, "未就绪：B7 保存结果缺失或校验失败；继续示意推演"
 
 
 def threshold_result(folder):
@@ -205,6 +336,7 @@ class DemoApp:
         self.history = None
         self.threshold = None
         self.x402 = None
+        self.cosign = None
         self.scenario_results = {}
         self.runs = {}
         try:
@@ -233,7 +365,19 @@ class DemoApp:
                 live = summary(self.live_folder)
         except (OSError, ValueError, KeyError, TypeError):
             pass
+        cosign, cosign_status = cosm2_saved_state()
+        if self.cosign is not None:
+            cosign = self.cosign
+            cosign_status = "本次现场运行；右侧仍为示意推演"
+        cosign_ready = (REPO / "tools/cosm2_desktop.py").is_file() and (
+            REPO / "tools/cosm2_gateway_demo.py"
+        ).is_file()
+        if cosign_ready and cosign is None:
+            cosign_status = "尚未运行：本机入口已安装；需要 Docker Desktop 与固定运行镜像"
         return {
+            "cosign": cosign,
+            "cosign_status": cosign_status,
+            "cosign_ready": cosign_ready,
             "history": historical,
             "live": live,
             "verification": self.last_verification,
@@ -250,6 +394,7 @@ class DemoApp:
             "verify",
             "scenario-run",
             "scenario-replay",
+            "cosm2-run",
             "threshold-run",
             "x402-run",
         ):
@@ -288,6 +433,7 @@ class DemoApp:
                 "stage": {
                     "run": "正在启动独占环境",
                     "verify": "正在离线验证原件与篡改副本",
+                    "cosm2-run": "正在准备双域共签固定采购演示",
                     "threshold-run": "正在准备本机固定门限采购演示",
                     "x402-run": "正在准备本机固定 x402 采购演示（首次运行需构建隔离镜像）",
                     "scenario-run": "准备固定场景独占环境",
@@ -356,10 +502,17 @@ class DemoApp:
                 return
             before = set(target.parent.glob("verify-*")) if action == "verify" else set()
             command = [sys.executable, str(REPO / "tools/teacher_demo.py")]
+            if action == "cosm2-run":
+                command = [sys.executable, str(REPO / "tools/cosm2_desktop.py")]
             if action == "threshold-run":
                 command = [sys.executable, str(REPO / "tools/threshold_desktop.py")]
             if action == "x402-run":
-                command = [sys.executable, str(REPO / "tools/x402_desktop.py")]
+                command = [
+                    sys.executable,
+                    str(REPO / "tools/x402_desktop.py"),
+                    "--approval-scheme",
+                    "sm2-2p",
+                ]
             if action == "scenario-run":
                 command = [
                     sys.executable,
@@ -380,13 +533,20 @@ class DemoApp:
                 stdin=subprocess.DEVNULL,
             )
             folder = None
-            captures_folder = action in ("run", "scenario-run", "threshold-run", "x402-run")
+            captures_folder = action in (
+                "run",
+                "scenario-run",
+                "threshold-run",
+                "x402-run",
+                "cosm2-run",
+            )
             for line in process.stdout:
                 if captures_folder and line.startswith("结果目录："):
                     folder = Path(line.split("：", 1)[1].strip())
                     with self.lock:
                         self.job["stage"] = {
                             "scenario-run": "固定安全场景运行中：准备环境、执行检查与清理",
+                            "cosm2-run": "双域共签运行中：真实授权链、独立授权域与接受事务",
                             "threshold-run": "门限固定演示运行中：真实签发、门限批准与拒绝用例",
                             "x402-run": "x402 固定演示运行中：真实 402、链上结算与拒绝用例",
                         }.get(action, "真实流程运行中：构建、授权、四工具执行与证据导出")
@@ -401,6 +561,7 @@ class DemoApp:
                     REPO
                     / {
                         "scenario-run": "artifacts/teacher-scenarios-live",
+                        "cosm2-run": "artifacts/cosm2-gateway-demo-live",
                         "threshold-run": "artifacts/threshold-gateway-demo-live",
                         "x402-run": "artifacts/x402-gateway-demo-live",
                     }.get(action, "artifacts/teacher-demo-live")
@@ -410,6 +571,12 @@ class DemoApp:
             if action == "scenario-run":
                 data = scenarios.result(folder, scenario_id)
                 self.scenario_results[scenario_id] = data
+            elif action == "cosm2-run":
+                data = cosm2_result(folder)
+                if data["completed_at"] < int(self.job["started"]):
+                    raise ValueError("COSM2 result predates this job")
+                data.update(source="current-run", source_label="本次现场运行（本机会话）")
+                self.cosign = data
             elif action == "threshold-run":
                 data = threshold_result(folder)
                 self.threshold = data
@@ -436,6 +603,7 @@ class DemoApp:
                     status="success",
                     stage={
                         "scenario-run": "真实场景断言通过且资源已清理",
+                        "cosm2-run": "双域共签完成：六用例与真实三轮耗时已记录",
                         "threshold-run": "门限固定演示完成：用例结果与资源清理已记录",
                         "x402-run": "x402 固定演示完成：真实链上结算、用例结果与资源清理已记录",
                         "run": "真实运行已完成",
@@ -472,13 +640,18 @@ def event_response(app, path):
         return 400, {"error": "请求路径过长"}
     try:
         url = urlsplit(path)
-        match = re.fullmatch(r"/api/runs/([0-9a-f-]{36})/events", url.path)
+        match = re.fullmatch(r"/api/runs/([^/]+)/events", url.path)
         if not match:
             return None
+        # A path addressed to the event route with a malformed/non-canonical run
+        # id is an invalid query (400); only a well-formed unknown UUID is 404.
         run_id = str(uuid.UUID(match[1]))
         if run_id != match[1]:
             raise ValueError("invalid run id")
-        query = parse_qs(url.query, strict_parsing=True, keep_blank_values=True)
+        # An absent query is valid; older Pythons reject "" under strict parsing.
+        query = (
+            parse_qs(url.query, strict_parsing=True, keep_blank_values=True) if url.query else {}
+        )
         if set(query) - {"after_seq", "limit"} or any(len(v) != 1 for v in query.values()):
             raise ValueError("invalid query")
         after_seq = int(query.get("after_seq", ["0"])[0])
@@ -558,11 +731,13 @@ class Handler(BaseHTTPRequestHandler):
         scenario_match = re.fullmatch(r"/api/scenarios/([a-z-]+)/(run|replay)", self.path)
         if scenario_match and scenario_match[1] not in scenarios.SPECS:
             scenario_match = None
+        cosm2_match = self.path == "/api/cosm2/run"
         threshold_match = self.path == "/api/threshold/run"
         x402_match = self.path == "/api/x402/run"
         if (
             self.path not in ("/api/run", "/api/verify")
             and not scenario_match
+            and not cosm2_match
             and not threshold_match
             and not x402_match
         ):
@@ -576,6 +751,8 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if scenario_match:
                 accepted = self.server.app.start("scenario-" + scenario_match[2], scenario_match[1])
+            elif cosm2_match:
+                accepted = self.server.app.start("cosm2-run")
             elif threshold_match:
                 accepted = self.server.app.start("threshold-run")
             elif x402_match:

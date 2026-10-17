@@ -1,0 +1,363 @@
+% =====================================================================
+%  Agent Guard 复赛论文模板（给 C 用）
+%  编译：xelatex main.tex 两遍（或 latexmk -xelatex main.tex）
+%  Overleaf：Compiler 选 XeLaTeX
+%
+%  使用方法：
+%   1. 灰色"写作指引"框只给作者看，定稿前把下面的 \showguidetrue 改成
+%      \showguidefalse，所有指引框会一次性消失。
+%   2. 红色 \fillme{...} 是必须用实测数据或核实结果替换的位置；定稿时
+%      全文搜索 \fillme，一个都不能剩。
+%   3. figures/ 下缺图时会自动显示占位框，图交到后直接覆盖同名文件即可。
+%   4. 如竞赛平台有官方模板 / 页数 / 匿名要求，以官方为准，把本文件的正文
+%      内容搬过去即可。
+% =====================================================================
+\documentclass[UTF8,zihao=-4,a4paper]{ctexart}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\usepackage{booktabs,multirow,makecell,array,longtable}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{caption}
+\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
+
+% ---------- 写作辅助宏 ----------
+\newif\ifshowguide
+\showguidetrue          % 定稿时改为 \showguidefalse
+
+\newcommand{\guide}[1]{%
+  \ifshowguide
+  \begin{tcolorbox}[colback=gray!8,colframe=gray!45,boxrule=0.4pt,
+      arc=1pt,left=4pt,right=4pt,top=2pt,bottom=2pt,fontupper=\small]
+  \textbf{写作指引：}#1
+  \end{tcolorbox}
+  \fi}
+\newcommand{\fillme}[1]{\textcolor{red}{【待填：#1】}}
+
+% 图：文件存在就插入，不存在就画占位框
+\newcommand{\figbox}[3][0.92\linewidth]{%
+  \IfFileExists{figures/#2}{%
+    \includegraphics[width=#1]{figures/#2}%
+  }{%
+    \fbox{\parbox[c][4.2cm][c]{#1}{\centering\small
+      \textcolor{gray}{占位：figures/#2\\[2pt]#3}}}%
+  }}
+
+% 定理环境
+\theoremstyle{plain}
+\newtheorem{theorem}{定理}
+\newtheorem{lemma}{引理}
+\theoremstyle{definition}
+\newtheorem{definition}{定义}
+\newtheorem{assumption}{假设}
+\theoremstyle{remark}
+\newtheorem*{remark}{说明}
+
+\crefname{figure}{图}{图}
+\crefname{table}{表}{表}
+\crefname{section}{第}{第}
+\crefname{theorem}{定理}{定理}
+\crefname{definition}{定义}{定义}
+\crefname{assumption}{假设}{假设}
+\crefname{lemma}{引理}{引理}
+
+% 记号
+\newcommand{\Pexec}{P_{\mathsf{E}}}
+\newcommand{\Pauth}{P_{\mathsf{A}}}
+\newcommand{\Phiauth}{\Phi_{\mathsf{A}}}
+\newcommand{\Phiexec}{\Phi_{\mathsf{E}}}
+\newcommand{\act}{\mathsf{act}}
+\newcommand{\SMtwo}{\mathrm{SM2}}
+\newcommand{\SMthree}{\mathrm{SM3}}
+
+% =====================================================================
+\title{授权即密钥：面向多智能体委托执行的\\谓词门控协同 SM2 签名机制}
+\author{\fillme{作者与单位；若复赛要求匿名则删去}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\guide{标题的两个备选：（1）当前标题；（2）“基于谓词门控协同 SM2 签名的智能体委托执行与支付授权”。标题里不要出现“门限 SM2”，因为本轮实现的是 $n=2$ 的协同签名；也不要出现“首个”“全新协议”。}
+
+% ---------------------------------------------------------------------
+\begin{abstract}
+\guide{摘要按“问题—方法—实现—结果—边界”五句话写。每个数字都必须来自实测，并能在第 7 节找到出处。“实现了”只能用于已勾选的交付项（见实施规划第 5 节）。}
+
+大模型智能体以委托方式代用户调用工具和发起支付时，授权检查通常集中在单一网关或授权服务器：一旦该组件的签名密钥或逻辑被攻破，任务边界、撤销和预算约束随之失效；而受提示注入影响的智能体也可能尝试越权执行。本文提出“授权即密钥”机制：把执行凭据的 SM2 签名密钥以两方协同方式分布于\textbf{授权域}与\textbf{执行域}，授权域仅在独立核验委托链、撤销状态与剩余预算等授权谓词成立后，才参与生成签名；最终输出是标准 SM2 签名，可由任何符合 GB/T 32918 的验签实现直接验证，并可同时作为网关执行凭据与支付意图批准。我们在已有的 OAuth 委托授权与国密持有者证明系统上实现了双域原型，密钥生成无需可信分发者，并给出向 $t$-of-$n$ 访问结构推广的构造。在半诚实模型下，我们论证了任一单域被攻破都无法为未授权或已撤销的行动产生有效凭据。在多智能体协同采购场景中，\fillme{X} 类攻击均在预期位置被拒绝，且未产生业务效果；一次协同签名的中位耗时为 \fillme{Y}~ms（$n=100$），约为单方 SM2 签名的 \fillme{Z} 倍。
+\end{abstract}
+
+\noindent\textbf{关键词：}协同签名；SM2；委托授权；智能体安全；OAuth；动态撤销
+
+% =====================================================================
+\section{引言}\label{sec:intro}
+
+\guide{共 5 段。第 1 段讲一个具体例子，不讲技术名词；第 2 段讲两个风险；第 3 段讲现有标准和研究已经解决了什么、还缺什么；第 4 段讲本文思路（一句话主张）；最后列贡献。全篇只围绕两条主线：智能体越权，以及单点被攻破。预算、恢复、审计放到第 6 节作为支撑机制，不要在引言里展开。}
+
+\paragraph{场景。}用户委托一组智能体完成企业采购：统筹代理拆分任务，选品代理比价，执行代理下单付款。用户批准的是一个有边界的任务（例如“1000 元以内、指定供应商、本周有效”），而不是把账户交给智能体。
+
+\paragraph{两个风险。}第一，智能体处理的报价、网页等外部内容可能含有恶意指令，使其提出超出任务边界的操作。第二，即使授权协议本身正确，负责“说可以”的组件——授权服务器（AS）或执行网关——也是单点：其签名密钥泄露或逻辑被篡改，所有约束都会失效。
+
+\paragraph{现有方法与缺口。}OAuth 令牌交换~\cite{rfc8693} 和发送者约束~\cite{rfc9449} 能限制令牌被盗用，委托收窄与动态撤销可以在应用层实现，但这些检查最终仍由单一组件执行。门限签名能把一个签名能力分散到多方~\cite{frost,rfc9591}，近期工作 KITA~\cite{kita} 将其用于智能体的行动审批，由多个 LLM 评审者投票后释放签名份额。然而，现有审批类方案的签名方依据的是语义判断或静态策略，并不独立核验 OAuth 委托链和撤销状态，而且普遍采用非国密算法。\fillme{C 在核对 KITA 原文后，补一句它在撤销/委托链方面的实际情况；不确定就写“未见讨论”}
+
+\paragraph{本文思路。}我们让\textbf{授权本身成为密钥}：执行凭据的 SM2 私钥被拆分在两个独立信任域，授权域只有在亲自确认“此刻这一行动确实被授权”时才交出它那一半签名能力。因此，一个有效签名本身就证明了授权谓词在签名时成立，这个证明可以随请求携带，任何持有公钥的一方都能用标准 SM2 验签确认。
+
+\paragraph{贡献。}
+\begin{enumerate}[leftmargin=2em,itemsep=2pt]
+  \item \textbf{谓词门控的协同 SM2 签名。}我们提出一种把签名份额的释放条件与可验证授权谓词绑定的构造：授权域独立核验 AS 签名的委托链、撤销状态与剩余预算后，才参与两方 SM2 协同签名。产出的签名与普通 SM2 签名不可区分，密钥生成无需可信分发者（\cref{sec:design}）。
+  \item \textbf{与委托授权和支付的一致组合。}该签名作为执行凭据，在网关的接受事务内与实际订单、授权路径和预算逐项绑定；签名之后发生的撤销仍会被拒绝。\fillme{若 B8 完成：它同时作为 x402 支付意图的批准}（\cref{sec:design,sec:impl}）。
+  \item \textbf{安全分析与实证。}我们定义了“执行授权不可伪造性”，并在半诚实模型下给出论证；在真实 PostgreSQL、真实 AS 签发链和独立下游服务上，验证了 \fillme{N} 个正负用例，并测量了各阶段开销（\cref{sec:security,sec:eval}）。
+\end{enumerate}
+
+\guide{贡献只写这三条，每条结尾都要指向对应章节。已有的 OAuth/AGPoP/预算/恢复能力在第 3、6 节作为“基础”介绍，不列为贡献。}
+
+% =====================================================================
+\section{背景与相关工作}\label{sec:related}
+
+\guide{每个小节先说别人解决了什么，再说和本文的区别。对别人的方案不确定的地方写“未确认”，不能因为没看到就写成“不支持”。}
+
+\subsection{OAuth 委托与发送者约束}
+\guide{RFC 8693 令牌交换、RFC 9449 DPoP、RFC 9700 安全最佳实践。强调本文\textbf{不}声称首创发送者约束；本项目的 AGPoP 是参照 DPoP 思路的国密私有 profile，不与标准 DPoP 互通。}
+
+\subsection{SM2 门限与协同签名}
+\guide{SM2 签名 $s=(1+d)^{-1}(k+r)-r$ 中含有 $(1+d)^{-1}$，不能像 Schnorr 那样把份额线性相加，这是 SM2 门限化的难点。可按以下脉络写：两方协同签名\cite{shang2014}；无可信中心的门限方案\cite{tiis2016}；基于同态加密与零知识证明、可识别中止的方案\cite{liang2024,faster2025}。说明本文采用其中最简洁的两方乘法分享结构，贡献\textbf{不在}签名算法本身，而在于份额释放条件与授权状态的绑定。}
+
+\subsection{智能体的行动审批与门限签名}
+\guide{重点写 KITA\cite{kita}。KITA：提议者不持有份额，多个 LLM 评审者审查同一规范化授权对象，审查通过后签名服务释放份额，最终形成门限 BLS 签名，采用 DKG。在其安全论证中，审批通道没有被建模（可引用外部评审的这一观察，但要注明来源）。与本文的区别用下表说明。}
+
+\begin{table}[htbp]
+\centering
+\caption{与相近方案的比较（“未确认”表示原文中未找到相关描述）}
+\label{tab:compare}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+ & 单钥 SM2 批准 & \makecell{FROST 2-of-3\\（本项目旧版）} & KITA\cite{kita} & \makecell{本文\\双域共签} \\
+\midrule
+签名算法 & SM2 & Ed25519 & 门限 BLS & SM2（标准签名） \\
+份额释放依据 & — & 静态策略 & LLM 语义评审 & \textbf{可验证授权谓词} \\
+密钥初始化 & 单方生成 & 可信分发者 & DKG & 两方交互，无分发者 \\
+签名方核验委托链 & 否 & 否 & \fillme{核实} & \textbf{是} \\
+签名方核验撤销 & 否 & 否 & \fillme{核实} & \textbf{是} \\
+单方被攻破仍可签 & 是 & 否 & 否（$<t$） & 否 \\
+国密算法 & 是 & 否 & 否 & 是 \\
+已实现规模 & — & 2-of-3 & $t$-of-$n$ & $n=2$（推广已设计） \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\subsection{智能体支付}
+\guide{x402~\cite{x402} 用 HTTP 402 承载支付要求与支付证明，V2 支持扩展与自定义 scheme。说明它解决的是“钱付对了”，而不是“这次付款被用户授权了”。若 B8 完成，再写本文如何让支付意图受共签约束；若未完成，本小节压缩为一段，并放进后续工作。}
+
+% =====================================================================
+\section{系统模型与威胁模型}\label{sec:model}
+
+\begin{figure}[htbp]
+\centering
+\figbox{fig-system.pdf}{系统模型：用户、三代理、AS 与授权域、网关与执行域、授权与预算库、下游与证据；虚线框表示信任域}
+\caption{系统模型与信任域划分。智能体不持有任何签名份额。}
+\label{fig:system}
+\end{figure}
+
+\subsection{参与方}
+\guide{按\cref{fig:system}逐一介绍：用户；统筹/选品/执行三代理（只能提出请求）；AS（统一签发各级 SM2 令牌，委托只能收窄）；授权域 $\Pauth$（与 AS 同一信任域，持份额 $d_2$）；执行网关与执行域 $\Pexec$（持份额 $d_1$）；授权与预算库（PostgreSQL，接受事务）；下游订单服务；回执与审计。}
+
+\subsection{威胁模型}
+\begin{assumption}[敌手能力]\label{asm:adv}
+敌手可以：（1）完全控制所有智能体，包括让其提出任意请求、复制任意令牌；（2）攻破 $\Pexec$、$\Pauth$ 中\textbf{至多一个}，获得其份额并以半诚实方式运行该域的协议；（3）观察和重放网络消息。
+\end{assumption}
+\begin{assumption}[信任基础]\label{asm:trust}
+AS 的签名私钥与身份登记可信；下游订单服务的验签代码可信；SM2 满足 EUF-CMA 安全，SM3 可视为随机预言机。网关可以被攻破，但此时仅能获得执行域份额。
+\end{assumption}
+\guide{必须写明不在范围内的情况：两域同时被攻破；恶意（非半诚实）参与方；侧信道（原型的标量乘不是常数时间）；同一主机、同一操作系统用户的部署（演示环境）。网关被攻破时的准确结论（不得扩大）：网关单方无法产生有效共签；下游订单服务独立以标准 SM2 验签、核对业务意图并拒绝同一批准跨操作重放，因此攻击者至多能把授权域在签名时已核准的那一笔执行一次；签名之后发生的撤销依赖网关接受事务拦截，网关失陷时在批准有效期内不受保护。不能写“网关被攻破后任何订单都无法产生”。}
+
+% =====================================================================
+\section{方案设计}\label{sec:design}
+
+\subsection{基础：委托授权与持有者证明}
+\guide{简要介绍已有系统：授权码 + PKCE 获得根令牌；两次令牌交换，每次由 AS 签发收窄后的子令牌（金额、工具、期限、次数、深度逐维比较）；执行代理每次调用附带 AG-Proof，用自己的 SM2 私钥签名，并以 SM3 绑定令牌与完整请求体；网关在接受事务内复核祖先撤销状态与共享预算。控制在一页以内，并注明这部分是“基础机制”。}
+
+\subsection{授权行动对象}
+每一次需要批准的高风险操作都被规范化为行动对象 $\act$，其中包含租户、任务、完整的根到叶授权路径、持有者与密钥标识、受众、工具及版本、业务幂等键、报价、商品条目、收货对象、金额（整数分）、参数摘要、策略版本、密钥纪元与过期时间\fillme{若有：以及支付意图摘要}。签名消息为
+\[
+M = \texttt{"AGENT-GUARD-COSM2-ACTION-V1\textbackslash n"} \;\|\; \mathrm{CanonicalJSON}(\act).
+\]
+\guide{说明域分离前缀的作用：防止与令牌、AG-Proof、旧版门限消息之间的跨协议重用。}
+
+\subsection{两方协同 SM2 签名}
+记 SM2 曲线的阶为 $n$、基点为 $G$，用户标识固定为 \texttt{1234567812345678}。
+
+\paragraph{密钥生成（无可信分发者）。}$\Pexec$ 随机选取 $d_1\in[1,n-1]$，发送 $T_1=d_1^{-1}G$；$\Pauth$ 随机选取 $d_2\in[1,n-1]$，计算公钥 $P=d_2^{-1}T_1-G$。此时 $(1+d)^{-1}\equiv d_1d_2 \pmod n$，完整私钥 $d$ 从不出现在任何一方。
+
+\paragraph{签名。}见\cref{fig:protocol}。双方各自计算 $e=\SMthree(Z_A\|M)$，$\Pauth$ 不接受由 $\Pexec$ 提供的 $e$。
+\begin{enumerate}[leftmargin=2em,itemsep=1pt]
+  \item $\Pexec$：$k_1\xleftarrow{\$}[1,n-1]$，发送 $Q_1=k_1G$ 与 $\act$。
+  \item $\Pauth$：\textbf{先检查授权谓词 $\Phiauth(\act)$}（见\cref{sec:predicate}），不成立则拒绝并终止；校验 $Q_1$ 合法；$k_2,k_3\xleftarrow{\$}[1,n-1]$，$(x_1,\cdot)=k_3Q_1+k_2G$，$r=(e+x_1)\bmod n$，$s_2=d_2k_3$，$s_3=d_2(r+k_2)$；发送 $(r,s_2,s_3)$ 后销毁 $k_2,k_3$。
+  \item $\Pexec$：$s=d_1k_1s_2+d_1s_3-r \bmod n$；若 $s=0$ 或 $s=n-r$ 则重新开始；用 $P$ 做标准 SM2 验签，通过后输出 $(r,s)$，并销毁 $k_1$。
+\end{enumerate}
+
+\begin{lemma}[正确性]
+令 $k=k_1k_3+k_2$，则 $s=(1+d)^{-1}(k+r)-r \bmod n$，$(r,s)$ 是消息 $M$ 在公钥 $P$ 下的标准 SM2 签名。
+\end{lemma}
+\begin{proof}
+$x_1$ 是 $kG$ 的横坐标；$s=d_1d_2(k_1k_3+k_2+r)-r=(1+d)^{-1}(k+r)-r$。
+\end{proof}
+
+\begin{figure}[htbp]
+\centering
+\figbox{fig-protocol.pdf}{协同签名时序：执行域 Q1 → 授权域谓词检查（委托链、撤销、预算）→ (r,s2,s3) → 执行域合成并做标准验签 → 网关}
+\caption{谓词门控的两方协同 SM2 签名流程}
+\label{fig:protocol}
+\end{figure}
+
+\subsection{授权谓词}\label{sec:predicate}
+\begin{align*}
+\Phiauth(\act,t)=\;&\mathsf{ChainValid}\wedge\mathsf{PathMatch}\wedge\mathsf{InScope}\wedge\mathsf{PolicyMatch}\\
+&\wedge\mathsf{NotRevoked}(t)\wedge\mathsf{NotExpired}(t)\wedge\mathsf{BudgetOK}(t)
+\end{align*}
+\guide{逐项解释，并对应到实现中的拒绝码（AUTHZ\_PATH\_MISMATCH、AUTHZ\_SCOPE、AUTHZ\_REVOKED、AUTHZ\_EXPIRED、AUTHZ\_OVER\_BUDGET、AUTHZ\_POLICY\_MISMATCH）。执行域谓词 $\Phiexec$ 检查行动与经过 AG-Proof 验证的请求事实是否一致（EXEC\_MISMATCH）。强调授权域的检查是只读的，预算的真正预留仍在网关的接受事务中原子完成。}
+
+\subsection{与接受事务的组合}
+\guide{说明签名不替代原有检查：网关先验 SM2 令牌与 AG-Proof，再验共签签名，并在接受事务内把行动与实际订单、可信报价、授权路径逐项比对，原子写入 action\_id 到操作的绑定（不可覆盖），锁后再按数据库时钟检查一次过期。由此得到两层撤销保护：签名前撤销时，授权域拒绝出份额；签名后撤销时，接受事务拒绝。}
+
+\subsection{推广到 $t$-of-$n$ 访问结构（设计）}
+\guide{这一小节是\textbf{设计}，标题和正文都要写明“尚未实现”。要点：（1）推广的目的是可用性，即某个域宕机时仍能签名；（2）为保证撤销不可绕过，授权域必须是必选方，访问结构为“授权域 $\wedge$（其余 $n-1$ 个域中任意 $t-1$ 个）”，而不是简单的 $t$-of-$n$；（3）可基于 \cite{liang2024,faster2025} 中的门限 SM2 构造实现，代价是引入同态加密或零知识证明；（4）可增加审计域，只有在行动写入只追加日志并取得包含证明后才出份额，从而做到“未入账即无法执行”。}
+
+% =====================================================================
+\section{安全性分析}\label{sec:security}
+
+\begin{definition}[执行授权不可伪造性]\label{def:eau}
+在\cref{asm:adv,asm:trust}下，考虑如下游戏：敌手与系统交互，可以请求任意行动的共签。若敌手最终让验签方接受了某个行动 $\act^*$，而在所有对 $\act^*$ 的签名会话中，诚实域的谓词均不成立（或从未有诚实域参与 $\act^*$ 的会话），则敌手获胜。若任何多项式时间敌手的获胜概率均可忽略，则称方案满足执行授权不可伪造性。
+\end{definition}
+
+\begin{theorem}\label{thm:main}
+若两方协同签名协议在半诚实模型下安全地实现了 SM2 签名功能，且 SM2 满足 EUF-CMA，则本文方案满足\cref{def:eau}。
+\end{theorem}
+
+\guide{证明分两种情况写，每种情况都归约到 SM2 的不可伪造性。}
+\begin{proof}[证明思路]
+情况一：敌手攻破 $\Pexec$。由于 $\Pauth$ 只对谓词成立的行动参与签名，并且自行由 $\act$ 计算 $e$，敌手从协议中得到的只是谓词成立行动上的签名。若敌手能为 $\act^*$ 产生有效签名，可构造一个伪造者 $\mathcal{B}$，利用协议的模拟器把它转化为对 SM2 签名谕言机的伪造。
+情况二：敌手攻破 $\Pauth$。对称地，$\Pexec$ 只对与经过验证的请求事实一致的行动发起会话。\fillme{C 补全：引用所采用协议的安全性证明（\cite{shang2014} 或替代文献），说明模拟器如何构造}。
+另外，签名之后发生的撤销由接受事务拒绝，这依赖\cref{asm:trust}中验签方可信。
+\end{proof}
+
+\guide{可选：用 ProVerif 或 Tamarin 对“委托—出份额—撤销—接受”流程建模，验证一条可达性性质（撤销后不存在被接受的新行动）。只有真正跑出结果才写，否则不写。不要写“已形式化证明安全”。}
+
+\paragraph{不覆盖的情况。}两域同时被攻破；恶意参与方（需引入零知识证明）；侧信道；拒绝服务（任一域离线即无法签名，$t$-of-$n$ 推广用于缓解）。
+
+% =====================================================================
+\section{实现}\label{sec:impl}
+
+\guide{用表格列出模块、语言、代码位置和行数（行数用 wc -l 实测）。写明依赖版本：tongsuopy 1.0.1（铜锁 8.3.2），PostgreSQL 16，Python 3.11。强调网关验签使用铜锁的标准 SM2 验签，而非自写代码；自写的曲线运算只用于生成份额，并且产生的签名已被 OpenSSL 3 独立验证。}
+
+\begin{table}[htbp]
+\centering
+\caption{实现概况}
+\label{tab:impl}
+\small
+\begin{tabular}{@{}llll@{}}
+\toprule
+模块 & 位置 & 规模 & 状态 \\
+\midrule
+协同签名核心 & \texttt{src/agent\_guard/cosign/} & \fillme{行} & \fillme{已实现/测试数} \\
+授权域谓词签名者 & \texttt{cosign/authz\_domain.py} & \fillme{行} & \fillme{} \\
+网关方案切换 & \texttt{threshold/verifier.py} 等 & \fillme{行} & \fillme{} \\
+委托授权基础 & \texttt{authorization/} & \fillme{行} & 已有 \\
+接受事务与预算 & \texttt{ledger/}、\texttt{execution/} & \fillme{行} & 已有 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% =====================================================================
+\section{实验评估}\label{sec:eval}
+
+\guide{只报告实际跑出来的结果。每张表、每张图的图注都写清 run\_id 或命令、样本数和环境。小样本报告中位数和 p95，不报告“提升百分之多少”。历史证据、本轮真实运行和示意图分开呈现。}
+
+\subsection{实验环境}
+\fillme{CPU 型号、内存、操作系统、Docker 镜像标签、Python/tongsuopy/PostgreSQL 版本、代码提交号}
+
+\subsection{正确性与攻击拒绝}
+\begin{table}[htbp]
+\centering
+\caption{攻击与拒绝位置（双域共签各行来自固定运行 01af29ac-26be-4616-851d-d8afa38fa46e；“委托扩权”行来自场景 3 运行 \fillme{run\_id}）}
+\label{tab:negative}
+\small
+\begin{tabular}{@{}lllll@{}}
+\toprule
+攻击 & 拒绝位置 & 拒绝码 & 新订单数 & 预算变化 \\
+\midrule
+盗用令牌（无私钥） & 网关（持有者证明） & INVALID\_SIGNATURE & 0 & 0 \\
+委托扩权（场景 3） & AS & \fillme{} & 0 & 0 \\
+行动越权（超出令牌范围） & \textbf{授权域} & AUTHZ\_SCOPE & 0 & 0 \\
+撤销后再请求共签 & \textbf{授权域} & AUTHZ\_REVOKED & 0 & 0 \\
+共签后撤销 & 接受事务 & REVOKED & 0 & 0 \\
+单域伪造签名 & 网关验签 & INVALID\_SIGNATURE & 0 & 0 \\
+签名后篡改金额 & 网关（批准与订单比对） & APPROVAL\_MISMATCH & 0 & 0 \\
+超出剩余预算 & \textbf{授权域} & AUTHZ\_OVER\_BUDGET & 0 & 0 \\
+绕过网关直接调用下游 & 下游订单服务 & DOWNSTREAM\_UNAUTHORIZED & 0 & 0 \\
+合法共签（对照） & — & — & 1 & \fillme{} \\
+\bottomrule
+\end{tabular}
+\end{table}
+\guide{上表的值是示例结构，必须用真实运行结果逐格替换；没跑过的行删掉。另附一句：产出的签名经 OpenSSL 3 \texttt{pkeyutl -verify} 独立验证通过（A1 脚本输出）。}
+
+\subsection{性能}
+\begin{figure}[htbp]
+\centering
+\figbox[0.8\linewidth]{fig-latency.pdf}{各阶段耗时箱线图：round1 / round2 / round3、单方 SM2 签名、SM2 验签、FROST 2-of-3}
+\caption{协同签名各阶段与对照方案的耗时（$n=100$，预热 10 次）}
+\label{fig:latency}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{耗时统计（单位：ms）}
+\label{tab:latency}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+测量项 & 样本数 & 中位数 & p95 & 说明 \\
+\midrule
+协同签名（三轮合计，不含谓词） & 100 & \fillme{} & \fillme{} & 原型，纯 Python \\
+授权域谓词检查 & \fillme{} & \fillme{} & \fillme{} & 含数据库只读查询 \\
+单方 SM2 签名 & 100 & \fillme{} & \fillme{} & 铜锁 \\
+SM2 验签 & 100 & \fillme{} & \fillme{} & 铜锁 \\
+FROST 2-of-3 & 100 & \fillme{} & \fillme{} & 含子进程启动 \\
+网关端到端受理 & \fillme{} & \fillme{} & \fillme{} & \\
+\bottomrule
+\end{tabular}}
+\end{table}
+\guide{分析时要说明：纯 Python 标量乘是主要开销，换用常数时间的原生实现可以显著降低；与网关一次受理的总耗时相比，签名开销占比为多少（用实测数字说话）。}
+
+\subsection{演示}
+\guide{放 1--2 张前端截图：双域共签页（真实结果，带 run\_id 标签）、撤销场景。图注写明“现场运行”还是“记录回放”。}
+
+% =====================================================================
+\section{讨论与局限}\label{sec:limits}
+\guide{逐条如实写出：（1）$n=2$，$t$-of-$n$ 仅为设计；（2）半诚实模型；（3）演示中两域位于同一主机、同一操作系统用户，授权域使用只读数据库角色\fillme{是否真正隔离}；（4）标量乘不是常数时间；（5）网关失陷时，签名之后的撤销在批准有效期内不受保护，下游效果端不复查撤销与预算（后续工作：效果端补充动态状态核验或缩短批准有效期）；（6）x402 部分为本地测试链和测试资产，链上结算签名仍为 EIP-3009；（7）智能体为确定性脚本，未接入真实大模型；（8）规模化实验尚未完成。}
+
+\section{结论}
+\guide{3--4 句：重述“授权即密钥”的主张，已实现了什么、证据是什么，以及下一步（$t$-of-$n$、恶意安全、效果端验签、真实大模型代理）。}
+
+% =====================================================================
+\begin{thebibliography}{99}\small
+\bibitem{rfc8693} M. Jones, A. Nadalin, B. Campbell, et al. OAuth 2.0 Token Exchange. RFC 8693, 2020.
+\bibitem{rfc9449} D. Fett, B. Campbell, J. Bradley, et al. OAuth 2.0 Demonstrating Proof of Possession (DPoP). RFC 9449, 2023.
+\bibitem{rfc9700} T. Lodderstedt, J. Bradley, A. Labunets, D. Fett. Best Current Practice for OAuth 2.0 Security. RFC 9700, 2025.
+\bibitem{gbt32918} 国家市场监督管理总局, 国家标准化管理委员会. GB/T 32918--2016 信息安全技术 SM2 椭圆曲线公钥密码算法.
+\bibitem{gbt32905} GB/T 32905--2016 信息安全技术 SM3 密码杂凑算法.
+\bibitem{shang2014} 尚铭, 马原, 林璟锵, 荆继武. SM2 椭圆曲线门限密码算法. 密码学报, 2014, 1(2): 155--166. \fillme{C 核对卷期页码，并确认其中两方签名结构与本文一致；若不一致，换成实际采用的协议来源}
+\bibitem{tiis2016} \fillme{作者}. A SM2 Elliptic Curve Threshold Signature Scheme without a Trusted Center. KSII Transactions on Internet and Information Systems, 2016.
+\bibitem{liang2024} \fillme{作者全名} Liang, Chen. Non-interactive SM2 threshold signature scheme with identifiable abort. Frontiers of Computer Science, 2024.
+\bibitem{faster2025} \fillme{作者}. Faster threshold-SM2 with identifiable abort and non-interactive online signing. Cybersecurity, 2025.
+\bibitem{frost} C. Komlo, I. Goldberg. FROST: Flexible Round-Optimized Schnorr Threshold Signatures. SAC 2020.
+\bibitem{rfc9591} D. Connolly, C. Komlo, I. Goldberg, C. A. Wood. The Flexible Round-Optimized Schnorr Threshold (FROST) Protocol for Two-Round Schnorr Signatures. RFC 9591, 2024.
+\bibitem{kita} Y. Zheng, Q. Zhang. From Review to Authorization: Key-Isolated Threshold Signing for LLM Agents. arXiv:2609.05901, 2026.
+\bibitem{x402} x402 Foundation. x402 Protocol Specification v2. \url{https://github.com/x402-foundation/x402}, \fillme{固定提交号与查阅日期}.
+\end{thebibliography}
+
+\end{document}

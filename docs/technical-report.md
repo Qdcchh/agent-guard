@@ -1,7 +1,6 @@
 # 技术与实际交付范围
 
-整体状态仍为 **PARTIAL**，本段不构成阶段接受或独立验收。A31/A32 已正式接受；A33/A34 联合 v1 已 PACKAGE_READY，
-唯一整合者正在最终候选上执行完整联合自查，全新 Astra/high 独立复验尚未开始。原文档、失败与验收记录保持原文。
+整体状态仍为 **PARTIAL**。A31/A32 已正式接受；旧 A33/A34 完整联合验收尚未完成（未接受），原文档、失败和接受记录保留。旧长实验本轮不恢复，本次 COSM2 原规划的独立交付不补记旧阶段通过。现行角色见工作流约定，新增范围见 [COSM2说明](cosm2-gateway-20261020.md)。
 
 正常交付基于现有 SM2/SM3 SDK、真实 AS 签发与持钥 proof、当前 authority 状态与原子全祖先预算、独立 DS once-effect/lease
 恢复、独立 audit 检查点、bounded export 与 offline。RSA TLS 加 SM2 应用签名不称全 GM TLS。私密 host 桥不向 holder 授新控制权，

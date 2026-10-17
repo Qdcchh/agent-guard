@@ -39,7 +39,6 @@ def check(name: str, condition: bool, detail: str = "") -> None:
 def main() -> int:
     from eth_account import Account
     from web3 import Web3
-
     from x402 import x402ClientSync, x402Facilitator, x402ResourceServer
     from x402.mechanisms.evm.exact import (
         ExactEvmClientScheme,
@@ -81,9 +80,7 @@ def main() -> int:
         # ---- deploy + link the Solidity library --------------------------
         library_addresses = {}
         for fqn, library in artifact["libraries"].items():
-            library_factory = w3.eth.contract(
-                abi=library["abi"], bytecode=library["bytecode"]
-            )
+            library_factory = w3.eth.contract(abi=library["abi"], bytecode=library["bytecode"])
             library_hash = library_factory.constructor().transact({"from": owner})
             library_receipt = w3.eth.wait_for_transaction_receipt(library_hash, timeout=120)
             library_addresses[fqn] = library_receipt.contractAddress
@@ -186,11 +183,15 @@ def main() -> int:
         ).transact({"from": owner})
         receipt = w3.eth.wait_for_transaction_receipt(tx, timeout=120)
         check("eip3009_settle_status", receipt.status == 1)
-        check("eip3009_authorization_consumed",
-              token.functions.authorizationState(auth["from"], auth["nonce"]).call() is True)
-        check("eip3009_balances",
-              token.functions.balanceOf(auth["from"]).call() == 0
-              and token.functions.balanceOf(merchant).call() == 1_000_000 + amount)
+        check(
+            "eip3009_authorization_consumed",
+            token.functions.authorizationState(auth["from"], auth["nonce"]).call() is True,
+        )
+        check(
+            "eip3009_balances",
+            token.functions.balanceOf(auth["from"]).call() == 0
+            and token.functions.balanceOf(merchant).call() == 1_000_000 + amount,
+        )
 
         print(json.dumps({"status": "PASS", "checks": CHECKS, "chainId": chain_id}))
         return 0

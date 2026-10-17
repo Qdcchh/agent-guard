@@ -138,6 +138,10 @@ class Docker(_BaseDocker):
         return self._capture(args, 60, check=True).stdout.decode().strip()
 
 
+#: Must match tools/x402_gateway_demo.py; kept literal so this launcher stays stdlib-only.
+APPROVAL_SCHEME_ENV = "AGENT_GUARD_X402_APPROVAL_SCHEME"
+APPROVAL_SCHEMES = frozenset({"frost-ed25519", "sm2-2p"})
+
 X402Docker = Docker
 
 
@@ -152,7 +156,11 @@ class Launcher:
         timeout: float = DEFAULT_TIMEOUT,
         pg_image: str | None = None,
         environ: dict[str, str] | None = None,
+        approval_scheme: str = "frost-ed25519",
     ):
+        if approval_scheme not in APPROVAL_SCHEMES:
+            raise ValueError("invalid approval scheme")
+        self.approval_scheme = approval_scheme
         self.repo = Path(repo).resolve()
         self.docker = docker if docker is not None else Docker(find_docker())
         self.timeout = float(timeout)
@@ -213,13 +221,13 @@ class Launcher:
                 "POSTGRES_DB": self.database,
             },
         )
-        self._write_env_file(
-            runner_env,
-            {
-                DEMO_DSN_ENV: self._dsn(),
-                "PYTHONPATH": f"{WORKDIR}/src",
-            },
-        )
+        runner_values = {
+            DEMO_DSN_ENV: self._dsn(),
+            "PYTHONPATH": f"{WORKDIR}/src",
+        }
+        if self.approval_scheme != "frost-ed25519":
+            runner_values[APPROVAL_SCHEME_ENV] = self.approval_scheme
+        self._write_env_file(runner_env, runner_values)
 
     def _remove_secret_files(self) -> None:
         for path in self.secret_files:
@@ -551,12 +559,20 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--timeout", type=float, default=DEFAULT_TIMEOUT, help="演示总限时秒数")
     parser.add_argument("--pg-image", default=None, help="覆盖临时 PostgreSQL 镜像")
+    parser.add_argument(
+        "--approval-scheme",
+        choices=sorted(APPROVAL_SCHEMES),
+        default="frost-ed25519",
+        help="网关批准方案：frost-ed25519（默认）或 sm2-2p（双域共签）",
+    )
     args = parser.parse_args(argv)
     os.umask(0o077)
     if not 1.0 <= args.timeout <= 7200.0:
         print("x402 采购演示未完成：限时参数无效", file=sys.stderr)
         return 2
-    launcher = Launcher(timeout=args.timeout, pg_image=args.pg_image)
+    launcher = Launcher(
+        timeout=args.timeout, pg_image=args.pg_image, approval_scheme=args.approval_scheme
+    )
     return launcher.run()
 
 
