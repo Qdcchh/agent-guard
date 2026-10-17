@@ -13,12 +13,14 @@ from agent_guard.gateway.config import (
     GatewaySecrets,
     evidence_operator_inputs,
     receipt_public_keys,
+    threshold_policy,
     trusted_inputs,
 )
 from agent_guard.gateway.endpoint import GatewayEndpoint
 from agent_guard.gateway.http_app import GatewayHttpApp
 from agent_guard.ledger.service import ExecutionLedger
 from agent_guard.server.config import ConfigError, secret_sha256
+from agent_guard.threshold.verifier import ThresholdApprovalVerifier
 from agent_guard.tools.downstream import MockDownstream
 
 
@@ -41,6 +43,8 @@ def build_app(
     secret_sha256(secrets.downstream_secret)
     value = load_strict_json(config.raw)
     keys, identities, registrations, catalog = trusted_inputs(value)
+    policy = threshold_policy(value)
+    threshold_verifier = ThresholdApprovalVerifier(policy=policy) if policy is not None else None
     evidence = EvidenceStore(gateway_dsn)
     provider = PermissionSnapshotProvider(
         gateway_dsn, issuer=value["issuer"], as_keys=keys, registrations=registrations
@@ -79,6 +83,7 @@ def build_app(
             gateway_dsn, evidence_store=evidence, receipt_verifier=receipt_verifier
         ),
         receipt_verifier=receipt_verifier,
+        threshold_verifier=threshold_verifier,
     )
     gateway_app = GatewayHttpApp(
         endpoint,

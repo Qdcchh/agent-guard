@@ -163,6 +163,24 @@ _PINNED = (
         "A3.1-audit-shared",
         None,
     ),
+    (
+        "execution",
+        "008",
+        "008_threshold_approval.sql",
+        "008_threshold_approval.sql",
+        "2349e7551e8884f46224804a3d587f305f2ce5b565cc66927fb8b73aa826a9d1",
+        "threshold-gateway-20261017",
+        None,
+    ),
+    (
+        "execution",
+        "009",
+        "009_x402_payment.sql",
+        "009_x402_payment.sql",
+        "e9e6f0a5d7046c10f2f7c3abe1144838696b6c40a0aeb47150c60504965105a4",
+        "x402-gateway-20261017",
+        None,
+    ),
 )
 
 
@@ -499,7 +517,10 @@ def apply_bundle_migrations(
                 # old registry before binding it, as on a normal empty A DB.
                 _ensure_registry(conn)
                 for m in manifest.migrations:
-                    if m.namespace not in ("common", "execution") or m.version == "007":
+                    # Seed only the original v2 completion set into the legacy
+                    # registry; later migrations (execution 007/008) are merged
+                    # as new lineage records instead of legacy imports.
+                    if m.namespace not in ("common", "execution") or m.version > "006":
                         continue
                     conn.execute(_sql_text(manifest, m))
                     conn.execute(

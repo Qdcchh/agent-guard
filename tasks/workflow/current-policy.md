@@ -1,6 +1,31 @@
+2026-10-17 真人授权“帮我把这个版本推送到最新分支吧”：提交当前已整合、已完成门限与 x402 阶段验收的本地版本，推送到 `origin/codex/integrate-a-b-20261016`。本次授权覆盖下文历史“不 Git 发布”限制，仅发布当前分支，不合并 main。
+
+2026-10-17 x402 X1–X8 已独立 **ACCEPTED**：139 个不同测试最终通过，r1 三处阻断全部关闭，最终页面按钮 6/6、公网只读验证通过。所有实施与审查 worker 已 STOP，自有测试资源清零；下列所有权分工及 r1 否决为历史过程记录。仅本地测试链阶段接受，全项目仍 PARTIAL；未 Git 发布、不恢复旧长实验。见[接受记录](runs/x402-gateway-20261017/acceptance.md)。
+
+x402独立验收r1 NOT_ACCEPTED：三个实证阻断R1-01～03（有效授权过早释放、回执nonce绑定、幂等重复预留）。授权范围内一次最小补正后fresh验收；原失败与报告保留。
+
+x402运行时worker已STOP，现将deploy/x402-runner/Dockerfile与README移交main，用于V3 signer可复现构建及桌面联调；launcher两文件仍不修改。
+
 # 现行角色与边界
 
-2026-10-16 三人协作 A 前端任务：用户负责 A。演示页已重做为系统总览、七场景协议时序图、门限设计示意与真实记录；重点 1/3/6。B 的逐条事件、门限签名与 x402 尚未实现，前端只以醒目标注的示意展示，不得当作现场观测。A 交接见 [前端说明](../../docs/teacher-demo-frontend-a-20261015.md)。用户已同意把 A 的改动推送到独立分支 `codex/demo-visual`；不恢复长实验。
+x402桌面辅助worker（同OpenCode Go deepseek/max）独占 tools/x402_desktop.py、tests/test_x402_desktop.py及自身证据；main不编辑这两文件。固定内层工具为tools/x402_gateway_demo.py，结果根artifacts/x402-gateway-demo-live，结果demo=x402-gateway-purchase，字段与门限演示相同另加payments/transactions。runtime已STOP，main可读其稳定交付。
+
+x402文件所有权拆分：runtime-worker（同OpenCode Go deepseek/max）独占 dependencies/x402-20261017/**、requirements-x402.lock、deploy/x402-runner/** 与自身证据。main worker不编辑/格式化上述文件，负责src/tests/tools/UI及业务迁移，等runtime STOP后读取稳定镜像和合约。两者停写后唯一整合冻结。
+
+2026-10-17 真人新增授权“把x402也做了吧”。当前推进本地测试链真实x402支付闭环与必要安全验证，覆盖旧阶段“不做x402”范围；无真实资产/用户钱包，无Git发布，不恢复长实验。沿用OpenCode Go deepseek-v4.1-flash/max实施及fresh Astra/high独立包审/实施验收，见[本阶段包](runs/x402-gateway-20261017/package-v1.md)。
+
+2026-10-17 门限接网关 T1–T8 已独立 ACCEPTED：50 个不同安全检查通过，桌面按钮与公网只读验证完成。仅本阶段接受，全项目仍 PARTIAL；x402、旧长实验未做；未 Git 发布。见[接受记录](runs/threshold-gateway-20261017/acceptance.md)。
+
+2026-10-17 真人授权门限批准接入采购网关并补齐必要安全验证，沿用 worker OpenCode Go deepseek-v4.1-flash/max 与 fresh reviewer Astra/high；不反复精修、不做x402、不恢复长实验。完整本阶段范围与精简审查安排见 [任务包](runs/threshold-gateway-20261017/package-v1.md)。
+
+本阶段并行文件所有权更新：桌面适配 worker（同为 OpenCode Go deepseek-v4.1-flash/max）独占 `tools/threshold_desktop.py`、`tests/test_threshold_desktop.py` 与 `artifacts/threshold-gateway-20261017/launcher-worker/`。主实施 worker 不编辑或格式化这两个文件；双方停写后主控唯一整合服务入口并冻结，随后 fresh Astra 验收。
+
+
+2026-10-16 本地整合：按用户要求合并 Claude 最新前端、本机服务器与 B 分支 `7e81acc`，本地分支 `codex/integrate-a-b-20261016`，未提交未推送。状态与验证见 [整合记录](../../docs/integration-status-20261016.md)。仍不恢复 A3.3/A3.4 长实验。
+
+2026-10-16 本机服务器子任务：用户授权一键启动/关闭本机与公网演示，并明确选择“公网只浏览，本机控制运行”。新增独立只读隧道入口与桌面启动器，保留协议与历史证据，不恢复长实验、不自动 Git 发布。使用与边界见 [Mac 演示服务器](../../docs/desktop-server.md)。本轮局部审查不构成 A3.3/A3.4 联合验收。
+
+2026-10-16 三人协作 A 前端任务：用户负责 A。演示页已重做为系统总览、七场景协议时序图、门限设计示意与真实记录；重点 1/3/6。合并前 B 接口尚未实现的记录已由下述整合状态更新：场景 1/3/6 的真实事件及独立门限原型已交付；门限未接入采购，x402 仅设计。没有真实事件时仍明确展示示意。A 交接见 [前端说明](../../docs/teacher-demo-frontend-a-20261015.md)。用户已同意把 A 的改动推送到独立分支 `codex/demo-visual`；不恢复长实验。
 
 当前演示前端子任务（2026-10-15）：真人授权本地可操作演示页，worker 指定 `gpt-6.1-sol / low`。用户随后授权补齐安全场景台：复用现有真实安全测试，新增固定场景运行、明确标注的历史记录回放与能力全景；范围为页面与本地固定动作适配器、演示检查及说明；A3.3/A3.4完整实验和联合验收仍暂停。此角色覆盖仅适用于当前前端任务，不把旧OpenCode配置当作本次worker。
 

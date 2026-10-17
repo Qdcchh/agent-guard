@@ -1,10 +1,17 @@
 # Agent Guard
 
+2026-10-17 最新：x402 X1–X8 本地测试链闭环已独立验收通过，139 个不同测试通过，页面固定演示 6/6。见[阶段接受记录](tasks/workflow/runs/x402-gateway-20261017/acceptance.md)。全项目仍 PARTIAL，生产支付未实现。
+
+最新本地整合与完成边界：[2026-10-16 合并验证记录](docs/integration-status-20261016.md)。
+
+
+Mac 一键公网演示：桌面 `Agent Guard 服务器` 文件夹提供启动、关闭和查看地址入口。本机控制任务，公网只读；临时 HTTPS 地址每次启动可能变化。安装、权限及停止行为见 [Mac 演示服务器](docs/desktop-server.md)。
+
 A3.1与A3.2已正式独立接受；A3.3/A3.4联合v1已通过独立PACKAGE_REVIEW，S2正常装配必要自查已完成。完整联合自查及新独立IMPLEMENTATION_ACCEPTANCE尚未完成，项目仍PARTIAL。保留当前授权UNKNOWN、下游ATTESTED_NOT_INDEPENDENTLY_PROVEN、未锚尾部与bootstrap外部信任限制。
 
 **面向企业多智能体协同的可验证授权与可信执行系统。**
 
-本机演示页面：启动 Docker Desktop 后，在仓库根目录运行 `python3 tools/teacher_demo_server.py`，打开 `http://127.0.0.1:8765/`。支持真实演示启动、七类安全场景、带来源的验证记录回放和离线证据篡改对照；仅用于本地展示，不代表完整联合验收。见[演示操作稿](docs/teacher-demo-20261015.md)和[当前状态与覆盖范围](docs/project-status-and-demo-coverage-20261015.md)。
+本机演示页面：启动 Docker Desktop 后，在仓库根目录运行 `python3 tools/teacher_demo_server.py`，打开 `http://127.0.0.1:8765/`。支持真实演示启动、七类安全场景、带来源的验证记录回放和离线证据篡改对照；仅用于本地展示，不代表完整联合验收。见[演示操作稿](docs/teacher-demo-20261015.md)、[DemoEvent v1 接口](docs/teacher-demo-events-v1.md)和[当前状态与覆盖范围](docs/project-status-and-demo-coverage-20261015.md)。[2-of-3 门限签名原型](tools/threshold_demo/README.md)已通过版本化 `ag-approval` 接入现有采购网关与接受事务（固定本机演示、真实 FROST 组签名 + SM2/AGPoP，见[门限接入说明](docs/threshold-gateway-20261017.md)）；公网仍只读。x402 本机固定演示已接入（真实 HTTP 402 + EIP-3009 签名 + 本地测试链结算，无真实资产，见[x402 适配设计的实现状态](docs/x402-adapter-design-20261016.md)）；生产支付链路仍未实现。
 
 目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
 

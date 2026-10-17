@@ -44,12 +44,21 @@ def test_standalone_old_six_then_qualified_audit_upgrade(namespace):
     target = acquire_namespace(namespace.base_dsn)
     try:
         with psycopg.connect(target.dsn) as conn:
-            assert apply_migrations(conn) == ["001", "002", "003", "004", "005", "006"]
+            assert apply_migrations(conn) == [
+                "001",
+                "002",
+                "003",
+                "004",
+                "005",
+                "006",
+                "008",
+                "009",
+            ]
             assert conn.execute("SELECT to_regclass('ag_audit_streams')").fetchone() == (None,)
             apply_bundle_migrations(conn)
             assert apply_bundle_migrations(conn) == []
             assert conn.execute("SELECT count(*) FROM ag_schema_migration_lineages").fetchone() == (
-                15,
+                17,
             )
         entry = next(
             m
@@ -160,7 +169,7 @@ def test_maintenance_baseline_preserves_legacy_rows_and_owned_reset_closure(
             assert conn.execute(
                 sql.SQL("SELECT count(*) FROM {}").format(sql.Identifier(name))
             ).fetchone() == (0,)
-        assert conn.execute("SELECT count(*) FROM ag_schema_migration_lineages").fetchone() == (15,)
+        assert conn.execute("SELECT count(*) FROM ag_schema_migration_lineages").fetchone() == (17,)
 
 
 @pytest.mark.parametrize(

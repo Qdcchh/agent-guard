@@ -91,6 +91,7 @@ CONFIG_BOUNDS: dict[str, tuple[int, int]] = {
 _PROOF_UNIQUE_CONSTRAINT = "ag_proofs_pkey"
 _OPERATION_UNIQUE_CONSTRAINT = "ag_operations_business_key"
 _TASK_UNIQUE_CONSTRAINT = "ag_tasks_pkey"
+_APPROVAL_OPERATION_UNIQUE_CONSTRAINT = "ag_threshold_approvals_operation_unique"
 
 
 def _utc(ts: datetime) -> datetime:
@@ -395,7 +396,15 @@ class ExecutionLedger:
                 trusted_binding.response_bytes() if descriptor else None,
             )
             if binding is not None or baseline is not None or after_link is not None:
-                self._final_bound_check(conn, grants, keys, verified)
+                self._final_bound_check(
+                    conn,
+                    grants,
+                    keys,
+                    verified,
+                    trusted_binding,
+                    existing,
+                    AcceptDisposition.EXISTING,
+                )
             return result
 
         # (6) first accept: budget at root and every applicable node.
@@ -480,10 +489,27 @@ class ExecutionLedger:
             or before_create is not None
             or after_link is not None
         ):
-            self._final_bound_check(conn, grants, keys, verified)
+            self._final_bound_check(
+                conn,
+                grants,
+                keys,
+                verified,
+                trusted_binding,
+                inserted,
+                AcceptDisposition.CREATED,
+            )
         return result
 
-    def _final_bound_check(self, conn, grants, keys, verified):
+    def _final_bound_check(
+        self,
+        conn,
+        grants,
+        keys,
+        verified,
+        trusted_binding=None,
+        operation=None,
+        disposition=None,
+    ):
         # Flush deferred trigger/FK work before the authorization clock, then
         # reload rows already locked by this transaction (no external I/O).
         conn.execute("SET CONSTRAINTS ALL IMMEDIATE")
@@ -491,6 +517,11 @@ class ExecutionLedger:
         current = store.lock_grants_root_to_leaf(conn, [g.grant_id for g in grants])
         self._check_path(current, verified)
         self._check_freshness(current, principals, verified, store.db_now_epoch(conn))
+        # Last check in the transaction: an approval deadline that elapsed while
+        # the transaction worked is refused here, after every deferred
+        # constraint, journal append and evidence/publication write.
+        if trusted_binding is not None:
+            trusted_binding.final_check(conn, operation, disposition)
 
     # ------------------------------------------------------------------ checks
 
@@ -605,6 +636,11 @@ class ExecutionLedger:
             return LedgerError(ErrorCode.IDEMPOTENCY_CONFLICT, "business key already used")
         if constraint == _TASK_UNIQUE_CONSTRAINT:
             return LedgerError(ErrorCode.INVALID_CONTEXT, "task root already exists")
+        if constraint == _APPROVAL_OPERATION_UNIQUE_CONSTRAINT:
+            return LedgerError(
+                ErrorCode.APPROVAL_MISMATCH,
+                "accepted operation is already bound to a different approval",
+            )
         return LedgerError(ErrorCode.IDEMPOTENCY_CONFLICT, f"unique violation: {constraint}")
 
 

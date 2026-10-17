@@ -40,6 +40,7 @@ MAINTENANCE_DBS = frozenset({"postgres", "template0", "template1"})
 #: 004 adds three more tables next to the seven A1 business tables; they are
 #: wiped together so a run never leaks execution state into the next test.
 RESET_TABLES = (
+    "ag_threshold_approvals",
     "ag_operation_evidence",
     "ag_verified_evidence",
     "ag_auth_events",

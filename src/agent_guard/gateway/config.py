@@ -210,22 +210,67 @@ def evidence_operator_inputs(value):
     )
 
 
+_THRESHOLD_FIELDS = {
+    "group_public_key",
+    "policy_version",
+    "key_epoch",
+    "max_lifetime_seconds",
+}
+
+
+def threshold_policy(value):
+    """Trusted approval policy; absent means the documented legacy behavior."""
+    from agent_guard.threshold.contracts import (
+        MAX_LIFETIME_SECONDS,
+        MAX_VERSION,
+        ThresholdApprovalPolicy,
+    )
+
+    if "threshold_approval" not in value:
+        return None
+    data = value["threshold_approval"]
+    if type(data) is not dict or set(data) != _THRESHOLD_FIELDS:
+        raise ConfigError("exact threshold approval fields required")
+    key = data["group_public_key"]
+    if type(key) is not str or re.fullmatch(r"[0-9a-f]{64}", key) is None:
+        raise ConfigError("threshold group public key must be 32 raw bytes in lowercase hex")
+    for name, upper in (
+        ("policy_version", MAX_VERSION),
+        ("key_epoch", MAX_VERSION),
+        ("max_lifetime_seconds", MAX_LIFETIME_SECONDS),
+    ):
+        if type(data[name]) is not int or not 1 <= data[name] <= upper:
+            raise ConfigError(f"bounded trusted threshold {name} required")
+    return ThresholdApprovalPolicy(
+        group_public_key=bytes.fromhex(key),
+        policy_version=data["policy_version"],
+        key_epoch=data["key_epoch"],
+        max_lifetime_seconds=data["max_lifetime_seconds"],
+    )
+
+
 def load_gateway_config(raw: bytes):
     try:
         value = load_strict_json(raw)
-        if type(value) is not dict or set(value) not in (
-            _FIELDS,
-            _FIELDS | {"receipt_keys"},
-            _FIELDS | {"export_credentials", "evidence_local_inputs"},
-            _FIELDS | {"receipt_keys", "export_credentials", "evidence_local_inputs"},
-        ):
+        if type(value) is not dict:
             raise ConfigError("exact gateway fields required")
+        extras = set(value) - _FIELDS
+        if extras - {
+            "receipt_keys",
+            "threshold_approval",
+            "export_credentials",
+            "evidence_local_inputs",
+        }:
+            raise ConfigError("exact gateway fields required")
+        if ("export_credentials" in extras) != ("evidence_local_inputs" in extras):
+            raise ConfigError("complete independent export configuration required")
         _string(value["secrets_path"], "secrets_path")
         for name, upper in (("request_timeout_seconds", 60), ("max_workers", 32)):
             if type(value[name]) is not int or not 1 <= value[name] <= upper:
                 raise ConfigError("bounded positive gateway setting required")
         trusted_inputs(value)
         evidence_operator_inputs(value)
+        threshold_policy(value)
         return GatewayConfig(canonical_json_bytes(value))
     except (ValueError, TypeError, KeyError, UnicodeError) as exc:
         raise ConfigError("invalid gateway configuration") from exc

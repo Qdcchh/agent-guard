@@ -47,6 +47,63 @@ def successful_run(folder):
     write(folder / "cleanup.json", {"resources_remaining": 0, "private": "SECRET"})
 
 
+def threshold_run(folder):
+    write(
+        folder / "result.json",
+        {
+            "demo": "threshold-gateway-purchase",
+            "run_id": str(uuid.uuid4()),
+            "passed": True,
+            "cases": [
+                {"name": "valid-approval-one-order", "passed": True, "http_status": 202},
+                {
+                    "name": "tampered-amount",
+                    "passed": True,
+                    "http_status": 409,
+                    "code": "APPROVAL_MISMATCH",
+                    "raw": "SECRET",
+                },
+            ],
+            "operations": 1,
+            "approvals": 1,
+            "orders": 1,
+            "budget": [[0, 0, 70000, 0, 1]] * 3,
+            "resources_remaining": [],
+            "private": "SECRET",
+        },
+    )
+
+
+def x402_run(folder):
+    write(
+        folder / "result.json",
+        {
+            "demo": "x402-gateway-purchase",
+            "profile": "x402-v2-exact-evm-eip3009-local",
+            "run_id": str(uuid.uuid4()),
+            "passed": True,
+            "cases": [
+                {"name": "paid-flow-settles-once", "passed": True, "http_status": 202, "orders": 1},
+                {
+                    "name": "forged-payment-refused",
+                    "passed": True,
+                    "http_status": 402,
+                    "code": "PAYMENT_INVALID",
+                    "raw": "SECRET",
+                },
+            ],
+            "operations": 1,
+            "approvals": 1,
+            "orders": 1,
+            "payments": 1,
+            "transactions": 1,
+            "asset_budgets": [[0, 0, 70000, 0, 1]] * 3,
+            "resources_remaining": [],
+            "private": "SECRET",
+        },
+    )
+
+
 class FakeProcess:
     def __init__(self, output="", code=0, release=None):
         self.stdout = io.StringIO(output)
@@ -187,6 +244,68 @@ class DemoTests(unittest.TestCase):
         self.assertEqual(app.job["status"], "failed")
         self.assertIsNone(app.last_verification)
 
+    def test_threshold_demo_route_and_sanitized_result(self):
+        folder = self.repo / "artifacts/threshold-gateway-demo-live/owned"
+        threshold_run(folder)
+        child = FakeProcess("结果目录：" + str(folder) + "\nSECRET\n")
+        calls = []
+
+        def launcher(command, **kwargs):
+            calls.append(command)
+            return child
+
+        app = demo.DemoApp(launcher=launcher)
+        self.assertTrue(app.start("threshold-run"))
+        self.complete(app)
+        self.assertEqual(app.job["status"], "success")
+        self.assertEqual(
+            calls[0], [demo.sys.executable, str(self.repo / "tools/threshold_desktop.py")]
+        )
+        state = app.state()
+        self.assertTrue(state["threshold"]["passed"])
+        self.assertEqual(state["threshold"]["orders"], 1)
+        self.assertEqual(state["threshold"]["resources_remaining"], 0)
+        self.assertEqual(state["threshold"]["cases"][1]["code"], "APPROVAL_MISMATCH")
+        encoded = json.dumps(state)
+        self.assertNotIn("SECRET", encoded)
+        self.assertNotIn("raw", encoded)
+        self.assertNotIn(str(self.repo), encoded)
+        damaged = self.repo / "artifacts/threshold-gateway-demo-live/damaged"
+        write(damaged / "result.json", {"demo": "other"})
+        with self.assertRaises(ValueError):
+            demo.threshold_result(damaged)
+
+    def test_x402_demo_route_and_sanitized_result(self):
+        folder = self.repo / "artifacts/x402-gateway-demo-live/owned"
+        x402_run(folder)
+        child = FakeProcess("结果目录：" + str(folder) + "\nSECRET\n")
+        calls = []
+
+        def launcher(command, **kwargs):
+            calls.append(command)
+            return child
+
+        app = demo.DemoApp(launcher=launcher)
+        self.assertTrue(app.start("x402-run"))
+        self.complete(app)
+        self.assertEqual(app.job["status"], "success")
+        self.assertEqual(calls[0], [demo.sys.executable, str(self.repo / "tools/x402_desktop.py")])
+        state = app.state()
+        self.assertTrue(state["x402"]["passed"])
+        self.assertEqual(state["x402"]["orders"], 1)
+        self.assertEqual(state["x402"]["payments"], 1)
+        self.assertEqual(state["x402"]["transactions"], 1)
+        self.assertEqual(state["x402"]["resources_remaining"], 0)
+        self.assertEqual(state["x402"]["cases"][1]["code"], "PAYMENT_INVALID")
+        encoded = json.dumps(state)
+        self.assertNotIn("SECRET", encoded)
+        self.assertNotIn("raw", encoded)
+        self.assertNotIn(str(self.repo), encoded)
+        damaged = self.repo / "artifacts/x402-gateway-demo-live/damaged"
+        write(damaged / "result.json", {"demo": "x402-gateway-purchase"})
+        with self.assertRaises(ValueError):
+            demo.x402_result(damaged)
+
     def test_http_host_origin_csrf_paths_and_double_click(self):
         release = threading.Event()
         app = demo.DemoApp(launcher=lambda *_args, **_kwargs: FakeProcess(code=1, release=release))
@@ -226,15 +345,65 @@ class DemoTests(unittest.TestCase):
             self.assertEqual(request("POST", "/api/run", {}, "{}")[0], 403)
             self.assertEqual(request("POST", "/api/run", valid, '{"command":"id"}')[0], 400)
             self.assertEqual(request("POST", "/api/other", valid, "{}")[0], 404)
+            self.assertEqual(request("POST", "/api/threshold/run", {}, "{}")[0], 403)
+            self.assertEqual(request("POST", "/api/x402/run", {}, "{}")[0], 403)
             self.assertEqual(request("POST", "/api/run", valid, "{}")[0], 202)
             self.assertEqual(request("POST", "/api/run", valid, "{}")[0], 409)
             self.assertEqual(request("POST", "/api/verify", valid, "{}")[0], 409)
+            self.assertEqual(request("POST", "/api/threshold/run", valid, "{}")[0], 409)
+            self.assertEqual(request("POST", "/api/x402/run", valid, "{}")[0], 409)
         finally:
             release.set()
             self.complete(app)
             server.shutdown()
             server.server_close()
             thread.join()
+
+    def test_event_endpoint_is_bounded_read_only_and_host_checked(self):
+        app = demo.DemoApp()
+        self.assertTrue(app.start("scenario-replay", "stolen-token"))
+        self.complete(app)
+        run_id = app.state()["job"]["run_id"]
+        server = demo.make_server(0, app)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+
+        def request(path, headers=None):
+            conn = http.client.HTTPConnection("127.0.0.1", server.server_port)
+            conn.request("GET", path, headers=headers or {})
+            response = conn.getresponse()
+            result = response.status, response.read()
+            conn.close()
+            return result
+
+        try:
+            path = f"/api/runs/{run_id}/events"
+            status, raw = request(path + "?after_seq=0&limit=20")
+            self.assertEqual(status, 200)
+            value = json.loads(raw)
+            self.assertEqual(value["events"], [])
+            self.assertFalse(value["complete"])
+            self.assertEqual(value["source"], "replay")
+            self.assertEqual(request(path, {"Host": "evil.test"})[0], 403)
+            self.assertEqual(request(path, {"Origin": "https://evil.test"})[0], 403)
+            self.assertEqual(request(path + "?limit=201")[0], 400)
+            self.assertEqual(request(path + "?limit=1&limit=2")[0], 400)
+            self.assertEqual(request(path + "?after_seq=-1")[0], 400)
+            self.assertEqual(request(f"/api/runs/{uuid.uuid4()}/events")[0], 404)
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join()
+
+    def test_failed_scenario_records_program_error(self):
+        app = demo.DemoApp(launcher=lambda *_args, **_kwargs: FakeProcess(code=7))
+        self.assertTrue(app.start("scenario-run", "stolen-token"))
+        self.complete(app)
+        self.assertEqual(app.job["status"], "failed")
+        page = app.event_page(app.job["run_id"], 0, 200)
+        self.assertTrue(page["terminal"])
+        self.assertFalse(page["complete"])
+        self.assertEqual(page["events"][-1]["event_type"], "run.error")
 
 
 if __name__ == "__main__":

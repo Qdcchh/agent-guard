@@ -103,3 +103,12 @@ assert.deepEqual(m.CATALOG_FALLBACK.map(c => c.id), ['stolen-token', 'signed-par
   assert.ok(!/localStorage|sessionStorage/.test(js), '不在浏览器存储任何数据');
 }
 console.log('teacher demo frontend logic: passed');
+
+// B 的撤销锁等待必须保留连续游标，不能被前端拒收。
+{
+  const store = new m.EventStore('run-a');
+  store.add([ev(1), ev(2, {event_type: 'lock.waiting', status: 'waiting'}), ev(3)]);
+  assert.equal(store.rejected.length, 0);
+  assert.equal(store.nextAfterSeq(), 3);
+  assert.ok(m.SCENES.s1.narrate(ev(1, {event_type: 'accept.rejected'})));
+}

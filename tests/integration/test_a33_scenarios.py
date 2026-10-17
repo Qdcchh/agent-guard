@@ -468,6 +468,71 @@ def _counts(f):
     return counters, operations, events, outboxes, effects
 
 
+def _demo_readback(f):
+    """Only public aggregate values; the private test databases stay private."""
+    chain = [str(claim["ag_grant_id"]) for claim in f.as_material["claims"]]
+    with psycopg.connect(f.gateway_dsn) as conn:
+        conn.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY")
+        rows = conn.execute(
+            "SELECT grant_id,amount_reserved,amount_settled,calls_reserved,calls_settled "
+            "FROM ag_grants WHERE grant_id = ANY(%s)",
+            (chain,),
+        ).fetchall()
+    counters = {str(row[0]): row[1:] for row in rows}
+    assert len(chain) == len(set(chain)) == len(counters) == 3
+    with psycopg.connect(f.downstream_dsn) as conn:
+        orders = conn.execute("SELECT count(*) FROM ds_orders").fetchone()[0]
+        notifications = conn.execute("SELECT count(*) FROM ds_notifications").fetchone()[0]
+    return {
+        "budget": [
+            {
+                "reserved_fen": counters[grant_id][0],
+                "settled_fen": counters[grant_id][1],
+                "calls": counters[grant_id][2] + counters[grant_id][3],
+            }
+            for grant_id in chain
+        ],
+        "orders": orders,
+        "notifications": notifications,
+    }
+
+
+def _demo_witness(scenario_id, case, steps):
+    """Persist only observations reached after the corresponding assertions."""
+    from tests.fixtures.a31_audit_service import record_native
+
+    record_native(
+        "teacher-demo-witness",
+        {"scenario_id": scenario_id, "case": case, "steps": steps},
+    )
+
+
+def _demo_mark(event_type, actor, target, status, safe_payload=None, reason_code=None):
+    return {
+        "event_type": event_type,
+        "actor": actor,
+        "target": target,
+        "status": status,
+        "safe_payload": safe_payload or {},
+        "reason_code": reason_code,
+        "observed_at": time.time(),
+        "monotonic_ms": time.monotonic_ns() // 1_000_000,
+    }
+
+
+def _demo_reason(response):
+    if isinstance(response, bytes):
+        try:
+            response = load_strict_json(response)
+        except ValueError:
+            return None
+    if not isinstance(response, dict):
+        return None
+    error = response.get("error")
+    code = error.get("code") if isinstance(error, dict) else error
+    return code if isinstance(code, str) and len(code) <= 80 else None
+
+
 def _publisher(f):
     return receipt_services(
         f.env, f.gateway_dsn, gateway_key=f.receipt_key, signing_kid="joint-receipt-1"
@@ -887,6 +952,7 @@ def _as_refusal(
         if amount is not None:
             form["ag_amount_limit_fen"] = str(amount)
         form["scope"] = " ".join(TOOLS)
+        demo_steps = []
         if not attack.startswith("branch"):
             positive_registration = f.env.registrations[("tenant-001", "agent-" + holder)]
             positive_proof = sign_ag_proof(
@@ -924,6 +990,60 @@ def _as_refusal(
                 assert positive_response.status == 200
             finally:
                 positive_connection.close()
+            if attack in ("amount", "scope"):
+                positive_claims = verify_compact_jws(
+                    load_strict_json(positive_raw)["access_token"],
+                    expected_type="ag-at+jwt",
+                    trusted_keys={"as-sign-1": f.env.as_key.public_key()},
+                )
+                assert positive_claims["ag_parent_id"] == f.as_material["claims"][0]["ag_grant_id"]
+                assert (
+                    positive_claims["ag_cnf"]["kid"]
+                    == f.env.registrations[("tenant-001", "agent-selector")].kid
+                )
+                demo_steps.extend(
+                    [
+                        _demo_mark(
+                            "delegation.requested",
+                            "planner",
+                            "as",
+                            "in_progress",
+                            {
+                                "parent_limits": {
+                                    "amount_fen": f.as_material["claims"][0]["ag_limits"][
+                                        "amount_fen"
+                                    ],
+                                    "calls": f.as_material["claims"][0]["ag_limits"]["calls"],
+                                },
+                                "requested_limits": {
+                                    "amount_fen": int(form["ag_amount_limit_fen"]),
+                                    "calls": int(form["ag_call_limit"]),
+                                },
+                                "parent_scope": list(TOOLS),
+                                "requested_scope": form["scope"].split(),
+                            },
+                        ),
+                        _demo_mark(
+                            "delegation.issued",
+                            "as",
+                            "selector",
+                            "passed",
+                            {
+                                "grant_alias": "mid",
+                                "parent_alias": "root",
+                                "holder": "selector",
+                                "holder_kid": "selector#key-1",
+                                "limits": {
+                                    "amount_fen": positive_claims["ag_limits"]["amount_fen"],
+                                    "calls": positive_claims["ag_limits"]["calls"],
+                                },
+                                "scope": positive_claims["scope"].split(),
+                                "expires_in": positive_claims["exp"] - positive_claims["iat"],
+                                "http_status": positive_response.status,
+                            },
+                        ),
+                    ]
+                )
             record_native(
                 "a33-as-positive-control",
                 {
@@ -936,6 +1056,8 @@ def _as_refusal(
             )
             form["ag_delegation_key"] = secrets.token_urlsafe(32)
             before = full_state(f.gateway_dsn, f.downstream_dsn)
+            if attack in ("amount", "scope"):
+                demo_before = _demo_readback(f)
         if attack == "amount":
             form["ag_amount_limit_fen"] = "100001"
         elif attack == "calls":
@@ -1084,6 +1206,27 @@ def _as_refusal(
                 },
             )
         else:
+            if attack in ("amount", "scope"):
+                demo_steps.append(
+                    _demo_mark(
+                        "delegation.requested",
+                        "planner",
+                        "as",
+                        "in_progress",
+                        {
+                            "parent_limits": {
+                                "amount_fen": f.as_material["claims"][0]["ag_limits"]["amount_fen"],
+                                "calls": f.as_material["claims"][0]["ag_limits"]["calls"],
+                            },
+                            "requested_limits": {
+                                "amount_fen": int(form["ag_amount_limit_fen"]),
+                                "calls": int(form["ag_call_limit"]),
+                            },
+                            "parent_scope": list(TOOLS),
+                            "requested_scope": form["scope"].split(),
+                        },
+                    )
+                )
             status, raw = send_form()
         if attack.startswith("branch"):
             record_native(
@@ -1118,6 +1261,35 @@ def _as_refusal(
             return child, claims
         assert status in (400, 401, 403)
         assert _business(full_state(f.gateway_dsn, f.downstream_dsn)) == _business(before)
+        if attack in ("amount", "scope"):
+            demo_after = _demo_readback(f)
+            demo_steps.extend(
+                [
+                    _demo_mark(
+                        "delegation.rejected",
+                        "as",
+                        "planner",
+                        "rejected",
+                        {"dimension": attack, "http_status": status},
+                        _demo_reason(raw),
+                    ),
+                    _demo_mark(
+                        "readback.state",
+                        "ledger",
+                        "user",
+                        "passed",
+                        {
+                            "budget_before": demo_before["budget"],
+                            "budget_after": demo_after["budget"],
+                            "orders_before": demo_before["orders"],
+                            "orders_after": demo_after["orders"],
+                            "notifications_before": demo_before["notifications"],
+                            "notifications_after": demo_after["notifications"],
+                        },
+                    ),
+                ]
+            )
+            _demo_witness("delegation-scope", attack, demo_steps)
         record_native(
             "a33-as-refusal",
             {
@@ -1495,6 +1667,15 @@ def test_attack_set_exact_binding_no_side_effects(scene, round_id, attack):
             token=f.env.token,
             now=int(time.time()),
         )
+        demo_steps = [
+            _demo_mark(
+                "fixture.setup",
+                "attacker",
+                "attacker",
+                "passed",
+                {"token_holder": "executor", "proof_signer_kid": registration.kid},
+            )
+        ]
     if attack in (
         "replay",
         "wrong-query-owner",
@@ -1555,6 +1736,22 @@ def test_attack_set_exact_binding_no_side_effects(scene, round_id, attack):
         else:
             body["params"]["template_id"] = "unapproved-template"
     before = full_state(f.gateway_dsn, f.downstream_dsn)
+    if attack == "stolen":
+        demo_before = _demo_readback(f)
+        demo_steps.append(
+            _demo_mark(
+                "request.sent",
+                "attacker",
+                "gateway",
+                "in_progress",
+                {
+                    "endpoint": "/v1/invocations",
+                    "token_holder": "executor",
+                    "proof_signer_kid": registration.kid,
+                    "tool_id": body["tool_id"],
+                },
+            )
+        )
     if attack in ("negative", "overflow"):
         # The hostile wire is deliberately outside the safe signer/encoder domain.
         import hashlib
@@ -1610,7 +1807,7 @@ def test_attack_set_exact_binding_no_side_effects(scene, round_id, attack):
             },
         )
     else:
-        status, _ = _accept(f, body, proof=proof)
+        status, response = _accept(f, body, proof=proof)
     after = full_state(f.gateway_dsn, f.downstream_dsn)
     assert status in (400, 401, 403, 409)
     assert _business(after) == _business(before)
@@ -1621,6 +1818,35 @@ def test_attack_set_exact_binding_no_side_effects(scene, round_id, attack):
     assert len(after["gateway"].get("ag_verified_evidence", [])) >= len(
         before["gateway"].get("ag_verified_evidence", [])
     )
+    if attack == "stolen":
+        demo_after = _demo_readback(f)
+        demo_steps.extend(
+            [
+                _demo_mark(
+                    "accept.rejected",
+                    "gateway",
+                    "attacker",
+                    "rejected",
+                    {"http_status": status},
+                    _demo_reason(response),
+                ),
+                _demo_mark(
+                    "readback.state",
+                    "ledger",
+                    "user",
+                    "passed",
+                    {
+                        "budget_before": demo_before["budget"],
+                        "budget_after": demo_after["budget"],
+                        "orders_before": demo_before["orders"],
+                        "orders_after": demo_after["orders"],
+                        "notifications_before": demo_before["notifications"],
+                        "notifications_after": demo_after["notifications"],
+                    },
+                ),
+            ]
+        )
+        _demo_witness("stolen-token", "stolen", demo_steps)
 
 
 @pytest.mark.parametrize("round_id", range(10))
@@ -1653,6 +1879,20 @@ def test_root_mid_calls_revocation_final_clock_races(scene, round_id, case):
             if case == "revoke-first":
                 lock.execute("SELECT 1")
                 revoke_grant(lock, root)
+                demo_before = _demo_readback(f)
+                demo_steps = [
+                    _demo_mark(
+                        "request.sent",
+                        "executor",
+                        "gateway",
+                        "in_progress",
+                        {
+                            "endpoint": "/v1/invocations",
+                            "token_holder": "executor",
+                            "tool_id": TOOLS[2],
+                        },
+                    )
+                ]
             else:
                 lock.execute(
                     "SELECT stream_id FROM ag_audit_streams WHERE stream_id=%s FOR UPDATE",
@@ -1668,6 +1908,16 @@ def test_root_mid_calls_revocation_final_clock_races(scene, round_id, case):
                         (blocker,),
                     ).fetchall()
                 if waiting:
+                    if case == "revoke-first":
+                        demo_steps.append(
+                            _demo_mark(
+                                "lock.waiting",
+                                "gateway",
+                                "ledger",
+                                "waiting",
+                                {"waiting_on": "root-revocation"},
+                            )
+                        )
                     break
                 if accept.done() or time.monotonic() >= deadline:
                     lock.rollback()
@@ -1694,11 +1944,49 @@ def test_root_mid_calls_revocation_final_clock_races(scene, round_id, case):
                         pytest.fail("actual revoke behind accept absent")
                     time.sleep(0.01)
             lock.commit()
+            if case == "revoke-first":
+                demo_steps.append(
+                    _demo_mark(
+                        "revocation.committed",
+                        "ledger",
+                        "gateway",
+                        "passed",
+                        {"grant_alias": "root", "txn_ref": "root-revocation"},
+                    )
+                )
             status, result = accept.result(timeout=10)
             if case == "revoke-first":
                 assert status in (401, 403)
                 assert _counts(f)[0] == [(0, 0, 0, 0)] * 3
                 assert _counts(f)[1:] == ([], [], 0, 0)
+                demo_after = _demo_readback(f)
+                demo_steps.extend(
+                    [
+                        _demo_mark(
+                            "accept.rejected",
+                            "gateway",
+                            "executor",
+                            "rejected",
+                            {"http_status": status},
+                            _demo_reason(result),
+                        ),
+                        _demo_mark(
+                            "readback.state",
+                            "ledger",
+                            "user",
+                            "passed",
+                            {
+                                "budget_before": demo_before["budget"],
+                                "budget_after": demo_after["budget"],
+                                "orders_before": demo_before["orders"],
+                                "orders_after": demo_after["orders"],
+                                "notifications_before": demo_before["notifications"],
+                                "notifications_after": demo_after["notifications"],
+                            },
+                        ),
+                    ]
+                )
+                _demo_witness("revocation", "revoke-first", demo_steps)
             else:
                 assert status == 202
                 revocation.result(timeout=10)

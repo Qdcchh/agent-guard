@@ -18,6 +18,7 @@
     <button type="button" data-view="s6"><span class="no">6</span>撤销后拒绝</button>
     <button type="button" data-view="more">其余场景</button>
     <button type="button" data-view="threshold">门限批准</button>
+    <button type="button" data-view="x402">x402 支付</button>
     <button type="button" data-view="evidence">真实记录</button>
   </nav>
   <div class="source" id="source" aria-live="polite"><span class="sw illus" aria-hidden="true"></span><span id="source-text">示意推演</span></div>
@@ -62,6 +63,7 @@
           <marker id="a-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#18203A"/></marker>
           <marker id="a-gold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#A8761A"/></marker>
           <marker id="a-seal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#C63A2E"/></marker>
+          <marker id="a-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#2445D4"/></marker>
           <marker id="a-mute" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,1 L9,5 L0,9 z" fill="#8A91A3"/></marker>
           <filter id="grain" x="-10%" y="-10%" width="120%" height="120%">
             <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="2" seed="5" result="n"/>
@@ -77,12 +79,12 @@
     </div>
 
     <div class="caption" id="caption">
-      <span class="count" id="count"></span>
+      <div class="stepper" id="count" aria-label="步骤进度"></div>
       <p id="cap" aria-live="polite"></p>
       <div class="ctrl" id="ctrl">
-        <button type="button" id="prev" aria-label="上一步"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 2.5 4.5 8l6 5.5z"/></svg></button>
-        <button type="button" id="play" class="play" aria-label="播放"><svg viewBox="0 0 16 16" aria-hidden="true"><path id="play-ic" d="M4.5 2.5v11l9-5.5z"/></svg></button>
-        <button type="button" id="next" aria-label="下一步"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 2.5 11.5 8l-6 5.5z"/></svg></button>
+        <button type="button" id="prev" class="ghost">上一步</button>
+        <button type="button" id="play" class="ghost"><svg viewBox="0 0 16 16" aria-hidden="true"><path id="play-ic" d="M4.5 2.5v11l9-5.5z"/></svg><span id="play-label">自动播放</span></button>
+        <button type="button" id="next" class="next-btn"><span id="next-label">下一步</span><kbd aria-hidden="true">→</kbd></button>
       </div>
     </div>
   </section>

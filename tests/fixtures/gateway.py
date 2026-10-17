@@ -31,12 +31,15 @@ def query_bundle(env, operation_id, *, lifetime=60, proof_now=None):
     )
 
 
-def app_for(env, dsn):
+def app_for(env, dsn, *, threshold_verifier=None, payment=None, now=None):
     return GatewayHttpApp(
         GatewayEndpoint(
             verifier=env.verifier,
             execution=env.adapter,
             queries=AuthorizedQuery(dsn, evidence_store=env.evidence),
+            threshold_verifier=threshold_verifier,
+            payment=payment,
+            now=now,
         )
     )
 
@@ -91,6 +94,7 @@ def state(dsn, *, proofs=True):
         "ag_execution_leases",
         "ag_operation_evidence",
         "ag_operation_review_flags",
+        "ag_threshold_approvals",
     ]
     if proofs:
         names.append("ag_proofs")

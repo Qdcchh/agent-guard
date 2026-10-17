@@ -19,13 +19,13 @@
 const SCHEMA_VERSION = 1;
 const ACTORS = ['user', 'planner', 'selector', 'executor', 'executor-2', 'attacker', 'as', 'gateway',
   'ledger', 'downstream', 'audit', 'verifier', 'worker', 'recovery', 'coordinator',
-  'signer-1', 'signer-2', 'signer-3', 'x402', 'model'];
+  'signer-1', 'signer-2', 'signer-3', 'x402', 'model', 'resource', 'chain'];
 const EVENT_TYPES = ['fixture.setup', 'token.issued', 'delegation.requested', 'delegation.issued',
   'delegation.rejected', 'request.sent', 'check.passed', 'check.rejected', 'lock.waiting',
   'revocation.committed', 'accept.committed', 'accept.rejected', 'process.crashed',
   'operation.reconciled', 'receipt.published', 'readback.state', 'run.terminal', 'run.error',
   'threshold.share_signed', 'threshold.aggregated', 'threshold.verified', 'intent.proposed'];
-const STATUSES = ['pending', 'in_progress', 'passed', 'rejected', 'failed', 'unknown', 'skipped'];
+const STATUSES = ['pending', 'in_progress', 'waiting', 'passed', 'rejected', 'failed', 'unknown', 'skipped'];
 const SOURCES = ['live', 'replay', 'illustrative'];
 const NOT_DRAWN = new Set(['run.terminal']);
 
@@ -183,6 +183,7 @@ const SCENES = {
         case 'fixture.setup': return ['令牌副本被窃取', '令牌是一串数据，可以被复制；私钥没有随它离开执行代理。'];
         case 'request.sent': return ['冒用方发起工具调用', '令牌是真的，证明却只能用冒用方手里的 planner 私钥来签。'];
         case 'check.passed': return ['令牌本身验签通过', 'AS 的 SM2 签名有效。只验 Bearer 令牌的系统，到这里已经放行。'];
+        case 'accept.rejected': return ['网关拒绝冒用请求', `真实请求返回 ${ev.safe_payload.http_status ?? '未采集'}；原因：${ev.reason_code || '未采集'}。`];
         case 'check.rejected': return ['持有者对不上，网关驳回', 'ag_cnf 指向 executor#key-1，AG-Proof 却由 planner#key-1 签出。拿到令牌，不等于拿到权限。'];
         case 'readback.state': return ['业务没有任何变化', '请求没有进入接受事务，预算没有新预留，下游没有新订单。'];
       }
@@ -292,7 +293,7 @@ const SCENES = {
           return p.dimension === 'scope'
             ? ['工具超出父授权，AS 拒绝', '集合必须包含于父授权；多出的工具不会被签进任何令牌。']
             : ['金额超出父授权，AS 拒绝', '哪怕只多 0.01 元也不签发。拒绝发生在 AS，网关根本没有收到请求。'];
-        case 'readback.state': return ['没有产生可用的子令牌', '授权树没有新增节点，网关没有收到任何请求，业务没有变化。'];
+        case 'readback.state': return ['扩权请求被拒绝后的状态读回', '本用例包含合法委托签发；扩权请求被拒绝，预算、订单与通知读回用于检查业务是否变化。'];
       }
       return null;
     },
@@ -507,7 +508,7 @@ const SCENES = {
     title: '门限批准：三方中两方签字',
     lede: '高风险行动除了授权，还要多个独立签名域共同批准。一方签字不够；两方批准成立后，如果授权已被撤销，仍然不能执行。',
     stack: [
-      ['签名方案', '2-of-3 门限签名，候选库 FROST，B 选型中'],
+      ['签名方案', '2-of-3 FROST-Ed25519，已接入固定采购演示'],
       ['签名对象', '行动摘要：任务、授权路径、工具、参数、金额、策略版本'],
       ['与授权', '独立的组公钥与配置，不替代令牌，不绕过撤销与预算'],
     ],
@@ -516,7 +517,7 @@ const SCENES = {
       ['KITA', '把评审、密钥隔离与门限签名连接起来，是最接近的相关工作。'],
       ['本项目目标', '把门限批准绑定到具体行动与授权路径，执行时仍检查当前授权与撤销状态。', true],
     ],
-    honest: '本页是设计示意：B 尚未交付门限原型，图中所有步骤都不是运行结果。交付后改用真实事件；若只有独立原型，会标明"未接入采购"。门限算法并非国密 SM2。',
+    honest: '图中步骤仍是设计示意，不是逐帧回放。本机已接入固定 2-of-3 演示：有效批准只产生一单，不足/篡改/撤销会被拒绝；公网页面仍只读。份额暂由同一 OS 用户管理，门限算法并非国密 SM2。',
     band: [430, 900], focus: 'gateway',
     lanes: [
       {k: 'signer-1', x: 70, name: '签名域 S1', id: '份额 1'},
@@ -553,6 +554,66 @@ const SCENES = {
       return null;
     },
   },
+  x402: {
+    catalogId: null, no: 'x402 支付', short: 'x402 支付', design: true,
+    kicker: 'x402 支付 · 设计示意 + 本机固定演示',
+    title: 'x402 支付：先报价，再按报价付款',
+    lede: '付费资源先返回 402 报价；支付方按报价签一份 EIP-3009 授权，资源服务器验证并结算。付款只说明这笔钱有效，能不能执行仍由授权与预算决定。',
+    stack: [
+      ['协议', 'HTTP 402 + x402 v2 exact/EVM（EIP-3009），本机测试链固定演示'],
+      ['付款证明', 'EIP-3009 授权转账签名，nonce 与报价、收款方、金额绑定'],
+      ['与授权', '支付适配不替代令牌；资产预算独立计量，授权撤销后不得再付'],
+    ],
+    delta: [
+      ['现有 x402 生态', '公网设施依赖真实稳定币与远程 facilitator，本仓库不引入外部依赖。'],
+      ['OAuth 授权', '付款证明只证明付款有效，不能代替用户授权；执行时两者都要复核。'],
+      ['本项目目标', '把付款摘要绑定到授权路径与独立资产预算，执行时仍复核撤销与预算。', true],
+    ],
+    honest: '图中步骤仍是设计示意，不是逐帧回放。本机已接入固定演示：真实 HTTP 402、真实 EIP-3009 签名与本地测试链结算，有效支付恰好一单且链上仅一笔；伪造签名、V2 批准、超预算、重放会被拒绝。使用本机测试链与自建代币，没有真实资产；公网页面仍只读；不替代 OAuth 授权。',
+    band: [430, 900], focus: 'gateway',
+    lanes: [
+      {k: 'user', x: 70, name: '付款方（测试）', id: '本地测试钱包'},
+      {k: 'x402', x: 210, name: '支付适配 x402', id: '402 报价 / EIP-3009'},
+      {k: 'resource', x: 350, name: '资源服务器', id: '验证 → 结算'},
+      {k: 'chain', x: 500, name: '本地 EVM 测试链', id: '自建 USDC'},
+      {k: 'gateway', x: 660, name: '执行网关', id: '接受时绑定支付意图'},
+      {k: 'ledger', x: 820, name: '授权与预算库', id: '独立资产预算'},
+    ],
+    checkNote: {},
+    readbackExtra: [['chain', '链上结算仍为 1 笔', 'lab jade']],
+    events: illustrative('x402', [
+      {event_type: 'accept.committed', actor: 'gateway', target: 'ledger', safe_payload: {intent: 'quote-001/1', amount_fen: 70000}},
+      {event_type: 'check.passed', actor: 'x402', target: 'resource', safe_payload: {check: 'challenge-402'}},
+      {event_type: 'check.passed', actor: 'x402', target: 'resource', safe_payload: {check: 'payload-persisted'}},
+      {event_type: 'check.passed', actor: 'chain', target: 'resource', safe_payload: {check: 'settled-once'}},
+      {event_type: 'accept.rejected', actor: 'resource', target: 'x402', status: 'rejected', reason_code: 'PAYMENT_INVALID',
+        safe_payload: {check: 'forged-signature', http_status: 402}},
+      {event_type: 'accept.rejected', actor: 'gateway', status: 'rejected', reason_code: 'APPROVAL_REQUIRED',
+        safe_payload: {check: 'v2-approval', http_status: 401}},
+      {event_type: 'accept.rejected', actor: 'gateway', status: 'rejected', reason_code: 'PAYMENT_BUDGET_EXCEEDED',
+        safe_payload: {check: 'asset-budget', http_status: 422}},
+      {event_type: 'readback.state', actor: 'x402', target: 'ledger',
+        safe_payload: {check: 'replay-nonce', orders_before: 1, orders_after: 1}},
+    ]),
+    narrate(ev) {
+      const p = ev.safe_payload || {};
+      switch (ev.event_type) {
+        case 'accept.committed': return ['接受时登记支付意图', '报价、金额、收款方与授权摘要绑定；之后的支付必须对上这份摘要。'];
+        case 'check.passed':
+          if (p.check === 'challenge-402') return ['收到 402 报价', '付费资源返回报价；支付方先核对金额、网络与收款方。'];
+          if (p.check === 'payload-persisted') return ['先落盘，再发送支付证明', '签名授权先写入存储；同一 nonce 重放时先查存储，不重复付款。'];
+          if (p.check === 'settled-once') return ['链上恰好结算一笔', 'EIP-3009 授权转账只执行一次，下游只产生一笔订单。'];
+          return ['检查通过', '按固定演示的检查步骤通过。'];
+        case 'accept.rejected':
+          if (p.check === 'forged-signature') return ['伪造签名的支付被拒绝', '签名对不上付款方，资源服务器拒绝，且不产生任何订单。'];
+          if (p.check === 'v2-approval') return ['V2 批准不能豁免支付摘要', '批准覆盖不了付款条件：执行网关拒绝。'];
+          if (p.check === 'asset-budget') return ['超出独立资产预算', '资产预算单独计量；超限时事务内回滚，不付款。'];
+          return ['被拒绝', '固定演示中该步骤会被拒绝。'];
+        case 'readback.state': return ['重放只读到同一笔', '重复提交同一个 nonce 不会新签、不会重付，订单仍是一笔。'];
+      }
+      return null;
+    },
+  },
 };
 const MORE_SCENES = ['s2', 's4', 's5', 's7'];
 
@@ -571,12 +632,14 @@ const MODULES = {
   audit: ['回执与独立审计', 'SM2 回执 / SM3 检查点', '事后能独立核对发生了什么。', '网关与恢复流程。', '签名回执、执行记录、检查点。', '签名、摘要与关联关系。', '可离线验证的证据包。', '一致性通过不代表当前授权仍有效；未锚定尾部仍有局限。'],
   worker: ['执行进程', '执行与恢复服务', '按接受时固定的意图调用下游。', '网关接受后启动。', '操作 ID 与不可变意图。', '持有租约，独占执行。', '下游调用与结果写回。', '进程随时可能中断，结果可能未知。'],
   recovery: ['恢复进程', 'reconcile', '在原进程中断后完成未决操作。', '租约过期后由恢复流程启动。', '操作 ID。', '按同一操作向下游对账，不重新生成意图。', '结算与回执。', '依赖持久状态与下游幂等契约。'],
-  coordinator: ['门限协调器', '设计中', '收集签名份额并聚合。', '执行前的行动批准流程。', '行动摘要与签名份额。', '份额是否针对同一摘要、签名域是否重复。', '聚合后的组签名。', '只持组公钥与公开协议材料，不持任何完整私钥。B 尚未交付。'],
-  'signer-1': ['签名域 S1', '设计中', '独立批准高风险行动。', '协调器。', '规范化的行动摘要。', '认证后只对本次行动签名。', '一份签名份额。', '与采购代理是不同角色；B 尚未交付。'],
-  'signer-2': ['签名域 S2', '设计中', '独立批准高风险行动。', '协调器。', '规范化的行动摘要。', '认证后只对本次行动签名。', '一份签名份额。', '与采购代理是不同角色；B 尚未交付。'],
-  'signer-3': ['签名域 S3', '设计中', '独立批准高风险行动。', '协调器。', '规范化的行动摘要。', '认证后只对本次行动签名。', '一份签名份额。', '与采购代理是不同角色；B 尚未交付。'],
-  threshold: ['门限签名', '2-of-3，待接入', '高风险行动需要多个独立签名域共同批准。', '计划由网关在接受前验证。', '规范化的行动摘要。', '门限签名验签，并与授权路径、策略版本绑定。', '行动批准凭据。', '由 B 实现中，尚未接入采购；即使批准，也不能绕过撤销与预算。'],
-  x402: ['支付适配 x402', '协议设计', 'HTTP 资源的付费交互。', '计划由执行侧支付适配器调用。', '402 报价。', '收款方、金额、网络与报价有效期。', '支付证明与结算结果。', '本轮只做协议设计，未接入；它不替代 OAuth 授权。'],
+  coordinator: ['门限协调器', '独立原型', '收集签名份额并聚合。', '执行前的行动批准流程。', '行动摘要与签名份额。', '份额是否针对同一摘要、签名域是否重复。', '聚合后的组签名。', '只持组公钥与公开协议材料，不持任何完整私钥。已接入固定采购演示；份额暂由同一 OS 用户管理。'],
+  'signer-1': ['签名域 S1', '独立原型', '独立批准高风险行动。', '协调器。', '规范化的行动摘要。', '认证后只对本次行动签名。', '一份签名份额。', '与采购代理是不同角色；已接入固定采购演示；份额暂由同一 OS 用户管理。'],
+  'signer-2': ['签名域 S2', '独立原型', '独立批准高风险行动。', '协调器。', '规范化的行动摘要。', '认证后只对本次行动签名。', '一份签名份额。', '与采购代理是不同角色；已接入固定采购演示；份额暂由同一 OS 用户管理。'],
+  'signer-3': ['签名域 S3', '独立原型', '独立批准高风险行动。', '协调器。', '规范化的行动摘要。', '认证后只对本次行动签名。', '一份签名份额。', '与采购代理是不同角色；已接入固定采购演示；份额暂由同一 OS 用户管理。'],
+  threshold: ['门限签名', '2-of-3，本机固定演示', '高风险行动需要多个独立签名域共同批准。', '网关在接受事务内验证批准。', '规范化的行动摘要。', '门限签名验签，并与授权路径、策略版本绑定。', '行动批准凭据。', '本机固定演示已接入采购：有效批准只产生一单；不足/篡改/撤销会被拒绝。公网仍只读，份额暂由同一 OS 用户管理，非 SM2。'],
+  x402: ['支付适配 x402', '本机固定演示', 'HTTP 资源的付费交互：先 402 报价，再带 EIP-3009 签名授权支付。', '网关在接受事务内绑定支付意图；资源服务器验证并结算。', '402 报价与支付要求。', '收款方、金额、网络与报价有效期。', '支付证明与结算结果。', '本机固定演示已接入：有效支付恰好一单且链上仅一笔；伪造签名、V2 批准、超预算、重放会被拒绝。使用本机测试链与自建代币，无真实资产；公网页面仍只读；不替代 OAuth 授权。'],
+  resource: ['资源服务器', '本机模拟服务', '演示用的付费资源服务：返回 402 报价，验证付款并结算。', '由本机演示脚本启动，只绑定回环端口。', '402 报价与支付要求。', '报价金额、网络、资产与收款方地址。', '支付证明验证与结算结果。', '本机模拟，不对外提供服务；资产是测试链上的自建代币。'],
+  chain: ['本地 EVM 测试链', 'Anvil · chain 31337', '本机测试链，承载自建 USDC 合约（EIP-3009）。', '仅本机演示进程访问，不连公网。', 'EIP-3009 授权转账交易。', 'nonce、签名、金额与收款方。', '交易哈希与链上事件。', '测试链与自建代币，没有任何真实资产。'],
 };
 
 const CATALOG_FALLBACK = [
@@ -608,12 +671,12 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
   const svgText = (parent, attrs, s) => { const t = svgEl('text', attrs, parent); t.textContent = s; return t; };
   const h = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
 
-  const VIEWS = ['overview', 's1', 's3', 's6', 's2', 's4', 's5', 's7', 'threshold', 'evidence'];
+  const VIEWS = ['overview', 's1', 's3', 's6', 's2', 's4', 's5', 's7', 'threshold', 'x402', 'evidence'];
   const ui = {
     view: 'overview', moreView: 's2', steps: {}, timer: null, follow: true,
     token: '', connected: false, state: null, posting: false, actionError: '',
     openRecords: new Set(), lastRecordsKey: '', lastProofKey: '', band: [0, 0], bandY: null,
-    rows: [], seals: [], feed: null, sceneKey: '',
+    rows: [], seals: [], feed: null, feeds: new Map(), sceneKey: '',
   };
 
   /* ---------- 通用：测量文字宽度 ---------- */
@@ -640,7 +703,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     rect.setAttribute('x', x - w / 2); rect.setAttribute('width', w);
     g.addEventListener('click', () => openModule(k));
     g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); openModule(k); } });
-    return {x1: x - w / 2, x2: x + w / 2, top, bottom: top + 52, x, cy: top + 26};
+    return {x1: x - w / 2, x2: x + w / 2, top, bottom: top + 52, x, cy: top + 26, g};
   }
 
   /* ---------- 小图形 ---------- */
@@ -792,7 +855,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
         if (ev.event_type === 'threshold.verified' && tx != null) arrow(g, ax, tx - 12, y, 'ink');
         const x = ev.event_type === 'threshold.verified' && tx != null ? tx : ax;
         tick(g, x, y);
-        const text = {token_signature: 'SM2 验签：令牌由 AS 签发', holder_binding: '令牌签名有效，持有者一致', request_binding: '请求体与令牌绑定一致', freshness: 'jti 新鲜，未被使用过', threshold_signature: '组公钥验签通过，批准成立'}[p.check] || p.check;
+        const text = {token_signature: 'SM2 验签：令牌由 AS 签发', holder_binding: '令牌签名有效，持有者一致', request_binding: '请求体与令牌绑定一致', freshness: 'jti 新鲜，未被使用过', threshold_signature: '组公钥验签通过，批准成立', 'challenge-402': '收到 402 报价，核对金额与收款方', 'payload-persisted': '签名授权已落盘，重放先查存储', 'settled-once': '链上确认：恰好一笔结算'}[p.check] || p.check;
         label(g, x + 16, y + 5, text, 'lab left', x + 16);
         const note = sc.checkNote && sc.checkNote[p.check];
         if (note) label(g, x + 16, y + 25, note, 'lab mute left', x + 16);
@@ -950,7 +1013,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
   /* ---------- 场景：事件来源（示意或真实事件流） ---------- */
   function sceneEvents(id) {
     const sc = SCENES[id];
-    const f = ui.feed;
+    const f = ui.feeds.get(sc.catalogId);
     if (f && sc.catalogId && f.scenarioId === sc.catalogId && f.store.ordered().length) {
       return {events: f.store.ordered(), source: f.source || 'live', feed: f};
     }
@@ -967,22 +1030,25 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     ui.sceneKey = id + ':' + src.source + ':' + events.length;
     let cursor = 100;
     const firstRej = events.findIndex(e => e.status === 'rejected');
-    const ys = events.map((ev, i) => { const [top, bottom] = rowLayout(ev, i === firstRej); const y = cursor + top; cursor = y + bottom + 10; return y; });
+    const spans = [];
+    const ys = events.map((ev, i) => { const [top, bottom] = rowLayout(ev, i === firstRej); const y = cursor + top; spans.push([cursor - 2, top + bottom + 14]); cursor = y + bottom + 10; return y; });
     const H = Math.max(640, cursor + 16);
     $('diagram').setAttribute('viewBox', `0 0 900 ${H}`);
     svgEl('rect', {class: 'band', x: sc.band[0], y: 0, width: sc.band[1] - sc.band[0], height: H}, back);
     svgText(back, {class: 'band-label', x: sc.band[0] + 16, y: 20}, sc.design ? '可信授权执行边界（设计）' : '可信授权执行边界');
     if (sc.band[0] > 150) svgText(back, {class: 'tap-hint', x: 8, y: 20}, '点击参与方查看职责');
-    for (const l of sc.lanes) svgEl('line', {class: 'life', x1: l.x, x2: l.x, y1: 84, y2: H - 10}, back);
+    for (const l of sc.lanes) svgEl('line', {class: 'life', 'data-k': l.k, x1: l.x, x2: l.x, y1: 84, y2: H - 10}, back);
     const f = laneX(sc, sc.focus);
     const firstIn = events.findIndex(e => e.target === sc.focus);
     let lastAt = -1; events.forEach((e, i) => { if (e.actor === sc.focus || e.target === sc.focus) lastAt = i; });
     if (f != null && firstIn >= 0 && lastAt >= firstIn) svgEl('rect', {class: 'act-bar', x: f - 4, y: ys[firstIn] - 6, width: 8, height: ys[lastAt] - ys[firstIn] + 30, rx: 2}, back);
     for (const l of sc.lanes) chip(heads, l.k, l.x, 30, l.name, l.id, l.tone);
-    ui.rows = []; ui.seals = [];
+    ui.rows = []; ui.seals = []; ui.ys = ys;
     events.forEach((ev, i) => {
       const g = svgEl('g', {class: 'row future'}, rowsL);
-      svgText(g, {class: 'seq', x: 8, y: ys[i] + 4}, String(ev.seq));
+      svgEl('rect', {class: 'hl', x: 0, y: spans[i][0], width: 900, height: spans[i][1], rx: 8}, g);
+      svgEl('circle', {class: 'seq-dot', cx: 14, cy: ys[i], r: 10}, g);
+      svgText(g, {class: 'seq', x: 14, y: ys[i] + 4}, String(ev.seq));
       const s = drawRow(g, sc, ev, ys[i], i === firstRej);
       ui.rows.push({g, ev, reject: ev.status === 'rejected'});
       ui.seals.push(s || null);
@@ -999,7 +1065,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     ui.steps[id] = i;
     ui.rows.forEach((r, k) => {
       const cls = k === i ? 'current' : k < i ? (r.reject ? 'keep' : 'past') : 'future';
-      r.g.setAttribute('class', 'row ' + cls);
+      r.g.setAttribute('class', 'row ' + cls + (r.reject ? ' rej' : ''));
       if (k === i && animate && !reduced) r.g.querySelectorAll('.ln.draw').forEach(p => { p.style.animation = 'none'; void p.getBBox(); p.style.animation = ''; });
       const s = ui.seals[k];
       if (s) {
@@ -1009,8 +1075,11 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       }
     });
     const ev = ui.rows[i].ev;
+    const involved = new Set([ev.actor, ev.target].filter(Boolean));
+    document.querySelectorAll('#layer-heads .who, #layer-back .life').forEach(n => n.classList.toggle('involved', involved.has(n.getAttribute('data-k'))));
     const [title, say] = sc.narrate(ev, i) || ['第 ' + ev.seq + ' 步', ev.event_type + (ev.reason_code ? '：' + ev.reason_code : '')];
-    $('count').replaceChildren(h('b', null, String(i + 1)), document.createTextNode(' / ' + n));
+    renderStepper(i);
+    placeNextHint(i);
     const parts = [h('strong', null, title), h('span', null, say)];
     const f = sceneEvents(id).feed;
     if (f) {
@@ -1021,11 +1090,49 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       else if (f.complete === false) parts.push(h('span', 'warn', '　本轮轨迹不完整'));
     }
     $('cap').replaceChildren(...parts);
-    $('prev').disabled = i === 0; $('next').disabled = i === n - 1;
+    $('prev').disabled = i === 0;
+    $('next-label').textContent = i === n - 1 ? '从头再看' : '下一步';
+  }
+
+  /* 底部进度条：每一步一个可点的小段，被拒的那一步是红色 */
+  function renderStepper(i) {
+    const box = $('count'); box.replaceChildren();
+    ui.rows.forEach((r, k) => {
+      const b = h('button', 'seg' + (k < i ? ' done' : k === i ? ' cur' : '') + (r.reject ? ' rej' : ''));
+      b.type = 'button';
+      const t = (SCENES[ui.view].narrate(r.ev, k) || ['第 ' + (k + 1) + ' 步'])[0];
+      b.title = `${k + 1}. ${t}`; b.setAttribute('aria-label', `第 ${k + 1} 步：${t}`);
+      b.addEventListener('click', () => { stop(); ui.follow = false; showStep(k, k === i + 1); });
+      box.append(b);
+    });
+    const c = h('span', 'cnt'); c.append(h('b', null, String(i + 1)), document.createTextNode(' / ' + ui.rows.length));
+    box.append(c);
+  }
+
+  /* 图里下一步将出现的位置放一个提示：点它、点画面空白处或按 → 都能继续 */
+  function placeNextHint(i) {
+    const old = $('next-hint'); if (old) old.remove();
+    if (i >= ui.rows.length - 1 || ui.timer) return;
+    const nextEv = ui.rows[i + 1].ev, y = ui.ys[i + 1];
+    const t = (SCENES[ui.view].narrate(nextEv, i + 1) || ['下一步'])[0];
+    const g = svgEl('g', {id: 'next-hint', class: 'next-hint', role: 'button', tabindex: '0', 'aria-label': '下一步：' + t}, $('layer-rows'));
+    const rect = svgEl('rect', {x: 34, y: y - 17, height: 34, rx: 17}, g);
+    svgText(g, {class: 'nh-k', x: 52, y: y + 5}, '下一步');
+    const title = svgText(g, {class: 'nh-t', x: 104, y: y + 5}, t);
+    const tw = measure(title, t, 14, 8);
+    const hint = svgText(g, {class: 'nh-hint', x: 104 + tw + 14, y: y + 5}, '点击或按 →');
+    rect.setAttribute('width', 104 + tw + 14 + measure(hint, '点击或按 →', 12, 7) + 18 - 34);
+    g.addEventListener('click', e => { e.stopPropagation(); step(1); });
+    g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); step(1); } });
   }
 
   const PLAY = 'M4.5 2.5v11l9-5.5z', PAUSE = 'M4 2.5h2.8v11H4zM9.2 2.5H12v11H9.2z';
-  function stop() { if (ui.timer) { clearInterval(ui.timer); ui.timer = null; $('play-ic').setAttribute('d', PLAY); $('play').setAttribute('aria-label', '播放'); } }
+  function stop() {
+    if (!ui.timer) return;
+    clearInterval(ui.timer); ui.timer = null;
+    $('play-ic').setAttribute('d', PLAY); $('play-label').textContent = '自动播放';
+    if (SCENES[ui.view] && ui.rows.length) placeNextHint(ui.steps[ui.view] || 0);
+  }
   function step(delta) {
     if (!SCENES[ui.view]) return;
     stop();
@@ -1034,12 +1141,21 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     showStep(next, delta > 0);
   }
   $('prev').addEventListener('click', () => step(-1));
-  $('next').addEventListener('click', () => step(1));
+  $('next').addEventListener('click', () => {
+    if (SCENES[ui.view] && (ui.steps[ui.view] || 0) >= ui.rows.length - 1) { stop(); showStep(0, true); return; }
+    step(1);
+  });
+  // 演示时点画面空白处也能前进；点参与方按钮仍然打开说明
+  $('diagram').addEventListener('click', e => {
+    if (!SCENES[ui.view] || (e.target.closest && e.target.closest('.who, .next-hint'))) return;
+    if ((ui.steps[ui.view] || 0) < ui.rows.length - 1) step(1);
+  });
   $('play').addEventListener('click', () => {
     if (!SCENES[ui.view]) return;
     if (ui.timer) { stop(); return; }
     if ((ui.steps[ui.view] || 0) >= ui.rows.length - 1) showStep(0, true);
-    $('play-ic').setAttribute('d', PAUSE); $('play').setAttribute('aria-label', '暂停');
+    $('play-ic').setAttribute('d', PAUSE); $('play-label').textContent = '暂停';
+    const old = $('next-hint'); if (old) old.remove();
     ui.timer = setInterval(() => { if (ui.steps[ui.view] < ui.rows.length - 1) showStep(ui.steps[ui.view] + 1, true); else stop(); }, 2600);
   });
 
@@ -1067,8 +1183,8 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     C.as = chip(heads, 'as', 120, 272, '授权服务器', 'AS / OIDC OP');
     C.gateway = chip(heads, 'gateway', 470, 272, '执行网关', 'GM-MVP-1 验权');
     C.ledger = chip(heads, 'ledger', 810, 272, '授权与预算库', 'PostgreSQL');
-    C.threshold = chip(heads, 'threshold', 470, 368, '门限签名', '2-of-3 待接入', null, true);
-    C.x402 = chip(heads, 'x402', 110, 520, '支付适配 x402', '协议设计', null, true);
+    C.threshold = chip(heads, 'threshold', 470, 368, '门限签名', '2-of-3 本机固定演示', null, false);
+    C.x402 = chip(heads, 'x402', 110, 520, '支付适配 x402', '本机固定演示', null, false);
     C.downstream = chip(heads, 'downstream', 360, 520, '模拟订单与通知', '幂等执行');
     C.audit = chip(heads, 'audit', 810, 520, '回执与审计', 'SM2 回执 / 检查点');
 
@@ -1089,20 +1205,21 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     label(rowsL, 450, busY - 8, 'AS 统一签发各级令牌', 'lab gold', 450);
     label(rowsL, 450, busY + 18, '授权码交换 + Token Exchange（RFC 8693）', 'lab mono', 450);
     // 执行代理 → 网关：L 形
-    path(`M836,96 V226 H490 V266`, 'main', 'a-ink');
+    path(`M836,96 V226 H490 V266`, 'main', 'a-accent');
     label(rowsL, 660, 218, 'AGPoP 令牌 + AG-Proof', 'lab mono', 660);
     label(rowsL, 660, 244, 'SM2 签名，SM3 绑定请求体', 'lab mute', 660);
     // 网关 → 库
-    path(`M${C.gateway.x2 + 4},298 H${C.ledger.x1 - 6}`, 'main', 'a-ink');
+    path(`M${C.gateway.x2 + 4},298 H${C.ledger.x1 - 6}`, 'main', 'a-accent');
+    for (const k of ['as', 'gateway', 'ledger']) C[k].g.classList.add('core');
     const gl = (C.gateway.x2 + C.ledger.x1) / 2;
     label(rowsL, gl, 290, '接受事务', 'lab', gl);
     label(rowsL, gl, 318, '撤销、预算、防重放', 'lab mute', gl);
-    // 门限（待接入）
-    path('M470,368 V328', 'planned', 'a-mute');
+    // 门限批准：本机固定演示已接入接受事务
+    path('M470,368 V328', 'main', 'a-accent');
     // 网关 → 下游：先向左，再竖直下行
     path(`M${C.gateway.x1 - 4},298 H360 V514`, '', 'a-mute');
     label(rowsL, 372, 476, '不可变意图，幂等执行', 'lab mute left', 372);
-    // 下游 → x402（设计）
+    // 下游 → x402（本机固定演示，公网未部署）
     path(`M${C.downstream.x1 - 4},546 H${C.x402.x2 + 6}`, 'planned', 'a-mute');
     // 库 → 审计
     path('M810,326 V514', '', 'a-mute');
@@ -1115,7 +1232,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     for (const r of rows) {
       const ours = r[r.length - 1] === true;
       dl.append(h('dt', ours ? 'ours' : null, r[0]));
-      const dd = h('dd', weak && !ours ? 'weak' : null);
+      const dd = h('dd', ours ? 'ours' : weak ? 'weak' : null);
       for (let i = 1; i < r.length; i++) {
         if (r[i] === true) continue;
         if (/^(RFC \d+|GM-MVP-1)$/.test(r[i])) dd.append(h('span', 'rfc', r[i]));
@@ -1140,8 +1257,8 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
         }
         box.append(sw);
       }
-      box.append(h('p', 'kicker', sc.design ? '门限批准 · 设计示意' : sc.no), h('h1', null, sc.title), h('p', 'lede', sc.lede));
-      box.append(h('h2', 'sub', sc.design ? '计划使用的协议' : '用到的协议'), pairsList(sc.stack));
+      box.append(h('p', 'kicker', sc.kicker || (sc.design ? '门限批准 · 设计示意' : sc.no)), h('h1', null, sc.title), h('p', 'lede', sc.lede));
+      box.append(h('h2', 'sub', '用到的协议'), pairsList(sc.stack));
       box.append(h('h2', 'sub', '和原有做法比，改了什么'), pairsList(sc.delta, true), h('p', 'honest', sc.honest));
       const proof = h('div', 'proof'); proof.id = 'proof'; box.append(proof);
       ui.lastProofKey = ''; renderProof();
@@ -1155,9 +1272,9 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
         ['网关↔库', '接受事务内复核撤销、共享预算与防重放'],
         ['网关→下游', '不可变意图、幂等执行、签名回执'],
       ]));
-      box.append(h('h2', 'sub', '本轮尚未接入'), pairsList([
-        ['门限签名', '2-of-3 行动批准，B 实现中；图中用虚线表示'],
-        ['x402', '支付交互只做协议设计，不替代 OAuth 授权'],
+      box.append(h('h2', 'sub', '扩展能力与边界'), pairsList([
+        ['门限签名', '2-of-3 已接入本机固定演示；公网只读，份额仍由同一 OS 用户管理'],
+        ['x402', '本机固定演示已接入：真实 HTTP 402 与 EIP-3009 结算；公网只读，测试链自建代币，不替代 OAuth 授权'],
       ], true));
       box.append(h('h2', 'sub', '三道防线'));
       const go = h('div', 'actions');
@@ -1215,10 +1332,11 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       live: ['live', '现场运行，事件来自本机服务'],
       replay: ['replay', '记录回放，事件来自保存的运行'],
       model: ['replay', '架构说明'],
-      design: ['illus', '设计示意，B 尚未交付'],
+      design: ['illus', '流程示意；固定采购演示已接入'],
       illus: ['illus', '示意推演，未连接事件流'],
     }[kind] || ['illus', '示意推演'];
     sw.className = 'sw ' + map[0];
+    $('source').className = 'source src-' + kind;
     $('source-text').textContent = map[1];
   }
   document.querySelectorAll('#chapters button').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
@@ -1281,21 +1399,23 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     const j = job();
     if (j && j.run_id && j.scenario_id && (!ui.feed || ui.feed.runId !== j.run_id)) {
       ui.feed = {runId: j.run_id, scenarioId: j.scenario_id, store: new EventStore(j.run_id), status: 'polling', source: null, terminal: false, complete: true};
+      ui.feeds.set(j.scenario_id, ui.feed);
     }
-    const f = ui.feed;
-    if (!f || f.status !== 'polling' || !ui.connected) { maybeRebuild(); return; }
-    try {
-      const r = await fetch(`/api/runs/${encodeURIComponent(f.runId)}/events?after_seq=${f.store.nextAfterSeq()}&limit=200`, {cache: 'no-store'});
-      if (r.status === 404) { f.status = 'unsupported'; return; }
-      if (!r.ok) throw new Error('events');
-      const data = await r.json();
-      f.store.add(data.events || []);
-      if (SOURCES.includes(data.source)) f.source = data.source;
-      f.terminal = data.terminal === true;
-      f.complete = data.complete !== false;
-      if (f.terminal && !f.store.gaps().length) f.status = 'done';
-    } catch (e) {
-      /* 保留已收到的事件，下一轮再试 */
+    for (const f of ui.feeds.values()) {
+      if (f.status !== 'polling' || !ui.connected) continue;
+      try {
+        const r = await fetch(`/api/runs/${encodeURIComponent(f.runId)}/events?after_seq=${f.store.nextAfterSeq()}&limit=200`, {cache: 'no-store'});
+        if (r.status === 404) { f.status = 'unsupported'; continue; }
+        if (!r.ok) throw new Error('events');
+        const data = await r.json();
+        f.store.add(data.events || []);
+        if (SOURCES.includes(data.source)) f.source = data.source;
+        f.terminal = data.terminal === true;
+        f.complete = data.complete !== false;
+        if (f.terminal && !f.store.gaps().length) f.status = 'done';
+      } catch (e) {
+        /* 保留已收到的事件，下一轮再试 */
+      }
     }
     maybeRebuild();
   }
@@ -1329,7 +1449,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
 
   function jobText(j) {
     if (!j) return '';
-    const what = {run: '完整采购演示', verify: '离线验证', 'scenario-run': '场景现场运行', 'scenario-replay': '场景记录回放'}[j.action] || '任务';
+    const what = {run: '完整采购演示', verify: '离线验证', 'scenario-run': '场景现场运行', 'scenario-replay': '场景记录回放', 'threshold-run': '门限采购固定演示', 'x402-run': 'x402 采购固定演示'}[j.action] || '任务';
     const st = {running: '进行中', success: '已完成', failed: '未成功'}[j.status] || '状态未确认';
     const el = Number.isFinite(j.elapsed) ? `，已用 ${Math.floor(j.elapsed / 60)} 分 ${j.elapsed % 60} 秒` : '';
     const sc = j.scenario_id ? '（' + ((catalog().find(c => c.id === j.scenario_id) || {}).title || j.scenario_id) + '）' : '';
@@ -1367,11 +1487,60 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     const box = $('proof'); if (!box || !SCENES[ui.view]) return;
     const sc = SCENES[ui.view];
     if (!sc.catalogId) {
-      if (ui.lastProofKey === 'design') return;
-      ui.lastProofKey = 'design';
+      const FIXED = {
+        threshold: {
+          action: 'threshold-run', state: 'threshold',
+          idle: '有效批准→一单；不足/篡改/撤销会被拒绝。启动 Docker Desktop 后即可运行，临时数据库会自动准备和清理。',
+          summary: d => `下游订单 ${d.orders}，批准绑定 ${d.approvals}，操作 ${d.operations}；资源剩余 ${d.resources_remaining}`,
+        },
+        x402: {
+          action: 'x402-run', state: 'x402',
+          idle: '有效支付→一单且链上仅一笔；伪造签名、V2 批准、超预算、重放会被拒绝。首次运行需构建隔离镜像，可能需要几分钟；临时环境会自动准备和清理。',
+          summary: d => `下游订单 ${d.orders}，支付 ${d.payments}，链上交易 ${d.transactions}，操作 ${d.operations}；资源剩余 ${d.resources_remaining}`,
+        },
+      }[ui.view];
+      if (!FIXED) {
+        if (ui.lastProofKey === 'design') return;
+        ui.lastProofKey = 'design';
+        const line = h('p', 'proof-line');
+        line.append(h('span', 'none', '暂无'), h('small', null, '独立 CLI 原型已有验证，尚无接入本页面与采购网关的运行记录。'));
+        box.replaceChildren(h('h2', 'sub', '真实记录'), line);
+        return;
+      }
+      const demo = (ui.state && ui.state[FIXED.state]) || null;
+      const tj = job();
+      const key = JSON.stringify([ui.view, ui.connected, !!ui.token, ui.posting, demo, tj && [tj.status, tj.stage, tj.elapsed, tj.action]]);
+      if (key === ui.lastProofKey) return;
+      ui.lastProofKey = key;
+      box.replaceChildren(h('h2', 'sub', '本机固定演示'));
       const line = h('p', 'proof-line');
-      line.append(h('span', 'none', '暂无'), h('small', null, 'B 交付门限原型并通过负例检查后，这里显示真实验证记录。'));
-      box.replaceChildren(h('h2', 'sub', '真实记录'), line);
+      const actions = h('div', 'actions');
+      if (!ui.connected) {
+        line.append(h('span', 'none', '本机服务未连接'), h('small', null, '启动本机服务后可运行固定演示；过程图仍是设计示意。'));
+        box.append(line);
+        return;
+      }
+      const btn = h('button', 'btn primary', demo ? '重新运行固定演示' : '运行固定演示');
+      btn.type = 'button';
+      btn.disabled = !canAct();
+      btn.addEventListener('click', () => start(ui.view + '/run'));
+      actions.append(btn);
+      if (demo) {
+        line.append(h('span', demo.passed ? 'ok' : 'bad', demo.passed ? '全部用例符合预期' : '存在未通过用例'));
+        line.append(h('small', null, FIXED.summary(demo)));
+        const dl = h('dl', 'pairs');
+        for (const c of demo.cases) {
+          dl.append(h('dt', c.passed ? 'ok' : 'bad', c.name));
+          dl.append(h('dd', null, c.passed ? '通过' : '未通过', c.code ? ' ' + c.code : ''));
+        }
+        box.append(line, actions, dl);
+      } else {
+        line.append(h('span', 'none', '尚未运行'), h('small', null, FIXED.idle));
+        box.append(line, actions);
+      }
+      if (tj && (tj.action === FIXED.action || tj.status === 'running')) {
+        box.append(h('p', 'job' + (tj.status === 'failed' ? ' failed' : ''), jobText(tj)));
+      }
       return;
     }
     const id = sc.catalogId;
@@ -1396,6 +1565,10 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
 
   function renderConn() {
     const c = $('conn-line'); if (!c) return;
+    if (ui.connected && ui.state && ui.state.read_only) {
+      c.textContent = '公网只读展示：可浏览页面和真实记录；现场任务由演示者在本机启动，结果会自动更新。';
+      return;
+    }
     c.textContent = ui.connected ? '本机服务：已连接。' : '本机服务：未连接。请在仓库根目录运行 python3 tools/teacher_demo_server.py，然后打开 http://127.0.0.1:8765/';
   }
 

@@ -40,6 +40,8 @@ ORIGINAL14 = {
     "lineage/001_registry.sql": "12da43d61229f481a3309e58ab73400615f8740644404e9698177942fe399a13",
 }
 CURRENT007 = "4ae5b1c1a2d6d2cdd4355a43961a13fccdb3dbff0661278dd78ea347326fd1de"
+CURRENT008 = "2349e7551e8884f46224804a3d587f305f2ce5b565cc66927fb8b73aa826a9d1"
+CURRENT009 = "e9e6f0a5d7046c10f2f7c3abe1144838696b6c40a0aeb47150c60504965105a4"
 
 
 def test_full_original14_current15_cli_inventory_and_idempotence(dsn, namespace):
@@ -72,13 +74,14 @@ def test_full_original14_current15_cli_inventory_and_idempotence(dsn, namespace)
             assert p.returncode == 0, "private CLI output retained by owned runner"
             if i == 0:
                 assert p.stdout.strip() == "applied: " + ", ".join(
-                    ["authorization:" + f"{n:03}" for n in range(4, 11)] + ["execution:007"]
+                    ["authorization:" + f"{n:03}" for n in range(4, 11)]
+                    + ["execution:007", "execution:008", "execution:009"]
                 )
             else:
                 assert p.stdout.strip() == "already up to date"
             with psycopg.connect(scratch.dsn) as c:
                 versions = applied_lineage_versions(c)
-                assert len(versions) == 15
+                assert len(versions) == 17
                 registry = c.execute(
                     (
                         "SELECT row_to_json(t)::text FROM "
@@ -91,7 +94,12 @@ def test_full_original14_current15_cli_inventory_and_idempotence(dsn, namespace)
                     assert versions == first
                     assert registry == first_registry  # includes applied_at, not only checksums
         manifest = load_manifest()
-        expected = {**ORIGINAL14, "007_audit_journal.sql": CURRENT007}
+        expected = {
+            **ORIGINAL14,
+            "007_audit_journal.sql": CURRENT007,
+            "008_threshold_approval.sql": CURRENT008,
+            "009_x402_payment.sql": CURRENT009,
+        }
         sql = []
         for m in manifest.migrations:
             h = hashlib.sha256((manifest.directory / m.relative_path).read_bytes()).hexdigest()
@@ -102,7 +110,7 @@ def test_full_original14_current15_cli_inventory_and_idempotence(dsn, namespace)
         assert len(sql) == 14
         assert set(sql) == set(ORIGINAL14)
         assert set(versions) == {m.key for m in manifest.migrations}
-        assert len(manifest.migrations) == 15
+        assert len(manifest.migrations) == 17
         original_versions = {
             m.key: versions[m.key] for m in manifest.migrations if m.relative_path in ORIGINAL14
         }

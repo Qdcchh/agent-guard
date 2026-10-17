@@ -11,10 +11,12 @@ import time
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
 
 REPO = Path(__file__).resolve().parents[1]
 STATIC = REPO / "web/teacher-demo"
 sys.path.insert(0, str(REPO))
+from tools import teacher_demo_events as events  # noqa: E402
 from tools import teacher_demo_scenarios as scenarios  # noqa: E402
 
 
@@ -70,6 +72,101 @@ def summary(folder):
     }
 
 
+def threshold_result(folder):
+    """Read one sanitized threshold demo result; never returns raw material."""
+    folder = safe_path(folder)
+    data = read(folder / "result.json")
+    if (
+        data.get("demo") != "threshold-gateway-purchase"
+        or type(data.get("passed")) is not bool
+        or type(data.get("run_id")) is not str
+        or type(data.get("cases")) is not list
+        or len(data["cases"]) == 0
+        or type(data.get("orders")) is not int
+        or type(data.get("approvals")) is not int
+        or type(data.get("operations")) is not int
+        or type(data.get("resources_remaining")) is not list
+    ):
+        raise ValueError("invalid threshold demo result")
+    cases = []
+    for case in data["cases"]:
+        if (
+            type(case) is not dict
+            or type(case.get("name")) is not str
+            or type(case.get("passed")) is not bool
+            or ("http_status" in case and type(case["http_status"]) is not int)
+            or ("code" in case and not (case["code"] is None or type(case["code"]) is str))
+        ):
+            raise ValueError("invalid threshold demo case")
+        cases.append(
+            {
+                "name": case["name"][:64],
+                "passed": case["passed"],
+                "http_status": case.get("http_status"),
+                "code": case.get("code"),
+            }
+        )
+    return {
+        "run_id": str(uuid.UUID(data["run_id"])),
+        "passed": data["passed"],
+        "cases": cases,
+        "operations": integer(data["operations"]),
+        "approvals": integer(data["approvals"]),
+        "orders": integer(data["orders"]),
+        "resources_remaining": integer(len(data["resources_remaining"])),
+        "completed_at": int(time.time()),
+    }
+
+
+def x402_result(folder):
+    """Read one sanitized x402 demo result; never returns raw material."""
+    folder = safe_path(folder)
+    data = read(folder / "result.json")
+    if (
+        data.get("demo") != "x402-gateway-purchase"
+        or type(data.get("passed")) is not bool
+        or type(data.get("run_id")) is not str
+        or type(data.get("cases")) is not list
+        or len(data["cases"]) == 0
+        or any(
+            type(data.get(key)) is not int
+            for key in ("operations", "approvals", "orders", "payments", "transactions")
+        )
+        or type(data.get("resources_remaining")) is not list
+    ):
+        raise ValueError("invalid x402 demo result")
+    cases = []
+    for case in data["cases"]:
+        if (
+            type(case) is not dict
+            or type(case.get("name")) is not str
+            or type(case.get("passed")) is not bool
+            or ("http_status" in case and type(case["http_status"]) is not int)
+            or ("code" in case and not (case["code"] is None or type(case["code"]) is str))
+        ):
+            raise ValueError("invalid x402 demo case")
+        cases.append(
+            {
+                "name": case["name"][:64],
+                "passed": case["passed"],
+                "http_status": case.get("http_status"),
+                "code": case.get("code"),
+            }
+        )
+    return {
+        "run_id": str(uuid.UUID(data["run_id"])),
+        "passed": data["passed"],
+        "cases": cases,
+        "operations": integer(data["operations"]),
+        "approvals": integer(data["approvals"]),
+        "orders": integer(data["orders"]),
+        "payments": integer(data["payments"]),
+        "transactions": integer(data["transactions"]),
+        "resources_remaining": integer(len(data["resources_remaining"])),
+        "completed_at": int(time.time()),
+    }
+
+
 def verification(folder):
     result = {}
     for label, expected in (("original", 0), ("tampered", 2)):
@@ -106,7 +203,10 @@ class DemoApp:
         self.live_folder = None
         self.last_verification = None
         self.history = None
+        self.threshold = None
+        self.x402 = None
         self.scenario_results = {}
+        self.runs = {}
         try:
             pointer = safe_path(REPO / "artifacts/teacher-demo-live/latest-run.txt")
             if not pointer.exists():
@@ -137,13 +237,22 @@ class DemoApp:
             "history": historical,
             "live": live,
             "verification": self.last_verification,
+            "threshold": self.threshold,
+            "x402": self.x402,
             "job": job,
             "catalog": scenarios.catalog(),
             "scenario_results": dict(self.scenario_results),
         }
 
     def start(self, action, scenario_id=None):
-        if action not in ("run", "verify", "scenario-run", "scenario-replay"):
+        if action not in (
+            "run",
+            "verify",
+            "scenario-run",
+            "scenario-replay",
+            "threshold-run",
+            "x402-run",
+        ):
             raise ValueError("unknown action")
         if action.startswith("scenario-") and scenario_id not in scenarios.SPECS:
             raise ValueError("unknown scenario")
@@ -157,12 +266,33 @@ class DemoApp:
                 target_run_id = summary(target)["run_id"] if action == "verify" else None
             except (OSError, ValueError, KeyError, TypeError) as exc:
                 raise ValueError("invalid verification target") from exc
+            job_id = str(uuid.uuid4())
+            event_run_id = job_id
+            replay_folder = None
+            if action == "scenario-replay":
+                replay_folder = safe_path(REPO / scenarios.HISTORY)
+                saved = replay_folder / events.FILE
+                try:
+                    if not saved.is_symlink() and saved.stat().st_size <= events.MAX_FILE_BYTES:
+                        candidate = str(uuid.UUID(json.loads(saved.read_text())["run_id"]))
+                        events.page(replay_folder, candidate, scenario_id, replay=True)
+                        event_run_id = candidate
+                except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError):
+                    pass
             self.job = {
-                "id": str(uuid.uuid4()),
+                "id": job_id,
+                "run_id": event_run_id,
                 "action": action,
                 "status": "running",
                 "started": time.time(),
-                "stage": "正在启动独占环境" if action == "run" else "正在离线验证原件与篡改副本",
+                "stage": {
+                    "run": "正在启动独占环境",
+                    "verify": "正在离线验证原件与篡改副本",
+                    "threshold-run": "正在准备本机固定门限采购演示",
+                    "x402-run": "正在准备本机固定 x402 采购演示（首次运行需构建隔离镜像）",
+                    "scenario-run": "准备固定场景独占环境",
+                    "scenario-replay": "校验历史记录",
+                }[action],
             }
             if scenario_id:
                 self.scenario_results.pop(scenario_id, None)
@@ -170,6 +300,22 @@ class DemoApp:
                 self.job["stage"] = (
                     "校验历史记录" if action == "scenario-replay" else "准备固定场景独占环境"
                 )
+                self.runs[event_run_id] = (
+                    replay_folder
+                    if action == "scenario-replay"
+                    else safe_path(REPO / "artifacts/teacher-scenarios-live" / event_run_id),
+                    scenario_id,
+                    action == "scenario-replay",
+                )
+            else:
+                self.runs[event_run_id] = (
+                    safe_path(REPO / "artifacts/teacher-demo-live" / event_run_id),
+                    "normal" if action == "run" else "verification",
+                    False,
+                )
+            if len(self.runs) > 32:
+                oldest = next(iter(self.runs))
+                del self.runs[oldest]
             target = self.live_folder or self.history
             if action == "verify":
                 self.job["target_run_id"] = target_run_id
@@ -177,6 +323,21 @@ class DemoApp:
                 target=self._work, args=(action, target, scenario_id), daemon=True
             ).start()
             return True
+
+    def event_page(self, run_id, after_seq, limit):
+        with self.lock:
+            target = self.runs.get(run_id)
+        if target is None:
+            raise KeyError("unknown run")
+        folder, scenario_id, replay = target
+        return events.page(
+            safe_path(folder),
+            run_id,
+            scenario_id,
+            after_seq=after_seq,
+            limit=limit,
+            replay=replay,
+        )
 
     def _work(self, action, target, scenario_id=None):
         try:
@@ -195,12 +356,18 @@ class DemoApp:
                 return
             before = set(target.parent.glob("verify-*")) if action == "verify" else set()
             command = [sys.executable, str(REPO / "tools/teacher_demo.py")]
+            if action == "threshold-run":
+                command = [sys.executable, str(REPO / "tools/threshold_desktop.py")]
+            if action == "x402-run":
+                command = [sys.executable, str(REPO / "tools/x402_desktop.py")]
             if action == "scenario-run":
                 command = [
                     sys.executable,
                     str(REPO / "tools/teacher_demo_scenarios.py"),
                     "--scenario",
                     scenario_id,
+                    "--run-id",
+                    self.job["run_id"],
                 ]
             if action == "verify":
                 command += ["--verify", str(safe_path(target))]
@@ -213,15 +380,16 @@ class DemoApp:
                 stdin=subprocess.DEVNULL,
             )
             folder = None
+            captures_folder = action in ("run", "scenario-run", "threshold-run", "x402-run")
             for line in process.stdout:
-                if action in ("run", "scenario-run") and line.startswith("结果目录："):
+                if captures_folder and line.startswith("结果目录："):
                     folder = Path(line.split("：", 1)[1].strip())
                     with self.lock:
-                        self.job["stage"] = (
-                            "固定安全场景运行中：准备环境、执行检查与清理"
-                            if action == "scenario-run"
-                            else "真实流程运行中：构建、授权、四工具执行与证据导出"
-                        )
+                        self.job["stage"] = {
+                            "scenario-run": "固定安全场景运行中：准备环境、执行检查与清理",
+                            "threshold-run": "门限固定演示运行中：真实签发、门限批准与拒绝用例",
+                            "x402-run": "x402 固定演示运行中：真实 402、链上结算与拒绝用例",
+                        }.get(action, "真实流程运行中：构建、授权、四工具执行与证据导出")
                 # Raw process output is deliberately never returned to the browser.
             code = process.wait()
             with self.lock:
@@ -231,17 +399,23 @@ class DemoApp:
                 folder = safe_path(folder)
                 folder.relative_to(
                     REPO
-                    / (
-                        "artifacts/teacher-scenarios-live"
-                        if action == "scenario-run"
-                        else "artifacts/teacher-demo-live"
-                    )
+                    / {
+                        "scenario-run": "artifacts/teacher-scenarios-live",
+                        "threshold-run": "artifacts/threshold-gateway-demo-live",
+                        "x402-run": "artifacts/x402-gateway-demo-live",
+                    }.get(action, "artifacts/teacher-demo-live")
                 )
             if code != 0:
                 raise RuntimeError("child failed")
             if action == "scenario-run":
                 data = scenarios.result(folder, scenario_id)
                 self.scenario_results[scenario_id] = data
+            elif action == "threshold-run":
+                data = threshold_result(folder)
+                self.threshold = data
+            elif action == "x402-run":
+                data = x402_result(folder)
+                self.x402 = data
             elif action == "run":
                 data = summary(folder) if folder else None
                 if data is None:
@@ -260,11 +434,13 @@ class DemoApp:
             with self.lock:
                 self.job.update(
                     status="success",
-                    stage="真实场景断言通过且资源已清理"
-                    if action == "scenario-run"
-                    else "真实运行已完成"
-                    if action == "run"
-                    else "原件通过，篡改副本已拒绝",
+                    stage={
+                        "scenario-run": "真实场景断言通过且资源已清理",
+                        "threshold-run": "门限固定演示完成：用例结果与资源清理已记录",
+                        "x402-run": "x402 固定演示完成：真实链上结算、用例结果与资源清理已记录",
+                        "run": "真实运行已完成",
+                        "verify": "原件通过，篡改副本已拒绝",
+                    }[action],
                     result=data,
                     ended=time.time(),
                 )
@@ -272,12 +448,46 @@ class DemoApp:
             # Keep exclusivity until any launched child has actually exited.
             if "process" in locals():
                 process.wait()
+            if action == "scenario-run" and scenario_id in events.CASES:
+                try:
+                    run_id = self.job["run_id"]
+                    events.fail(
+                        safe_path(REPO / "artifacts/teacher-scenarios-live" / run_id),
+                        run_id,
+                        scenario_id,
+                    )
+                except (OSError, ValueError, KeyError, TypeError):
+                    pass
             with self.lock:
                 self.job.update(
                     status="failed",
                     stage="本次动作未成功；请由演示人员检查本机记录。历史回放仍可查看。",
                     ended=time.time(),
                 )
+
+
+def event_response(app, path):
+    """Shared read-only event route; callers separately enforce their access boundary."""
+    if len(path) > 256:
+        return 400, {"error": "请求路径过长"}
+    try:
+        url = urlsplit(path)
+        match = re.fullmatch(r"/api/runs/([0-9a-f-]{36})/events", url.path)
+        if not match:
+            return None
+        run_id = str(uuid.UUID(match[1]))
+        if run_id != match[1]:
+            raise ValueError("invalid run id")
+        query = parse_qs(url.query, strict_parsing=True, keep_blank_values=True)
+        if set(query) - {"after_seq", "limit"} or any(len(v) != 1 for v in query.values()):
+            raise ValueError("invalid query")
+        after_seq = int(query.get("after_seq", ["0"])[0])
+        limit = int(query.get("limit", ["200"])[0])
+        return 200, app.event_page(run_id, after_seq, limit)
+    except KeyError:
+        return 404, {"error": "运行不存在"}
+    except (OSError, ValueError, TypeError):
+        return 400, {"error": "事件查询无效"}
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -310,10 +520,21 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if not self.valid_host():
             return self.reply(403, {"error": "仅允许本机地址"})
+        if len(self.path) > 256:
+            return self.reply(400, {"error": "请求路径过长"})
+        origin = self.headers.get_all("Origin", [])
+        if origin and origin != [f"http://127.0.0.1:{self.server.server_port}"]:
+            return self.reply(403, {"error": "请求来源未获允许"})
+        # Address-bar/bookmark navigation sends 'none'; cross-site API fetches stay denied.
+        if self.headers.get("Sec-Fetch-Site") not in (None, "none", "same-origin"):
+            return self.reply(403, {"error": "请求来源未获允许"})
         if self.path == "/api/state":
             return self.reply(200, self.server.app.state())
         if self.path == "/api/session":
             return self.reply(200, {"token": self.server.app.token})
+        response = event_response(self.server.app, self.path)
+        if response is not None:
+            return self.reply(*response)
         files = {
             "/": ("index.html", "text/html; charset=utf-8"),
             "/style.css": ("style.css", "text/css; charset=utf-8"),
@@ -337,7 +558,14 @@ class Handler(BaseHTTPRequestHandler):
         scenario_match = re.fullmatch(r"/api/scenarios/([a-z-]+)/(run|replay)", self.path)
         if scenario_match and scenario_match[1] not in scenarios.SPECS:
             scenario_match = None
-        if self.path not in ("/api/run", "/api/verify") and not scenario_match:
+        threshold_match = self.path == "/api/threshold/run"
+        x402_match = self.path == "/api/x402/run"
+        if (
+            self.path not in ("/api/run", "/api/verify")
+            and not scenario_match
+            and not threshold_match
+            and not x402_match
+        ):
             return self.reply(404, {"error": "不存在"})
         if self.headers.get("Transfer-Encoding") or self.headers.get_all("Content-Length", []) != [
             "2"
@@ -346,11 +574,14 @@ class Handler(BaseHTTPRequestHandler):
         if self.rfile.read(2) != b"{}":
             return self.reply(400, {"error": "只接受固定动作"})
         try:
-            accepted = (
-                self.server.app.start("scenario-" + scenario_match[2], scenario_match[1])
-                if scenario_match
-                else self.server.app.start(self.path.rsplit("/", 1)[1])
-            )
+            if scenario_match:
+                accepted = self.server.app.start("scenario-" + scenario_match[2], scenario_match[1])
+            elif threshold_match:
+                accepted = self.server.app.start("threshold-run")
+            elif x402_match:
+                accepted = self.server.app.start("x402-run")
+            else:
+                accepted = self.server.app.start(self.path.rsplit("/", 1)[1])
             return self.reply(202 if accepted else 409, {"accepted": accepted})
         except ValueError:
             return self.reply(409, {"error": "没有可验证的成功运行"})

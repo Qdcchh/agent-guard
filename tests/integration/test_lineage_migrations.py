@@ -139,6 +139,8 @@ def test_public_a_view_rejects_b_legacy_before_bootstrap(target, tmp_path, count
             "005",
             "006",
             "007",
+            "008",
+            "009",
         }
 
 
@@ -202,7 +204,7 @@ def test_every_legal_prefix_preserves_all_old_rows(target, tmp_path, source, cou
         after = _dump(conn)
         _old_rows_and_new_audit_initial_values(before, after)
         versions = applied_lineage_versions(conn)
-        assert len(versions) == 15
+        assert len(versions) == 17
         assert set(applied_versions(conn)) == {
             "001",
             "002",
@@ -211,6 +213,8 @@ def test_every_legal_prefix_preserves_all_old_rows(target, tmp_path, source, cou
             "005",
             "006",
             "007",
+            "008",
+            "009",
         }
         assert apply_bundle_migrations(conn) == []
         assert _dump(conn) == after
@@ -387,8 +391,8 @@ with psycopg.connect(os.environ['S1_TEST_DSN']) as c:
                 out, err = child.communicate(timeout=10)
                 assert child.returncode == 0, err
                 counts.append(int(out.strip()))
-            assert sorted(counts) == [0, 8]
-            assert len(applied_lineage_versions(observer)) == 15
+            assert sorted(counts) == [0, 10]
+            assert len(applied_lineage_versions(observer)) == 17
             _no_probe(observer)
         finally:
             for child in children:
@@ -446,7 +450,7 @@ with psycopg.connect(os.environ['S1_TEST_DSN']) as c:
             assert _dump(conn) == before
             _no_probe(conn)
             apply_bundle_migrations(conn)
-            assert len(applied_lineage_versions(conn)) == 15
+            assert len(applied_lineage_versions(conn)) == 17
             assert all(_dump(conn)[k] == v for k, v in before.items())
     finally:
         if child.poll() is None:
@@ -654,7 +658,7 @@ def test_bundle_binding_independent_of_session_timezone(target):
     with psycopg.connect(target.dsn) as conn:
         conn.execute("SET TIME ZONE 'Asia/Shanghai'")
         assert apply_bundle_migrations(conn) == []
-        assert len(applied_lineage_versions(conn)) == 15
+        assert len(applied_lineage_versions(conn)) == 17
 
 
 @pytest.mark.parametrize(

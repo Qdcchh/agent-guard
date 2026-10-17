@@ -6,6 +6,7 @@ from agent_guard.authorization.verifier import VerificationError
 from agent_guard.contracts.execution import ExecutionError, ExecutionErrorCode
 from agent_guard.contracts.ledger import ErrorCode, LedgerError
 from agent_guard.gateway.errors import classify
+from agent_guard.x402.contracts import X402Error
 
 
 @pytest.mark.parametrize(
@@ -40,3 +41,22 @@ def test_ledger_typed_mapping(code):
 def test_unclassified_and_verifier_errors():
     assert classify(ValueError("REPLAY secret")) == (500, "INTERNAL_ERROR")
     assert classify(VerificationError("unrelated", code="EXPIRED")) == (403, "EXPIRED")
+
+
+@pytest.mark.parametrize(
+    "code,status,public",
+    [
+        ("PAYMENT_APPROVAL_MISSING", 401, "APPROVAL_REQUIRED"),
+        ("PAYMENT_DIGEST_MISSING", 401, "APPROVAL_REQUIRED"),
+        ("PAYMENT_DIGEST_MISMATCH", 409, "APPROVAL_MISMATCH"),
+        ("CHALLENGE_MISMATCH", 409, "APPROVAL_MISMATCH"),
+        ("NO_ASSET_BUDGET", 422, "PAYMENT_BUDGET_EXCEEDED"),
+        ("ASSET_BUDGET_EXCEEDED", 422, "PAYMENT_BUDGET_EXCEEDED"),
+        ("PAYMENT_STATE_CONFLICT", 409, "PAYMENT_CONFLICT"),
+        ("PAYMENT_NOT_FOUND", 409, "PAYMENT_CONFLICT"),
+        ("CONFIG_INVALID", 503, "TRUSTED_STATE_UNAVAILABLE"),
+        ("X402_INVALID", 500, "INTERNAL_ERROR"),
+    ],
+)
+def test_x402_typed_mapping(code, status, public):
+    assert classify(X402Error("secret payment bytes", code=code)) == (status, public)

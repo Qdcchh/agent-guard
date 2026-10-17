@@ -47,40 +47,68 @@ class TrustedAcceptBinding:
 
     Composition adds a local callback without losing the verified descriptor or
     calling the original validator twice. It never derives trust from closures.
+    A composed binding may also carry one *final check* callback. The ledger
+    runs it after every deferred constraint, journal append and evidence write,
+    with the database clock; it is the place where an approval deadline that
+    elapsed while the transaction worked is refused.
     """
 
     descriptor: AcceptDescriptor
     _bind: Callable
     _response: Callable | None
+    _final: Callable | None
 
-    def __init__(self, descriptor, bind, response=None, *, _factory=None):
+    def __init__(self, descriptor, bind, response=None, final=None, *, _factory=None):
         if _factory is not _BINDING_FACTORY or type(descriptor) is not AcceptDescriptor:
             raise EvidenceError("trusted binding requires verified factory")
+        if final is not None and not callable(final):
+            raise EvidenceError("final check callback must be callable")
         object.__setattr__(self, "descriptor", descriptor)
         object.__setattr__(self, "_bind", bind)
         object.__setattr__(self, "_response", response)
+        object.__setattr__(self, "_final", final)
 
     def __call__(self, conn, operation, disposition) -> None:
         if self._bind(conn, operation, disposition) is not None:
             raise EvidenceError("binding callback must return None")
 
-    def compose(self, callback) -> TrustedAcceptBinding:
+    def compose(self, callback, *, final_check=None) -> TrustedAcceptBinding:
         if not callable(callback):
             raise EvidenceError("binding composition callback required")
+        if final_check is not None and not callable(final_check):
+            raise EvidenceError("final check callback must be callable")
+        previous_final = self._final
 
         def combined(conn, operation, disposition):
             self(conn, operation, disposition)
             if callback(conn, operation, disposition) is not None:
                 raise EvidenceError("binding callback must return None")
 
+        def combined_final(conn, operation, disposition):
+            if previous_final is not None:
+                previous_final(conn, operation, disposition)
+            if final_check is not None and final_check(conn, operation, disposition) is not None:
+                raise EvidenceError("final check callback must return None")
+
         return TrustedAcceptBinding(
-            self.descriptor, combined, self._response, _factory=_BINDING_FACTORY
+            self.descriptor,
+            combined,
+            self._response,
+            combined_final if (previous_final or final_check) else None,
+            _factory=_BINDING_FACTORY,
         )
+
+    def final_check(self, conn, operation, disposition) -> None:
+        """Run the composed final check, if any; called with locks still held."""
+        if self._final is not None and self._final(conn, operation, disposition) is not None:
+            raise EvidenceError("final check callback must return None")
 
     def _with_response(self, reader):
         if not callable(reader):
             raise EvidenceError("local response projection required")
-        return TrustedAcceptBinding(self.descriptor, self._bind, reader, _factory=_BINDING_FACTORY)
+        return TrustedAcceptBinding(
+            self.descriptor, self._bind, reader, self._final, _factory=_BINDING_FACTORY
+        )
 
     def response_bytes(self):
         return None if self._response is None else canonical_json_bytes(self._response())

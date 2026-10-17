@@ -89,6 +89,9 @@ class ErrorCode(str, Enum):
     - ``CALL_LIMIT_EXCEEDED``: call-count limit insufficient at a node.
     - ``TRUSTED_STATE_UNAVAILABLE``: database unreachable/timeout; fail closed,
       never presented as success or as an idempotent hit.
+    - ``APPROVAL_MISMATCH``: the verified threshold approval does not describe
+      the actual accepted operation/path, or an existing durable approval
+      binding points at a different operation/message.
     """
 
     INVALID_CONTEXT = "INVALID_CONTEXT"
@@ -102,6 +105,7 @@ class ErrorCode(str, Enum):
     BUDGET_EXCEEDED = "BUDGET_EXCEEDED"
     CALL_LIMIT_EXCEEDED = "CALL_LIMIT_EXCEEDED"
     TRUSTED_STATE_UNAVAILABLE = "TRUSTED_STATE_UNAVAILABLE"
+    APPROVAL_MISMATCH = "APPROVAL_MISMATCH"
 
 
 class AcceptDisposition(str, Enum):

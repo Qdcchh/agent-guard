@@ -10,6 +10,7 @@ from __future__ import annotations
 import uuid
 from dataclasses import asdict
 from datetime import datetime
+from decimal import Decimal
 from urllib.parse import urlsplit
 
 import rfc8785
@@ -81,6 +82,8 @@ def require_stream_tx(conn, tenant_id: str, task_id: str) -> ExistingStreamRef |
 def _json_value(value):
     if type(value) is int and value < 0:
         return {"signed_integer_text": str(value)}
+    if isinstance(value, Decimal):
+        return {"decimal_text": str(value)}
     if isinstance(value, datetime):
         return utc_text(value)
     if isinstance(value, memoryview):

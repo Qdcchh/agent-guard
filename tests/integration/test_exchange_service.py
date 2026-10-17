@@ -169,10 +169,21 @@ def _root(dsn, *, approved_overrides=None):
     return as_key, keys, registrations, exchanges, root
 
 
-def _form(as_key, token, *, recipient="selector", delegation_key=None, ttl=180):
+def _form(
+    as_key,
+    token,
+    *,
+    recipient="selector",
+    delegation_key=None,
+    ttl=180,
+    amount_limit_fen=None,
+    call_limit=None,
+):
     parent = verify_compact_jws(
         token, expected_type="ag-at+jwt", trusted_keys={"as-sign-1": as_key.public_key()}
     )
+    default_amount = 80000 if recipient == "selector" else 70000
+    default_calls = 8 if recipient == "selector" else 7
     return {
         "grant_type": "urn:ietf:params:oauth:grant-type:token-exchange",
         "subject_token": token,
@@ -181,8 +192,10 @@ def _form(as_key, token, *, recipient="selector", delegation_key=None, ttl=180):
         "audience": "https://gateway.agent-guard.test",
         "scope": "procurement.order.create",
         "ag_delegate_client_id": f"agent-{recipient}",
-        "ag_amount_limit_fen": "80000" if recipient == "selector" else "70000",
-        "ag_call_limit": "8" if recipient == "selector" else "7",
+        "ag_amount_limit_fen": str(
+            default_amount if amount_limit_fen is None else amount_limit_fen
+        ),
+        "ag_call_limit": str(default_calls if call_limit is None else call_limit),
         "ag_ttl_seconds": str(ttl),
         "ag_delegation_remaining": str(parent["ag_delegation_remaining"] - 1),
         "ag_constraints": canonical_json_bytes(parent["ag_constraints"]).decode("utf-8"),

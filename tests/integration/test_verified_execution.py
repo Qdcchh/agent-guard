@@ -105,18 +105,43 @@ class SignedEnv:
         )
 
 
-def signed_env(dsn, downstream_dsn, *, leaf_ttl=100):
+def signed_env(
+    dsn,
+    downstream_dsn,
+    *,
+    leaf_ttl=100,
+    root_limit_fen=100000,
+    root_calls=10,
+    selector_limit_fen=80000,
+    selector_calls=8,
+    executor_limit_fen=70000,
+    executor_calls=7,
+):
     as_key, keys, registrations, exchanges, root = _root(
         dsn,
         approved_overrides={
             "scope": "openid " + " ".join(TOOLS),
             "constraints": CONSTRAINTS,
+            "amount_limit_fen": root_limit_fen,
+            "call_limit": root_calls,
         },
     )
-    form = _form(as_key, root.access_token)
+    form = _form(
+        as_key,
+        root.access_token,
+        amount_limit_fen=selector_limit_fen,
+        call_limit=selector_calls,
+    )
     form["scope"] = " ".join(TOOLS)
     child = _exchange(exchanges, keys, registrations, form)
-    form = _form(as_key, child.access_token, recipient="executor", ttl=leaf_ttl)
+    form = _form(
+        as_key,
+        child.access_token,
+        recipient="executor",
+        ttl=leaf_ttl,
+        amount_limit_fen=executor_limit_fen,
+        call_limit=executor_calls,
+    )
     form["scope"] = " ".join(TOOLS)
     leaf = _exchange(exchanges, keys, registrations, form, holder="selector")
     evidence = EvidenceStore(dsn)

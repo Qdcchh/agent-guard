@@ -8,6 +8,7 @@ from concurrent.futures import ThreadPoolExecutor
 from agent_guard.contracts.encoding import EncodingError, canonical_json_bytes
 from agent_guard.contracts.execution import MAX_GATEWAY_RESPONSE_BYTES
 from agent_guard.gateway.errors import GatewayError, classify
+from agent_guard.threshold.contracts import MAX_HEADER_BYTES as MAX_APPROVAL_BYTES
 
 MAX_BODY = 65536
 MAX_HEADERS = 65536
@@ -16,6 +17,7 @@ _PATHS = {"/v1/invocations", "/v1/operations/query"}
 _SENSITIVE = {
     b"authorization",
     b"ag-proof",
+    b"ag-approval",
     b"content-type",
     b"content-length",
     b"transfer-encoding",
@@ -151,6 +153,13 @@ class GatewayHttpApp:
             or not re.fullmatch(rb"[A-Za-z0-9_.-]+", proof)
         ):
             raise GatewayError("INVALID_SIGNATURE")
+        approval = headers.get(b"ag-approval")
+        if approval is not None and (
+            len(approval) > MAX_APPROVAL_BYTES
+            or path != "/v1/invocations"
+            or not re.fullmatch(rb"[A-Za-z0-9_-]+", approval)
+        ):
+            raise GatewayError("INVALID_SCHEMA")
         # Retain capacity until real work finishes, even if the wall timeout
         # returns 503. Running threads cannot be killed; SQL waits are bounded.
         await self._slots.acquire()
@@ -162,6 +171,7 @@ class GatewayHttpApp:
             token.decode("ascii"),
             proof.decode("ascii"),
             bytes(chunks),
+            approval,
         )
 
         def completed(done):

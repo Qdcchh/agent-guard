@@ -1,0 +1,21 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/v2/FiatTokenV2_2.sol": {"urls": ["contracts/v2/FiatTokenV2_2.sol"]}
+  },
+  "settings": {
+    "optimizer": {"enabled": true, "runs": 10000000},
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode.object",
+          "evm.bytecode.linkReferences",
+          "evm.deployedBytecode.object",
+          "evm.deployedBytecode.linkReferences",
+          "metadata"
+        ]
+      }
+    }
+  }
+}

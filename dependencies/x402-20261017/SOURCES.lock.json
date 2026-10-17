@@ -1,0 +1,114 @@
+{
+  "circle": {
+    "commit": "405efc100c016ed1a437063b6274b4e24ea7b8b1",
+    "files": [
+      {
+        "gitBlobSha1": "74b8488067faf1e9bf0faf9adaf6d1ae8f178cb9",
+        "path": "contracts/interface/IERC1271.sol"
+      },
+      {
+        "gitBlobSha1": "df5c8f0d60a2a71424c8f8e1368d96e37c4da146",
+        "path": "contracts/util/ECRecover.sol"
+      },
+      {
+        "gitBlobSha1": "bd01b2f743a14e371c9ed384a17c04df17554b04",
+        "path": "contracts/util/EIP712.sol"
+      },
+      {
+        "gitBlobSha1": "9b80f352ebf647a2eecd3a771d4510c12ed81f4e",
+        "path": "contracts/util/MessageHashUtils.sol"
+      },
+      {
+        "gitBlobSha1": "b66fa080be0774d565d14ab7a18fba6e0cd99558",
+        "path": "contracts/util/SignatureChecker.sol"
+      },
+      {
+        "gitBlobSha1": "854664ecfc23e73a2f8a98e4b9e094952f7871ff",
+        "path": "contracts/v1.1/FiatTokenV1_1.sol"
+      },
+      {
+        "gitBlobSha1": "3b23aa07e55a0fddd81bffeeb7bad95e18d9c23e",
+        "path": "contracts/v1.1/Rescuable.sol"
+      },
+      {
+        "gitBlobSha1": "bb64da5a3a004886d99c945292b1624878290953",
+        "path": "contracts/v1/AbstractFiatTokenV1.sol"
+      },
+      {
+        "gitBlobSha1": "b555cb6df0c1c4cf0c012d980bd517f00508c53b",
+        "path": "contracts/v1/Blacklistable.sol"
+      },
+      {
+        "gitBlobSha1": "cfec563eafbd979598889d7775d8d1fab595ee73",
+        "path": "contracts/v1/FiatTokenV1.sol"
+      },
+      {
+        "gitBlobSha1": "3e90f61d2640cf6dca657c1a5d06c256e67c9234",
+        "path": "contracts/v1/Ownable.sol"
+      },
+      {
+        "gitBlobSha1": "51c120349cf34558a9d6a8b628b95c524ee3518f",
+        "path": "contracts/v1/Pausable.sol"
+      },
+      {
+        "gitBlobSha1": "4a0e9a721f2112e5efbce2ec4030526ff64315aa",
+        "path": "contracts/v2/AbstractFiatTokenV2.sol"
+      },
+      {
+        "gitBlobSha1": "455b1ca1632fbfd61c6e879560d6f65c7ba27c6b",
+        "path": "contracts/v2/EIP2612.sol"
+      },
+      {
+        "gitBlobSha1": "17e3d5a0045d3e49b6bdc9d0050cd75177afe43f",
+        "path": "contracts/v2/EIP3009.sol"
+      },
+      {
+        "gitBlobSha1": "4513d8c365ea83e1b9711c1e2e6f45b6f7e98b8e",
+        "path": "contracts/v2/EIP712Domain.sol"
+      },
+      {
+        "gitBlobSha1": "152d90eb9f4a58ccf2c0562afb873702d8f39bfb",
+        "path": "contracts/v2/FiatTokenV2.sol"
+      },
+      {
+        "gitBlobSha1": "38fe992c62249131d4b0301093f449a7b566dfd8",
+        "path": "contracts/v2/FiatTokenV2_1.sol"
+      },
+      {
+        "gitBlobSha1": "41260cb02ebde18cd257393c74003e544c2fdaad",
+        "path": "contracts/v2/FiatTokenV2_2.sol"
+      }
+    ],
+    "hashScheme": "git blob sha1 as listed in the GitHub tree API at the pinned commit",
+    "license": "Apache-2.0",
+    "repo": "https://github.com/circlefin/stablecoin-evm",
+    "tag": "v2.2.0"
+  },
+  "generated": "2026-10-17",
+  "openzeppelin": {
+    "files": [
+      {
+        "path": "openzeppelin-contracts-3.4.2/contracts/math/SafeMath.sol",
+        "sha256": "4a04d0a20a19e3ef1dcabae9cad9ba006430a4e7eec4d9b519db87999722c98a"
+      },
+      {
+        "path": "openzeppelin-contracts-3.4.2/contracts/token/ERC20/IERC20.sol",
+        "sha256": "0573c2961569aa4906845d0cd428b5b7394956170054ceeaa8f8af96cd44875c"
+      },
+      {
+        "path": "openzeppelin-contracts-3.4.2/contracts/token/ERC20/SafeERC20.sol",
+        "sha256": "eea796f96939e7dd6119de00941717ce5772d8a942b184f5e48d2b962d0ab655"
+      },
+      {
+        "path": "openzeppelin-contracts-3.4.2/contracts/utils/Address.sol",
+        "sha256": "11ad5e3e21434e00c4ceba1f5a977b7a68bdd7d16b849276ce4ff4495129eec7"
+      }
+    ],
+    "hashScheme": "sha256 of file",
+    "license": "MIT",
+    "npmTarballSha256": "72f4176e8d4db8825a6161a7663061f3c3d3f2f6e14c7d5357bec6bd1dd9c7bd",
+    "package": "@openzeppelin/contracts",
+    "version": "3.4.2"
+  },
+  "purpose": "source identity manifest for the vendored FiatTokenV2_2 compile inputs"
+}

@@ -8,19 +8,24 @@ from agent_guard.authorization.verifier import VerificationError
 from agent_guard.contracts.execution import ExecutionError
 from agent_guard.contracts.ledger import LedgerError
 from agent_guard.execution.receipt_projection import ReceiptProjectionError
+from agent_guard.x402.contracts import X402Error
 
 _STATUS = {
     "INVALID_SCHEMA": 400,
     "INVALID_SIGNATURE": 401,
     "HOLDER_MISMATCH": 401,
     "STALE_REQUEST": 401,
+    "APPROVAL_REQUIRED": 401,
     "SCOPE_DENIED": 403,
     "REVOKED": 403,
     "EXPIRED": 403,
     "REPLAY": 409,
     "IDEMPOTENCY_CONFLICT": 409,
     "QUOTE_CONFLICT": 409,
+    "APPROVAL_MISMATCH": 409,
+    "PAYMENT_CONFLICT": 409,
     "BUDGET_EXCEEDED": 422,
+    "PAYMENT_BUDGET_EXCEEDED": 422,
     "CALL_LIMIT_EXCEEDED": 422,
     "TRUSTED_STATE_UNAVAILABLE": 503,
     "INTERNAL_ERROR": 500,
@@ -41,6 +46,24 @@ _EXECUTION = {
     "LEGACY_SNAPSHOT_INVALID": "TRUSTED_STATE_UNAVAILABLE",
 }
 _LEDGER = {"INVALID_CONTEXT": "SCOPE_DENIED", "INVALID_COST": "TRUSTED_STATE_UNAVAILABLE"}
+_X402 = {
+    "PAYMENT_APPROVAL_MISSING": "APPROVAL_REQUIRED",
+    "PAYMENT_DIGEST_MISSING": "APPROVAL_REQUIRED",
+    "PAYMENT_DIGEST_MISMATCH": "APPROVAL_MISMATCH",
+    "PAYMENT_APPROVAL_MISMATCH": "APPROVAL_MISMATCH",
+    "PAYMENT_FACT_MISMATCH": "APPROVAL_MISMATCH",
+    "CHALLENGE_MISMATCH": "APPROVAL_MISMATCH",
+    "NO_ASSET_BUDGET": "PAYMENT_BUDGET_EXCEEDED",
+    "ASSET_BUDGET_EXCEEDED": "PAYMENT_BUDGET_EXCEEDED",
+    "ASSET_BUDGET_CONFLICT": "PAYMENT_CONFLICT",
+    "PAYMENT_INTENT_CONFLICT": "PAYMENT_CONFLICT",
+    "PAYMENT_STATE_CONFLICT": "PAYMENT_CONFLICT",
+    "PAYMENT_STATE_MISSING": "PAYMENT_CONFLICT",
+    "PAYMENT_NOT_FOUND": "PAYMENT_CONFLICT",
+    "CONFIG_INVALID": "TRUSTED_STATE_UNAVAILABLE",
+    "CONFIG_MISSING": "TRUSTED_STATE_UNAVAILABLE",
+    "CONFIG_NOT_LOOPBACK": "TRUSTED_STATE_UNAVAILABLE",
+}
 
 
 class GatewayError(Exception):
@@ -60,6 +83,8 @@ def classify(exc: Exception) -> tuple[int, str]:
         code = _EXECUTION.get(exc.code.value, "INTERNAL_ERROR")
     elif isinstance(exc, LedgerError):
         code = _LEDGER.get(exc.code.value, exc.code.value)
+    elif isinstance(exc, X402Error):
+        code = _X402.get(exc.code, "INTERNAL_ERROR")
     elif isinstance(
         exc,
         (

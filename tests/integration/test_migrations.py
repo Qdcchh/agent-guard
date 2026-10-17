@@ -52,7 +52,7 @@ def expected_versions(migrations_dir: Path = DEFAULT_MIGRATIONS_DIR) -> list[str
         assert (migrations_dir / "007_audit_journal.sql").is_file()
         paths = [p for p in paths if p.name != "007_audit_journal.sql"]
         versions = sorted(p.name.split("_", 1)[0] for p in paths)
-        assert versions == ["001", "002", "003", "004", "005", "006"]
+        assert versions == ["001", "002", "003", "004", "005", "006", "008", "009"]
         return versions
     return sorted(p.name.split("_", 1)[0] for p in paths)
 
