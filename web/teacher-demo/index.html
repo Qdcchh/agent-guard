@@ -10,28 +10,32 @@
 </head>
 <body>
 <header class="top">
-  <div class="brand"><i aria-hidden="true"></i>Agent Guard</div>
+  <div class="brand"><i aria-hidden="true"></i><span>Agent Guard</span><small>多智能体可信授权执行</small></div>
   <nav class="chapters" id="chapters" aria-label="汇报章节">
-    <button type="button" data-view="overview">系统总览</button>
-    <button type="button" data-view="s1"><span class="no">1</span>盗取令牌</button>
-    <button type="button" data-view="s3"><span class="no">3</span>委托不得扩权</button>
-    <button type="button" data-view="s6"><span class="no">6</span>撤销后拒绝</button>
-    <button type="button" data-view="more">其余场景</button>
-    <button type="button" data-view="cosign">双域共签 · SM2</button>
-    <button type="button" data-view="threshold">FROST 对照</button>
-    <button type="button" data-view="x402">x402 支付</button>
-    <button type="button" data-view="evidence">真实记录</button>
+    <button type="button" data-chapter="overview">总览</button>
+    <button type="button" data-chapter="defense">基础防线</button>
+    <button type="button" data-chapter="core">核心机制 · 双域共签</button>
+    <button type="button" data-chapter="pay">扩展 · x402 支付</button>
+    <button type="button" data-chapter="evidence">运行证据</button>
   </nav>
-  <div class="source" id="source" aria-live="polite"><span class="sw illus" aria-hidden="true"></span><span id="source-text">示意推演</span></div>
+  <div class="source" id="source" aria-live="polite">
+    <span class="src-note" id="source-text">示意推演</span>
+    <span class="src-pills" aria-label="数据来源">
+      <span class="src-pill" data-src="live"><i class="sw live" aria-hidden="true"></i>现场运行</span>
+      <span class="src-pill" data-src="replay"><i class="sw replay" aria-hidden="true"></i>记录回放</span>
+      <span class="src-pill" data-src="illus"><i class="sw illus" aria-hidden="true"></i>示意推演</span>
+    </span>
+  </div>
 </header>
 
 <main class="app" id="app">
   <section class="brief" id="brief" aria-label="本章说明">
+    <nav class="subnav" id="subnav" aria-label="本章页面" hidden></nav>
     <div id="brief-main"></div>
 
     <div class="module" id="module" hidden>
       <div class="back-row">
-        <button type="button" class="back" id="back"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 2.5 4.5 8l6 5.5z"/></svg>回到本章说明</button>
+        <button type="button" class="back" id="back"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 2.5 4.5 8l6 5.5z"/></svg>返回本页说明</button>
         <small>或按 <kbd>Esc</kbd></small>
       </div>
       <h2 id="m-name"></h2>
@@ -46,11 +50,6 @@
       </dl>
     </div>
 
-    <div class="legend" aria-label="数据来源">
-      <span><i class="sw live"></i>现场运行</span>
-      <span><i class="sw replay"></i>记录回放</span>
-      <span><i class="sw illus"></i>示意推演</span>
-    </div>
   </section>
 
   <section class="stage" id="stage" aria-label="协议过程">

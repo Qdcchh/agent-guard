@@ -141,7 +141,7 @@ const INVOKE = 'POST /v1/invocations';
 
 const SCENES = {
   s1: {
-    catalogId: 'stolen-token', no: '场景 1', short: '盗取令牌',
+    catalogId: 'stolen-token', short: '持有者绑定',
     title: '盗取令牌，却没有私钥',
     lede: '冒用方复制了执行代理的访问令牌，但签名私钥仍在执行代理手里。它能用这张令牌下单吗？',
     stack: [
@@ -193,7 +193,7 @@ const SCENES = {
   },
 
   s2: {
-    catalogId: 'signed-parameters', no: '场景 2', short: '篡改参数',
+    catalogId: 'signed-parameters', short: '参数篡改',
     title: '签名之后，参数被改了',
     lede: '执行代理签好了请求，途中有人把收货地址改掉。签名者是真的，令牌也是真的，网关会接受吗？',
     stack: [
@@ -241,7 +241,7 @@ const SCENES = {
   },
 
   s3: {
-    catalogId: 'delegation-scope', no: '场景 3', short: '委托收窄',
+    catalogId: 'delegation-scope', short: '委托收窄',
     title: '委托不得扩权',
     lede: '统筹代理给选品代理申请子授权时，多要了一点：金额多 0.01 元，或者多一个工具。授权服务器会签吗？',
     stack: [
@@ -301,7 +301,7 @@ const SCENES = {
   },
 
   s4: {
-    catalogId: 'shared-budget', no: '场景 4', short: '共享预算',
+    catalogId: 'shared-budget', short: '共享预算',
     title: '两条分支，同一笔预算',
     lede: '根授权 1,000 元下有两条委托链，各自的子额度都是 700 元。两边同时下单 700 元，会不会一共花掉 1,400 元？',
     stack: [
@@ -350,7 +350,7 @@ const SCENES = {
   },
 
   s5: {
-    catalogId: 'replay-idempotency', no: '场景 5', short: '重放与幂等',
+    catalogId: 'replay-idempotency', short: '重放幂等',
     title: '重放被拒，重试不重复',
     lede: '把同一个请求证明原样再发一次，会不会下两单？换一个新证明重试同一笔业务，又会怎样？',
     stack: [
@@ -403,7 +403,7 @@ const SCENES = {
   },
 
   s6: {
-    catalogId: 'revocation', no: '场景 6', short: '动态撤销',
+    catalogId: 'revocation', short: '动态撤销',
     title: '撤销之后，拒绝新请求',
     lede: '根授权被撤销，执行代理手里的旧令牌签名依然有效。它还能下单吗？',
     stack: [
@@ -454,7 +454,7 @@ const SCENES = {
   },
 
   s7: {
-    catalogId: 'recovery-evidence', no: '场景 7', short: '故障恢复',
+    catalogId: 'recovery-evidence', short: '故障恢复',
     title: '下单成功后进程崩溃',
     lede: '下游已经下单成功，执行进程却在回报结果前被强制终止。会不会少记一笔账，或者重新下一单？',
     stack: [
@@ -505,10 +505,9 @@ const SCENES = {
   },
 
   cosign: {
-    catalogId: null, no: '双域共签', short: '双域共签',
-    kicker: '核心机制：双域协同 SM2 签名',
+    catalogId: null, short: '双域共签 SM2',
     title: '授权域点头，才能签出这一笔',
-    lede: '执行凭据的私钥被拆成两份：一份在授权域，一份在执行域。授权域先自己查一遍委托链、撤销和预算，确认无误才交出它那一半；两半合成一个普通 SM2 签名，网关用标准国密验签就能验证。',
+    lede: '基础防线都依赖网关把关；如果网关本身被攻破呢？执行凭据的私钥被拆成两份，分别在授权域和执行域。授权域自己查一遍委托链、撤销和预算，确认无误才交出它那一半；两半合成一个普通 SM2 签名。',
     stack: [
       ['批准 profile', 'AG-COSM2-APPROVAL-1 · sm2-2p'],
       ['签名对象', '双方由结构化行动独立重算消息与 SM3 摘要；授权域不信任执行域提供的摘要'],
@@ -516,8 +515,8 @@ const SCENES = {
     ],
     delta: [
       ['普通单钥', '网关被攻破就能任意签（凭据单钥在网关侧的部署）。'],
-      ['2-of-3 FROST（本项目旧版）', '签名者不检查授权状态，非国密。'],
-      ['双域共签（本项目）', '授权域独立核验后才出份额，产出标准 SM2 签名；网关单方签不出，下单服务也独立验签并拒绝重复使用。', true],
+      ['旧版 FROST', '2-of-3 门限签名，但签名者不检查授权状态，且非国密。'],
+      ['本项目', '授权域独立核验后才出份额，产出标准 SM2 签名；网关单方签不出，下单服务也独立验签并拒绝重复使用。', true],
     ],
     honest: '当前为两域协同（n=2），半诚实模型；两域部署在同一主机；向 t-of-n 的推广已有设计，尚未实现。网关被攻破时，至多能把授权域已核准的那一笔执行一次；签名之后才发生的撤销仍靠网关接受事务拦截。右侧为示意推演；左侧可运行固定六用例并显示原始结果来源、日期与单次耗时。不证明恶意安全或跨主机隔离。',
     band: [30, 900], focus: 'authz-domain',
@@ -560,21 +559,21 @@ const SCENES = {
   },
 
   threshold: {
-    catalogId: null, fixed: 'threshold', no: '门限批准', short: '门限批准', design: true,
-    kicker: '扩展能力：门限批准',
-    title: '两方签字，才能下单',
-    lede: '高风险的下单除了授权，还要三个独立签名域中至少两个共同批准。批准随请求一起送到网关，在接受事务里与实际订单逐项核对；授权一旦被撤销，批准再有效也不能执行。',
+    catalogId: null, fixed: 'threshold', short: '对照：旧版 FROST', design: true,
+    title: '为什么换掉旧版 FROST',
+    lede: '这是上一版方案：三个签名域中任意两个，用 FROST 共同签出一份行动批准，网关在接受事务里核对。它已正确接入采购流程；本次保留它，用来说明为什么换成双域共签。',
     stack: [
       ['签名方案', '2-of-3 FROST-Ed25519 组签名，网关只持组公钥'],
       ['批准对象', 'V2 行动：授权路径、holder、工具、参数摘要、金额、策略版本、key epoch、有效期'],
       ['传递方式', '采购请求附 ag-approval 头，令牌与 AG-Proof 照常验证'],
     ],
     delta: [
-      ['普通多签', '三把完整私钥各签一次再计数，不是门限签名。'],
-      ['KITA', '把评审、密钥隔离与门限签名连接起来，是最接近的相关工作。'],
-      ['本项目', '批准在接受事务内与实际订单逐项比对并原子绑定 action_id；之后仍复核撤销、预算与证明新鲜度。', true],
+      ['不查授权', '签名域只对行动摘要签名，不独立核验委托链、撤销与预算；授权状态仍完全依赖网关。'],
+      ['非国密', '组签名是 Ed25519，网关需另外维护一套非 SM2 的验签。'],
+      ['可信初始化', '组密钥由可信 dealer 一次性生成并分发份额。'],
+      ['双域共签', '授权域独立核验后才出份额；产出标准 SM2 签名；完整私钥不重建。', true],
     ],
-    honest: '右侧是流程示意，不是逐帧回放；真实结果以左栏的本机固定演示为准。门限算法是 Ed25519 而非国密 SM2；演示中份额由同一宿主、同一 OS 用户管理，采用可信分发，不是生产部署。',
+    honest: '不是说 FROST 方案有错：它是正确实现的门限签名，只是与授权主线结合得不够紧。右侧是流程示意，不是逐帧回放；真实结果以左栏的本机固定演示为准。演示中份额由同一宿主、同一 OS 用户管理，采用可信分发，不是生产部署。',
     band: [516, 900], focus: 'gateway',
     lanes: [
       {k: 'signer-1', x: 62, name: '签名域 S1', id: '份额 1'},
@@ -620,10 +619,9 @@ const SCENES = {
   },
 
   x402: {
-    catalogId: null, fixed: 'x402', no: 'x402 支付', short: 'x402 支付', design: true,
-    kicker: '扩展能力：x402 支付',
+    catalogId: null, fixed: 'x402', short: 'x402 支付', design: true,
     title: '先报价，再按报价付款',
-    lede: '付款意图先要经过双域共签批准：授权域查清委托链、撤销和预算，才和执行域一起签出 SM2 批准，批准里写死了这笔付款的摘要。网关接受后，支付适配器去请求付费资源；资源先返回 402 报价，适配器核对报价、签一份 EIP-3009 转账授权，资源服务器验证后在链上结算。',
+    lede: '付款不能代替授权：付款意图先经双域共签批准，批准里写死这笔付款的摘要。网关接受后才去付款——资源先返回 402 报价，适配器核对报价、签 EIP-3009 转账授权，资源服务器验证后在链上结算。',
     stack: [
       ['支付协议', 'HTTP 402 + x402 v2 exact/EVM，顺序 verify → resource → settle'],
       ['付款证明', 'EIP-3009 转账授权（EIP-712 签名），nonce 只能用一次'],
@@ -647,7 +645,7 @@ const SCENES = {
     readbackExtra: [['ledger', '支付状态 SETTLED', 'lab jade'], ['resource', '资源已交付', 'lab jade'], ['chain', '链上 +1 笔', 'lab jade']],
     events: illustrative('x402', [
       {event_type: 'accept.committed', actor: 'gateway', target: 'ledger', safe_payload: {},
-        display: {top: '接受采购，登记支付意图', sub: 'PaymentIntent 绑定授权路径、收款方、网络、资产与金额'}},
+        display: {top: '接受采购，登记支付意图', sub: '绑定授权路径、收款方、网络、资产与金额'}},
       {event_type: 'request.sent', actor: 'x402', target: 'resource', safe_payload: {},
         display: {top: '请求付费资源', sub: '只由已接受的操作驱动，不接受页面或模型传来的付款对象'}},
       {event_type: 'request.sent', actor: 'resource', target: 'x402', safe_payload: {},
@@ -684,8 +682,22 @@ const SCENES = {
 };
 const MORE_SCENES = ['s2', 's4', 's5', 's7'];
 
+/*
+ * 汇报结构：五章递进。先讲系统，再讲基础防线，然后抛出"网关本身被攻破怎么办"引出双域共签，
+ * 再讲付款扩展，最后用真实运行核对。章内分组决定左栏顶部的子导航。
+ */
+const CHAPTERS = [
+  {k: 'overview', name: '总览', groups: [['', ['overview']]]},
+  {k: 'defense', name: '基础防线', groups: [['三道防线', ['s1', 's3', 's6']], ['更多保障', MORE_SCENES]]},
+  {k: 'core', name: '核心机制 · 双域共签', groups: [['', ['cosign', 'threshold']]]},
+  {k: 'pay', name: '扩展 · x402 支付', groups: [['', ['x402']]]},
+  {k: 'evidence', name: '运行证据', groups: [['', ['evidence']]]},
+];
+const chapterOf = view => CHAPTERS.find(c => c.groups.some(([, vs]) => vs.includes(view))) || null;
+
 /* 模块说明：六项固定格式 */
 const MODULES = {
+  cosign: ['双域协同 SM2 签名', 'sm2-2p · AG-COSM2-APPROVAL-1', '网关被攻破时，单方也签不出可执行的批准。', '执行网关在接受采购前发起；授权域与 AS 同侧。', '结构化行动；执行域与授权域各持一份私钥份额。', '授权域独立核验委托链、撤销、有效期与预算，通过才返回部分签名；执行域合成后标准 SM2 验签。', '普通 SM2 签名的 ag-approval，网关与下单服务都用标准国密库验证。', '半诚实两方（n=2），两域在同一主机；签名之后发生的撤销仍靠网关接受事务拦截。'],
   'exec-domain': ['执行域 P1', '网关侧 · 示意模块', '与授权域共同产生这一笔行动的 SM2 签名。', '执行请求触发第一轮；智能体不持有份额。', '结构化行动和授权域返回的部分签名。', '自行重算消息，合成后用标准 SM2 验签，通过才输出。', '普通 SM2 签名与行动批准信封。', '只有自身一份秘密不能独自完成共签；当前 n=2、半诚实、同主机，核心尚未接入本页。'],
   'authz-domain': ['授权域 P2', 'AS 侧 · 示意模块', '独立决定当前授权是否允许签出这一笔。', '执行域发送结构化行动与第一轮公开消息。', '结构化行动及当前授权、撤销与预算状态。', '自己重算消息，核对委托链、有效期、撤销、范围、预算与策略版本。', '仅在检查通过后返回部分签名，否则返回拒绝码。', '不接受执行域算好的摘要作为依据；当前为半诚实模型，不提供恶意安全证明或跨主机隔离。'],
   user: ['用户 / 撤销方', 'OIDC 登录 / 用户同意', '任务必须源于用户明确批准的范围；用户也可以撤销自己批准的授权。', '用户通过登录客户端发起；场景 6 中由测试直接提交撤销事务。', '登录结果、任务与预算确认。', '身份、租户、任务对象与预算范围。', '用户授权，作为根授权的依据。', 'ID Token 只证明身份，不能用于下单；当前登录同意为自动流程，手动页面尚未提供。'],
@@ -720,7 +732,7 @@ const CATALOG_FALLBACK = [
 
 /* 供 node 测试读取 */
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {SCHEMA_VERSION, ACTORS, EVENT_TYPES, STATUSES, SOURCES, eventProblems, EventStore, fen, readbackDelta, SCENES, MORE_SCENES, MODULES, CATALOG_FALLBACK};
+  module.exports = {SCHEMA_VERSION, ACTORS, EVENT_TYPES, STATUSES, SOURCES, eventProblems, EventStore, fen, readbackDelta, SCENES, MORE_SCENES, CHAPTERS, chapterOf, MODULES, CATALOG_FALLBACK};
 }
 
 /* ======================================================================
@@ -740,9 +752,9 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
   const svgText = (parent, attrs, s) => { const t = svgEl('text', attrs, parent); t.textContent = s; return t; };
   const h = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
 
-  const VIEWS = ['overview', 's1', 's3', 's6', 's2', 's4', 's5', 's7', 'cosign', 'threshold', 'x402', 'evidence'];
+  const VIEWS = CHAPTERS.flatMap(c => c.groups.flatMap(([, vs]) => vs));
   const ui = {
-    view: 'overview', moreView: 's2', steps: {}, timer: null, follow: true,
+    view: 'overview', lastIn: {}, steps: {}, timer: null, follow: true,
     token: '', connected: false, state: null, posting: false, actionError: '',
     openRecords: new Set(), lastRecordsKey: '', lastProofKey: '', band: [0, 0], bandY: null,
     rows: [], seals: [], feed: null, feeds: new Map(), sceneKey: '',
@@ -978,6 +990,8 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       case 'delegation.rejected':
       case 'accept.rejected': {
         const s = seal(g, ax, y - 50);
+        // 印章始终压在拒绝方的生命线上；说明文字在靠边的泳道时向内收，避免出画
+        const rx = Math.min(Math.max(ax, 250), 650);
         if (p.check === 'holder_binding') tally(g, ax, y, p);
         else if (p.check === 'delegation_narrowing' && p.dimension === 'amount') columns(g, ax, y, [['父授权上限', fen(p.expected)], ['本次申请', fen(p.observed)], ['超出', Number.isInteger(p.observed) && Number.isInteger(p.expected) ? fen(p.observed - p.expected) : '未采集', 'seal']]);
         else if (p.check === 'delegation_narrowing') setCompare(g, ax, y, p);
@@ -987,11 +1001,11 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
         else if (p.check === 'budget') {
           const over = [p.reserved_fen, p.requested_fen, p.limit_fen].every(Number.isInteger) ? p.reserved_fen + p.requested_fen - p.limit_fen : null;
           columns(g, ax, y, [['根预算上限', fen(p.limit_fen)], ['已被预留', fen(p.reserved_fen)], ['本次申请', fen(p.requested_fen)], ['超出', over == null ? '未采集' : fen(over), 'seal']], 118);
-        } else if (D && D.cols) columns(g, ax, y, D.cols, 150);
+        } else if (D && D.cols) columns(g, rx, y, D.cols, 150);
         else derivedReject(g, sc, ev, ax, y, all, idx);
-        label(g, ax, y + 60, `${p.http_status || ''} ${ev.reason_code || ''}`.trim() || '拒绝原因未采集', 'reason', ax);
-        if (illus && firstReject) label(g, ax, y + 78, sc.fixed ? '与本机固定演示的实际返回码一致，见左栏' : '接口契约中的拒绝码；接入事件流后显示实际返回', 'lab mute', ax);
-        else if (!illus && firstReject) label(g, ax, y + 78, '本次运行实际返回', 'lab mute', ax);
+        label(g, rx, y + 60, `${p.http_status || ''} ${ev.reason_code || ''}`.trim() || '拒绝原因未采集', 'reason', rx);
+        if (illus && firstReject) label(g, rx, y + 78, sc.fixed ? '与本机固定演示的实际返回码一致，见左栏' : '接口契约中的拒绝码；接入事件流后显示实际返回', 'lab mute', rx);
+        else if (!illus && firstReject) label(g, rx, y + 78, '本次运行实际返回', 'lab mute', rx);
         return s;
       }
       case 'accept.committed': {
@@ -1391,7 +1405,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     C.as = chip(heads, 'as', 120, 272, '授权服务器', 'AS / OIDC OP');
     C.gateway = chip(heads, 'gateway', 470, 272, '执行网关', 'GM-MVP-1 验权');
     C.ledger = chip(heads, 'ledger', 810, 272, '授权与预算库', 'PostgreSQL');
-    C.threshold = chip(heads, 'threshold', 470, 368, '门限签名', '2-of-3 本机固定演示', null, false);
+    C.cosign = chip(heads, 'cosign', 470, 368, '双域共签', '授权域 × 执行域 · SM2');
     C.x402 = chip(heads, 'x402', 110, 520, '支付适配 x402', '本机固定演示', null, false);
     C.downstream = chip(heads, 'downstream', 360, 520, '模拟订单与通知', '幂等执行');
     C.audit = chip(heads, 'audit', 810, 520, '回执与审计', 'SM2 回执 / 检查点');
@@ -1418,12 +1432,14 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     label(rowsL, 660, 244, 'SM2 签名，SM3 绑定请求体', 'lab mute', 660);
     // 网关 → 库
     path(`M${C.gateway.x2 + 4},298 H${C.ledger.x1 - 6}`, 'main', 'a-accent');
-    for (const k of ['as', 'gateway', 'ledger']) C[k].g.classList.add('core');
+    for (const k of ['as', 'gateway', 'ledger', 'cosign']) C[k].g.classList.add('core');
     const gl = (C.gateway.x2 + C.ledger.x1) / 2;
     label(rowsL, gl, 290, '接受事务', 'lab', gl);
     label(rowsL, gl, 318, '撤销、预算、防重放', 'lab mute', gl);
-    // 门限批准：本机固定演示已接入接受事务
+    // 双域共签：授权域在 AS 侧独立核验后才出份额，合成的 SM2 批准随请求进入网关
     path('M470,368 V328', 'main', 'a-accent');
+    path(`M120,${C.as.bottom} V${C.cosign.cy} H${C.cosign.x1 - 6}`, '', 'a-mute');
+    label(rowsL, 132, C.cosign.cy - 8, '授权域核验后出份额', 'lab mute left', 132);
     // 网关 → 下游：先向左，再竖直下行
     path(`M${C.gateway.x1 - 4},298 H360 V514`, '', 'a-mute');
     label(rowsL, 372, 476, '不可变意图，幂等执行', 'lab mute left', 372);
@@ -1451,104 +1467,140 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     return dl;
   }
 
+  /* 左栏小节：标题 + 内容，所有页面共用 */
+  const section = (title, ...nodes) => { const d = h('div', 'sec'); d.append(h('h2', 'sub', title), ...nodes); return d; };
+  function limits(text) {
+    const d = h('div', 'limits');
+    d.append(h('h2', 'sub', '局限与边界'), h('p', null, text));
+    return d;
+  }
+
+  /* 总览：四种风险各对应一页，构成整场汇报的主线 */
+  const RISKS = [
+    ['令牌被复制', '持有者绑定：没有私钥，令牌用不了', 's1'],
+    ['代理多要权限', '委托收窄：子授权只能更小', 's3'],
+    ['用户中途撤销', '动态撤销：接受时复核当前状态', 's6'],
+    ['网关本身被攻破', '双域共签：授权域核验后才出份额', 'cosign'],
+  ];
+
   function briefFor(view) {
     const box = $('brief-main'); box.replaceChildren();
+    const ch = chapterOf(view);
+    const group = ch && (ch.groups.find(([, vs]) => vs.includes(view)) || [''])[0];
+    const kicker = h('p', 'kicker', ch ? ch.name + (group ? ' · ' + group : '') : '');
     if (SCENES[view]) {
       const sc = SCENES[view];
-      if (MORE_SCENES.includes(view)) {
-        const sw = h('div', 'switch');
-        for (const v of MORE_SCENES) {
-          const b = h('button', null, SCENES[v].no.replace('场景 ', '') + ' ' + SCENES[v].short); b.type = 'button';
-          b.setAttribute('aria-current', String(v === view));
-          b.addEventListener('click', () => setView(v));
-          sw.append(b);
-        }
-        box.append(sw);
-      }
-      box.append(h('p', 'kicker', sc.kicker || (sc.design ? '门限批准 · 设计示意' : sc.no)), h('h1', null, sc.title), h('p', 'lede', sc.lede));
-      box.append(h('h2', 'sub', '用到的协议'), pairsList(sc.stack));
-      box.append(h('h2', 'sub', '和原有做法比，改了什么'), pairsList(sc.delta, true), h('p', 'honest', sc.honest));
-      const proof = h('div', 'proof'); proof.id = 'proof'; box.append(proof);
+      box.append(kicker, h('h1', null, sc.title), h('p', 'lede', sc.lede));
+      box.append(section('用到的协议', pairsList(sc.stack)));
+      box.append(section('与原有做法相比', pairsList(sc.delta, true)));
+      box.append(limits(sc.honest));
+      const proof = h('div', 'proof sec'); proof.id = 'proof'; box.append(proof);
       ui.lastProofKey = ''; renderProof();
     } else if (view === 'overview') {
-      box.append(h('p', 'kicker', '系统总览'), h('h1', null, '一笔采购，经过谁的手'),
+      box.append(kicker, h('h1', null, '一笔采购，经过谁的手'),
         h('p', 'lede', '三个代理接力完成采购。它们只提出请求；能不能执行，由可信边界里的服务决定。'));
-      box.append(h('h2', 'sub', '每条连线用的协议'), pairsList([
+      const list = h('div', 'risks');
+      for (const [risk, fix, v] of RISKS) {
+        const b = h('button', 'risk-row'); b.type = 'button';
+        b.title = '转到：' + chapterOf(v).name + ' · ' + SCENES[v].short;
+        b.append(h('span', 'risk', risk), h('span', 'fix', fix), h('span', 'go', '→'));
+        b.addEventListener('click', () => setView(v));
+        list.append(b);
+      }
+      box.append(section('要防住的四种风险', list));
+      box.append(section('每条连线用的协议', pairsList([
         ['用户↔AS', 'OIDC 登录与用户同意；授权码 + PKCE ', 'RFC 7636'],
         ['代理↔AS', 'Token Exchange ', 'RFC 8693', '，两级委托，AS 统一签发'],
         ['代理→网关', 'AGPoP 令牌 + AG-Proof；SM2 签名，SM3 摘要'],
         ['网关↔库', '接受事务内复核撤销、共享预算与防重放'],
+        ['授权域↔网关', '双域协同 SM2 签名，授权域核验后才出份额'],
         ['网关→下游', '不可变意图、幂等执行、签名回执'],
-      ]));
-      box.append(h('h2', 'sub', '扩展能力与边界'), pairsList([
-        ['双域共签（SM2）', '核心机制；已接入采购网关与本机固定演示（六用例）；半诚实、两域、同一主机'],
-        ['FROST 2-of-3', '对照实现；已接入本机固定演示，份额仍由同一 OS 用户管理'],
-        ['x402', '本机测试链；付款意图须经双域共签批准，链上仍用 EIP-3009 结算；公网只读，测试链自建代币，不替代 OAuth 授权'],
-      ], true));
-      box.append(h('h2', 'sub', '三道防线'));
-      const go = h('div', 'actions');
-      for (const [v, t] of [['s1', '1 持有者绑定'], ['s3', '3 委托收窄'], ['s6', '6 动态撤销']]) {
-        const b = h('button', 'btn', t); b.type = 'button'; b.addEventListener('click', () => setView(v)); go.append(b);
-      }
-      box.append(go);
+      ])));
+      box.append(limits('合成采购业务，无真实付款；代理为确定性实现，未接入真实大模型。双域共签为半诚实两方、同一主机；x402 只用本机测试链。各页逐项写明边界。'));
     } else {
-      box.append(h('p', 'kicker', '真实记录'), h('h1', null, '用真实运行核对'),
-        h('p', 'lede', '前面的过程图是示意推演。这里读取本机真实运行留下的记录，或者现场再跑一次。'));
-      box.append(h('h2', 'sub', '怎么读这些记录'), pairsList([
+      box.append(kicker, h('h1', null, '用真实运行核对'),
+        h('p', 'lede', '前面各页的过程图是示意推演。这里只显示本机真实运行留下的结果，或者现场再跑一次。'));
+      const toc = h('div', 'toc'); toc.id = 'evidence-toc';
+      box.append(section('本页内容', toc));
+      box.append(section('怎么读这些记录', pairsList([
         ['现场运行', '真实启动隔离环境执行测试；场景约 1–3 分钟，完整采购约 5–8 分钟'],
         ['记录回放', '读取之前真实运行保存的断言记录，并校验快照摘要'],
         ['失败', '运行失败如实显示，不会被当成成功'],
         ['前提', '本机服务已启动，Docker Desktop 正在运行'],
-      ], true));
+      ], true)));
       const conn = h('p', 'honest'); conn.id = 'conn-line'; box.append(conn);
-      renderConn();
+      renderConn(); renderToc();
+    }
+  }
+
+  /* 左栏顶部的章内导航：只有一页的章节不显示 */
+  function renderSubnav(view) {
+    const nav = $('subnav'), ch = chapterOf(view);
+    nav.replaceChildren();
+    const pages = ch ? ch.groups.flatMap(([, vs]) => vs) : [];
+    nav.hidden = pages.length < 2;
+    if (nav.hidden) return;
+    for (const [name, vs] of ch.groups) {
+      const row = h('div', 'subnav-row');
+      if (name) row.append(h('span', 'subnav-k', name));
+      for (const v of vs) {
+        const b = h('button', null, SCENES[v].short); b.type = 'button';
+        b.setAttribute('aria-current', String(v === view));
+        b.addEventListener('click', () => setView(v));
+        row.append(b);
+      }
+      nav.append(row);
     }
   }
 
   /* ---------- 章节切换 ---------- */
   function setView(view, push) {
-    if (view === 'more') view = ui.moreView;
+    if (view === 'more') view = 's2'; // 旧链接兼容
+    const asChapter = CHAPTERS.find(c => c.k === view);
+    if (asChapter && !VIEWS.includes(view)) view = ui.lastIn[asChapter.k] || asChapter.groups[0][1][0];
     if (!VIEWS.includes(view)) view = 'overview';
     stop();
     ui.view = view;
-    if (MORE_SCENES.includes(view)) ui.moreView = view;
+    const ch = chapterOf(view);
+    ui.lastIn[ch.k] = view;
     if (ui.steps[view] == null) ui.steps[view] = 0;
     ui.follow = false;
     closeModule(true);
-    const navKey = MORE_SCENES.includes(view) ? 'more' : view;
-    document.querySelectorAll('#chapters button').forEach(b => b.setAttribute('aria-current', String(b.dataset.view === navKey)));
+    document.querySelectorAll('#chapters button').forEach(b => b.setAttribute('aria-current', String(b.dataset.chapter === ch.k)));
     const isScene = !!SCENES[view], isRec = view === 'evidence';
     // SVG 元素不支持 hidden 属性的 IDL 写法，必须用 attribute 切换
     $('diagram').toggleAttribute('hidden', isRec);
     $('records').hidden = !isRec;
     $('ctrl').hidden = !isScene;
     $('count').hidden = !isScene;
+    renderSubnav(view);
     briefFor(view);
+    $('brief').scrollTop = 0;
     if (isScene) { buildScene(view); showStep(ui.steps[view], false); }
     else if (view === 'overview') {
       buildOverview(); setSource('model');
-      $('cap').replaceChildren(h('strong', null, '系统模型'), h('span', null, '代理只提出意图；令牌由 AS 统一签发，网关在接受前做确定性检查。'));
+      $('cap').replaceChildren(h('strong', null, '系统模型'), h('span', null, '代理只提出意图；令牌由 AS 统一签发，授权域与网关在接受前做确定性检查。'));
     } else {
       ui.lastRecordsKey = ''; renderRecords(); setSource('real');
-      $('cap').replaceChildren(h('strong', null, '真实记录'), h('span', null, '这里的结果全部来自本机服务；没有读到的内容显示为未读取。'));
+      $('cap').replaceChildren(h('strong', null, '运行证据'), h('span', null, '这里的结果全部来自本机服务；没有读到的内容显示为未读取。'));
     }
     if (push !== false && location.hash !== '#' + view) { try { history.replaceState(null, '', '#' + view); } catch (e) { /* 预览环境可能不允许 */ } }
   }
+  /* 右上角来源：三种来源始终并列，当前这一屏的来源点亮，旁边一句说明 */
   function setSource(kind) {
-    const sw = $('source').querySelector('.sw');
     const map = {
-      real: ['live', '真实记录，来自本机服务'],
-      live: ['live', '现场运行，事件来自本机服务'],
-      replay: ['replay', '记录回放，事件来自保存的运行'],
-      model: ['replay', '架构说明'],
-      design: ['illus', '流程示意，真实结果见左栏'],
-      illus: ['illus', '示意推演，未连接事件流'],
-    }[kind] || ['illus', '示意推演'];
-    sw.className = 'sw ' + map[0];
+      real: [['live', 'replay'], '结果来自本机服务'],
+      live: [['live'], '事件来自本机服务'],
+      replay: [['replay'], '事件来自保存的运行'],
+      model: [[], '架构图，不是运行结果'],
+      design: [['illus'], '真实结果见左栏'],
+      illus: [['illus'], '未连接事件流'],
+    }[kind] || [['illus'], ''];
     $('source').className = 'source src-' + kind;
+    $('source').querySelectorAll('.src-pill').forEach(p => p.classList.toggle('on', map[0].includes(p.dataset.src)));
     $('source-text').textContent = map[1];
   }
-  document.querySelectorAll('#chapters button').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+  document.querySelectorAll('#chapters button').forEach(b => b.addEventListener('click', () => setView(b.dataset.chapter)));
 
   /* ---------- 模块说明 ---------- */
   function openModule(k) {
@@ -1565,7 +1617,13 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
   }
   $('back').addEventListener('click', () => closeModule());
 
-  const KEYS = {'0': 'overview', '1': 's1', '2': 's2', '3': 's3', '4': 's4', '5': 's5', '6': 's6', '7': 's7'};
+  // 数字键 1–5 切换章节，[ ] 在章内翻页
+  const KEYS = Object.fromEntries(CHAPTERS.map((c, i) => [String(i + 1), c.k]));
+  function pageStep(d) {
+    const pages = chapterOf(ui.view).groups.flatMap(([, vs]) => vs);
+    const i = pages.indexOf(ui.view) + d;
+    if (i >= 0 && i < pages.length) setView(pages[i]);
+  }
   document.addEventListener('keydown', e => {
     const onCtl = e.target.closest && e.target.closest('button,[role=button]');
     if (e.key === 'Escape' && !$('module').hidden) { closeModule(); return; }
@@ -1573,6 +1631,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     if (e.key === 'ArrowRight') step(1);
     else if (e.key === 'ArrowLeft') step(-1);
     else if (e.key === ' ' && !onCtl && SCENES[ui.view]) { e.preventDefault(); $('play').click(); }
+    else if (e.key === '[' || e.key === ']') pageStep(e.key === ']' ? 1 : -1);
     else if (KEYS[e.key]) setView(KEYS[e.key]);
   });
 
@@ -1597,7 +1656,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       ui.connected = false;
     }
     await pollFeed();
-    renderProof(); renderRecords(); renderConn();
+    renderProof(); renderRecords(); renderConn(); renderToc();
   }
 
   /*
@@ -1704,7 +1763,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       },
     },
     threshold: {
-      title: '门限批准', action: 'threshold-run',
+      title: '对照：旧版 FROST', action: 'threshold-run',
       idle: '有效批准只下一单；缺批准、份额不足、伪造、篡改、撤销都会被拒绝。需要 Docker Desktop，临时数据库会自动准备和清理。',
       summary: d => `订单 ${d.orders}，批准绑定 ${d.approvals}，操作 ${d.operations}；残留资源 ${d.resources_remaining}`,
       names: {
@@ -1724,6 +1783,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       },
     },
   };
+  const ms = v => (Number.isFinite(v) ? v.toFixed(2) + ' ms' : '未采集');
   function fixedBlock(kind) {
     const F = FIXED_DEMOS[kind], demo = (ui.state && ui.state[kind]) || null, tj = job();
     const out = [];
@@ -1750,7 +1810,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       if (demo) {
         out.push(h('p', 'code', `run_id: ${demo.run_id}`),
           h('p', 'honest', `来源：${demo.source_label}；原 completed_at: ${demo.completed_at}。右侧始终为示意推演。`),
-          h('p', 'honest', `本次三轮耗时（单次运行，非统计结果）：第一轮 ${demo.timing_ms.round1} ms；含检查第二轮 ${demo.timing_ms.round2_with_checks} ms；含验签第三轮 ${demo.timing_ms.round3_with_verify} ms`));
+          h('p', 'honest', `本次三轮耗时（单次运行，非统计结果）：第一轮 ${ms(demo.timing_ms.round1)}；含检查第二轮 ${ms(demo.timing_ms.round2_with_checks)}；含验签第三轮 ${ms(demo.timing_ms.round3_with_verify)}`));
       }
     }
     if (demo && Array.isArray(demo.cases)) {
@@ -1773,7 +1833,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     const box = $('proof'); if (!box || !SCENES[ui.view]) return;
     const sc = SCENES[ui.view];
     if (ui.view === 'cosign') {
-      box.replaceChildren(h('h2', 'sub', '双域共签现场运行与保存结果'), ...fixedBlock('cosign'));
+      box.replaceChildren(h('h2', 'sub', '运行证据'), ...fixedBlock('cosign'));
       return;
     }
     if (!sc.catalogId) {
@@ -1781,7 +1841,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       const key = JSON.stringify([ui.view, ui.connected, !!ui.token, ui.posting, st[sc.fixed], tj && [tj.status, tj.stage, tj.elapsed, tj.action]]);
       if (key === ui.lastProofKey) return;
       ui.lastProofKey = key;
-      box.replaceChildren(h('h2', 'sub', '真实记录'), ...fixedBlock(sc.fixed));
+      box.replaceChildren(h('h2', 'sub', '运行证据'), ...fixedBlock(sc.fixed));
       return;
     }
     const id = sc.catalogId;
@@ -1791,7 +1851,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     const key = JSON.stringify([ui.connected, !!ui.token, ui.posting, item, res, j && [j.status, j.stage, j.elapsed, j.scenario_id]]);
     if (key === ui.lastProofKey) return;
     ui.lastProofKey = key;
-    box.replaceChildren(h('h2', 'sub', '真实记录'));
+    box.replaceChildren(h('h2', 'sub', '运行证据'));
     const line = h('p', 'proof-line');
     if (!ui.connected) {
       line.append(h('span', 'none', '本机服务未连接'), h('small', null, '过程图仍可讲解；真实记录需要启动本机服务。'));
@@ -1813,7 +1873,32 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     c.textContent = ui.connected ? '本机服务：已连接。' : '本机服务：未连接。请在仓库根目录运行 python3 tools/teacher_demo_server.py，然后打开 http://127.0.0.1:8765/';
   }
 
-  /* "真实记录"视图 */
+  /* "运行证据"视图：分节顺序与顶栏章节一致 */
+  const REC_SECTIONS = [
+    ['rec-flow', '总览', '完整采购流程'],
+    ['rec-scenes', '基础防线', '安全场景'],
+    ['rec-cosign', '核心机制', '双域共签'],
+    ['rec-threshold', '核心机制', '对照：旧版 FROST'],
+    ['rec-x402', '扩展', 'x402 支付'],
+  ];
+  const recHead = (sec, id) => {
+    const [, tag, title] = REC_SECTIONS.find(r => r[0] === id);
+    sec.id = id;
+    const h3 = h('h3'); h3.append(h('span', 'tag', tag), document.createTextNode(title));
+    return h3;
+  };
+  /* 按章内分组排列场景；目录里出现未知用例时归入"其他"，不丢弃 */
+  function sceneGroups() {
+    const byCatalog = new Map(Object.values(SCENES).filter(sc => sc.catalogId).map(sc => [sc.catalogId, sc]));
+    const defense = CHAPTERS.find(c => c.k === 'defense');
+    const items = catalog(), used = new Set();
+    const groups = defense.groups.map(([name, vs]) => [name, vs.map(v => items.find(it => it.id === SCENES[v].catalogId)).filter(Boolean)]);
+    groups.forEach(([, its]) => its.forEach(it => used.add(it.id)));
+    const rest = items.filter(it => !used.has(it.id));
+    if (rest.length) groups.push(['其他', rest]);
+    return groups.map(([name, its]) => [name, its.map(it => [it, byCatalog.get(it.id)])]);
+  }
+
   function renderRecords() {
     const box = $('records'); if (!box || ui.view !== 'evidence') return;
     const st = ui.state || {};
@@ -1822,35 +1907,12 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     ui.lastRecordsKey = key;
     const keepScroll = box.scrollTop;
     box.replaceChildren();
-
     const j = job();
-    const s1 = h('section');
-    s1.append(h('h3', null, '七个安全场景'), h('p', 'hint', '每一项对应一组真实的集成测试。"读取记录"回放之前保存的结果，"现场运行"重新执行一次。'));
-    if (j && ['scenario-run', 'scenario-replay'].includes(j.action)) s1.append(h('p', 'job' + (j.status === 'failed' ? ' failed' : ''), jobText(j)));
-    const ul = h('ul', 'rec-list');
-    catalog().forEach((item, i) => {
-      const li = h('li'); const row = h('div', 'rec-row');
-      const res = results()[item.id];
-      const [cls, txt] = ui.connected ? resultLine(res) : ['none', '未连接'];
-      const t = h('div', 't', item.title); t.append(h('small', null, item.defense || ''));
-      const src = h('div', 'src');
-      if (res) src.append(h('i', 'sw ' + (res.mode === 'current_run' ? 'live' : 'replay')), document.createTextNode(modeText(res)));
-      row.append(h('span', 'n', String(i + 1)), t, h('span', 'st ' + cls, txt), src, actionButtons(item, true));
-      li.append(row);
-      if (res) {
-        const open = ui.openRecords.has(item.id);
-        const more = h('button', 'rec-more', open ? '收起详情' : '查看详情'); more.type = 'button';
-        more.addEventListener('click', () => { if (open) ui.openRecords.delete(item.id); else ui.openRecords.add(item.id); ui.lastRecordsKey = ''; renderRecords(); });
-        li.append(more);
-        if (open) li.append(recordDetail(item, res));
-      }
-      ul.append(li);
-    });
-    s1.append(ul);
 
+    /* 1. 完整采购流程与离线验证 */
     const s2 = h('section');
     const result = st.live || st.history;
-    s2.append(h('h3', null, '完整采购流程'), h('p', 'hint', result ? (st.live ? '最近一次现场运行。' : '历史记录回放，不是本次运行。') + '运行编号 ' + result.run_id : '还没有可读取的成功记录；这里不会显示预设结果。'));
+    s2.append(recHead(s2, 'rec-flow'), h('p', 'hint', result ? (st.live ? '最近一次现场运行。' : '历史记录回放，不是本次运行。') + '运行编号 ' + result.run_id : '还没有可读取的成功记录；这里不会显示预设结果。'));
     if (result) {
       const facts = h('div', 'facts');
       const root = result.counters && result.counters[0];
@@ -1891,15 +1953,75 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       for (const [k, val] of Object.entries(v.boundaries || {})) dl.append(h('dt', null, names[k] || k), h('dd', 'code', String(val)));
       s2.append(dl, h('p', 'hint', '一致性通过只说明证据与信任材料相符；当前授权仍未知，下游效果依赖见证，历史可能存在缺口。'));
     }
-    const s3 = h('section');
-    s3.append(h('h3', null, '门限批准与 x402 支付'), h('p', 'hint', '两项扩展能力的本机固定演示：在专用临时环境里真实运行一组正负用例，结束后自动清理。'));
-    for (const kind of ['cosign', 'threshold', 'x402']) {
-      const sub = h('div', 'fixed-demo');
-      sub.append(h('h4', null, FIXED_DEMOS[kind].title), ...fixedBlock(kind));
-      s3.append(sub);
+
+    /* 2. 安全场景，按"三道防线 / 更多保障"分组 */
+    const s1 = h('section');
+    s1.append(recHead(s1, 'rec-scenes'), h('p', 'hint', '每一项对应一组真实的集成测试。"读取记录"回放之前保存的结果，"现场运行"重新执行一次；"看过程"打开对应讲解页。'));
+    if (j && ['scenario-run', 'scenario-replay'].includes(j.action)) s1.append(h('p', 'job' + (j.status === 'failed' ? ' failed' : ''), jobText(j)));
+    for (const [gname, rows] of sceneGroups()) {
+      s1.append(h('h4', 'rec-group', gname));
+      const ul = h('ul', 'rec-list');
+      for (const [item, sc] of rows) {
+        const li = h('li'); const row = h('div', 'rec-row');
+        const res = results()[item.id];
+        const [cls, txt] = ui.connected ? resultLine(res) : ['none', '未连接'];
+        const t = h('div', 't', sc ? sc.short : item.title); t.append(h('small', null, item.defense || item.title || ''));
+        const src = h('div', 'src');
+        if (res) src.append(h('i', 'sw ' + (res.mode === 'current_run' ? 'live' : 'replay')), document.createTextNode(modeText(res)));
+        const btns = actionButtons(item, true);
+        if (sc) {
+          const view = Object.keys(SCENES).find(k => SCENES[k] === sc);
+          const see = h('button', 'btn ghost-btn', '看过程'); see.type = 'button';
+          see.addEventListener('click', () => setView(view));
+          btns.prepend(see);
+        }
+        row.append(t, h('span', 'st ' + cls, txt), src, btns);
+        li.append(row);
+        if (res) {
+          const open = ui.openRecords.has(item.id);
+          const more = h('button', 'rec-more', open ? '收起详情' : '查看详情'); more.type = 'button';
+          more.addEventListener('click', () => { if (open) ui.openRecords.delete(item.id); else ui.openRecords.add(item.id); ui.lastRecordsKey = ''; renderRecords(); });
+          li.append(more);
+          if (open) li.append(recordDetail(item, res));
+        }
+        ul.append(li);
+      }
+      s1.append(ul);
     }
-    box.append(s1, s2, s3);
+
+    /* 3–5. 固定演示：双域共签、FROST 对照、x402 */
+    const fixed = [['rec-cosign', 'cosign', '固定六用例，真实 AS 授权链与双域共签。'], ['rec-threshold', 'threshold', '上一版 2-of-3 FROST 方案的固定用例，保留作对照。'], ['rec-x402', 'x402', '本机测试链与自建测试代币，付款意图须经双域共签批准。']];
+    const secs = fixed.map(([id, kind, hint]) => {
+      const sec = h('section');
+      sec.append(recHead(sec, id), h('p', 'hint', hint));
+      const sub = h('div', 'fixed-demo'); sub.append(...fixedBlock(kind)); sec.append(sub);
+      return sec;
+    });
+    box.append(s2, s1, ...secs);
     box.scrollTop = keepScroll;
+    renderToc();
+  }
+
+  /* 左栏目录：每节一行，状态只取自本机服务返回的数据 */
+  function renderToc() {
+    const toc = $('evidence-toc'); if (!toc) return;
+    const st = ui.state || {};
+    const fixed = d => !d ? ['none', '尚未运行'] : d.passed ? ['ok', '全部符合预期'] : ['bad', '有用例不符合预期'];
+    const res = Object.values(results());
+    const total = catalog().length, passed = res.filter(r => r && r.status === 'passed').length, failed = res.filter(r => r && r.status === 'failed').length;
+    const status = {
+      'rec-flow': st.live ? ['ok', '现场运行'] : st.history ? ['ok', '记录回放'] : ['none', '尚无记录'],
+      'rec-scenes': !res.length ? ['none', '尚未读取'] : [failed ? 'bad' : 'ok', `通过 ${passed} / ${total}`],
+      'rec-cosign': fixed(st.cosign), 'rec-threshold': fixed(st.threshold), 'rec-x402': fixed(st.x402),
+    };
+    toc.replaceChildren();
+    for (const [id, tag, title] of REC_SECTIONS) {
+      const b = h('button', 'toc-row'); b.type = 'button';
+      const [cls, txt] = ui.connected ? status[id] : ['none', '未连接'];
+      b.append(h('span', 'tag', tag), h('span', 'tt', title), h('span', 'pill ' + cls, txt));
+      b.addEventListener('click', () => { const t = $(id); if (t) t.scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block: 'start'}); });
+      toc.append(b);
+    }
   }
 
   function recordDetail(item, res) {
