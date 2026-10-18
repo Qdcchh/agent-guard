@@ -1,0 +1,53 @@
+{
+  "run_id": "5efd0b13-bf3e-4062-b8ed-0048e110dbb9",
+  "passed": true,
+  "completed_at": 1792236213,
+  "scheme": "sm2-2p",
+  "public_key_fingerprint": "b3fbce179c781277",
+  "orders": 1,
+  "operations": 1,
+  "approvals": 1,
+  "resources_remaining": 0,
+  "cases": [
+    {
+      "name": "cosign-valid-one-order",
+      "passed": true,
+      "http_status": 202
+    },
+    {
+      "name": "missing-approval",
+      "passed": true,
+      "http_status": 401,
+      "code": "APPROVAL_REQUIRED"
+    },
+    {
+      "name": "exec-domain-alone",
+      "passed": true,
+      "http_status": 401,
+      "code": "INVALID_SIGNATURE"
+    },
+    {
+      "name": "tampered-amount",
+      "passed": true,
+      "http_status": 409,
+      "code": "APPROVAL_MISMATCH"
+    },
+    {
+      "name": "revoked-before-cosign",
+      "passed": true,
+      "refused_by": "authz",
+      "code": "AUTHZ_REVOKED"
+    },
+    {
+      "name": "revoked-after-cosign",
+      "passed": true,
+      "http_status": 403,
+      "code": "REVOKED"
+    }
+  ],
+  "timing_ms": {
+    "round1": 5.132124992087483,
+    "round2_with_checks": 25.076666963286698,
+    "round3_with_verify": 0.6650000577792525
+  }
+}

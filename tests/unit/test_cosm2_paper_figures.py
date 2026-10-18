@@ -7,13 +7,14 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
+DATA_ROOT = ROOT / "tests/fixtures/cosm2_paper_evidence"
 SPEC = importlib.util.spec_from_file_location("figures", ROOT / "tools/cosm2_paper_figures.py")
 figures = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(figures)
 
 
 def test_partial_evidence_only():
-    index = figures.build_index()
+    index = figures.build_index(DATA_ROOT)
     assert len(index["cells"]) == 56
     observed = [cell for cell in index["cells"] if cell["status"] == "OBSERVED"]
     assert len(observed) == 3
@@ -26,7 +27,7 @@ def test_partial_evidence_only():
     "change", ["scheme", "unknown_code", "bool_status", "extra", "duplicate_case"]
 )
 def test_bad_source_refused(tmp_path, change):
-    result = json.loads((ROOT / figures.SOURCE).read_text())
+    result = json.loads((DATA_ROOT / figures.SOURCE).read_text())
     if change == "scheme":
         result["profile"] = "AG-COSM2-APPROVAL-1"
     elif change == "unknown_code":
@@ -58,7 +59,7 @@ LIVE_RUN = "b944d1ab-4525-46a9-8bb1-1a9dbdbdca00"
 
 
 def test_actual_run_index_maps_only_observed_locations():
-    index = figures.build_index(cosm2_run=LIVE_RUN)
+    index = figures.build_index(DATA_ROOT, cosm2_run=LIVE_RUN)
     assert index["status"] == "OBSERVED_FIXED_RUN"
     assert len(index["cells"]) == 28
     observed = [cell for cell in index["cells"] if cell["status"] == "OBSERVED"]
@@ -79,7 +80,7 @@ def live_source(tmp_path):
     folder = tmp_path / relative
     folder.mkdir(parents=True)
     for name in ("result.json", "negative-matrix.json"):
-        (folder / name).write_bytes((ROOT / relative / name).read_bytes())
+        (folder / name).write_bytes((DATA_ROOT / relative / name).read_bytes())
     return tmp_path, folder
 
 
@@ -163,7 +164,7 @@ def test_invalid_actual_observations_cannot_supply_figure(live_source, change):
 
 def test_actual_b9_effect_refusals_are_provenance_outside_four_columns():
     run = "5efd0b13-bf3e-4062-b8ed-0048e110dbb9"
-    index = figures.build_index(cosm2_run=run)
+    index = figures.build_index(DATA_ROOT, cosm2_run=run)
     assert len(index["cells"]) == 28
     assert len(index["additional_effect_observations"]) == 3
     assert all(
@@ -182,7 +183,7 @@ def test_effect_observations_remain_strict(tmp_path, change):
     folder = tmp_path / relative
     folder.mkdir(parents=True)
     for name in ("result.json", "negative-matrix.json"):
-        (folder / name).write_bytes((ROOT / relative / name).read_bytes())
+        (folder / name).write_bytes((DATA_ROOT / relative / name).read_bytes())
     path = folder / "negative-matrix.json"
     matrix = json.loads(path.read_text())
     effect = next(o for o in matrix["observations"] if o["case_id"].startswith("downstream-"))

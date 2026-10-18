@@ -1,0 +1,80 @@
+{
+  "demo": "threshold-gateway-purchase",
+  "run_id": "9982ea76-0998-4832-9eab-c65a6cea4548",
+  "profile": "AG-GUARD-THRESHOLD-APPROVAL-1",
+  "passed": true,
+  "cases": [
+    {
+      "name": "missing-approval",
+      "passed": true,
+      "http_status": 401,
+      "code": "APPROVAL_REQUIRED"
+    },
+    {
+      "name": "insufficient-and-duplicate",
+      "passed": true,
+      "extra": {
+        "one_returncode": 1,
+        "duplicate_returncode": 1
+      }
+    },
+    {
+      "name": "fake-signature",
+      "passed": true,
+      "http_status": 401,
+      "code": "INVALID_SIGNATURE"
+    },
+    {
+      "name": "valid-approval-one-order",
+      "passed": true,
+      "http_status": 202,
+      "retry_http_status": 202,
+      "orders": 1
+    },
+    {
+      "name": "tampered-amount",
+      "passed": true,
+      "http_status": 409,
+      "code": "APPROVAL_MISMATCH"
+    },
+    {
+      "name": "revoked-ancestor",
+      "passed": true,
+      "http_status": 403,
+      "code": "REVOKED"
+    }
+  ],
+  "operations": 1,
+  "approvals": 1,
+  "orders": 1,
+  "budget": [
+    [
+      0,
+      0,
+      70000,
+      0,
+      1
+    ],
+    [
+      1,
+      0,
+      70000,
+      0,
+      1
+    ],
+    [
+      2,
+      0,
+      70000,
+      0,
+      1
+    ]
+  ],
+  "resources_remaining": [],
+  "limitations": [
+    "same-host teaching deployment; trusted dealer and one OS user",
+    "FROST-Ed25519 group approval is not an SM2 signature",
+    "no independent organization isolation; not production ready",
+    "no x402 payment path"
+  ]
+}
