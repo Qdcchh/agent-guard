@@ -1,0 +1,41 @@
+from dataclasses import replace
+import psycopg,pytest
+from agent_guard.contracts.execution import ExecutionError,ExecutionErrorCode,ToolId
+from agent_guard.contracts.encoding import canonical_json_bytes
+from agent_guard.tools.catalog import CatalogQuote,CatalogQuoteLine,snapshot_from_bytes
+from tests.fixtures.execution import constraints_for,permission_for,order_params,expire_lease
+from tests.fixtures.dbstate import fetch_counts,fetch_counters
+
+@pytest.mark.parametrize('entry',['execute','query'])
+def test_maximum_width_zero_price_order_does_not_accept_read_shape(a2,entry):
+    skus=tuple('s'+str(i).zfill(3)+'x'*124 for i in range(256));maximum=2**53-1
+    a2.catalog.replace_quote(CatalogQuote('quote-001','1','supplier-001','req-001',tuple(CatalogQuoteLine(s,maximum,0) for s in skus)))
+    permission=permission_for(a2.tree,chain=tuple(constraints_for(i,skus=skus,max_quantity=maximum) for i in range(3)))
+    invocation=a2.tree.invocation(tool_id=ToolId.ORDER_CREATE.value,params=order_params(items=tuple((s,maximum) for s in skus)))
+    accepted=a2.service.accept_invocation(invocation,permission);op=a2.service.load_operation(accepted.operation_id)
+    assert accepted.cost.amount_fen==0 and len(snapshot_from_bytes(op.quote_snapshot).items)==256
+    real=a2.downstream
+    class BadPort:
+        def mutate(self,out):
+            assert out is not None
+            return replace(out,effect_ref=None,result_bytes=canonical_json_bytes(dict(kind='read',operation_id=op.operation_id,tool_id=op.tool_id)))
+        def execute(self,**kw):return self.mutate(real.execute(**kw))
+        def query(self,**kw):return self.mutate(real.query(**kw))
+    if entry=='query':real.execute(service_secret=a2.service._secret,operation_id=op.operation_id,tool_id=ToolId.ORDER_CREATE,canonical_params=op.canonical_params,quote=snapshot_from_bytes(op.quote_snapshot),expected_amount_fen=0)
+    a2.service._downstream=BadPort()
+    result=(a2.service.run_operation if entry=='execute' else a2.service.reconcile)(op.operation_id)
+    assert result.status=='UNKNOWN' and result.action is None
+    for g in [a2.tree.root_id,a2.tree.mid_id,a2.tree.leaf_id]:assert fetch_counters(a2.gateway_dsn,g)==dict(amount_reserved=0,amount_settled=0,calls_reserved=1,calls_settled=0)
+    assert a2.service.outbox_entry(op.operation_id) is None
+    a2.service._downstream=real;expire_lease(a2.gateway_dsn,op.operation_id)
+    assert a2.service.run_operation(op.operation_id).status=='SUCCEEDED'
+    for g in [a2.tree.root_id,a2.tree.mid_id,a2.tree.leaf_id]:assert fetch_counters(a2.gateway_dsn,g)==dict(amount_reserved=0,amount_settled=0,calls_reserved=0,calls_settled=1)
+    with psycopg.connect(a2.downstream_dsn) as c:assert c.execute('SELECT count(*) FROM ds_orders').fetchone()==(1,)
+    with psycopg.connect(a2.gateway_dsn) as c:
+        assert c.execute('SELECT phase FROM ag_ledger_events WHERE operation_id=%s ORDER BY seq',(op.operation_id,)).fetchall()==[('RESERVE',),('SETTLE',)]
+        assert c.execute('SELECT count(*) FROM ag_receipt_outbox').fetchone()==(1,)
+    before=fetch_counts(a2.gateway_dsn)
+    over=replace(invocation,canonical_params=order_params(items=tuple((s,maximum) for s in skus)+(('last',1),)),proof_jti='independent-over-bound')
+    with pytest.raises(ExecutionError) as exc:a2.service.accept_invocation(over,permission)
+    assert exc.value.code is ExecutionErrorCode.INVALID_PARAMS
+    assert fetch_counts(a2.gateway_dsn)==before

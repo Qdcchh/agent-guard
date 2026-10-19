@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "files": {
+    "source/a31_enhanced_live_r1.pth": {
+      "path": "sidecars/source/a31_enhanced_live_r1.pth.txt",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/native-final-archives-r2/source-sidecar-files/a31_enhanced_live_r1.pth",
+      "sha256": "2be4c84c34a38931c59eeca937245691990d7ad68f415b568c97bd6cf573b3ef"
+    },
+    "source/a31_enhanced_live_r1.py": {
+      "path": "sidecars/source/a31_enhanced_live_r1.py.txt",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/native-final-archives-r2/source-sidecar-files/a31_enhanced_live_r1.py",
+      "sha256": "bcc25f52162d7a5d1609df89ecb3643ab801c2b8df1d36039e790d176b7208ec"
+    },
+    "source/a31_runtime_observer.pth": {
+      "path": "sidecars/source/a31_runtime_observer.pth.txt",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/native-final-archives-r2/source-sidecar-files/a31_runtime_observer.pth",
+      "sha256": "c14942db734f447a40d60eb96b7d98d9e4f6df4625627d0b01a4ab99e6fba324"
+    },
+    "source/a31_runtime_observer.py": {
+      "path": "sidecars/source/a31_runtime_observer.py.txt",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/native-final-archives-r2/source-sidecar-files/a31_runtime_observer.py",
+      "sha256": "3406f8059492ccc0179623b23baa9333e28ffe12f16925aa64d9cfbfa576d6a3"
+    },
+    "wheel/a31_enhanced_live_r1.pth": {
+      "path": "sidecars/wheel/a31_enhanced_live_r1.pth.txt",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/native-final-archives-r2/wheel-sidecar-files/a31_enhanced_live_r1.pth",
+      "sha256": "2be4c84c34a38931c59eeca937245691990d7ad68f415b568c97bd6cf573b3ef"
+    },
+    "wheel/a31_enhanced_live_r1.py": {
+      "path": "sidecars/wheel/a31_enhanced_live_r1.py.txt",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/native-final-archives-r2/wheel-sidecar-files/a31_enhanced_live_r1.py",
+      "sha256": "bcc25f52162d7a5d1609df89ecb3643ab801c2b8df1d36039e790d176b7208ec"
+    },
+    "wheel/a31_runtime_observer.pth": {
+      "path": "sidecars/wheel/a31_runtime_observer.pth.txt",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/native-final-archives-r2/wheel-sidecar-files/a31_runtime_observer.pth",
+      "sha256": "c14942db734f447a40d60eb96b7d98d9e4f6df4625627d0b01a4ab99e6fba324"
+    },
+    "wheel/a31_runtime_observer.py": {
+      "path": "sidecars/wheel/a31_runtime_observer.py.txt",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/native-final-archives-r2/wheel-sidecar-files/a31_runtime_observer.py",
+      "sha256": "3406f8059492ccc0179623b23baa9333e28ffe12f16925aa64d9cfbfa576d6a3"
+    }
+  }
+}

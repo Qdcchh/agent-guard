@@ -1,0 +1,7 @@
+# PR9 candidate1完整内容冻结
+
+基线eafb6f28aa87a041e149c0190b76054424f1c9cf，不把旧HEAD当当前候选。全部实施writer已SOURCE STOP，runtime自查仍运行，尚非资源STOP或ACCEPTED。candidate1-manifest.json覆盖当前全部Git tracked内容、明确公开新源码/策展/依赖/任务资料，以及真人授权CSS、03docx和main.pdf；aux/out/synctex和所有ignored私密artifact/原DB/key/cipher不在发布候选。
+
+本轮源码、测试、fixture、配置、锁、资料在独立审查期间不变。任何真实失败需补源码时主控先停止审查并宣告候选失效，再授low补正；不得并发写。新high完整IMPLEMENTATION_ACCEPTANCE须独立核对原6839节点保留、非PG全范围、当前owner/三域/TLS、真实下载解密110+当前139安装绑定、source/wheel+原20组、全部负例与用户材料。环境按实际21pin hash锁及x402原hash锁；key不进Git/参数/公开日志，GitHub受管Secret有意持久保留。
+
+全新high仅能写自身排除artifact目录和自己的验收报告，必须保存开始/结束清单、真实失败及owner资源清零证据。公开接受/报告及最终包装状态属于单独记录的审查输出，不是受审业务源码；最终Git diff须确认只有已声明的状态/报告追加。不能用package/transport专域审查代完整接受。最终root唯一commit/push，GitHub最新exact head全部CI通过后用expectedSHA普通squash合并，随后verify远端main。

@@ -1,0 +1,37 @@
+import ssl,http.client,subprocess,sys,os,stat
+import pytest
+import tests.integration.test_server_tls as tls
+pytest_plugins=["tests.integration.conftest"]
+
+def test_verified_ca_hostname_and_full_tls_flow(ledger,dsn,tmp_path,monkeypatch):
+    called=[]
+    def verified_request(port,method,path,body=None,headers=None):
+        if not called:
+            with pytest.raises(ssl.SSLCertVerificationError):
+                c=http.client.HTTPSConnection('localhost',port,context=ssl.create_default_context(),timeout=5)
+                try: c.request('GET','/ag/keys'); c.getresponse()
+                finally: c.close()
+            with pytest.raises(ssl.SSLCertVerificationError):
+                c=http.client.HTTPSConnection('127.0.0.1',port,context=ssl.create_default_context(cafile=str(tmp_path/'tls-cert.pem')),timeout=5)
+                try: c.request('GET','/ag/keys'); c.getresponse()
+                finally: c.close()
+        context=ssl.create_default_context(cafile=str(tmp_path/'tls-cert.pem'))
+        assert context.check_hostname and context.verify_mode==ssl.CERT_REQUIRED
+        c=http.client.HTTPSConnection('localhost',port,context=context,timeout=20)
+        try:
+            c.request(method,path,body=body,headers=headers or {})
+            r=c.getresponse(); called.append((method,path.split('?')[0],r.status))
+            return r.status,{k.lower():v for k,v in r.getheaders()},r.read()
+        finally: c.close()
+    monkeypatch.setattr(tls,'_request',verified_request)
+    tls.test_tls_server_runs_the_full_as_flow(ledger,dsn,tmp_path)
+    assert called==[('GET','/.well-known/openid-configuration',200),('GET','/ag/login',200),('POST','/ag/login',303),('GET','/oauth/authorize',200),('POST','/ag/consent',303),('POST','/oauth/token',200),('POST','/oauth/introspect',200),('POST','/ag/tasks/task-001/revoke',200)]
+
+def test_cli_init_must_create_private_material(tmp_path):
+    target=tmp_path/'cli-output'
+    # Deliberately ordinary Unix umask: operator should not need undocumented setup.
+    done=subprocess.run([sys.executable,'-m','agent_guard.server','init','--out',str(target)],capture_output=True,text=True,umask=0o022)
+    assert done.returncode==0
+    files=[target/'as-sign-key.pem',target/'agent-planner.pem',target/'secrets.json']
+    observed={p.name:oct(stat.S_IMODE(p.stat().st_mode)) for p in files}
+    assert all(p.stat().st_mode & 0o077==0 for p in files), 'private material permissions: '+str(observed)

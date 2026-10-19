@@ -167,7 +167,7 @@ def pause(phase):
   atomic_marker(c['marker'], {'pid':os.getpid(),'phase':phase})
   while True:time.sleep(.1)
 def connect():return psycopg.connect(c['dsn'],connect_timeout=5)
-client=AuditClient(c['origin'],ca_file='/private/ca.pem',writer_credential='writer:DELIVERY_FIXTURE_SECRET_0123456789',reader_credential='reader:DELIVERY_FIXTURE_SECRET_0123456789',timeout=2)
+client=AuditClient(c['origin'],ca_file=c['ca_file'],writer_credential='writer:DELIVERY_FIXTURE_SECRET_0123456789',reader_credential='reader:DELIVERY_FIXTURE_SECRET_0123456789',timeout=2)
 original=client.append
 def append(batch):
  pause('before_send');jws=original(batch);pause('after_remote');return jws
@@ -208,6 +208,7 @@ def test_real_sigkill_new_process_persistent_recovery(
             {
                 "dsn": dsn,
                 "origin": transport.origin,
+                "ca_file": transport.ca_file,
                 "trust": trust,
                 "stream_id": records[0].scope.stream_id,
                 "phase": phase,
@@ -346,7 +347,7 @@ def test_tls_hostname_and_role_refused(delivery_env):
     _, transport, _, records = delivery_env
     client = AuditClient(
         transport.origin.replace("localhost", "127.0.0.1"),
-        ca_file="/private/ca.pem",
+        ca_file=transport.ca_file,
         writer_credential="writer:DELIVERY_FIXTURE_SECRET_0123456789",
         reader_credential="reader:DELIVERY_FIXTURE_SECRET_0123456789",
         timeout=2,
@@ -355,7 +356,7 @@ def test_tls_hostname_and_role_refused(delivery_env):
         client.latest(records[0].scope.stream_id)
     client = AuditClient(
         transport.origin,
-        ca_file="/private/ca.pem",
+        ca_file=transport.ca_file,
         writer_credential="reader:DELIVERY_FIXTURE_SECRET_0123456789",
         reader_credential="reader:DELIVERY_FIXTURE_SECRET_0123456789",
         timeout=2,
@@ -631,7 +632,7 @@ def pause(phase):
   atomic_marker(c['marker'], identity)
   while True:time.sleep(.1)
 def connect():return psycopg.connect(c['dsn'],connect_timeout=5)
-client=AuditClient(c['origin'],ca_file='/private/ca.pem',writer_credential='writer:DELIVERY_FIXTURE_SECRET_0123456789',reader_credential='reader:DELIVERY_FIXTURE_SECRET_0123456789',timeout=2)
+client=AuditClient(c['origin'],ca_file=c['ca_file'],writer_credential='writer:DELIVERY_FIXTURE_SECRET_0123456789',reader_credential='reader:DELIVERY_FIXTURE_SECRET_0123456789',timeout=2)
 original=client.append
 def append(batch):
  if batch.start_sequence>1:
@@ -685,6 +686,7 @@ def test_reconciliation_child_sigkill_recovery(
     cfg = {
         "dsn": dsn,
         "origin": transport.origin,
+        "ca_file": transport.ca_file,
         "trust": [{**asdict(k), "spki_der": b64url_encode(k.spki_der)} for k in transport.trust],
         "stream_id": sid,
         "phase": phase,

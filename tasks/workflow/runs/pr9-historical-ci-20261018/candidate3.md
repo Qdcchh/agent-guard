@@ -1,0 +1,9 @@
+# PR9 candidate3完整冻结，尚未接受
+
+基线仍eafb6f28aa87a041e149c0190b76054424f1c9cf，实际候选以candidate3-manifest.json而非旧HEAD为准。主控逐旧1193内容核对：仅变CI、ci-inputs环境文档、deploy_inputs helper、clean_deploy和对应unit五份；全部原业务139/迁移18、user CSS/Word/PDF和此前已过的observer/core SHA保持。C1/C2的实际失败/取消及全部manifest原样保留。
+
+C3补独立导出TLS环境、trusted控制器/private tmpfs、三B脚本日志物理目录与environment动态venv前缀；详见三个独立addenda及low只读closure报告。原件/原断言保留；32stdlib探针及目标Ruff通过，source已STOP。当前完整环境自查/全6839/新high完整独验均未完成，不能作为接受或remoteCI green。
+
+此前真实远程输入消费/139新安装/原容量1pass、非root全非integration2194pass1skip和另原RealCLI1pass属于报告所列旧snapshot，不冒称C3全套。r3 source/wheel原7+live/SIGKILL+各4负例及纯wrapper均真绿(2pass202.82s)，四files仅3pass后受控取消，资源严格清0；不冒充全域通过。
+
+全部writer在本完整freeze后只读；runtime与自有排除报告可继续，新源码故障须先root解除候选再授low修，审查必须全新high。最终唯一root提交/push精确候选，全部最新head GitHub CI绿后expectedSHA普通squash合并main并核实远端。审查/最终状态报告另列SHA，不与受审代码并发写。

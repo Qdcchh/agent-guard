@@ -1,0 +1,50 @@
+import time,json,threading
+from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
+import psycopg,pytest
+from agent_guard.authorization.consent import ConsentError
+from agent_guard.authorization.exchange_service import TokenExchangeError
+from tests.integration.test_login_consent import _setup,_session,_params
+from tests.integration.test_exchange_service import _root,_form,_exchange
+pytest_plugins=['tests.integration.conftest']
+def wait(dsn,pids,blocker):
+ end=time.monotonic()+5
+ while time.monotonic()<end:
+  with psycopg.connect(dsn,autocommit=True) as c:rows=c.execute("SELECT pid,wait_event_type,pg_blocking_pids(pid),query FROM pg_stat_activity WHERE pid=ANY(%s)",(pids,)).fetchall() if pids else []
+  for pid,kind,blocks,query in rows:
+   if kind=='Lock' and blocker in blocks:
+    with Path('/evidence/logs/state-race-locks.jsonl').open('a') as f:f.write(json.dumps({'pid':pid,'blocker':blocker,'wait':kind,'query':query})+'\n')
+    return
+  time.sleep(.01)
+ raise AssertionError('real state-race lock not reached')
+@pytest.mark.parametrize('round',range(10))
+@pytest.mark.parametrize('change',['policy_change','disable_user','revoke_session'])
+def test_consent_state_change_first_exact_zero_code(ledger,dsn,round,change):
+ s=_setup(dsn);x=_session(s);r=s.consent.create_request(session_token=x.session_token,csrf_token=x.csrf_token,params=_params());pids=[]
+ def connect(*a,**kw):
+  c=psycopg.connect(*a,**kw);pids.append(c.info.backend_pid);return c
+ s.consent._connector=connect
+ table='ag_task_policies' if change=='policy_change' else 'ag_authorization_requests'
+ with ThreadPoolExecutor(1) as pool:
+  with psycopg.connect(dsn) as block:
+   block.execute('SELECT * FROM '+table+' FOR UPDATE');f=pool.submit(s.consent.decide,session_token=x.session_token,csrf_token=x.csrf_token,request_id=r.request_id,decision='approve');wait(dsn,pids,block.info.backend_pid)
+   if change=='policy_change':block.execute('UPDATE ag_task_policies SET amount_limit_fen=900000')
+   else:
+    with psycopg.connect(dsn) as c:c.execute('UPDATE ag_users SET active=false' if change=='disable_user' else 'UPDATE ag_login_sessions SET revoked_at=clock_timestamp()')
+   block.commit()
+  with pytest.raises(ConsentError) as e:f.result(10)
+  assert e.value.code==('TASK_POLICY_CHANGED' if change=='policy_change' else 'SESSION_INVALID')
+ with psycopg.connect(dsn) as c:
+  assert c.execute('SELECT count(*) FROM ag_authorization_codes').fetchone()==(0,);assert c.execute("SELECT count(*) FROM ag_auth_events WHERE event_type='consent'").fetchone()==(0,);assert c.execute('SELECT status,consent_ref FROM ag_authorization_requests').fetchone()==('pending',None)
+@pytest.mark.parametrize('round',range(10))
+def test_key_disable_first_exchange_rejects_with_zero_new_rows(ledger,dsn,round):
+ a,k,r,s,root=_root(dsn);form=_form(a,root.access_token);pids=[]
+ def connect(*a,**kw):
+  c=psycopg.connect(*a,**kw);pids.append(c.info.backend_pid);return c
+ s._connector=connect
+ with ThreadPoolExecutor(1) as pool:
+  with psycopg.connect(dsn) as block:
+   block.execute('SELECT * FROM ag_principals FOR UPDATE');f=pool.submit(_exchange,s,k,r,form);wait(dsn,pids,block.info.backend_pid);block.execute('UPDATE ag_principals SET active=false');block.commit()
+  with pytest.raises(TokenExchangeError,match='CLIENT_KEY_INVALID'):f.result(10)
+ with psycopg.connect(dsn) as c:
+  assert c.execute('SELECT count(*) FROM ag_grants').fetchone()==(1,);assert c.execute('SELECT count(*) FROM ag_grant_tokens').fetchone()==(1,);assert c.execute('SELECT count(*) FROM ag_delegations').fetchone()==(0,);assert c.execute('SELECT count(*) FROM ag_exchange_evidence').fetchone()==(0,);assert c.execute('SELECT count(*) FROM ag_proofs').fetchone()==(1,);assert c.execute('SELECT sum(amount_reserved),sum(calls_reserved) FROM ag_grants').fetchone()==(0,0)

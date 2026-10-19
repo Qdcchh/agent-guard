@@ -1,0 +1,7 @@
+# 部署夹具生命周期补充
+
+真实r7证明normal四工具、export/offline与真实到期完成后，normal既有freeze/drain正确停止AS；旧role_init随后_AUDIT_PROGRAM还要求连接auth.agent-guard.test验证CA/SAN，Docker已移除停止AS的网络DNS别名，因此gaierror。这是验收阶段与当前真实生命周期不一致，不以延长超时或假TLS服务替代。
+
+授权low部署worker仅在其独占test_a33_roles.py当前owner装配分支，在normal全部成功/已到期且原worker/publisher停止后，对同一已核验fullID/owner/run的原AS角色，用原真实AS服务命令临时启动listener并完成原ready屏障；执行原_AUDIT_PROGRAM全部CA/SAN/拒绝/审计状态断言；finally停止本次恢复的AS。额外核对authority/audit表投影在临时listener阶段前后不变，证据私有。不得恢复writer/publisher执行待定业务，不改变normal生产freeze/drain，不新造授权/延长有效期/伪造服务成功。
+
+原legacy装配断言与原TLS正反集合不删。AS重启/屏障失败仍使测试失败；finally清理不掩盖原错误。source/wheel完整原角色/clean_deploy/registration/scenarios随后实跑，真实旧r2–r7失败保留，后续全新high独验核对其权限与生命周期约束。

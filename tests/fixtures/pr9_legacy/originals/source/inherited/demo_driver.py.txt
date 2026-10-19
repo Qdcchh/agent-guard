@@ -1,0 +1,17 @@
+import json,os,subprocess,sys,re,hashlib,pathlib
+sys.path.insert(0,os.getcwd())
+import psycopg
+from agent_guard.ledger.lineage import apply_bundle_migrations
+from tests.fixtures.isolation import acquire_namespace,release_namespace,create_downstream_database,drop_downstream_database
+base=os.environ["AGENT_GUARD_TEST_DATABASE_URL"]
+ns=acquire_namespace(base);ds=create_downstream_database(ns.base_dsn)
+try:
+ with psycopg.connect(ns.dsn,connect_timeout=5) as conn: apply_bundle_migrations(conn)
+ env=dict(os.environ,RUN_GATEWAY_TEST_DSN=ns.dsn,RUN_DOWNSTREAM_TEST_DSN=ds.dsn,PATH=str(pathlib.Path(sys.executable).parent)+':'+os.environ['PATH'])
+ readme=(pathlib.Path.cwd()/'README.md').read_text();block=next(b for b in re.findall(r'```bash\n(.*?)\n```',readme,re.S) if 'python -m tools.a2_receipt_demo' in b)
+ p=subprocess.run(['bash','-c',block],env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=90)
+ (pathlib.Path('/e/source-tests/inherited')/(os.environ['A23_RUN_LABEL']+'-literal-binding.json')).write_text(json.dumps({'classification':'ACTUAL_LITERAL_README_SHELL','readme_sha256':hashlib.sha256(readme.encode()).hexdigest(),'block_sha256':hashlib.sha256(block.encode()).hexdigest(),'exit':p.returncode,'command':['bash','-c',block]},indent=2))
+ print(p.stdout.decode());print(p.stderr.decode(),file=sys.stderr)
+ if p.returncode: raise RuntimeError("real demo process failed")
+finally:
+ drop_downstream_database(ns.base_dsn,ds);release_namespace(ns)

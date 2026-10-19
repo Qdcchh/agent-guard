@@ -1,0 +1,185 @@
+"""Own boundary control: actual HTTP and PG proof rollback at fixed 64 KiB.
+
+The trusted projection is deliberately fault injected after its real validator.
+This is not a legal business result or a canonical publisher reachability claim.
+The unmodified encoder, response cap, signed query, and transaction execute.
+"""
+import json
+import os
+from dataclasses import replace
+from pathlib import Path
+
+import psycopg
+import pytest
+
+from agent_guard.contracts.encoding import canonical_json_bytes, load_strict_json
+from agent_guard.execution import query as query_module
+from tests.fixtures.gateway import app_for, query_bundle
+from tests.fixtures.receipts import full_state, result_read_only as _original_result_read_only, staged_only
+from tests.integration.test_gateway_http import send_bundle as _original_send_bundle
+from tests.integration.test_receipt_publication import final_env
+
+A31_ORIGINAL31 = frozenset({'ag_schema_migration_lineages', 'ag_authorization_requests', 'ag_auth_events', 'ag_login_sessions', 'ag_operations', 'ag_tenant_admins', 'ag_task_policies', 'ag_task_revocations', 'ag_grant_tokens', 'ag_principals', 'ag_schema_migrations', 'ag_operation_review_flags', 'ag_verified_evidence', 'ag_auth_evidence', 'ag_proofs', 'ag_authorization_codes', 'ag_users', 'ag_ledger_events', 'ag_execution_leases', 'ag_grant_revocations', 'ag_ledger_event_nodes', 'ag_login_csrf', 'ag_receipt_outbox', 'ag_event_seals', 'ag_test_ownership', 'ag_tasks', 'ag_delegations', 'ag_exchange_evidence', 'ag_operation_evidence', 'ag_schema_legacy_binding', 'ag_grants'})
+A31_CURRENT007_SIX = frozenset({'ag_audit_bootstrap', 'ag_audit_streams', 'ag_audit_records', 'ag_audit_delivery_batches', 'ag_audit_bootstrap_chunks', 'ag_audit_delivery'})
+
+# Actual ASGI bytes are recorded without changing request/schema/verifier/encoder.
+_A31_CAPTURED = {}
+
+def send_bundle(application, dsn, bundle, *, query=False):
+    parts = []
+    starts = []
+    class ObservedApplication:
+        async def __call__(self, scope, receive, send):
+            async def observed_send(event):
+                if event['type'] == 'http.response.start':
+                    starts.append(event['status'])
+                if event['type'] == 'http.response.body':
+                    parts.append(event['body'])
+                await send(event)
+            await application(scope, receive, observed_send)
+    status, response, headers = _original_send_bundle(ObservedApplication(), dsn, bundle, query=query)
+    raw_response = b''.join(parts)
+    assert starts == [status] and load_strict_json(raw_response) == response
+    assert raw_response == canonical_json_bytes(response)
+    if query:
+        _A31_CAPTURED[bundle.query.proof_jti] = (status, raw_response, response)
+    return status, response, headers
+
+
+def _a31_fault_projection_oracle(before, after, *, response, raw_response, **kwargs):
+    from copy import deepcopy
+    assert raw_response == canonical_json_bytes(response) and len(raw_response) == 65536
+    assert set(before['gateway']) == set(after['gateway']) == A31_ORIGINAL31 | A31_CURRENT007_SIX
+    # This is the actual DB comparison, before any explicitly expected view.
+    assert before['gateway']['ag_receipt_outbox'] == after['gateway']['ag_receipt_outbox']
+    expected_before, expected_after = deepcopy(before), deepcopy(after)
+    operation_id = kwargs['operation_id']
+    expected_result = canonical_json_bytes(response['result'])
+    assert response['operation_id'] == operation_id
+    for view in (expected_before, expected_after):
+        original_rows = view['gateway']['ag_receipt_outbox']
+        matches = [i for i, row in enumerate(original_rows)
+                   if json.loads(row[0])['operation_id'] == operation_id]
+        assert len(matches) == 1
+        index = matches[0]
+        actual_row = json.loads(original_rows[index][0])
+        expected_row = dict(actual_row, result_bytes=chr(92) + 'x' + expected_result.hex())
+        assert {k: v for k, v in expected_row.items() if k != 'result_bytes'} == {
+            k: v for k, v in actual_row.items() if k != 'result_bytes'}
+        original_rows[index] = (json.dumps(expected_row, separators=(',', ':')),)
+    _original_result_read_only(expected_before, expected_after,
+                               observed_response=response, **kwargs)
+    return expected_before, expected_after
+
+
+def result_read_only(before, after, **kwargs):
+    status, raw_response, response = _A31_CAPTURED[kwargs['proof_jti']]
+    assert status == 200
+    if len(raw_response) != 65536 or set(response['result']) != {'body'}:
+        return _original_result_read_only(before, after, observed_response=response, **kwargs)
+    expected_before, expected_after = _a31_fault_projection_oracle(
+        before, after, response=response, raw_response=raw_response, **kwargs)
+    # Two mutations of the actually captured snapshot demonstrate oracle efficacy;
+    # they are negative test inputs, never reported as actual database rows.
+    from copy import deepcopy
+    changed_outbox = deepcopy(after)
+    row = json.loads(changed_outbox['gateway']['ag_receipt_outbox'][0][0])
+    row['result_bytes'] = chr(92) + 'x00'
+    changed_outbox['gateway']['ag_receipt_outbox'][0] = (json.dumps(row),)
+    with pytest.raises(AssertionError):
+        _a31_fault_projection_oracle(before, changed_outbox, response=response,
+                                    raw_response=raw_response, **kwargs)
+    changed_other_fact = deepcopy(after)
+    assert changed_other_fact['gateway']['ag_grants']
+    changed_other_fact['gateway']['ag_grants'] = []
+    with pytest.raises(AssertionError):
+        _a31_fault_projection_oracle(before, changed_other_fact, response=response,
+                                    raw_response=raw_response, **kwargs)
+    directory = Path(os.environ['A23_RECEIPT_EVIDENCE'])
+    stem = 'fault-projection-' + kwargs['proof_jti']
+    for label, snapshot in [('ACTUAL_BEFORE', before), ('ACTUAL_AFTER', after),
+                            ('EXPECTED_PROJECTION_VIEW_BEFORE', expected_before),
+                            ('EXPECTED_PROJECTION_VIEW_AFTER', expected_after)]:
+        target = directory / (stem + '-' + label + '.json')
+        assert not target.exists()
+        target.write_text(json.dumps({'classification': label, 'snapshot': snapshot}, indent=2))
+        target.chmod(0o600)
+    target = directory / (stem + '-ACTUAL_HTTP_RESPONSE.bin')
+    assert not target.exists()
+    target.write_bytes(raw_response)
+    target.chmod(0o600)
+
+
+@pytest.mark.parametrize("exact_bytes", [65536, 65537])
+def test_new_actual_public_envelope_boundary_fixed_cap_and_same_proof(
+    ledger, dsn, downstream_dsn, monkeypatch, exact_bytes
+):
+    env, op, key, verifier, publisher = final_env(dsn, downstream_dsn)
+    assert query_module.MAX_GATEWAY_RESPONSE_BYTES == 65536
+    envelope = {
+        "operation_id": op,
+        "status": "SUCCEEDED",
+        "receipt_status": "PENDING",
+        "receipt_jws": None,
+        "result": {"body": ""},
+    }
+    fixed = len(canonical_json_bytes(envelope))
+    body = "x" * (exact_bytes - fixed)
+    result_bytes = canonical_json_bytes({"body": body})
+    # Independent UTF-8 length arithmetic: every ASCII x adds exactly one byte.
+    assert len(result_bytes) <= 65536
+    assert fixed + len(body) == exact_bytes
+    original = query_module.project_receipt
+
+    def poisoned_projection(conn, operation_id):
+        return replace(original(conn, operation_id), result_bytes=result_bytes)
+
+    bundle = query_bundle(env, op)
+    application = app_for(env, dsn)
+    baseline = full_state(dsn, downstream_dsn)
+    try:
+        with monkeypatch.context() as patch:
+            patch.setattr(query_module, "project_receipt", poisoned_projection)
+            status, response, headers = send_bundle(application, dsn, bundle, query=True)
+        if exact_bytes == 65536:
+            assert status == 200 and response == {**envelope, "result": {"body": body}}
+            assert len(canonical_json_bytes(response)) == exact_bytes
+            with psycopg.connect(dsn) as conn:
+                ref = conn.execute(
+                    "SELECT evidence_ref FROM ag_proofs WHERE proof_jti=%s",
+                    (bundle.query.proof_jti,),
+                ).fetchone()[0]
+            result_read_only(
+                baseline, full_state(dsn, downstream_dsn), evidence_ref=ref,
+                proof_jti=bundle.query.proof_jti, operation_id=op, staging=True,
+            )
+        else:
+            assert status == 503 and response["error"]["code"] == "TRUSTED_STATE_UNAVAILABLE"
+            assert headers[b"cache-control"] == b"no-store"
+            staged_only(baseline, full_state(dsn, downstream_dsn), proof_jti=bundle.query.proof_jti)
+            baseline = full_state(dsn, downstream_dsn)
+            status, repaired, _ = send_bundle(application, dsn, bundle, query=True)
+            assert status == 200 and repaired["result"]["kind"] == "order"
+            with psycopg.connect(dsn) as conn:
+                ref = conn.execute(
+                    "SELECT evidence_ref FROM ag_proofs WHERE proof_jti=%s",
+                    (bundle.query.proof_jti,),
+                ).fetchone()[0]
+            result_read_only(
+                baseline, full_state(dsn, downstream_dsn), evidence_ref=ref,
+                proof_jti=bundle.query.proof_jti, operation_id=op, staging=True,
+            )
+        baseline = full_state(dsn, downstream_dsn)
+        replay, refusal, _ = send_bundle(application, dsn, bundle, query=True)
+        assert replay == 409 and refusal["error"]["code"] == "REPLAY"
+        staged_only(baseline, full_state(dsn, downstream_dsn), proof_jti=bundle.query.proof_jti)
+        output = Path(os.environ["A23_RECEIPT_EVIDENCE"])
+        (output / f"independent-public-boundary-{exact_bytes}.json").write_text(json.dumps({
+            "classification": "FAULT_INJECTED_TRUSTED_PROJECTION_NOT_LEGAL_BUSINESS",
+            "component_bytes": len(result_bytes), "envelope_bytes": exact_bytes,
+            "cap_unchanged": 65536, "boundary_http_status": 200 if exact_bytes == 65536 else 503,
+            "repaired_same_proof_http_status": None if exact_bytes == 65536 else 200,
+            "replay_http_status": replay, "oracle": "all ag_* and ds_* rows; only stages/query proof allowed",
+        }, indent=2))
+    finally:
+        application._executor.shutdown()

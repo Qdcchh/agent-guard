@@ -1,0 +1,48 @@
+import json,pytest
+from agent_guard.contracts.encoding import *
+from agent_guard.contracts.ledger_changes import canonical_ledger_changes_bytes
+from agent_guard.crypto.sm import generate_sm2_private_key,sign_sm2_message,_der_to_jws_signature,verify_compact_jws,JWS_ALG,InvalidSm2Signature,serialize_sm2_public_key
+from agent_guard.identity.resolver import IdentityError,IdentityResolver,RegisteredIdentity
+from agent_guard.authorization.verifier import VerificationError
+from tests.test_authorization import _fixture,_claims,_body,_sign_pair,DID,KID,NOW,ENDPOINT
+RAWS=[b'{"k":"\\ud800"}',b'{"\\udfff":1}',b'{"a":[{"b":"ok\\ud800"}]}',b'{"k":"'+bytes([0xed,0xa0,0x80])+b'"}',b'{"n":'+b'1'*5000+b'}',b'{"d":'+b'['*1500+b'0'+b']'*1500+b'}',b'"'+b'x'*65536+b'"',b'['+b'0,'*4095+b'0]']
+@pytest.mark.parametrize('raw',RAWS,ids=['value-surrogate','key-surrogate','nested-mixed','invalid-utf8','5000digits','1500deep','bytes-over','nodes-over'])
+@pytest.mark.parametrize('entry',['parser','jws','did','sdk'])
+def test_actual_negative_entry(raw,entry):
+ if entry=='parser':
+  with pytest.raises(EncodingError):load_strict_json(raw)
+ elif entry=='jws':
+  key=generate_sm2_private_key();h=canonical_json_bytes({'alg':JWS_ALG,'typ':'ag-at+jwt','kid':'test-as'});inp=b64url_encode(h)+'.'+b64url_encode(raw);sig=b64url_encode(_der_to_jws_signature(sign_sm2_message(key,inp.encode('ascii'))));
+  with pytest.raises(InvalidSm2Signature):verify_compact_jws(inp+'.'+sig,expected_type='ag-at+jwt',trusted_keys={'test-as':key.public_key()})
+ elif entry=='did':
+  key=generate_sm2_private_key();reg=RegisteredIdentity('tenant-001','agent-planner',DID,KID,serialize_sm2_public_key(key.public_key()));resolver=IdentityResolver({('tenant-001','agent-planner'):reg},allowed_hosts=frozenset({'identity.agent-guard.test'}),fetch_document=lambda _:raw)
+  with pytest.raises(IdentityError):resolver.resolve_registered('agent-planner','tenant-001','capabilityInvocation')
+ else:
+  a,k,doc,v,staged=_fixture();good=_body();token,proof=_sign_pair(a,k,_claims(serialize_sm2_public_key(k.public_key())),good)
+  with pytest.raises(VerificationError):v.verify_static(token,proof,endpoint=ENDPOINT,method='POST',body=raw,now=NOW)
+  assert staged==[]
+@pytest.mark.parametrize('depth',[63,64])
+def test_legal_depth_boundary(depth):
+ raw=b'['*depth+b'0'+b']'*depth;assert canonical_json_bytes(load_strict_json(raw))==raw
+def test_valid_unicode_and_limits():
+ for raw in ['{"中文":"😀"}','{"中文":"\\ud83d\\ude00"}']:
+  assert canonical_json_bytes(load_strict_json(raw))=='{"中文":"😀"}'.encode()
+ assert len(canonical_json_bytes('x'*65534))==65536
+ assert len(load_strict_json(b'"'+b'x'*65534+b'"'))==65534
+ assert len(load_strict_json('['+','.join(['0']*4095)+']'))==4095
+ assert canonical_json_bytes(MAX_SAFE_INTEGER)==str(MAX_SAFE_INTEGER).encode()
+@pytest.mark.parametrize('obj',['cycle','depth','escaped','surrogate-key'])
+def test_programmatic_bounds(obj):
+ if obj=='cycle':v=[];v.append(v)
+ elif obj=='depth':
+  v=0
+  for _ in range(1500):v=[v]
+ elif obj=='escaped':v={'text':'\n'*40000}
+ else:v={'中文\ud800':'valid'}
+ with pytest.raises(EncodingError):canonical_json_bytes(v)
+@pytest.mark.parametrize('phase',['SETTLE','RELEASE'])
+def test_valid_negative_delta_still_works(phase):
+ node={'grant_id':'g','amount_reserved_delta':-70000,'amount_settled_delta':70000 if phase=='SETTLE' else 0,'calls_reserved_delta':-1,'calls_settled_delta':1 if phase=='SETTLE' else 0};v={'operation_id':'o','events':[{'phase':phase,'nodes':[node]}]};assert json.loads(canonical_ledger_changes_bytes(v))==v
+ with pytest.raises(EncodingError):canonical_json_bytes(v)
+ node['calls_reserved_delta']=-MAX_SAFE_INTEGER-1
+ with pytest.raises(EncodingError):canonical_ledger_changes_bytes(v)

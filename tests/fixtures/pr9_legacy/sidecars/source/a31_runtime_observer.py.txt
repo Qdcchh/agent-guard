@@ -1,0 +1,26 @@
+"""Synchronous startup/exit module observations; native identity is externally registered."""
+import atexit,hashlib,json,os,pathlib,sys,tempfile,threading,time
+_LOCK=threading.RLock()
+
+def capture(phase='explicit'):
+ if not os.environ.get('AG31_SESSION_DIR'):return True
+ with _LOCK:
+  try:
+   gate=json.loads(pathlib.Path(os.environ['AG31_GATE']).read_text());prefix=pathlib.Path('/e/'+gate['mode']+'-venv/lib/python3.11/site-packages');rows=[]
+   for name,module in list(sys.modules.items()):
+    if name=='agent_guard' or name.startswith('agent_guard.'):
+     value=getattr(module,'__file__',None)
+     if value:
+      p=pathlib.Path(value).resolve();h=hashlib.sha256(p.read_bytes()).hexdigest();rel=str(p.relative_to(prefix));assert h==gate['installed_modules_sha256'][rel];rows.append({'module':name,'file':str(p),'sha256':h})
+   stat=pathlib.Path('/proc/self/stat').read_text();tail=stat[stat.rfind(')')+2:].split();d={'pid':os.getpid(),'uid':os.getuid(),'kernel_start_ticks':int(tail[19]),'argv_sha256':hashlib.sha256(pathlib.Path('/proc/self/cmdline').read_bytes()).hexdigest(),'loaded':rows,'wall':time.time(),'valid':True,'phase':phase,'scope':'startup currently loaded root or normal exit loaded set; killed child identity comes from external Registry'}
+  except BaseException as exc:d={'pid':os.getpid(),'valid':False,'error_type':type(exc).__name__,'phase':phase}
+  try:
+   folder=pathlib.Path(os.environ['AG31_OBSERVER_DIR']);folder.mkdir(mode=0o700,exist_ok=True);out=folder/(str(os.getpid())+'.json')
+   with tempfile.NamedTemporaryFile(mode='w',encoding='utf-8',dir=folder,prefix=str(os.getpid())+'.',suffix='.tmp',delete=False) as f:
+    temporary=pathlib.Path(f.name);os.fchmod(f.fileno(),0o600);f.write(json.dumps(d,indent=2)+'\n')
+   os.replace(temporary,out)
+   return d['valid']
+  except BaseException:
+   return False # Observer never changes CLI stdout/stderr; missing receipt fails its control gate.
+if os.environ.get('AG31_SESSION_DIR'):
+ capture('startup');atexit.register(capture,'atexit')

@@ -1,0 +1,22 @@
+{
+  "status": "FAILED_NOT_ACCEPTED",
+  "source": {
+    "executed": 1251,
+    "passed": 1240,
+    "failed": 11
+  },
+  "wheel": {
+    "executed": 0,
+    "setup_error": "pip locked dependency download TLS EOF"
+  },
+  "scope": "Five complete legacy groups per mode diagnostic; full acceptance still required. Original failed assertions retained.",
+  "sleep_evidence": "All11 failure neighborhoods contain independently recorded host sleep; original exception chains unavailable, causation NOT_PROVEN. New owner diagnostic authorized with temporary process-scoped wake assertion, original expectations unchanged.",
+  "evidence_sha256": {
+    "legacy-closure-r8-result.json": "95b5c363495d21c9886c3179eaf4ae5a97dc3b62c63e15eaafdf752cc71435b4",
+    "legacy-closure-r8-failure-analysis.json": "5dff2b245a5301ca62115208896dbf63fb34f32800b63d3fecd6a9746b1c0bcb",
+    "legacy-closure-r8-sleep-association.json": "7d5ae42cfd6f4b6fb642dd5eb240da67318f5c5f47a43abcf962444fe8ec3d9f",
+    "legacy-closure-r8-source-stop-sha256.json": "9b6d527a597ad56437dfccb9828e9ad7772b2859422183dce41f88a48aacbbd5"
+  },
+  "root_source_verification": "All214 worker source entries recomputed unchanged; Ruff/format365 green; root unit82 passed.",
+  "cleanup": "Worker recorded five owner scopes all four resource classes zero; historical unknown volume attribution remains unknown."
+}

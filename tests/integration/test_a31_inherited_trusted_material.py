@@ -29,7 +29,8 @@ def send_bundle(app, dsn, bundle, *, query=False):
     original_handle = endpoint.handle
     previous_instance_handle = endpoint.__dict__.get("handle")
 
-    def preverified_handle(path, observed_token, observed_proof, observed_body):
+    def preverified_handle(path, observed_token, observed_proof, observed_body, approval=None):
+        assert approval is None
         assert path == "/v1/operations/query"
         assert observed_token.encode("ascii") == token
         assert observed_proof.encode("ascii") == proof

@@ -1,0 +1,40 @@
+from pathlib import Path
+import psycopg,pytest,json
+from agent_guard.ledger.migrate import apply_migrations,DEFAULT_MIGRATIONS_DIR,MigrationError
+from agent_guard.ledger.service import ExecutionLedger
+from agent_guard.ledger.provisioning import revoke_grant
+from tests.fixtures.state import build_tree
+from tests.fixtures.isolation import create_scratch_database,drop_scratch_database
+from tests.integration.test_migrations import _snapshot_business_tables
+pytest_plugins=['tests.integration.conftest']
+def registry(dsn):
+ with psycopg.connect(dsn) as c:return c.execute('SELECT * FROM ag_schema_migrations ORDER BY version').fetchall()
+@pytest.mark.parametrize('base',['001','003'])
+@pytest.mark.parametrize('legal',[True,False])
+def test_nonzero_seven_tables_and_complete_registry(namespace,tmp_path,base,legal):
+ scratch=create_scratch_database(namespace.base_dsn);initial=tmp_path/'initial';initial.mkdir()
+ try:
+  for p in DEFAULT_MIGRATIONS_DIR.glob('*.sql'):
+   if p.name[:3]<=base:(initial/p.name).write_bytes(p.read_bytes())
+  with psycopg.connect(scratch.dsn) as c:apply_migrations(c,initial)
+  with psycopg.connect(scratch.dsn) as c:tree=build_tree(c)
+  ExecutionLedger(scratch.dsn).accept(tree.invocation(),tree.cost(amount_fen=70000))
+  with psycopg.connect(scratch.dsn) as c:
+   revoke_grant(c,tree.root_id)
+   if not legal and base=='001':
+    c.execute("INSERT INTO ag_grants (grant_id,parent_grant_id,root_grant_id,tenant_id,task_id,subject,holder_client_id,holder_kid,depth,not_before,expires_at,amount_limit,call_limit) SELECT 'duplicate-root',NULL,'duplicate-root',tenant_id,task_id,subject,holder_client_id,holder_kid,0,not_before,expires_at,amount_limit,call_limit FROM ag_grants WHERE grant_id=%s",(tree.root_id,))
+   if not legal and base=='003':c.execute("UPDATE ag_schema_migrations SET checksum='invalid-review-owned' WHERE version='003'")
+  before=_snapshot_business_tables(scratch.dsn);reg=registry(scratch.dsn);assert all(before.values())
+  if legal:
+   with psycopg.connect(scratch.dsn) as c:applied=apply_migrations(c)
+   assert len(applied)==9-int(base);assert registry(scratch.dsn)[:int(base)]==reg
+   reg_after=registry(scratch.dsn)
+   with psycopg.connect(scratch.dsn) as c:assert apply_migrations(c)==[]
+   assert registry(scratch.dsn)==reg_after
+  else:
+   with pytest.raises((MigrationError,psycopg.IntegrityError)):
+    with psycopg.connect(scratch.dsn) as c:apply_migrations(c)
+   assert registry(scratch.dsn)==reg
+  assert _snapshot_business_tables(scratch.dsn)==before
+  with Path('/evidence/logs/migration-observations.jsonl').open('a') as f:f.write(json.dumps({'base':base,'legal':legal,'all_seven_rows_equal':True,'old_full_registry_equal':True,'registry_rows':len(registry(scratch.dsn))})+'\n')
+ finally:drop_scratch_database(namespace.base_dsn,scratch)

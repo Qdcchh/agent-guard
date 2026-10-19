@@ -53,8 +53,18 @@ class Native:
     """Retain native output and exit codes, including every failed attempt."""
 
     def __init__(self, evidence):
-        self.evidence = Path(evidence)
-        self.evidence.mkdir(parents=True, exist_ok=True)
+        self.evidence = Path(evidence).absolute()
+        if any(p.is_symlink() for p in (self.evidence, *self.evidence.parents)):
+            raise ValueError("native evidence symlink forbidden")
+        missing = []
+        current = self.evidence
+        while not current.exists():
+            missing.append(current)
+            current = current.parent
+        for directory in reversed(missing):
+            directory.mkdir(mode=0o700)
+        if self.evidence.stat().st_mode & 0o777 != 0o700:
+            raise ValueError("native evidence must be mode 0700")
         self.sequence = 0
 
     def call(self, argv, *, input=None, timeout=60, check=True, cwd=REPO, env=None):
@@ -78,6 +88,8 @@ class Native:
                     }
                 )
             )
+            for suffix in (".stdout", ".stderr", ".json"):
+                stem.with_suffix(suffix).chmod(0o600)
             raise
         stem.with_suffix(".stdout").write_bytes(result.stdout)
         stem.with_suffix(".stderr").write_bytes(result.stderr)
@@ -92,6 +104,8 @@ class Native:
                 indent=2,
             )
         )
+        for suffix in (".stdout", ".stderr", ".json"):
+            stem.with_suffix(suffix).chmod(0o600)
         if check:
             assert result.returncode == 0, f"native exit {result.returncode}: {stem}"
         return result
@@ -101,6 +115,14 @@ class Native:
 def a33_install(request, tmp_path_factory):
     """Fresh, exact-lock Python3.11 installations; generated context is test-only."""
     mode = request.param
+    current_assembly = bool(os.environ.get("PR9_DEPLOY_INPUTS_ROOT"))
+    if current_assembly:
+        private_root = Path(os.environ["PR9_DEPLOY_INPUTS_ROOT"]).absolute()
+        assert not any(path.is_symlink() for path in (private_root, *private_root.parents)), (
+            "deployment symlink root forbidden"
+        )
+        private_root.mkdir(parents=True, exist_ok=True, mode=0o700)
+        assert private_root.stat().st_mode & 0o077 == 0, "private deployment root must be 0700"
     run_id = str(uuid.uuid4())
     owner = "a33-deploy-" + run_id
     context = tmp_path_factory.mktemp("a33-install-" + mode)
@@ -108,16 +130,26 @@ def a33_install(request, tmp_path_factory):
     native = Native(evidence)
     package = context / "package"
     package.mkdir()
-    for name in ("pyproject.toml", "README.md", "requirements.lock", "requirements-dev.lock"):
+    for name in (
+        "pyproject.toml",
+        "README.md",
+        "requirements.lock",
+        "requirements-dev.lock",
+        "requirements-ci.lock",
+    ):
         shutil.copyfile(REPO / name, package / name)
 
     def isolated_source_ignore(directory, names):
         ignored = set(shutil.ignore_patterns("__pycache__", "*.egg-info")(directory, names))
-        if not os.environ.get("AG33_FINAL_RESOURCE_MANIFEST") and Path(directory).name == "demo":
+        if (
+            not current_assembly
+            and not os.environ.get("AG33_FINAL_RESOURCE_MANIFEST")
+            and Path(directory).name == "demo"
+        ):
             ignored.update({"holder.py", "runner.py", "faults.py"})
         return ignored
 
-    if not os.environ.get("AG33_FINAL_RESOURCE_MANIFEST"):
+    if not current_assembly and not os.environ.get("AG33_FINAL_RESOURCE_MANIFEST"):
         frozen = json.loads(
             (
                 REPO / "tasks/workflow/runs/A3.3-delivery-20261011/shared-interface-s0-r2.json"
@@ -132,14 +164,20 @@ def a33_install(request, tmp_path_factory):
         )
     for name in ("src", "migrations"):
         shutil.copytree(REPO / name, package / name, ignore=isolated_source_ignore)
+    shutil.copytree(REPO / "deploy/demo", package / "deploy/demo")
     # Both variants build wheels; source installation is separately noneditable.
+    from tools.pr9_deploy_inputs import prepare_legacy_sidecars
+
+    sidecar_binding = prepare_legacy_sidecars(context / "test-sidecars", mode)
+    (evidence / "sidecar-install-binding.json").write_text(json.dumps(sidecar_binding, indent=2))
+    (evidence / "sidecar-install-binding.json").chmod(0o600)
     (context / "Dockerfile").write_text(
         "FROM --platform=linux/amd64 python:3.11-slim\n"
-        "RUN apt-get update && apt-get install -y --no-install-recommends openssl "
+        "RUN apt-get update && apt-get install -y --no-install-recommends openssl busybox "
         "&& rm -rf /var/lib/apt/lists/*\n"
         "COPY package /package\n"
         "RUN python -m venv /opt/runtime && /opt/runtime/bin/pip install "
-        "-r /package/requirements-dev.lock setuptools==80.9.0 wheel==0.45.1 "
+        "--require-hashes --only-binary=:all: -r /package/requirements-ci.lock "
         "&& /opt/runtime/bin/pip wheel --no-deps --no-build-isolation "
         "--wheel-dir /wheels /package\n"
         + (
@@ -147,7 +185,8 @@ def a33_install(request, tmp_path_factory):
             if mode == "source"
             else "RUN /opt/runtime/bin/pip install --no-deps /wheels/agent_guard-*.whl\n"
         )
-        + "RUN /opt/runtime/bin/pip check\nWORKDIR /outside\n"
+        + "RUN /opt/runtime/bin/pip check\n"
+        + "COPY test-sidecars /opt/runtime/lib/python3.11/site-packages/\nWORKDIR /outside\n"
         'ENV PYTHONPATH=""\n'
     )
     tag = "agent-guard-a33-deploy-" + run_id + ":" + mode
@@ -171,6 +210,31 @@ def a33_install(request, tmp_path_factory):
     assert image["Config"]["Labels"]["agent-guard.owner"] == owner
     image_id = image["Id"]
     containers = []
+    created_containers = []
+
+    def persist_installation():
+        state = {
+            "version": 1,
+            "mode": mode,
+            "run_id": run_id,
+            "owner_id": owner,
+            "image_full_id": image_id,
+            "image_tag": tag,
+            "created_container_full_ids": list(created_containers),
+        }
+        path = evidence / "installation-state.json"
+        temporary = path.with_suffix(".tmp")
+        temporary.write_text(json.dumps(state, indent=2) + "\n")
+        temporary.chmod(0o600)
+        temporary.replace(path)
+
+    persist_installation()
+
+    def record_container(identity):
+        assert re.fullmatch(r"[0-9a-f]{64}", identity)
+        assert identity not in created_containers
+        created_containers.append(identity)
+        persist_installation()
 
     def execute(program, *, expected=0, timeout=180):
         name = "ag-a33-deploy-" + str(uuid.uuid4())
@@ -202,6 +266,7 @@ def a33_install(request, tmp_path_factory):
         )
         assert re.fullmatch(r"[0-9a-f]{64}", created)
         containers.append(created)
+        record_container(created)
         value = json.loads(native.call(["docker", "inspect", created]).stdout)[0]
         assert value["Id"] == created and value["Config"]["Labels"]["agent-guard.owner"] == owner
         result = native.call(["docker", "start", "-a", created], timeout=timeout, check=False)
@@ -211,6 +276,39 @@ def a33_install(request, tmp_path_factory):
         return result.stdout
 
     try:
+        if current_assembly or os.environ.get("AG33_FINAL_RESOURCE_MANIFEST"):
+            source_hashes = {
+                str(p.relative_to(REPO / "src/agent_guard")): digest(p)
+                for p in (REPO / "src/agent_guard").rglob("*.py")
+            }
+            program = """import hashlib, importlib.metadata, json, sys
+from pathlib import Path
+import agent_guard
+root = Path(agent_guard.__file__).parent
+assert "site-packages" in root.parts
+expected = EXPECTED
+actual = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
+          for p in root.rglob("*.py")}
+assert actual == expected, (set(actual) ^ set(expected))
+lock = Path(sys.prefix) / "share/agent-guard/requirements-ci.lock"
+assert hashlib.sha256(lock.read_bytes()).hexdigest() == CI_LOCK_SHA
+versions = {}
+for line in lock.read_text().splitlines():
+    if "==" in line and not line.startswith("#"):
+        name, version = line.split("==", 1)
+        version = version.strip().split()[0]
+        versions[name] = importlib.metadata.version(name)
+        assert versions[name] == version
+print(json.dumps({"installed_source_files": actual, "root": str(root),
+                  "dependency_lock_sha256": hashlib.sha256(lock.read_bytes()).hexdigest(),
+                  "dependency_versions": versions}))
+
+""".replace("EXPECTED", repr(source_hashes)).replace(
+                "CI_LOCK_SHA", repr(digest(REPO / "requirements-ci.lock"))
+            )
+            installed = json.loads(execute(program))
+            (evidence / "current-install-binding.json").write_text(json.dumps(installed, indent=2))
+
         yield {
             "mode": mode,
             "run_id": run_id,
@@ -219,6 +317,7 @@ def a33_install(request, tmp_path_factory):
             "execute": execute,
             "image": image_id,
             "containers": containers,
+            "record_container": record_container,
             "evidence": evidence,
         }
     finally:
@@ -736,15 +835,10 @@ class FinalDeployment:
         return value
 
 
-@pytest.fixture
-def a33_final(tmp_path_factory):
-    required = ("AG33_FINAL_RESOURCE_MANIFEST", "AG33_FINAL_RUN_CONFIG")
-    assert all(os.environ.get(k) for k in required), "S2 final assembly is required; no S1 PASS"
-    manifest_path, config_path = (Path(os.environ[k]).resolve() for k in required)
+def _load_final_deployment(manifest_path, config_path, evidence):
     assert manifest_path.is_file() and config_path.is_file()
     assert (REPO / "deploy/demo/compose.yaml").is_file()
     assert (REPO / "deploy/demo/Dockerfile").is_file()
-    evidence = Path(os.environ.get("AG33_EVIDENCE_DIR", str(tmp_path_factory.mktemp("a33-final"))))
     native = Native(evidence / "final")
     manifest = json.loads(manifest_path.read_bytes())
     config = json.loads(config_path.read_bytes())
@@ -774,6 +868,29 @@ def a33_final(tmp_path_factory):
         )
     )
     return result
+
+
+@pytest.fixture
+def a33_final(tmp_path_factory, request):
+    if os.environ.get("PR9_DEPLOY_INPUTS_ROOT"):
+        from tools.pr9_deploy_inputs import deployment
+
+        install = request.getfixturevalue("a33_install")
+        with deployment(os.environ["PR9_DEPLOY_INPUTS_ROOT"], install["mode"]) as owner:
+            result = _load_final_deployment(
+                owner.root / "allocated-resources.json",
+                owner.root / "run.json",
+                owner.root / "assertions",
+            )
+            result.controller_inputs = owner.root / "test-inputs/connections.json"
+            result.owner_controller = owner
+            yield result
+        return
+    required = ("AG33_FINAL_RESOURCE_MANIFEST", "AG33_FINAL_RUN_CONFIG")
+    assert all(os.environ.get(k) for k in required), "S2 final assembly is required; no S1 PASS"
+    manifest_path, config_path = (Path(os.environ[k]).resolve() for k in required)
+    evidence = Path(os.environ.get("AG33_EVIDENCE_DIR", str(tmp_path_factory.mktemp("a33-final"))))
+    yield _load_final_deployment(manifest_path, config_path, evidence)
 
 
 def test_role_init_trust_and_private_mounts(a33_final, a33_install):
@@ -909,7 +1026,8 @@ with psycopg.connect(_dsn(c.roles["operator"], "authority_dsn"), connect_timeout
         ).fetchone() == (False, False, False, False)
         denied = conn.execute(
             "SELECT tablename FROM pg_tables WHERE schemaname='public' AND "
-            "has_table_privilege(%s,quote_ident(tablename),'INSERT,UPDATE,DELETE,TRUNCAT"
+            "has_table_privilege(%s,quote_ident(schemaname)||'.'||quote_ident(tablename),"
+            "'INSERT,UPDATE,DELETE,TRUNCAT"
             "E')",
             (account,),
         ).fetchall()
@@ -937,10 +1055,7 @@ print(json.dumps(rows))
     for role in ("worker", "publisher"):
         a33_final.inspect(role)
         a33_final.native.call(["docker", "stop", "--time", "10", a33_final.ids[role]])
-    rows = [
-        json.loads(line)
-        for line in a33_final.execute("operator", _AUDIT_PROGRAM).stdout.splitlines()
-    ]
+    rows = _audit_rows_after_expiry(a33_final)
     assert set(rows[0]["positive"]) == {"append", "latest", "history", "records"}
     assert {r["denied"] for r in rows[1:]} >= {
         "wrongCA",
@@ -952,6 +1067,93 @@ print(json.dumps(rows))
         "badframing",
         "plainHTTP",
     }
+
+
+_FROZEN_PROJECTION_PROGRAM = r"""import hashlib, json, time
+from pathlib import Path
+import psycopg
+from psycopg import sql
+from agent_guard.demo.config import load_run_config
+from agent_guard.demo.provision import _dsn
+
+root = Path("/owned/run")
+c = load_run_config((root / "run.json").read_bytes(), base_dir=root)
+expiry = json.loads(Path("/tmp/a33-trust-flow/public-expiry.json").read_bytes())
+assert expiry["expired"] is True
+assert expiry["observed_at"] > expiry["latest_expiry"]
+assert int(time.time()) > expiry["latest_expiry"]
+result = {}
+for domain in ("authority", "audit"):
+    with psycopg.connect(_dsn(c.roles["operator"], domain + "_dsn")) as conn:
+        conn.execute("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY")
+        names = conn.execute(
+            "SELECT tablename FROM pg_tables WHERE schemaname='public' ORDER BY tablename"
+        ).fetchall()
+        projection = {
+            name: conn.execute(
+                sql.SQL("SELECT row_to_json(t)::text FROM {} t ORDER BY 1").format(
+                    sql.Identifier("public", name)
+                )
+            ).fetchall()
+            for (name,) in names
+        }
+        assert projection
+        result[domain] = hashlib.sha256(json.dumps(projection, sort_keys=True).encode()).hexdigest()
+print(json.dumps(result))
+"""
+
+
+def _audit_rows_after_expiry(final):
+    """Run unchanged TLS probes on the original AS only; preserve frozen state."""
+    if not hasattr(final, "owner_controller"):
+        return [
+            json.loads(line)
+            for line in final.execute("operator", _AUDIT_PROGRAM).stdout.splitlines()
+        ]
+    owner = final.owner_controller
+    assert not final.inspect("as")["State"]["Running"]
+    for role in ("worker", "publisher"):
+        assert not final.inspect(role)["State"]["Running"]
+    before = json.loads(final.execute("operator", _FROZEN_PROJECTION_PROGRAM).stdout)
+    primary = None
+    try:
+        owner.call(["docker", "start", final.ids["as"]])
+        owner.start_child("as", ["actor", "--stage", "as", "--role", "as"])
+        owner.ready(include_audit=True)
+        return [
+            json.loads(line)
+            for line in final.execute("operator", _AUDIT_PROGRAM).stdout.splitlines()
+        ]
+    except BaseException as exc:
+        primary = exc
+        raise
+    finally:
+        failures = []
+        try:
+            final.inspect("as")
+            owner.call(["docker", "stop", "--time", "10", final.ids["as"]])
+            assert not final.inspect("as")["State"]["Running"]
+        except Exception as exc:
+            failures.append(("stop", exc))
+        try:
+            after = json.loads(final.execute("operator", _FROZEN_PROJECTION_PROGRAM).stdout)
+            assert after == before, "temporary TLS listener changed frozen database rows"
+        except Exception as exc:
+            failures.append(("projection", exc))
+        if failures:
+            record = {stage: type(exc).__name__ for stage, exc in failures}
+            try:
+                (final.native.evidence / "temporary-as-probe-failure.json").write_text(
+                    json.dumps(record)
+                )
+            except OSError:
+                pass
+            if primary is not None:
+                primary.add_note("Temporary AS cleanup/projection also failed: " + repr(record))
+            else:
+                raise AssertionError(
+                    "Temporary AS cleanup/projection failed: " + repr(record)
+                ) from failures[0][1]
 
 
 def test_operator_https_did_approval_and_immutable_distribution(a33_final, a33_install):
@@ -1170,6 +1372,18 @@ def peer(sock, config):
 
 
 h._peer = peer
+original_listen = socket.socket.listen
+
+
+def listen(sock, *args, **kwargs):
+    result = original_listen(sock, *args, **kwargs)
+    marker = c.socket_path.parent / ("receiver-" + sys.argv[2] + ".ready")
+    descriptor = os.open(marker, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    os.close(descriptor)
+    return result
+
+
+socket.socket.listen = listen
 try:
     token = h.receive_child(c, expected_parent=c.peer_client_id)
     assert token.access_token == "IPC_FRAME_ONLY_NOT_AUTHORIZATION"
@@ -1247,10 +1461,12 @@ for round in range(10):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
+        ready = directory / "receiver-positive.ready"
         deadline = time.monotonic() + 5
-        while not path.exists():
+        while not ready.is_file():
             assert p.poll() is None and time.monotonic() < deadline
             time.sleep(0.01)
+        ready.unlink()
         info = path.stat()
         assert (info.st_uid, info.st_gid, stat.S_IMODE(info.st_mode)) == (ruid, gid, 0o660)
         q = subprocess.run(
@@ -1283,10 +1499,12 @@ for round in range(10):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )
+        ready = directory / "receiver-wrongUID.ready"
         deadline = time.monotonic() + 5
-        while not path.exists():
+        while not ready.is_file():
             assert p.poll() is None and time.monotonic() < deadline
             time.sleep(0.01)
+        ready.unlink()
         rogue = (
             "import "
             "os,socket,sys;os.setgroups([int(sys.argv[2])]);os.setgid(21006);os.setuid(2"

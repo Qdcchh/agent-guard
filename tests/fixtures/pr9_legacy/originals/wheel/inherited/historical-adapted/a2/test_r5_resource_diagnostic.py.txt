@@ -1,0 +1,17 @@
+"""Bounded r5 investigation: preserve exact P11 assertions, record coded exceptions."""
+import pytest
+from agent_guard.ledger.service import ExecutionLedger
+from agent_guard.contracts.ledger import LedgerError
+from test_review import observe
+from test_r2_variants import test_p11_resource_disappearance_actual_repeat as _original
+@pytest.mark.parametrize('round_no',range(10))
+def test_p11_resource_repeat_with_exception_diagnostic(a2,monkeypatch,round_no):
+ orig=ExecutionLedger.accept
+ def logged(self,v,c):
+  try:return orig(self,v,c)
+  except LedgerError as e:
+   cause=e.__cause__
+   observe('r5-p11-diagnostic',{'round':round_no,'code':e.code.value,'cause':None if cause is None else type(cause).__name__,'jti':v.proof_jti,'proof_iat':v.proof_iat,'proof_exp':v.proof_exp})
+   raise
+ monkeypatch.setattr(ExecutionLedger,'accept',logged)
+ _original(a2,monkeypatch,round_no)

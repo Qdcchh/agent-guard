@@ -1,0 +1,9 @@
+{
+  "observed_date": "2026-10-18",
+  "purpose": "Pin every third-party action in the job that can access decrypted capacity inputs",
+  "actions": [
+    {"repository": "actions/checkout", "ref": "v4", "commit": "11d5960a326750d5838078e36cf38b85af677262", "source": "https://api.github.com/repos/actions/checkout/commits/v4"},
+    {"repository": "actions/setup-python", "ref": "v5", "commit": "a26af69be951a213d495a4c3e4e4022e16d87065", "source": "https://api.github.com/repos/actions/setup-python/commits/v5"},
+    {"repository": "actions/setup-node", "ref": "v4", "commit": "49933ea5288caeca8642d1e84afbd3f7d6820020", "source": "https://api.github.com/repos/actions/setup-node/commits/v4"}
+  ]
+}

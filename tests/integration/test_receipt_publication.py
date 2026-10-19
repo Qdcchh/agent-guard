@@ -213,8 +213,14 @@ def test_original_accept_facts_coherent_quote_result_refused_before_sign(
     baseline = full_state(dsn, downstream_dsn)
     from tests.fixtures.receipts import AUDIT_GATEWAY_TABLES, OLD_GATEWAY_TABLES
 
-    assert set(baseline["gateway"]) == OLD_GATEWAY_TABLES | AUDIT_GATEWAY_TABLES
+    assert set(baseline["gateway"]) == OLD_GATEWAY_TABLES | AUDIT_GATEWAY_TABLES | {
+        "ag_threshold_approvals",
+        "ag_payment_intents",
+        "ag_payment_budgets",
+        "ag_payment_states",
+    }
     assert set(baseline["downstream"]) == {
+        "ds_cosm2_bindings",
         "ds_operations",
         "ds_orders",
         "ds_notifications",

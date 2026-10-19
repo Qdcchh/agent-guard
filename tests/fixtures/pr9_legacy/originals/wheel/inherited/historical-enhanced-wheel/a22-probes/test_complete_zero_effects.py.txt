@@ -1,0 +1,56 @@
+"""Run original query assertions with every downstream table and grant counter audited."""
+import psycopg
+import pytest
+from tests.integration import test_gateway_query as target
+
+
+def audit(monkeypatch, downstream_dsn):
+    real=target.state; observed=[]
+    def snapshot(dsn,**kwargs):
+        with psycopg.connect(dsn) as conn:
+            counters=conn.execute('SELECT grant_id,amount_reserved,amount_settled,calls_reserved,calls_settled FROM ag_grants ORDER BY depth').fetchall()
+        with psycopg.connect(downstream_dsn) as conn:
+            names=[r[0] for r in conn.execute("SELECT tablename FROM pg_tables WHERE schemaname=current_schema() AND tablename LIKE 'ds_%' ORDER BY tablename").fetchall()]
+            assert {'ds_operations','ds_orders','ds_notifications'} <= set(names)
+            rows={n:conn.execute(f'SELECT row_to_json(t)::text FROM {n} t ORDER BY row_to_json(t)::text').fetchall() for n in names}
+        if observed:
+            assert counters==observed[0][0]
+            assert rows==observed[0][1]
+        observed.append((counters,rows))
+        return real(dsn,**kwargs)
+    monkeypatch.setattr(target,'state',snapshot)
+    return observed
+
+@pytest.mark.parametrize('status',['RESERVED','EXECUTING','UNKNOWN','SUCCEEDED','FAILED'])
+def test_every_status_all_downstream_rows(ledger,dsn,downstream_dsn,monkeypatch,status):
+    seen=audit(monkeypatch,downstream_dsn)
+    target.test_all_statuses_zero_business_cost(ledger,dsn,downstream_dsn,status)
+    assert len(seen)>=2 and len(seen[0][0])==3
+
+@pytest.mark.parametrize('round_id',range(10))
+def test_replay_all_downstream_rows(ledger,dsn,downstream_dsn,monkeypatch,round_id):
+    seen=audit(monkeypatch,downstream_dsn)
+    target.test_same_query_proof_only_one_success(ledger,dsn,downstream_dsn,round_id)
+    assert len(seen)>=2 and len(seen[0][0])==3
+
+@pytest.mark.parametrize('round_id',range(10))
+@pytest.mark.parametrize('mode',['principals','task','grants','operation','evidence','proof-insert','proof-link','deferred'])
+@pytest.mark.parametrize('positive',[False,True])
+def test_every_late_dependency_all_downstream_rows(ledger,dsn,downstream_dsn,monkeypatch,round_id,mode,positive):
+    seen=audit(monkeypatch,downstream_dsn)
+    target.test_final_clock_after_every_query_wait(ledger,dsn,downstream_dsn,round_id,mode,positive)
+    # Positive waits only snapshot before; explicitly read again after query.
+    target.state(dsn)
+    assert len(seen)>=2 and len(seen[0][0])==3
+
+@pytest.mark.parametrize('field',target.CHANGES)
+def test_original_context_all_downstream_rows(ledger,dsn,downstream_dsn,monkeypatch,field):
+    seen=audit(monkeypatch,downstream_dsn)
+    target.test_original_context_same_shape_corruption(ledger,dsn,downstream_dsn,field)
+    assert len(seen)>=2 and len(seen[0][0])==3
+
+
+def test_expired_original_all_downstream_rows(ledger,dsn,downstream_dsn,monkeypatch):
+    seen=audit(monkeypatch,downstream_dsn)
+    target.test_new_query_proof_accepts_expired_original_proof(ledger,dsn,downstream_dsn)
+    assert len(seen)>=2 and len(seen[0][0])==3

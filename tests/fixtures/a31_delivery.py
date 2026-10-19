@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
+import re
 import ssl
+import stat
+import subprocess
 import threading
 from dataclasses import asdict
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -38,6 +42,13 @@ from tests.fixtures.isolation import acquire_namespace, release_namespace
 
 class SignedTransport:
     def __init__(self, scope, tls_dir):
+        ca_file = "/private/ca.pem"
+        if os.environ.get("PR9_A31_TLS_RECEIPT") is not None:
+            verified_root = _current_tls_dir()
+            if Path(tls_dir) != verified_root:
+                raise ValueError("delivery TLS root differs from verified context")
+            ca_file = str(verified_root / "ca.pem")
+        self.ca_file = ca_file
         self.scope = scope
         self.key = generate_sm2_private_key()
         self.trust = (
@@ -227,11 +238,15 @@ class SignedTransport:
                         self.send_error(404)
                         return
                     raw = canonical_json_bytes(output)
-                    self.send_response(200)
-                    self.send_header("Content-Type", "application/json")
-                    self.send_header("Content-Length", str(len(raw)))
-                    self.end_headers()
-                    self.wfile.write(raw)
+                    try:
+                        self.send_response(200)
+                        self.send_header("Content-Type", "application/json")
+                        self.send_header("Content-Length", str(len(raw)))
+                        self.end_headers()
+                        self.wfile.write(raw)
+                    except ssl.SSLEOFError:
+                        # The SIGKILL recovery probe may close TLS after remote commit.
+                        pass
                 except (BrokenPipeError, ConnectionResetError):
                     pass
                 except Exception as exc:
@@ -248,7 +263,7 @@ class SignedTransport:
         self.origin = "https://localhost:" + str(self.server.server_port)
         self.client = AuditClient(
             self.origin,
-            ca_file="/private/ca.pem",
+            ca_file=ca_file,
             writer_credential="writer:DELIVERY_FIXTURE_SECRET_0123456789",
             reader_credential="reader:DELIVERY_FIXTURE_SECRET_0123456789",
             timeout=2,
@@ -263,7 +278,127 @@ class SignedTransport:
         assert self.handler_error is None, repr(self.handler_error)
 
 
+def _regular_private_path(path, *, mode):
+    path = Path(path)
+    if not path.is_absolute():
+        raise ValueError("absolute TLS context path required")
+    for ancestor in (path, *path.parents):
+        if ancestor.is_symlink():
+            raise ValueError("TLS context symlink forbidden")
+    info = path.stat()
+    if stat.S_IMODE(info.st_mode) != mode or info.st_uid != os.getuid():
+        raise ValueError("TLS context ownership or mode differs")
+    return path
+
+
+def _current_tls_dir():
+    receipt_path = _regular_private_path(os.environ["PR9_A31_TLS_RECEIPT"], mode=0o600)
+    if not receipt_path.is_file():
+        raise ValueError("regular TLS receipt required")
+    receipt = load_strict_json(receipt_path.read_bytes())
+    fields = {
+        "container_id",
+        "owner",
+        "sslmode",
+        "verified_tcp_tls",
+        "ca",
+        "ephemeral",
+        "tls_root",
+        "ca_sha256",
+        "server_certificate_sha256",
+        "delivery_server_certificate_sha256",
+        "audit_host",
+    }
+    if not isinstance(receipt, dict) or set(receipt) != fields:
+        raise ValueError("unknown TLS receipt fields")
+    owner = os.environ.get("PR9_CI_OWNER")
+    if (
+        not isinstance(owner, str)
+        or re.fullmatch(r"[A-Za-z0-9_-]{1,100}", owner) is None
+        or receipt["owner"] != owner
+        or not isinstance(receipt["container_id"], str)
+        or re.fullmatch(r"[0-9a-f]{64}", receipt["container_id"]) is None
+        or receipt["sslmode"] != "verify-full"
+        or receipt["verified_tcp_tls"] is not True
+        or receipt["ephemeral"] is not True
+    ):
+        raise ValueError("TLS receipt owner or identity differs")
+    root = _regular_private_path(receipt["tls_root"], mode=0o700)
+    if not root.is_dir() or receipt_path != root / "receipt.json":
+        raise ValueError("TLS receipt must belong to its bound root")
+    ca = root / "ca.pem"
+    if receipt["ca"] != str(ca):
+        raise ValueError("TLS CA must belong to its bound root")
+    for name in ("ca.pem", "server.pem"):
+        path = _regular_private_path(root / name, mode=0o600)
+        if not path.is_file():
+            raise ValueError("regular TLS material required")
+    for name, field in (("ca.pem", "ca_sha256"), ("server.pem", "server_certificate_sha256")):
+        checksum = receipt[field]
+        if (
+            not isinstance(checksum, str)
+            or re.fullmatch(r"[0-9a-f]{64}", checksum) is None
+            or hashlib.sha256((root / name).read_bytes()).hexdigest() != checksum
+        ):
+            raise ValueError("TLS material digest differs")
+    delivery_root = _regular_private_path(root / "delivery", mode=0o700)
+    if not delivery_root.is_dir():
+        raise ValueError("bound delivery TLS directory required")
+    for name in ("ca.pem", "server.pem", "server.key"):
+        path = _regular_private_path(delivery_root / name, mode=0o600)
+        if not path.is_file():
+            raise ValueError("regular delivery TLS material required")
+    if (delivery_root / "ca.pem").read_bytes() != ca.read_bytes():
+        raise ValueError("delivery CA differs from the bound audit CA")
+    delivery_checksum = receipt["delivery_server_certificate_sha256"]
+    if (
+        not isinstance(delivery_checksum, str)
+        or re.fullmatch(r"[0-9a-f]{64}", delivery_checksum) is None
+        or hashlib.sha256((delivery_root / "server.pem").read_bytes()).hexdigest()
+        != delivery_checksum
+    ):
+        raise ValueError("delivery certificate digest differs")
+    observed = subprocess.run(
+        ["docker", "inspect", receipt["container_id"]],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=15,
+    )
+    if observed.returncode:
+        raise ValueError("cannot inspect owned TLS service")
+    info = load_strict_json(observed.stdout)
+    if (
+        not isinstance(info, list)
+        or len(info) != 1
+        or info[0].get("Id") != receipt["container_id"]
+        or info[0].get("Config", {}).get("Labels", {}).get("agent-guard.pr9-owner") != owner
+        or info[0].get("State", {}).get("Running") is not True
+    ):
+        raise ValueError("actual TLS service ownership differs")
+    from psycopg.conninfo import conninfo_to_dict
+
+    dsn = os.environ["AGENT_GUARD_A31_TEST_AUDIT_DATABASE_URL"]
+    database = conninfo_to_dict(dsn)
+    if (
+        database.get("sslmode") != "verify-full"
+        or database.get("sslrootcert") != str(ca)
+        or receipt["audit_host"] not in {"localhost", "127.0.0.1", "pg-audit.agent-guard.test"}
+        or database.get("host") != receipt["audit_host"]
+    ):
+        raise ValueError("verified audit database TLS required")
+    with psycopg.connect(dsn, connect_timeout=5) as connection:
+        ssl_row = connection.execute(
+            "SELECT ssl FROM pg_stat_ssl WHERE pid=pg_backend_pid()"
+        ).fetchone()
+        if ssl_row != (True,):
+            raise ValueError("audit connection did not negotiate TLS")
+    return delivery_root
+
+
 def tls_dir():
+    if os.environ.get("PR9_A31_TLS_RECEIPT") is not None:
+        return _current_tls_dir()
     private = Path("/private")
     info = load_strict_json((private / "owner.json").read_bytes())
     role = info["role"]

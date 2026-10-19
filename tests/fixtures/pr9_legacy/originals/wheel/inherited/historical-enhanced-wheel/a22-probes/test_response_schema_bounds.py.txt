@@ -1,0 +1,27 @@
+"""Overapproximate all legal terminal result shapes at every declared field maximum."""
+import json,pathlib
+import pytest
+from agent_guard.contracts.encoding import canonical_json_bytes
+from agent_guard.contracts.ledger import MAX_SAFE_INT
+from agent_guard.tools.results import parse_result,MAX_RESULT_ITEMS,MAX_RESULT_STR
+
+@pytest.mark.parametrize('kind',['order','notification','read','refusal'])
+def test_legal_result_schema_maximum_frame_size(kind):
+    # Non-ID strings may use four-byte Unicode scalars. ID-pattern fields are
+    # ASCII <=128; safe integers <=16 decimal digits; version <=18 digits.
+    op='\U0001f600'*MAX_RESULT_STR
+    result={'kind':kind,'operation_id':op}
+    if kind=='order':
+        result.update(order_id='A'*128,supplier_id='B'*128,quote_id='C'*128,quote_version='9'*18,total_fen=MAX_SAFE_INT,
+            items=[{'sku':str(i).zfill(3)+'S'*125,'quantity':MAX_SAFE_INT,'unit_price_fen':MAX_SAFE_INT} for i in range(MAX_RESULT_ITEMS)])
+    elif kind=='notification':result.update(notification_id='A'*128,template_id='B'*128,recipient_id='C'*128)
+    elif kind=='read':result['tool_id']='\U0001f600'*MAX_RESULT_STR
+    else:result.update(tool_id='\U0001f600'*MAX_RESULT_STR,reason='\U0001f600'*MAX_RESULT_STR)
+    raw=canonical_json_bytes(result);parse_result(raw)
+    frame=canonical_json_bytes({'operation_id':op,'status':'SUCCEEDED','receipt_status':'PENDING','result':result,'receipt_jws':None})
+    # These parser-valid shapes intentionally overapproximate real persisted
+    # facts: actual operation UUID/tool names are much shorter, and actual
+    # quote costs cannot multiply both maximal numeric fields simultaneously.
+    assert len(frame)<60000<65536
+    out=pathlib.Path('/e/wheel-tests/inherited/wheel-response-legal-schema-bounds.jsonl')
+    with out.open('a') as f:f.write(json.dumps(dict(kind=kind,result_bytes=len(raw),frame_bytes=len(frame),parser_valid=True,overapproximation=True))+'\n')

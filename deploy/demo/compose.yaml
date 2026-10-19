@@ -916,7 +916,8 @@
       },
       "labels": {
         "agent-guard.run": "${AG33_RUN_ID}",
-        "agent-guard.owner": "${AG33_OWNER_ID}"
+        "agent-guard.owner": "${AG33_OWNER_ID}",
+        "agent-guard.pr9-owner": "${AG33_OWNER_ID}"
       },
       "command": [
         "postgres",

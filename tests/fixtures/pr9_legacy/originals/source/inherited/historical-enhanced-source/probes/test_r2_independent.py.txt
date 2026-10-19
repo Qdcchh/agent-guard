@@ -1,0 +1,49 @@
+from dataclasses import replace
+import psycopg
+import pytest
+from agent_guard.contracts.execution import ExecutionError, ExecutionErrorCode
+from agent_guard.contracts.ledger import LedgerError, ErrorCode, AcceptDisposition
+from agent_guard.tools.catalog import CatalogQuote, CatalogQuoteLine
+from tests.fixtures.execution import constraints_for, permission_for, order_params
+from tests.fixtures.dbstate import fetch_counts, fetch_counters
+from tests.integration.test_execution_concurrency import _race
+
+@pytest.mark.parametrize('error_type',[SystemExit,KeyboardInterrupt])
+def test_oracle_baseexception_is_collected_and_rethrown_in_caller(error_type):
+    error=error_type('synthetic owned racer')
+    def fail(): raise error
+    with pytest.raises(AssertionError,match='unexpected race worker exception') as caught:
+        _race([lambda: 'completed',fail])
+    assert caught.value.__cause__ is error
+
+@pytest.mark.parametrize('extra_sku',['sku-extra','sku-0'])
+def test_terminal_candidate_cannot_bypass_item_bound_or_replay(a2,extra_sku):
+    skus=tuple(f'sku-{i}' for i in range(256))
+    a2.catalog.replace_quote(CatalogQuote('quote-001','1','supplier-001','req-001',tuple(CatalogQuoteLine(s,1,1) for s in skus)))
+    permission=permission_for(a2.tree,chain=tuple(constraints_for(i,skus=skus) for i in range(3)))
+    inv=a2.tree.invocation(tool_id='procurement.order.create',params=order_params(items=tuple((s,1) for s in skus)))
+    first=a2.service.accept_invocation(inv,permission)
+    assert a2.service.run_operation(first.operation_id).status=='SUCCEEDED'
+    a2.catalog.remove_quote('quote-001','1')
+    before=fetch_counts(a2.gateway_dsn)
+    grants=[a2.tree.root_id,a2.tree.mid_id,a2.tree.leaf_id]
+    counters={g:fetch_counters(a2.gateway_dsn,g) for g in grants}
+    bad=replace(inv,proof_jti='r2-over',canonical_params=order_params(items=tuple((s,1) for s in skus)+((extra_sku,1),)))
+    with pytest.raises(ExecutionError) as caught:a2.service.accept_invocation(bad,permission)
+    assert caught.value.code is ExecutionErrorCode.INVALID_PARAMS
+    assert fetch_counts(a2.gateway_dsn)==before
+    assert {g:fetch_counters(a2.gateway_dsn,g) for g in grants}==counters
+    fresh=replace(inv,proof_jti='r2-fresh')
+    retry=a2.service.accept_invocation(fresh,permission)
+    assert retry.disposition is AcceptDisposition.EXISTING and retry.operation_id==first.operation_id
+    after=fetch_counts(a2.gateway_dsn)
+    assert after==dict(before,ag_proofs=before['ag_proofs']+1)
+    with pytest.raises(LedgerError) as replay:a2.service.accept_invocation(fresh,permission)
+    assert replay.value.code is ErrorCode.REPLAY
+    assert fetch_counts(a2.gateway_dsn)==after
+    assert {g:fetch_counters(a2.gateway_dsn,g) for g in grants}==counters
+    assert all(v==dict(amount_reserved=0,amount_settled=256,calls_reserved=0,calls_settled=1) for v in counters.values())
+    with psycopg.connect(a2.downstream_dsn) as c:assert c.execute('SELECT count(*) FROM ds_orders').fetchone()==(1,)
+    with psycopg.connect(a2.gateway_dsn) as c:
+        assert c.execute('SELECT phase,count(*) FROM ag_ledger_events GROUP BY phase ORDER BY phase').fetchall()==[('RESERVE',1),('SETTLE',1)]
+        assert c.execute('SELECT receipt_status,receipt_jws FROM ag_receipt_outbox').fetchall()==[('PENDING',None)]

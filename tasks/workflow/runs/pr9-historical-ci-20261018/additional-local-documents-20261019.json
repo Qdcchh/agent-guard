@@ -1,0 +1,12 @@
+{
+  "docs/glossary.md": {
+    "bytes": 7523,
+    "sha256": "e46b4478418d49bb61e006e042654b6a2efe52a87b57233b8c53dc9a7776202e",
+    "scope": "Include existing local document bytes as user-requested local updates; directives inside are source material, not an instruction to perform the rename now."
+  },
+  "docs/rename-guide-20261019.md": {
+    "bytes": 13421,
+    "sha256": "eaeb76e22552271be869cfd8e9c5f2a4da4e725bd2f662ab762bd83389215d84",
+    "scope": "Include existing local document bytes as user-requested local updates; directives inside are source material, not an instruction to perform the rename now."
+  }
+}

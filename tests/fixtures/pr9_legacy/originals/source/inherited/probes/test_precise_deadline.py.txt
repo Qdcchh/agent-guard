@@ -1,0 +1,214 @@
+from tests.integration import test_gateway_receipt_query as original
+globals().update({k:v for k,v in vars(original).items() if not k.startswith("__") and not k.startswith("test_")})
+from concurrent.futures import ThreadPoolExecutor
+import threading, time
+from agent_guard.contracts.ledger import LedgerError
+from agent_guard.authorization.permission_snapshot import PermissionSnapshotProvider
+from agent_guard.execution.receipt_publication import ReceiptVerifier
+from agent_guard.execution import query as query_module
+
+@pytest.mark.parametrize(
+    "dependency", ["outbox", "projection", "key-lookup", "source-load", "deferred"]
+)
+@pytest.mark.parametrize("expired", [False, True])
+@pytest.mark.parametrize("deadline_kind", ["proof", "token", "root", "mid", "leaf"])
+@pytest.mark.parametrize("round", range(10))
+def test_reviewer_precise_final_deadline_code(
+    ledger, dsn, downstream_dsn, monkeypatch, dependency, expired, deadline_kind, round
+):
+    import threading
+    import time
+    from concurrent.futures import ThreadPoolExecutor
+
+    from agent_guard.authorization.permission_snapshot import PermissionSnapshotProvider
+    from agent_guard.contracts.ledger import LedgerError
+    from agent_guard.execution import query as query_module
+    from agent_guard.execution.receipt_publication import ReceiptVerifier
+    from tests.fixtures.receipts import full_state
+
+    issuance_observations = []
+    if deadline_kind == "proof":
+        env, op, key, verifier, publisher = final_env(dsn, downstream_dsn)
+    else:
+        from tests.fixtures.gateway import signed_env_window
+        from tests.fixtures.receipts import receipt_services
+
+        env = signed_env_window(
+            dsn,
+            downstream_dsn,
+            "leaf" if deadline_kind == "token" else deadline_kind,
+            observations=issuance_observations,
+        )
+        op = env.adapter.accept(env.bundle()).operation_id
+        assert env.service.run_operation(op).status == "SUCCEEDED"
+        key, verifier, publisher = receipt_services(env, dsn)
+    publisher.publish(op)
+    # Complete the expensive material/oracle preparation before minting the
+    # authentic proof. STAGED evidence is the only permitted pre-query addition.
+    before = full_state(dsn, downstream_dsn)
+    reached = threading.Event()
+    observations = []
+    fired = False
+    if dependency == "outbox":
+        target, name = query_module.store, "fetch_outbox"
+    elif dependency == "projection":
+        target, name = query_module, "project_receipt"
+    elif dependency == "key-lookup":
+        target, name = ReceiptVerifier, "_trust_tx"
+    elif dependency == "source-load":
+        target, name = PermissionSnapshotProvider, "load_tx"
+    else:
+        target, name = psycopg.Connection, "execute"
+    original = getattr(target, name)
+
+    def gate(*args, **kwargs):
+        nonlocal fired
+        conn = args[1] if dependency in ("key-lookup", "source-load") else args[0]
+        applies = dependency != "deferred" or args[1] == "SET CONSTRAINTS ALL IMMEDIATE"
+        if not fired and applies:
+            fired = True
+            observations.append(conn.info.backend_pid)
+            reached.set()
+            if dependency == "deferred":
+                original(conn, "SELECT pg_advisory_xact_lock(5389917)")
+            else:
+                conn.execute("SELECT pg_advisory_xact_lock(5389917)")
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(target, name, gate)
+    with psycopg.connect(dsn, autocommit=True) as blocker:
+        blocker.execute("SELECT pg_advisory_lock(5389917)")
+        expiries = blocker.execute(
+            "SELECT depth,extract(epoch FROM expires_at) FROM ag_grants ORDER BY depth"
+        ).fetchall()
+        if deadline_kind == "proof":
+            # Real DB and wall clocks only; align once before actual signing.
+            while (
+                float(blocker.execute("SELECT extract(epoch FROM clock_timestamp())").fetchone()[0])
+                % 1
+                > 0.1
+            ):
+                time.sleep(0.001)
+        bundle = query_bundle(env, op, lifetime=1 if deadline_kind == "proof" else 60)
+        actual_deadline = (
+            bundle.query.proof_exp
+            if deadline_kind == "proof"
+            else bundle.query.token_exp
+            if deadline_kind == "token"
+            else int(dict(expiries)[{"root": 0, "mid": 1, "leaf": 2}[deadline_kind]])
+        )
+        diagnostic = {
+            "dependency": dependency,
+            "expired": expired,
+            "deadline_kind": deadline_kind,
+            "round": round,
+            "proof_iat": bundle.query.proof_iat,
+            "proof_exp": bundle.query.proof_exp,
+            "token_exp": bundle.query.token_exp,
+            "ancestor_expiries": [(depth, str(exp)) for depth, exp in expiries],
+            "actual_AS_issuance": issuance_observations,
+            "target_deadline": actual_deadline,
+            "before_submit_dbclock": str(
+                blocker.execute("SELECT extract(epoch FROM clock_timestamp())").fetchone()[0]
+            ),
+        }
+
+        def record():
+            import json
+            import os
+            from pathlib import Path
+
+            output = os.environ.get("A23_RECEIPT_EVIDENCE")
+            if output:
+                label = os.environ.get("A23_RUN_LABEL", "core")
+                Path(
+                    output, f"{label}-deadline-{round}-{deadline_kind}-{expired}-{dependency}.json"
+                ).write_text(json.dumps(diagnostic, indent=2))
+
+        with ThreadPoolExecutor(1) as pool:
+            future = pool.submit(
+                AuthorizedQuery(dsn, evidence_store=env.evidence, receipt_verifier=verifier).query,
+                bundle,
+            )
+            if not reached.wait(5):
+                diagnostic["gate_reached"] = False
+                diagnostic["failed_dbclock"] = str(
+                    blocker.execute("SELECT extract(epoch FROM clock_timestamp())").fetchone()[0]
+                )
+                blocker.execute("SELECT pg_advisory_unlock(5389917)")
+                try:
+                    future.result(5)
+                except Exception as exc:
+                    diagnostic["future_exception"] = {
+                        "type": type(exc).__name__,
+                        "code": str(getattr(exc, "code", None)),
+                        "text": str(exc),
+                    }
+                record()
+                pytest.fail("unreached real dependency gate: " + str(diagnostic))
+            diagnostic["gate_reached"] = True
+            diagnostic["backend_pid"] = observations[0]
+            deadline = time.monotonic() + 5
+            activity = None
+            while time.monotonic() < deadline:
+                activity = blocker.execute(
+                    "SELECT wait_event_type,wait_event,query FROM pg_stat_activity WHERE pid=%s",
+                    (observations[0],),
+                ).fetchone()
+                if activity and activity[:2] == ("Lock", "advisory"):
+                    break
+                time.sleep(0.001)
+            diagnostic["target_activity"] = list(activity)
+            assert activity[:2] == ("Lock", "advisory") and "pg_advisory_xact_lock" in activity[2]
+            now = blocker.execute("SELECT extract(epoch FROM clock_timestamp())").fetchone()[0]
+            if expired:
+                while now < actual_deadline:
+                    time.sleep(0.005)
+                    now = blocker.execute(
+                        "SELECT extract(epoch FROM clock_timestamp())"
+                    ).fetchone()[0]
+                assert now >= actual_deadline
+            else:
+                if now >= actual_deadline:
+                    blocker.execute("SELECT pg_advisory_unlock(5389917)")
+                    diagnostic["positive_window_exhausted_dbclock"] = str(now)
+                    try:
+                        future.result(5)
+                    except Exception as exc:
+                        diagnostic["future_exception"] = {
+                            "type": type(exc).__name__,
+                            "code": str(getattr(exc, "code", None)),
+                            "text": str(exc),
+                        }
+                    record()
+                    pytest.fail("positive real deadline exhausted: " + str(diagnostic))
+            diagnostic["release_dbclock"] = str(now)
+            blocker.execute("SELECT pg_advisory_unlock(5389917)")
+            if expired:
+                with pytest.raises(LedgerError) as denial:
+                    future.result(5)
+                expected_code = "STALE_REQUEST" if deadline_kind == "proof" else "EXPIRED"
+                assert denial.value.code.value == expected_code
+                from agent_guard.gateway.errors import classify
+                actual_classification = classify(denial.value)
+                assert actual_classification == (401 if deadline_kind == "proof" else 403, expected_code)
+                diagnostic["exact_denial_code"] = denial.value.code.value
+                diagnostic["actual_HTTP_classification"] = list(actual_classification)
+                diagnostic["outcome"] = "rejected-at-final-clock"
+                staged_only(
+                    before, full_state(dsn, downstream_dsn), proof_jti=bundle.query.proof_jti
+                )
+            else:
+                assert future.result(5)["receipt_status"] == "READY"
+                diagnostic["outcome"] = "accepted-before-deadline"
+                from tests.fixtures.receipts import result_read_only
+
+                result_read_only(
+                    before,
+                    full_state(dsn, downstream_dsn),
+                    evidence_ref=bundle.evidence_ref,
+                    proof_jti=bundle.query.proof_jti,
+                    operation_id=op,
+                    staging=True,
+                )
+            record()

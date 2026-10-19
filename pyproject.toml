@@ -38,6 +38,7 @@ line-length = 100
 select = ["E", "F", "I", "B"]
 
 [tool.setuptools.data-files]
+"share/agent-guard" = ["requirements-ci.lock"]
 "share/agent-guard/migrations" = ["migrations/001_init.sql", "migrations/002_root_invariants.sql", "migrations/003_root_delete_guard.sql", "migrations/004_execution_lifecycle.sql", "migrations/005_event_node_seal.sql", "migrations/006_event_seal.sql", "migrations/007_audit_journal.sql", "migrations/008_threshold_approval.sql", "migrations/009_x402_payment.sql"]
 "share/agent-guard/migrations/b" = ["migrations/b/004_authorization_code.sql", "migrations/b/005_delegation.sql", "migrations/b/006_task_revocation.sql", "migrations/b/007_admin_grant_revocation.sql", "migrations/b/008_login_consent.sql", "migrations/b/009_consent_policy_snapshot.sql", "migrations/b/010_evidence_store.sql"]
 "share/agent-guard/migrations/lineage" = ["migrations/lineage/001_registry.sql"]

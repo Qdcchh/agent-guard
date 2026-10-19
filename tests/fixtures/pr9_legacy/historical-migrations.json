@@ -1,0 +1,38 @@
+{
+  "original14_raw_sha256": {
+    "001_init.sql": "d5e7bb01b9713b7fd9f80b5da85ea039bdf311e2d4a8b6a191d7c48eb43b148c",
+    "002_root_invariants.sql": "bae1d72e1cf3dbe95ea73408e43196cdaa51297279319ac2dbf6111a68d44519",
+    "003_root_delete_guard.sql": "1d919f8f59a8d4f4bfe49a278006dd4b79f1bb8d791e701ec604ae051ec7527b",
+    "004_execution_lifecycle.sql": "41527dc2926c379895527b16d71c059d9bf8adac6d1f0a930d48361cbc964c98",
+    "005_event_node_seal.sql": "29529103ec7ffab8f785746edc4823a14e5e41d364010e3578e732e1a4e39c9e",
+    "006_event_seal.sql": "3abb279bc88b2fd7b2ff427a57fda407b77908182ec612334d500bea2f76760c",
+    "b/004_authorization_code.sql": "ac8f9235fb5601453b225ff95a6ca16241a03c2ada0c0a6a8ae96cb7786c1957",
+    "b/005_delegation.sql": "176f3743702022ded8b0d0691e4456a92c392884152f9e9142ffba91a68350f3",
+    "b/006_task_revocation.sql": "39a5f4b2c632f86d3511c7d69db04f576d33dfe1bfdc7a868e685a55ebf37784",
+    "b/007_admin_grant_revocation.sql": "6d7d44a2056d25f7c085c734b7ead77ffc36b0bec2d6f82cf3542a4d63fb3820",
+    "b/008_login_consent.sql": "6bfd359aff88c69909995b85fc15434d07390b93e3d2da9daf10ffe88b5e579e",
+    "b/009_consent_policy_snapshot.sql": "ee94ca3672497c0c0d5c67b04041afe12cf1618abb4f26363376dceea44974f1",
+    "b/010_evidence_store.sql": "a694e2f523b7c44f2ef1d17238552ddf98252d8d37b00d34f19342237dd927e0",
+    "lineage/001_registry.sql": "12da43d61229f481a3309e58ab73400615f8740644404e9698177942fe399a13"
+  },
+  "standalone": {
+    "007_audit_journal.sql": "4ae5b1c1a2d6d2cdd4355a43961a13fccdb3dbff0661278dd78ea347326fd1de",
+    "005_event_node_seal.sql": "29529103ec7ffab8f785746edc4823a14e5e41d364010e3578e732e1a4e39c9e",
+    "004_execution_lifecycle.sql": "41527dc2926c379895527b16d71c059d9bf8adac6d1f0a930d48361cbc964c98",
+    "001_init.sql": "d5e7bb01b9713b7fd9f80b5da85ea039bdf311e2d4a8b6a191d7c48eb43b148c",
+    "003_root_delete_guard.sql": "1d919f8f59a8d4f4bfe49a278006dd4b79f1bb8d791e701ec604ae051ec7527b",
+    "002_root_invariants.sql": "bae1d72e1cf3dbe95ea73408e43196cdaa51297279319ac2dbf6111a68d44519",
+    "006_event_seal.sql": "3abb279bc88b2fd7b2ff427a57fda407b77908182ec612334d500bea2f76760c",
+    "audit/001_checkpoint_store.sql": "982e8b4b98049badc2f32eb70579506da65c55b4e80caf594c9a6637a48b5678",
+    "lineage/001_registry.sql": "12da43d61229f481a3309e58ab73400615f8740644404e9698177942fe399a13",
+    "b/009_consent_policy_snapshot.sql": "ee94ca3672497c0c0d5c67b04041afe12cf1618abb4f26363376dceea44974f1",
+    "b/004_authorization_code.sql": "ac8f9235fb5601453b225ff95a6ca16241a03c2ada0c0a6a8ae96cb7786c1957",
+    "b/005_delegation.sql": "176f3743702022ded8b0d0691e4456a92c392884152f9e9142ffba91a68350f3",
+    "b/007_admin_grant_revocation.sql": "6d7d44a2056d25f7c085c734b7ead77ffc36b0bec2d6f82cf3542a4d63fb3820",
+    "b/006_task_revocation.sql": "39a5f4b2c632f86d3511c7d69db04f576d33dfe1bfdc7a868e685a55ebf37784",
+    "b/008_login_consent.sql": "6bfd359aff88c69909995b85fc15434d07390b93e3d2da9daf10ffe88b5e579e",
+    "b/010_evidence_store.sql": "a694e2f523b7c44f2ef1d17238552ddf98252d8d37b00d34f19342237dd927e0"
+  },
+  "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/s2-runner/gate.json",
+  "source_sha256": "fc365bc535e2d59ae6deb6747be81a97b3ddae8a1b1f6d54feb524bb7313363b"
+}

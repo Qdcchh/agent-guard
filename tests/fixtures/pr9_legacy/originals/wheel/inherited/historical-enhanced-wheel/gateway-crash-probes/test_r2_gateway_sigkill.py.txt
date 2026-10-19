@@ -1,0 +1,52 @@
+"""Independent persistent HTTPS result after actual gateway SIGKILL."""
+import json,psycopg
+from agent_guard.contracts.encoding import canonical_json_bytes
+from tests.integration import test_gateway_tls as tls
+from tests.integration.test_verified_execution import signed_env
+from tests.fixtures.gateway import config_document
+from tests.fixtures.execution import DOWNSTREAM_SECRET
+from enhanced_query_oracle_r1 import QueryJournalBusiness
+
+def business(dsn,ds):
+    with psycopg.connect(dsn) as c:
+        tables=[r[0] for r in c.execute("SELECT tablename FROM pg_tables WHERE schemaname=current_schema() AND tablename LIKE 'ag_%' ORDER BY tablename").fetchall() if r[0] not in ('ag_verified_evidence','ag_proofs')]
+        result={n:c.execute(f'SELECT row_to_json(t)::text FROM {n} t ORDER BY row_to_json(t)::text').fetchall() for n in tables}
+        assert 'ag_grants' in result and 'ag_operation_evidence' in result and 'ag_receipt_outbox' in result
+    with psycopg.connect(ds) as c:
+        result.update({n:c.execute(f'SELECT row_to_json(t)::text FROM {n} t ORDER BY row_to_json(t)::text').fetchall() for n in ['ds_operations','ds_orders','ds_notifications']})
+    return result
+
+def test_real_gateway_sigkill_then_restart_persistent_terminal_query(ledger,dsn,downstream_dsn,tmp_path,monkeypatch):
+    oracle=QueryJournalBusiness(dsn,downstream_dsn,globals()['business'])
+    business=oracle.snapshot
+    monkeypatch.setattr(tls,'sign_ag_proof',oracle.observe_sign(tls.sign_ag_proof))
+    env=signed_env(dsn,downstream_dsn);tls.certificates(tmp_path)
+    (tmp_path/'config.json').write_bytes(canonical_json_bytes(config_document(env)))
+    (tmp_path/'secrets.json').write_bytes(canonical_json_bytes({'note':'synthetic test-only','downstream_secret':DOWNSTREAM_SECRET}))
+    for n in ['config.json','secrets.json']:(tmp_path/n).chmod(0o600)
+    port=tls.fresh_port();gateway,context=tls.start_gateway(tmp_path,dsn,downstream_dsn,port);outputs=[];worker=None
+    body={'profile':'GM-MVP-1','task_id':'task-001','tool_id':'procurement.order.create','tool_version':'1','idempotency_key':'reviewer-r2-real-gateway-kill','params':{'request_id':'req-001','quote_id':'quote-001','quote_version':'1','items':[{'sku':'sku-001','quantity':1}],'delivery_id':'office-001'}}
+    try:
+        code,accepted,_=tls.signed_request(env,port,context,body);assert code==202 and accepted['status']=='RESERVED'
+        worker=tls.worker(env,dsn,downstream_dsn,accepted['operation_id']);out,err=worker.communicate(timeout=30);outputs.append(out+err)
+        assert worker.returncode==0 and json.loads(out)['status']=='SUCCEEDED'
+        query={'profile':'GM-MVP-1','task_id':'task-001','operation_id':accepted['operation_id']};before=business(dsn,downstream_dsn)
+        code,first,headers=tls.signed_request(env,port,context,query,query=True)
+        assert code==200 and first['status']=='SUCCEEDED' and first['result']['kind']=='order' and first['receipt_status']=='PENDING' and first['receipt_jws'] is None and headers['cache-control']=='no-store'
+        assert business(dsn,downstream_dsn)==before
+        killed_pid=gateway.pid;gateway.kill();out,err=gateway.communicate(timeout=10);outputs.append(out+err)
+        assert gateway.returncode==-9 and gateway.poll()==-9
+        assert business(dsn,downstream_dsn)==before
+        gateway,context=tls.start_gateway(tmp_path,dsn,downstream_dsn,port);assert gateway.pid!=killed_pid
+        code,second,headers=tls.signed_request(env,port,context,query,query=True)
+        assert code==200 and second==first and headers['cache-control']=='no-store'
+        assert business(dsn,downstream_dsn)==before
+        with psycopg.connect(dsn) as c:
+            assert c.execute('SELECT amount_reserved,amount_settled,calls_reserved,calls_settled FROM ag_grants ORDER BY depth').fetchall()==[(0,70000,0,1)]*3
+            assert c.execute('SELECT count(*) FROM ag_proofs WHERE purpose=%s',('result-read',)).fetchone()==(2,)
+        with psycopg.connect(downstream_dsn) as c:assert c.execute('SELECT count(*) FROM ds_orders').fetchone()==(1,)
+        print(f'OWN_GATEWAY_SIGKILL killed_pid={killed_pid} returncode=-9 restart_pid={gateway.pid} terminal_query_stable=true')
+    finally:
+        if worker and worker.poll() is None:worker.kill();worker.communicate(timeout=5)
+        if gateway.poll() is None:outputs.append(tls.stop_gateway(gateway))
+    assert all(marker not in ''.join(outputs) for marker in [env.token,DOWNSTREAM_SECRET,dsn,downstream_dsn,'PRIVATE KEY','Traceback'])

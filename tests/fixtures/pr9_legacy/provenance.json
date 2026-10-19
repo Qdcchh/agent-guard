@@ -1,0 +1,1477 @@
+{
+  "version": 1,
+  "files": {
+    "source/inherited/historical-original/conftest.py": {
+      "path": "originals/source/inherited/historical-original/conftest.py.txt",
+      "sha256": "bc63e0633db70011130d26da6d8bc01da8cb045e0f1e1a64a5f825f5379ca235",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/conftest.py"
+    },
+    "source/inherited/historical-original/a2/test_r3_more.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_r3_more.py.txt",
+      "sha256": "ee370c48c3812a7c2ea814a2ade0e50575eff01f8ee1cf55936e8b9da17555cc",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_r3_more.py"
+    },
+    "source/inherited/historical-original/a2/test_r8_independent.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_r8_independent.py.txt",
+      "sha256": "e326315907d2c365e2017ea313282b158e8343c2ec7de77405f67672be7ad462",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_r8_independent.py"
+    },
+    "source/inherited/historical-original/a2/test_r7_independent.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_r7_independent.py.txt",
+      "sha256": "68ab932a84e47ebaac8d2c6709084d21b7a7a2fe5f3eeba563c17116ce703e88",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_r7_independent.py"
+    },
+    "source/inherited/historical-original/a2/conftest.py": {
+      "path": "originals/source/inherited/historical-original/a2/conftest.py.txt",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/conftest.py"
+    },
+    "source/inherited/historical-original/a2/test_r3_independent.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_r3_independent.py.txt",
+      "sha256": "98c07f565fc2a068acc451834575a423f2b7b7034bbb1239facc87bf449d27b3",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_r3_independent.py"
+    },
+    "source/inherited/historical-original/a2/test_r5_confirm.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_r5_confirm.py.txt",
+      "sha256": "96ffc15449d4550102b559284cfd1ed734b8af8159ae18d790ebf8cdc5faa341",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_r5_confirm.py"
+    },
+    "source/inherited/historical-original/a2/test_upgrade.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_upgrade.py.txt",
+      "sha256": "47511f72a59fc44bd20ebd0ac9461b2a80ca2d9dc58e9277599505e8d96d93ca",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_upgrade.py"
+    },
+    "source/inherited/historical-original/a2/test_repetitions.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_repetitions.py.txt",
+      "sha256": "061d2a355b6e67a440b9a74b34bf02d7e7e405c186d4779da05930b998023a73",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_repetitions.py"
+    },
+    "source/inherited/historical-original/a2/test_r2_positive.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_r2_positive.py.txt",
+      "sha256": "25473d5512ddf0d22972a3ee66f853eb792fdb25fed3c03648d82d5a358e6002",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_r2_positive.py"
+    },
+    "source/inherited/historical-original/a2/test_entry_windows.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_entry_windows.py.txt",
+      "sha256": "bb3f46e543c5dbd01854115c658e9e15c19821e6a74c223d9bc367a508476bb1",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_entry_windows.py"
+    },
+    "source/inherited/historical-original/a2/test_r2_variants.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_r2_variants.py.txt",
+      "sha256": "c9912bc18f4c211f0668ae734d893ae3eae97a1719cc591f46af929f89e93055",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_r2_variants.py"
+    },
+    "source/inherited/historical-original/a2/test_deadline.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_deadline.py.txt",
+      "sha256": "992b28381be1ad843f724bb43615342da5b3dd027e042864cab2883a1be8a30d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_deadline.py"
+    },
+    "source/inherited/historical-original/a2/test_followups.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_followups.py.txt",
+      "sha256": "e5f7ccaa49bc1b7add01d016b6616e7aad5b8a667bc72d63c324f38e0f66a5fb",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_followups.py"
+    },
+    "source/inherited/historical-original/a2/test_r4_boundaries.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_r4_boundaries.py.txt",
+      "sha256": "e00736651cb2f3f404d6e5bce164f93b5906285ac124244b3d1680f5d533097e",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_r4_boundaries.py"
+    },
+    "source/inherited/historical-original/a2/test_r5_resource_diagnostic.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_r5_resource_diagnostic.py.txt",
+      "sha256": "e098d14fd6ada20b01cb4065c8b2aac30c30a4629fc362a6d4a0cec511f21c2b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_r5_resource_diagnostic.py"
+    },
+    "source/inherited/historical-original/a2/test_review.py": {
+      "path": "originals/source/inherited/historical-original/a2/test_review.py.txt",
+      "sha256": "6d250d94850029f3f57c9d9ef18121bc04c034808460d0f43579194f794edf22",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a2/test_review.py"
+    },
+    "source/inherited/historical-original/a1/test_missing_invariants.py": {
+      "path": "originals/source/inherited/historical-original/a1/test_missing_invariants.py.txt",
+      "sha256": "ee232af92406feca833f5915a4e3750c85c63ec261beae538b2981161b9bb75c",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a1/test_missing_invariants.py"
+    },
+    "source/inherited/historical-original/a1/test_upgrade_nonzero.py": {
+      "path": "originals/source/inherited/historical-original/a1/test_upgrade_nonzero.py.txt",
+      "sha256": "ab58df8e9885f2721bdc0efef444dd2ad8332b0341148e7f64a14f6c0464a391",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a1/test_upgrade_nonzero.py"
+    },
+    "source/inherited/historical-original/a1/test_root_rebuild.py": {
+      "path": "originals/source/inherited/historical-original/a1/test_root_rebuild.py.txt",
+      "sha256": "27d58251dbdd8494333edbf4d6302c44e4d48f7196676458de1850e937564ef1",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/a1/test_root_rebuild.py"
+    },
+    "source/inherited/historical-original/b/test_r2_state_races.py": {
+      "path": "originals/source/inherited/historical-original/b/test_r2_state_races.py.txt",
+      "sha256": "9548a0b9cb4895244900ebaa4a80aa8f4287a6c414444880f1bf387deaffb34e",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/b/test_r2_state_races.py"
+    },
+    "source/inherited/historical-original/b/test_r2_consent.py": {
+      "path": "originals/source/inherited/historical-original/b/test_r2_consent.py.txt",
+      "sha256": "a91485654f4d37556de0a51c340acdc3113270bdd178e4619959034ddba3c7c3",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/b/test_r2_consent.py"
+    },
+    "source/inherited/historical-original/b/test_r2_encoding.py": {
+      "path": "originals/source/inherited/historical-original/b/test_r2_encoding.py.txt",
+      "sha256": "58384af9484f71dab3702e44aab011bdf6191a295794313c9a6347d7098e82f4",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/b/test_r2_encoding.py"
+    },
+    "source/inherited/historical-original/b/test_r1_db_current.py": {
+      "path": "originals/source/inherited/historical-original/b/test_r1_db_current.py.txt",
+      "sha256": "176ecd065c92b3bd8cb54c970d4e4d604057281335c7c36e6f7e3d3a393a1c4b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/b/test_r1_db_current.py"
+    },
+    "source/inherited/historical-original/b/test_r2_migrations.py": {
+      "path": "originals/source/inherited/historical-original/b/test_r2_migrations.py.txt",
+      "sha256": "52dcff47aaeca23c1bf0c7d92f7d36c2578edab420af1e38ff10dfaf15748a29",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/b/test_r2_migrations.py"
+    },
+    "source/inherited/historical-original/b/test_r2_http_bounds.py": {
+      "path": "originals/source/inherited/historical-original/b/test_r2_http_bounds.py.txt",
+      "sha256": "eb3cd0dead6612356ffd914b9c3dd5174a7df14f2a5029e25d45643d973fb229",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/b/test_r2_http_bounds.py"
+    },
+    "source/inherited/historical-original/b/test_r1_tls_current.py": {
+      "path": "originals/source/inherited/historical-original/b/test_r1_tls_current.py.txt",
+      "sha256": "d3e703eb2de09a3484f1473b7f9ee4ef8cf1fe4f12ba1fcb82f8704778a4a22c",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/b/test_r1_tls_current.py"
+    },
+    "source/inherited/historical-original/b/test_r1_races_current.py": {
+      "path": "originals/source/inherited/historical-original/b/test_r1_races_current.py.txt",
+      "sha256": "b3d3f54f94cf8cad325dd4752f4da07d43061b2312ab234238bd248d5d400165",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/b/test_r1_races_current.py"
+    },
+    "source/inherited/historical-original/b/test_r2_network_private.py": {
+      "path": "originals/source/inherited/historical-original/b/test_r2_network_private.py.txt",
+      "sha256": "68de8d9202b7193a7e4c91c3946460d5209f6f0f037ce5634495679a2eecd863",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/b/test_r2_network_private.py"
+    },
+    "source/inherited/historical-original/b/legacy/test_history4.py": {
+      "path": "originals/source/inherited/historical-original/b/legacy/test_history4.py.txt",
+      "sha256": "ee232af92406feca833f5915a4e3750c85c63ec261beae538b2981161b9bb75c",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/b/legacy/test_history4.py"
+    },
+    "source/inherited/historical-original/b/legacy/test_history1.py": {
+      "path": "originals/source/inherited/historical-original/b/legacy/test_history1.py.txt",
+      "sha256": "27d58251dbdd8494333edbf4d6302c44e4d48f7196676458de1850e937564ef1",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-original/b/legacy/test_history1.py"
+    },
+    "source/inherited/historical-adapted/conftest.py": {
+      "path": "originals/source/inherited/historical-adapted/conftest.py.txt",
+      "sha256": "bc63e0633db70011130d26da6d8bc01da8cb045e0f1e1a64a5f825f5379ca235",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/conftest.py"
+    },
+    "source/inherited/historical-adapted/a2/test_r3_more.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_r3_more.py.txt",
+      "sha256": "ee370c48c3812a7c2ea814a2ade0e50575eff01f8ee1cf55936e8b9da17555cc",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_r3_more.py"
+    },
+    "source/inherited/historical-adapted/a2/test_r8_independent.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_r8_independent.py.txt",
+      "sha256": "e326315907d2c365e2017ea313282b158e8343c2ec7de77405f67672be7ad462",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_r8_independent.py"
+    },
+    "source/inherited/historical-adapted/a2/test_r7_independent.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_r7_independent.py.txt",
+      "sha256": "ee31e6a213dec3184ca753d164e6c13d804d3c968e2b92d400916844f03dbe12",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_r7_independent.py"
+    },
+    "source/inherited/historical-adapted/a2/conftest.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/conftest.py.txt",
+      "sha256": "cdbf4881ed8744645d092493807bd2c35a18b557e6db1eff86c64da32821d17d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/conftest.py"
+    },
+    "source/inherited/historical-adapted/a2/test_r3_independent.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_r3_independent.py.txt",
+      "sha256": "98c07f565fc2a068acc451834575a423f2b7b7034bbb1239facc87bf449d27b3",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_r3_independent.py"
+    },
+    "source/inherited/historical-adapted/a2/test_r5_confirm.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_r5_confirm.py.txt",
+      "sha256": "6805a03fc9976e669464db930a2abbad3d840df9c8cda623b5ad5319c7085c5b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_r5_confirm.py"
+    },
+    "source/inherited/historical-adapted/a2/test_upgrade.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_upgrade.py.txt",
+      "sha256": "a3ec986f4814f48eb4adc8d1943c5a88ece77e6e54a2fdb98cea118643fff6a6",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_upgrade.py"
+    },
+    "source/inherited/historical-adapted/a2/test_repetitions.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_repetitions.py.txt",
+      "sha256": "061d2a355b6e67a440b9a74b34bf02d7e7e405c186d4779da05930b998023a73",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_repetitions.py"
+    },
+    "source/inherited/historical-adapted/a2/test_r2_positive.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_r2_positive.py.txt",
+      "sha256": "25473d5512ddf0d22972a3ee66f853eb792fdb25fed3c03648d82d5a358e6002",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_r2_positive.py"
+    },
+    "source/inherited/historical-adapted/a2/test_entry_windows.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_entry_windows.py.txt",
+      "sha256": "bb3f46e543c5dbd01854115c658e9e15c19821e6a74c223d9bc367a508476bb1",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_entry_windows.py"
+    },
+    "source/inherited/historical-adapted/a2/test_r2_variants.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_r2_variants.py.txt",
+      "sha256": "c9912bc18f4c211f0668ae734d893ae3eae97a1719cc591f46af929f89e93055",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_r2_variants.py"
+    },
+    "source/inherited/historical-adapted/a2/test_deadline.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_deadline.py.txt",
+      "sha256": "992b28381be1ad843f724bb43615342da5b3dd027e042864cab2883a1be8a30d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_deadline.py"
+    },
+    "source/inherited/historical-adapted/a2/test_followups.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_followups.py.txt",
+      "sha256": "e5f7ccaa49bc1b7add01d016b6616e7aad5b8a667bc72d63c324f38e0f66a5fb",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_followups.py"
+    },
+    "source/inherited/historical-adapted/a2/test_r4_boundaries.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_r4_boundaries.py.txt",
+      "sha256": "217d0965f453a2de5ecd586645a18c7f1f7b3e96992a045a8fccaf4736a6a729",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_r4_boundaries.py"
+    },
+    "source/inherited/historical-adapted/a2/test_r5_resource_diagnostic.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_r5_resource_diagnostic.py.txt",
+      "sha256": "e098d14fd6ada20b01cb4065c8b2aac30c30a4629fc362a6d4a0cec511f21c2b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_r5_resource_diagnostic.py"
+    },
+    "source/inherited/historical-adapted/a2/test_review.py": {
+      "path": "originals/source/inherited/historical-adapted/a2/test_review.py.txt",
+      "sha256": "6d250d94850029f3f57c9d9ef18121bc04c034808460d0f43579194f794edf22",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a2/test_review.py"
+    },
+    "source/inherited/historical-adapted/a1/test_missing_invariants.py": {
+      "path": "originals/source/inherited/historical-adapted/a1/test_missing_invariants.py.txt",
+      "sha256": "ee232af92406feca833f5915a4e3750c85c63ec261beae538b2981161b9bb75c",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a1/test_missing_invariants.py"
+    },
+    "source/inherited/historical-adapted/a1/test_upgrade_nonzero.py": {
+      "path": "originals/source/inherited/historical-adapted/a1/test_upgrade_nonzero.py.txt",
+      "sha256": "4f18f60659427045e52186908bb208a168dda0fdaf1d4da1120d48693f9216b8",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a1/test_upgrade_nonzero.py"
+    },
+    "source/inherited/historical-adapted/a1/test_root_rebuild.py": {
+      "path": "originals/source/inherited/historical-adapted/a1/test_root_rebuild.py.txt",
+      "sha256": "27d58251dbdd8494333edbf4d6302c44e4d48f7196676458de1850e937564ef1",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/a1/test_root_rebuild.py"
+    },
+    "source/inherited/historical-adapted/b/test_r2_state_races.py": {
+      "path": "originals/source/inherited/historical-adapted/b/test_r2_state_races.py.txt",
+      "sha256": "9548a0b9cb4895244900ebaa4a80aa8f4287a6c414444880f1bf387deaffb34e",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/b/test_r2_state_races.py"
+    },
+    "source/inherited/historical-adapted/b/test_r2_consent.py": {
+      "path": "originals/source/inherited/historical-adapted/b/test_r2_consent.py.txt",
+      "sha256": "a91485654f4d37556de0a51c340acdc3113270bdd178e4619959034ddba3c7c3",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/b/test_r2_consent.py"
+    },
+    "source/inherited/historical-adapted/b/test_r2_encoding.py": {
+      "path": "originals/source/inherited/historical-adapted/b/test_r2_encoding.py.txt",
+      "sha256": "58384af9484f71dab3702e44aab011bdf6191a295794313c9a6347d7098e82f4",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/b/test_r2_encoding.py"
+    },
+    "source/inherited/historical-adapted/b/test_r1_db_current.py": {
+      "path": "originals/source/inherited/historical-adapted/b/test_r1_db_current.py.txt",
+      "sha256": "176ecd065c92b3bd8cb54c970d4e4d604057281335c7c36e6f7e3d3a393a1c4b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/b/test_r1_db_current.py"
+    },
+    "source/inherited/historical-adapted/b/test_r2_migrations.py": {
+      "path": "originals/source/inherited/historical-adapted/b/test_r2_migrations.py.txt",
+      "sha256": "119d6b620a1eb30461921b9fb6b2f1f7f5feba2941dc28aead3edca948a853b7",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/b/test_r2_migrations.py"
+    },
+    "source/inherited/historical-adapted/b/test_r2_http_bounds.py": {
+      "path": "originals/source/inherited/historical-adapted/b/test_r2_http_bounds.py.txt",
+      "sha256": "eb3cd0dead6612356ffd914b9c3dd5174a7df14f2a5029e25d45643d973fb229",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/b/test_r2_http_bounds.py"
+    },
+    "source/inherited/historical-adapted/b/test_r1_tls_current.py": {
+      "path": "originals/source/inherited/historical-adapted/b/test_r1_tls_current.py.txt",
+      "sha256": "d3e703eb2de09a3484f1473b7f9ee4ef8cf1fe4f12ba1fcb82f8704778a4a22c",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/b/test_r1_tls_current.py"
+    },
+    "source/inherited/historical-adapted/b/test_r1_races_current.py": {
+      "path": "originals/source/inherited/historical-adapted/b/test_r1_races_current.py.txt",
+      "sha256": "bbab6dbbb165c123a433786109e39cd4e307449231b87487959650263aec4816",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/b/test_r1_races_current.py"
+    },
+    "source/inherited/historical-adapted/b/test_r2_network_private.py": {
+      "path": "originals/source/inherited/historical-adapted/b/test_r2_network_private.py.txt",
+      "sha256": "65ba364f0eccdcd0fba2879b6a0592ff0dddac5a39fffd2b87795f69663c7388",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/b/test_r2_network_private.py"
+    },
+    "source/inherited/historical-adapted/b/legacy/test_history4.py": {
+      "path": "originals/source/inherited/historical-adapted/b/legacy/test_history4.py.txt",
+      "sha256": "f758a3b29f00ed4bda7ec9e30d78cbd8499e4454818cf747b46d4a4d72442011",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/b/legacy/test_history4.py"
+    },
+    "source/inherited/historical-adapted/b/legacy/test_history1.py": {
+      "path": "originals/source/inherited/historical-adapted/b/legacy/test_history1.py.txt",
+      "sha256": "c9c58589775e1131f56007f001153d74144062e18eeb232566365edb0db54cc8",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-adapted/b/legacy/test_history1.py"
+    },
+    "source/inherited/historical-enhanced-source/conftest.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/conftest.py.txt",
+      "sha256": "d2e606f54c0297bf8ce18180bf8c60926e16ed1c2455a9fcee4746da1340b2dc",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/conftest.py"
+    },
+    "source/inherited/historical-enhanced-source/a22-probes/conftest.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/a22-probes/conftest.py.txt",
+      "sha256": "d588242b84c2d3865fa9613f13e30001c4000b00ee93b4e7db0aee46de4a2d0d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/a22-probes/conftest.py"
+    },
+    "source/inherited/historical-enhanced-source/a22-probes/test_complete_zero_effects.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/a22-probes/test_complete_zero_effects.py.txt",
+      "sha256": "ef0ab5436a855444e98a942bc8ce6c6169f27aded347ba938e3c5927881df3be",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/a22-probes/test_complete_zero_effects.py"
+    },
+    "source/inherited/historical-enhanced-source/a22-probes/test_response_schema_bounds.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/a22-probes/test_response_schema_bounds.py.txt",
+      "sha256": "77d24f3330418ce9ff0e8b268c55c68b59b0cd974e67c1f1b737fe46c2fe2ca8",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/a22-probes/test_response_schema_bounds.py"
+    },
+    "source/inherited/historical-enhanced-source/a22-probes/test_public_permission_controls.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/a22-probes/test_public_permission_controls.py.txt",
+      "sha256": "54dd2b83090b05415968a29c0f20350b6671c1fd56c97e669c2e2708857e10fa",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/a22-probes/test_public_permission_controls.py"
+    },
+    "source/inherited/historical-enhanced-source/a22-probes/test_query_dynamic_effects.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/a22-probes/test_query_dynamic_effects.py.txt",
+      "sha256": "58340e4276414a619e02095c8032f61a5d1ce7b68ff0cb30cf5024fcc996937f",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/a22-probes/test_query_dynamic_effects.py"
+    },
+    "source/inherited/historical-enhanced-source/a22-probes/test_child_import_sources.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/a22-probes/test_child_import_sources.py.txt",
+      "sha256": "5670bcca1c8ec05c3a101f1a171fb38412a00bf95856d85b5069a971eb6b05fb",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/a22-probes/test_child_import_sources.py"
+    },
+    "source/inherited/historical-enhanced-source/probes/conftest.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/probes/conftest.py.txt",
+      "sha256": "d588242b84c2d3865fa9613f13e30001c4000b00ee93b4e7db0aee46de4a2d0d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/probes/conftest.py"
+    },
+    "source/inherited/historical-enhanced-source/probes/test_independent_compound.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/probes/test_independent_compound.py.txt",
+      "sha256": "ec31a6a44d41840413a0a0d8732c17c69aa8b67b2688a4c331e1847b3497a3a4",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/probes/test_independent_compound.py"
+    },
+    "source/inherited/historical-enhanced-source/probes/test_real_serialization.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/probes/test_real_serialization.py.txt",
+      "sha256": "5bf98f2cf1825d2bb113a340a1410845b95a60573fcfd5c794713ea7dd098f67",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/probes/test_real_serialization.py"
+    },
+    "source/inherited/historical-enhanced-source/probes/test_r2_independent.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/probes/test_r2_independent.py.txt",
+      "sha256": "a6417a75be78dea446d38fb19487bb10d90902ff3c099edefc2b65bcf102d4fd",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/probes/test_r2_independent.py"
+    },
+    "source/inherited/historical-enhanced-source/gateway-crash-probes/conftest.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/gateway-crash-probes/conftest.py.txt",
+      "sha256": "d588242b84c2d3865fa9613f13e30001c4000b00ee93b4e7db0aee46de4a2d0d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/gateway-crash-probes/conftest.py"
+    },
+    "source/inherited/historical-enhanced-source/gateway-crash-probes/test_r2_gateway_sigkill.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/gateway-crash-probes/test_r2_gateway_sigkill.py.txt",
+      "sha256": "f8828c1588a316cb4136a82ace301ddbaa504ef639906e366f5dc20120b4d47b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/gateway-crash-probes/test_r2_gateway_sigkill.py"
+    },
+    "source/inherited/historical-enhanced-source/fresh-probes/conftest.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/fresh-probes/conftest.py.txt",
+      "sha256": "d588242b84c2d3865fa9613f13e30001c4000b00ee93b4e7db0aee46de4a2d0d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/fresh-probes/conftest.py"
+    },
+    "source/inherited/historical-enhanced-source/fresh-probes/test_r2_real_second.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/fresh-probes/test_r2_real_second.py.txt",
+      "sha256": "76fe03c6252671adc60f08364b369064c8d3fab05f6259f7354ea854a6811701",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/fresh-probes/test_r2_real_second.py"
+    },
+    "source/inherited/historical-enhanced-source/fresh-probes/test_r2_trusted_material.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/fresh-probes/test_r2_trusted_material.py.txt",
+      "sha256": "df435d9357c6a2048cb496b0754a87d062f3955fd6a15dfb6882d5375929e402",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/fresh-probes/test_r2_trusted_material.py"
+    },
+    "source/inherited/historical-enhanced-source/local-original/test_boundary_probes.py": {
+      "path": "originals/source/inherited/historical-enhanced-source/local-original/test_boundary_probes.py.txt",
+      "sha256": "0ff96988fc4c37fa70e648c64a147f9789ed0d13601b5b11c528f81228e342f2",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/historical-enhanced-source/local-original/test_boundary_probes.py"
+    },
+    "source/inherited/probes/test_precise_deadline.py": {
+      "path": "originals/source/inherited/probes/test_precise_deadline.py.txt",
+      "sha256": "153b904b22916e40787c48a12822844302ce6d63e8f759a6983cd325837af366",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/probes/test_precise_deadline.py"
+    },
+    "source/inherited/probes/test_noncanonical_ready_v2.py": {
+      "path": "originals/source/inherited/probes/test_noncanonical_ready_v2.py.txt",
+      "sha256": "fec2cc5c7decc4579a586c155e69d5ba5ecdfee262600699057dfe678439bbe6",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/probes/test_noncanonical_ready_v2.py"
+    },
+    "source/inherited/probes/conftest.py": {
+      "path": "originals/source/inherited/probes/conftest.py.txt",
+      "sha256": "cdbf4881ed8744645d092493807bd2c35a18b557e6db1eff86c64da32821d17d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/probes/conftest.py"
+    },
+    "source/inherited/probes/test_independent.py": {
+      "path": "originals/source/inherited/probes/test_independent.py.txt",
+      "sha256": "1eccc38e412b21bbea35993814273035543d773d77791eb304c46350eaa58d75",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/probes/test_independent.py"
+    },
+    "source/inherited/probes/test_reviewer_precommit_payload.py": {
+      "path": "originals/source/inherited/probes/test_reviewer_precommit_payload.py.txt",
+      "sha256": "0eea5b63881de3108447882b7129eb31ba9116171862569434cbd17ee459047a",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/probes/test_reviewer_precommit_payload.py"
+    },
+    "source/inherited/probes/test_public_boundary.py": {
+      "path": "originals/source/inherited/probes/test_public_boundary.py.txt",
+      "sha256": "e490231ba08a714c327cd2b5c9fec8bda243a4f5a01b4d0c47e17a5e17b2fff7",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/probes/test_public_boundary.py"
+    },
+    "source/inherited/probes/test_coherent_quote_v2.py": {
+      "path": "originals/source/inherited/probes/test_coherent_quote_v2.py.txt",
+      "sha256": "5717d95e9efeb8c1e51bbab6df8f6add8b594962c78af82e64d7adc249771980",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/probes/test_coherent_quote_v2.py"
+    },
+    "source/inherited/probes/test_reviewer_variants.py": {
+      "path": "originals/source/inherited/probes/test_reviewer_variants.py.txt",
+      "sha256": "857dbad90c8538c7f7aad627ee048f1567f6701e94316e2f0f05c6823b1980c4",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/probes/test_reviewer_variants.py"
+    },
+    "source/inherited/readme-probes/conftest.py": {
+      "path": "originals/source/inherited/readme-probes/conftest.py.txt",
+      "sha256": "bc63e0633db70011130d26da6d8bc01da8cb045e0f1e1a64a5f825f5379ca235",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/readme-probes/conftest.py"
+    },
+    "source/inherited/readme-probes/test_receipt_readme_literal.py": {
+      "path": "originals/source/inherited/readme-probes/test_receipt_readme_literal.py.txt",
+      "sha256": "8bf1ee2612bb6aeb4329daf89870c05b70b19c4c7524253da5b47db8366b83af",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/readme-probes/test_receipt_readme_literal.py"
+    },
+    "source/inherited/test_oracle_controls.py": {
+      "path": "originals/source/inherited/test_oracle_controls.py.txt",
+      "sha256": "e1d4cbb2c40e9afc581ca77bbeda6c069c4c87716079b822f4b5f387e85e8171",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/test_oracle_controls.py"
+    },
+    "source/inherited/runtime_provenance.py": {
+      "path": "originals/source/inherited/runtime_provenance.py.txt",
+      "sha256": "c5452061d8630e771aea6163cc8f1c21a126fcf225c4759b29938edfdffac02c",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/runtime_provenance.py"
+    },
+    "source/inherited/capacity_domain_independent.py": {
+      "path": "originals/source/inherited/capacity_domain_independent.py.txt",
+      "sha256": "48849419331728549198b272cc2b5d513ceee06ca84702ae7079c9a5e69d4b07",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/capacity_domain_independent.py"
+    },
+    "source/inherited/readme_as_native_r2.py": {
+      "path": "originals/source/inherited/readme_as_native_r2.py.txt",
+      "sha256": "925da209fa2bd7bd05b868a5961aef4e07e68910d5175852f58ba1b4257b5c7a",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/readme_as_native_r2.py"
+    },
+    "source/inherited/readme_driver.py": {
+      "path": "originals/source/inherited/readme_driver.py.txt",
+      "sha256": "7e7fbd5bacb39797101fab5f88ad62988970aca9228d99a0429692333658b0ea",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/readme_driver.py"
+    },
+    "source/inherited/readme-snippet.py": {
+      "path": "originals/source/inherited/readme-snippet.py.txt",
+      "sha256": "163b199820077c9ba46b6129fcc5578f277dfb22d6e1a2cdfe49d0b59ed2301b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/readme-snippet.py"
+    },
+    "source/inherited/demo_driver.py": {
+      "path": "originals/source/inherited/demo_driver.py.txt",
+      "sha256": "75cc8ec354c4b64a5320825962b36d1bb3762fc52c27cd0b3e55f37ad616b377",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/demo_driver.py"
+    },
+    "source/inherited/readme_gateway_native_r3.py": {
+      "path": "originals/source/inherited/readme_gateway_native_r3.py.txt",
+      "sha256": "a1b0755ae0c88a9456fc5e34d68789d4614e848a50efbf5e73ce055e9f41d6ba",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/inherited/readme_gateway_native_r3.py"
+    },
+    "source/environment_observer.py": {
+      "path": "originals/source/environment_observer.py.txt",
+      "sha256": "2c57ca068c6fc96d6ffb67647a3b043da4d160caae130045296e15f54608b141",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-source/source-tests/environment_observer.py"
+    },
+    "wheel/inherited/historical-original/conftest.py": {
+      "path": "originals/wheel/inherited/historical-original/conftest.py.txt",
+      "sha256": "bc63e0633db70011130d26da6d8bc01da8cb045e0f1e1a64a5f825f5379ca235",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/conftest.py"
+    },
+    "wheel/inherited/historical-original/a2/test_r3_more.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_r3_more.py.txt",
+      "sha256": "ee370c48c3812a7c2ea814a2ade0e50575eff01f8ee1cf55936e8b9da17555cc",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_r3_more.py"
+    },
+    "wheel/inherited/historical-original/a2/test_r8_independent.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_r8_independent.py.txt",
+      "sha256": "e326315907d2c365e2017ea313282b158e8343c2ec7de77405f67672be7ad462",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_r8_independent.py"
+    },
+    "wheel/inherited/historical-original/a2/test_r7_independent.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_r7_independent.py.txt",
+      "sha256": "68ab932a84e47ebaac8d2c6709084d21b7a7a2fe5f3eeba563c17116ce703e88",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_r7_independent.py"
+    },
+    "wheel/inherited/historical-original/a2/conftest.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/conftest.py.txt",
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/conftest.py"
+    },
+    "wheel/inherited/historical-original/a2/test_r3_independent.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_r3_independent.py.txt",
+      "sha256": "98c07f565fc2a068acc451834575a423f2b7b7034bbb1239facc87bf449d27b3",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_r3_independent.py"
+    },
+    "wheel/inherited/historical-original/a2/test_r5_confirm.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_r5_confirm.py.txt",
+      "sha256": "96ffc15449d4550102b559284cfd1ed734b8af8159ae18d790ebf8cdc5faa341",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_r5_confirm.py"
+    },
+    "wheel/inherited/historical-original/a2/test_upgrade.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_upgrade.py.txt",
+      "sha256": "47511f72a59fc44bd20ebd0ac9461b2a80ca2d9dc58e9277599505e8d96d93ca",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_upgrade.py"
+    },
+    "wheel/inherited/historical-original/a2/test_repetitions.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_repetitions.py.txt",
+      "sha256": "061d2a355b6e67a440b9a74b34bf02d7e7e405c186d4779da05930b998023a73",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_repetitions.py"
+    },
+    "wheel/inherited/historical-original/a2/test_r2_positive.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_r2_positive.py.txt",
+      "sha256": "25473d5512ddf0d22972a3ee66f853eb792fdb25fed3c03648d82d5a358e6002",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_r2_positive.py"
+    },
+    "wheel/inherited/historical-original/a2/test_entry_windows.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_entry_windows.py.txt",
+      "sha256": "bb3f46e543c5dbd01854115c658e9e15c19821e6a74c223d9bc367a508476bb1",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_entry_windows.py"
+    },
+    "wheel/inherited/historical-original/a2/test_r2_variants.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_r2_variants.py.txt",
+      "sha256": "c9912bc18f4c211f0668ae734d893ae3eae97a1719cc591f46af929f89e93055",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_r2_variants.py"
+    },
+    "wheel/inherited/historical-original/a2/test_deadline.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_deadline.py.txt",
+      "sha256": "992b28381be1ad843f724bb43615342da5b3dd027e042864cab2883a1be8a30d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_deadline.py"
+    },
+    "wheel/inherited/historical-original/a2/test_followups.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_followups.py.txt",
+      "sha256": "e5f7ccaa49bc1b7add01d016b6616e7aad5b8a667bc72d63c324f38e0f66a5fb",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_followups.py"
+    },
+    "wheel/inherited/historical-original/a2/test_r4_boundaries.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_r4_boundaries.py.txt",
+      "sha256": "e00736651cb2f3f404d6e5bce164f93b5906285ac124244b3d1680f5d533097e",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_r4_boundaries.py"
+    },
+    "wheel/inherited/historical-original/a2/test_r5_resource_diagnostic.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_r5_resource_diagnostic.py.txt",
+      "sha256": "e098d14fd6ada20b01cb4065c8b2aac30c30a4629fc362a6d4a0cec511f21c2b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_r5_resource_diagnostic.py"
+    },
+    "wheel/inherited/historical-original/a2/test_review.py": {
+      "path": "originals/wheel/inherited/historical-original/a2/test_review.py.txt",
+      "sha256": "6d250d94850029f3f57c9d9ef18121bc04c034808460d0f43579194f794edf22",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a2/test_review.py"
+    },
+    "wheel/inherited/historical-original/a1/test_missing_invariants.py": {
+      "path": "originals/wheel/inherited/historical-original/a1/test_missing_invariants.py.txt",
+      "sha256": "ee232af92406feca833f5915a4e3750c85c63ec261beae538b2981161b9bb75c",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a1/test_missing_invariants.py"
+    },
+    "wheel/inherited/historical-original/a1/test_upgrade_nonzero.py": {
+      "path": "originals/wheel/inherited/historical-original/a1/test_upgrade_nonzero.py.txt",
+      "sha256": "ab58df8e9885f2721bdc0efef444dd2ad8332b0341148e7f64a14f6c0464a391",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a1/test_upgrade_nonzero.py"
+    },
+    "wheel/inherited/historical-original/a1/test_root_rebuild.py": {
+      "path": "originals/wheel/inherited/historical-original/a1/test_root_rebuild.py.txt",
+      "sha256": "27d58251dbdd8494333edbf4d6302c44e4d48f7196676458de1850e937564ef1",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/a1/test_root_rebuild.py"
+    },
+    "wheel/inherited/historical-original/b/test_r2_state_races.py": {
+      "path": "originals/wheel/inherited/historical-original/b/test_r2_state_races.py.txt",
+      "sha256": "9548a0b9cb4895244900ebaa4a80aa8f4287a6c414444880f1bf387deaffb34e",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/b/test_r2_state_races.py"
+    },
+    "wheel/inherited/historical-original/b/test_r2_consent.py": {
+      "path": "originals/wheel/inherited/historical-original/b/test_r2_consent.py.txt",
+      "sha256": "a91485654f4d37556de0a51c340acdc3113270bdd178e4619959034ddba3c7c3",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/b/test_r2_consent.py"
+    },
+    "wheel/inherited/historical-original/b/test_r2_encoding.py": {
+      "path": "originals/wheel/inherited/historical-original/b/test_r2_encoding.py.txt",
+      "sha256": "58384af9484f71dab3702e44aab011bdf6191a295794313c9a6347d7098e82f4",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/b/test_r2_encoding.py"
+    },
+    "wheel/inherited/historical-original/b/test_r1_db_current.py": {
+      "path": "originals/wheel/inherited/historical-original/b/test_r1_db_current.py.txt",
+      "sha256": "176ecd065c92b3bd8cb54c970d4e4d604057281335c7c36e6f7e3d3a393a1c4b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/b/test_r1_db_current.py"
+    },
+    "wheel/inherited/historical-original/b/test_r2_migrations.py": {
+      "path": "originals/wheel/inherited/historical-original/b/test_r2_migrations.py.txt",
+      "sha256": "52dcff47aaeca23c1bf0c7d92f7d36c2578edab420af1e38ff10dfaf15748a29",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/b/test_r2_migrations.py"
+    },
+    "wheel/inherited/historical-original/b/test_r2_http_bounds.py": {
+      "path": "originals/wheel/inherited/historical-original/b/test_r2_http_bounds.py.txt",
+      "sha256": "eb3cd0dead6612356ffd914b9c3dd5174a7df14f2a5029e25d45643d973fb229",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/b/test_r2_http_bounds.py"
+    },
+    "wheel/inherited/historical-original/b/test_r1_tls_current.py": {
+      "path": "originals/wheel/inherited/historical-original/b/test_r1_tls_current.py.txt",
+      "sha256": "d3e703eb2de09a3484f1473b7f9ee4ef8cf1fe4f12ba1fcb82f8704778a4a22c",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/b/test_r1_tls_current.py"
+    },
+    "wheel/inherited/historical-original/b/test_r1_races_current.py": {
+      "path": "originals/wheel/inherited/historical-original/b/test_r1_races_current.py.txt",
+      "sha256": "b3d3f54f94cf8cad325dd4752f4da07d43061b2312ab234238bd248d5d400165",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/b/test_r1_races_current.py"
+    },
+    "wheel/inherited/historical-original/b/test_r2_network_private.py": {
+      "path": "originals/wheel/inherited/historical-original/b/test_r2_network_private.py.txt",
+      "sha256": "68de8d9202b7193a7e4c91c3946460d5209f6f0f037ce5634495679a2eecd863",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/b/test_r2_network_private.py"
+    },
+    "wheel/inherited/historical-original/b/legacy/test_history4.py": {
+      "path": "originals/wheel/inherited/historical-original/b/legacy/test_history4.py.txt",
+      "sha256": "ee232af92406feca833f5915a4e3750c85c63ec261beae538b2981161b9bb75c",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/b/legacy/test_history4.py"
+    },
+    "wheel/inherited/historical-original/b/legacy/test_history1.py": {
+      "path": "originals/wheel/inherited/historical-original/b/legacy/test_history1.py.txt",
+      "sha256": "27d58251dbdd8494333edbf4d6302c44e4d48f7196676458de1850e937564ef1",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-original/b/legacy/test_history1.py"
+    },
+    "wheel/inherited/historical-adapted/conftest.py": {
+      "path": "originals/wheel/inherited/historical-adapted/conftest.py.txt",
+      "sha256": "bc63e0633db70011130d26da6d8bc01da8cb045e0f1e1a64a5f825f5379ca235",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/conftest.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_r3_more.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_r3_more.py.txt",
+      "sha256": "ee370c48c3812a7c2ea814a2ade0e50575eff01f8ee1cf55936e8b9da17555cc",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_r3_more.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_r8_independent.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_r8_independent.py.txt",
+      "sha256": "e326315907d2c365e2017ea313282b158e8343c2ec7de77405f67672be7ad462",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_r8_independent.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_r7_independent.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_r7_independent.py.txt",
+      "sha256": "ee31e6a213dec3184ca753d164e6c13d804d3c968e2b92d400916844f03dbe12",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_r7_independent.py"
+    },
+    "wheel/inherited/historical-adapted/a2/conftest.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/conftest.py.txt",
+      "sha256": "cdbf4881ed8744645d092493807bd2c35a18b557e6db1eff86c64da32821d17d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/conftest.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_r3_independent.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_r3_independent.py.txt",
+      "sha256": "98c07f565fc2a068acc451834575a423f2b7b7034bbb1239facc87bf449d27b3",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_r3_independent.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_r5_confirm.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_r5_confirm.py.txt",
+      "sha256": "6805a03fc9976e669464db930a2abbad3d840df9c8cda623b5ad5319c7085c5b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_r5_confirm.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_upgrade.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_upgrade.py.txt",
+      "sha256": "a3ec986f4814f48eb4adc8d1943c5a88ece77e6e54a2fdb98cea118643fff6a6",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_upgrade.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_repetitions.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_repetitions.py.txt",
+      "sha256": "061d2a355b6e67a440b9a74b34bf02d7e7e405c186d4779da05930b998023a73",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_repetitions.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_r2_positive.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_r2_positive.py.txt",
+      "sha256": "25473d5512ddf0d22972a3ee66f853eb792fdb25fed3c03648d82d5a358e6002",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_r2_positive.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_entry_windows.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_entry_windows.py.txt",
+      "sha256": "bb3f46e543c5dbd01854115c658e9e15c19821e6a74c223d9bc367a508476bb1",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_entry_windows.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_r2_variants.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_r2_variants.py.txt",
+      "sha256": "c9912bc18f4c211f0668ae734d893ae3eae97a1719cc591f46af929f89e93055",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_r2_variants.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_deadline.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_deadline.py.txt",
+      "sha256": "992b28381be1ad843f724bb43615342da5b3dd027e042864cab2883a1be8a30d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_deadline.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_followups.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_followups.py.txt",
+      "sha256": "e5f7ccaa49bc1b7add01d016b6616e7aad5b8a667bc72d63c324f38e0f66a5fb",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_followups.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_r4_boundaries.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_r4_boundaries.py.txt",
+      "sha256": "217d0965f453a2de5ecd586645a18c7f1f7b3e96992a045a8fccaf4736a6a729",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_r4_boundaries.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_r5_resource_diagnostic.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_r5_resource_diagnostic.py.txt",
+      "sha256": "e098d14fd6ada20b01cb4065c8b2aac30c30a4629fc362a6d4a0cec511f21c2b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_r5_resource_diagnostic.py"
+    },
+    "wheel/inherited/historical-adapted/a2/test_review.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a2/test_review.py.txt",
+      "sha256": "6d250d94850029f3f57c9d9ef18121bc04c034808460d0f43579194f794edf22",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a2/test_review.py"
+    },
+    "wheel/inherited/historical-adapted/a1/test_missing_invariants.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a1/test_missing_invariants.py.txt",
+      "sha256": "ee232af92406feca833f5915a4e3750c85c63ec261beae538b2981161b9bb75c",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a1/test_missing_invariants.py"
+    },
+    "wheel/inherited/historical-adapted/a1/test_upgrade_nonzero.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a1/test_upgrade_nonzero.py.txt",
+      "sha256": "4f18f60659427045e52186908bb208a168dda0fdaf1d4da1120d48693f9216b8",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a1/test_upgrade_nonzero.py"
+    },
+    "wheel/inherited/historical-adapted/a1/test_root_rebuild.py": {
+      "path": "originals/wheel/inherited/historical-adapted/a1/test_root_rebuild.py.txt",
+      "sha256": "27d58251dbdd8494333edbf4d6302c44e4d48f7196676458de1850e937564ef1",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/a1/test_root_rebuild.py"
+    },
+    "wheel/inherited/historical-adapted/b/test_r2_state_races.py": {
+      "path": "originals/wheel/inherited/historical-adapted/b/test_r2_state_races.py.txt",
+      "sha256": "9548a0b9cb4895244900ebaa4a80aa8f4287a6c414444880f1bf387deaffb34e",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/b/test_r2_state_races.py"
+    },
+    "wheel/inherited/historical-adapted/b/test_r2_consent.py": {
+      "path": "originals/wheel/inherited/historical-adapted/b/test_r2_consent.py.txt",
+      "sha256": "a91485654f4d37556de0a51c340acdc3113270bdd178e4619959034ddba3c7c3",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/b/test_r2_consent.py"
+    },
+    "wheel/inherited/historical-adapted/b/test_r2_encoding.py": {
+      "path": "originals/wheel/inherited/historical-adapted/b/test_r2_encoding.py.txt",
+      "sha256": "58384af9484f71dab3702e44aab011bdf6191a295794313c9a6347d7098e82f4",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/b/test_r2_encoding.py"
+    },
+    "wheel/inherited/historical-adapted/b/test_r1_db_current.py": {
+      "path": "originals/wheel/inherited/historical-adapted/b/test_r1_db_current.py.txt",
+      "sha256": "176ecd065c92b3bd8cb54c970d4e4d604057281335c7c36e6f7e3d3a393a1c4b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/b/test_r1_db_current.py"
+    },
+    "wheel/inherited/historical-adapted/b/test_r2_migrations.py": {
+      "path": "originals/wheel/inherited/historical-adapted/b/test_r2_migrations.py.txt",
+      "sha256": "119d6b620a1eb30461921b9fb6b2f1f7f5feba2941dc28aead3edca948a853b7",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/b/test_r2_migrations.py"
+    },
+    "wheel/inherited/historical-adapted/b/test_r2_http_bounds.py": {
+      "path": "originals/wheel/inherited/historical-adapted/b/test_r2_http_bounds.py.txt",
+      "sha256": "eb3cd0dead6612356ffd914b9c3dd5174a7df14f2a5029e25d45643d973fb229",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/b/test_r2_http_bounds.py"
+    },
+    "wheel/inherited/historical-adapted/b/test_r1_tls_current.py": {
+      "path": "originals/wheel/inherited/historical-adapted/b/test_r1_tls_current.py.txt",
+      "sha256": "d3e703eb2de09a3484f1473b7f9ee4ef8cf1fe4f12ba1fcb82f8704778a4a22c",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/b/test_r1_tls_current.py"
+    },
+    "wheel/inherited/historical-adapted/b/test_r1_races_current.py": {
+      "path": "originals/wheel/inherited/historical-adapted/b/test_r1_races_current.py.txt",
+      "sha256": "bbab6dbbb165c123a433786109e39cd4e307449231b87487959650263aec4816",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/b/test_r1_races_current.py"
+    },
+    "wheel/inherited/historical-adapted/b/test_r2_network_private.py": {
+      "path": "originals/wheel/inherited/historical-adapted/b/test_r2_network_private.py.txt",
+      "sha256": "65ba364f0eccdcd0fba2879b6a0592ff0dddac5a39fffd2b87795f69663c7388",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/b/test_r2_network_private.py"
+    },
+    "wheel/inherited/historical-adapted/b/legacy/test_history4.py": {
+      "path": "originals/wheel/inherited/historical-adapted/b/legacy/test_history4.py.txt",
+      "sha256": "f758a3b29f00ed4bda7ec9e30d78cbd8499e4454818cf747b46d4a4d72442011",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/b/legacy/test_history4.py"
+    },
+    "wheel/inherited/historical-adapted/b/legacy/test_history1.py": {
+      "path": "originals/wheel/inherited/historical-adapted/b/legacy/test_history1.py.txt",
+      "sha256": "c9c58589775e1131f56007f001153d74144062e18eeb232566365edb0db54cc8",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-adapted/b/legacy/test_history1.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/conftest.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/conftest.py.txt",
+      "sha256": "d2e606f54c0297bf8ce18180bf8c60926e16ed1c2455a9fcee4746da1340b2dc",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/conftest.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/a22-probes/conftest.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/a22-probes/conftest.py.txt",
+      "sha256": "d588242b84c2d3865fa9613f13e30001c4000b00ee93b4e7db0aee46de4a2d0d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/a22-probes/conftest.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/a22-probes/test_complete_zero_effects.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/a22-probes/test_complete_zero_effects.py.txt",
+      "sha256": "ef0ab5436a855444e98a942bc8ce6c6169f27aded347ba938e3c5927881df3be",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/a22-probes/test_complete_zero_effects.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/a22-probes/test_response_schema_bounds.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/a22-probes/test_response_schema_bounds.py.txt",
+      "sha256": "3ba1679a50d83e40bbdc01e8ed0a88df0714d09de1caad8333cfc2f49369df20",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/a22-probes/test_response_schema_bounds.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/a22-probes/test_public_permission_controls.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/a22-probes/test_public_permission_controls.py.txt",
+      "sha256": "54dd2b83090b05415968a29c0f20350b6671c1fd56c97e669c2e2708857e10fa",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/a22-probes/test_public_permission_controls.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/a22-probes/test_query_dynamic_effects.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/a22-probes/test_query_dynamic_effects.py.txt",
+      "sha256": "58340e4276414a619e02095c8032f61a5d1ce7b68ff0cb30cf5024fcc996937f",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/a22-probes/test_query_dynamic_effects.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/a22-probes/test_child_import_sources.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/a22-probes/test_child_import_sources.py.txt",
+      "sha256": "9984a61b9e1963e975155241bf1a8617c1002e763228ba5374ab2136cce78a43",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/a22-probes/test_child_import_sources.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/probes/conftest.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/probes/conftest.py.txt",
+      "sha256": "d588242b84c2d3865fa9613f13e30001c4000b00ee93b4e7db0aee46de4a2d0d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/probes/conftest.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/probes/test_independent_compound.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/probes/test_independent_compound.py.txt",
+      "sha256": "ec31a6a44d41840413a0a0d8732c17c69aa8b67b2688a4c331e1847b3497a3a4",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/probes/test_independent_compound.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/probes/test_real_serialization.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/probes/test_real_serialization.py.txt",
+      "sha256": "5bf98f2cf1825d2bb113a340a1410845b95a60573fcfd5c794713ea7dd098f67",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/probes/test_real_serialization.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/probes/test_r2_independent.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/probes/test_r2_independent.py.txt",
+      "sha256": "a6417a75be78dea446d38fb19487bb10d90902ff3c099edefc2b65bcf102d4fd",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/probes/test_r2_independent.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/gateway-crash-probes/conftest.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/gateway-crash-probes/conftest.py.txt",
+      "sha256": "d588242b84c2d3865fa9613f13e30001c4000b00ee93b4e7db0aee46de4a2d0d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/gateway-crash-probes/conftest.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/gateway-crash-probes/test_r2_gateway_sigkill.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/gateway-crash-probes/test_r2_gateway_sigkill.py.txt",
+      "sha256": "f8828c1588a316cb4136a82ace301ddbaa504ef639906e366f5dc20120b4d47b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/gateway-crash-probes/test_r2_gateway_sigkill.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/fresh-probes/conftest.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/fresh-probes/conftest.py.txt",
+      "sha256": "d588242b84c2d3865fa9613f13e30001c4000b00ee93b4e7db0aee46de4a2d0d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/fresh-probes/conftest.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/fresh-probes/test_r2_real_second.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/fresh-probes/test_r2_real_second.py.txt",
+      "sha256": "76fe03c6252671adc60f08364b369064c8d3fab05f6259f7354ea854a6811701",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/fresh-probes/test_r2_real_second.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/fresh-probes/test_r2_trusted_material.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/fresh-probes/test_r2_trusted_material.py.txt",
+      "sha256": "df435d9357c6a2048cb496b0754a87d062f3955fd6a15dfb6882d5375929e402",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/fresh-probes/test_r2_trusted_material.py"
+    },
+    "wheel/inherited/historical-enhanced-wheel/local-original/test_boundary_probes.py": {
+      "path": "originals/wheel/inherited/historical-enhanced-wheel/local-original/test_boundary_probes.py.txt",
+      "sha256": "0ff96988fc4c37fa70e648c64a147f9789ed0d13601b5b11c528f81228e342f2",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/historical-enhanced-wheel/local-original/test_boundary_probes.py"
+    },
+    "wheel/inherited/probes/test_precise_deadline.py": {
+      "path": "originals/wheel/inherited/probes/test_precise_deadline.py.txt",
+      "sha256": "153b904b22916e40787c48a12822844302ce6d63e8f759a6983cd325837af366",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/probes/test_precise_deadline.py"
+    },
+    "wheel/inherited/probes/test_noncanonical_ready_v2.py": {
+      "path": "originals/wheel/inherited/probes/test_noncanonical_ready_v2.py.txt",
+      "sha256": "fec2cc5c7decc4579a586c155e69d5ba5ecdfee262600699057dfe678439bbe6",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/probes/test_noncanonical_ready_v2.py"
+    },
+    "wheel/inherited/probes/conftest.py": {
+      "path": "originals/wheel/inherited/probes/conftest.py.txt",
+      "sha256": "cdbf4881ed8744645d092493807bd2c35a18b557e6db1eff86c64da32821d17d",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/probes/conftest.py"
+    },
+    "wheel/inherited/probes/test_independent.py": {
+      "path": "originals/wheel/inherited/probes/test_independent.py.txt",
+      "sha256": "1eccc38e412b21bbea35993814273035543d773d77791eb304c46350eaa58d75",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/probes/test_independent.py"
+    },
+    "wheel/inherited/probes/test_reviewer_precommit_payload.py": {
+      "path": "originals/wheel/inherited/probes/test_reviewer_precommit_payload.py.txt",
+      "sha256": "0eea5b63881de3108447882b7129eb31ba9116171862569434cbd17ee459047a",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/probes/test_reviewer_precommit_payload.py"
+    },
+    "wheel/inherited/probes/test_public_boundary.py": {
+      "path": "originals/wheel/inherited/probes/test_public_boundary.py.txt",
+      "sha256": "e490231ba08a714c327cd2b5c9fec8bda243a4f5a01b4d0c47e17a5e17b2fff7",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/probes/test_public_boundary.py"
+    },
+    "wheel/inherited/probes/test_coherent_quote_v2.py": {
+      "path": "originals/wheel/inherited/probes/test_coherent_quote_v2.py.txt",
+      "sha256": "5717d95e9efeb8c1e51bbab6df8f6add8b594962c78af82e64d7adc249771980",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/probes/test_coherent_quote_v2.py"
+    },
+    "wheel/inherited/probes/test_reviewer_variants.py": {
+      "path": "originals/wheel/inherited/probes/test_reviewer_variants.py.txt",
+      "sha256": "857dbad90c8538c7f7aad627ee048f1567f6701e94316e2f0f05c6823b1980c4",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/probes/test_reviewer_variants.py"
+    },
+    "wheel/inherited/readme-probes/conftest.py": {
+      "path": "originals/wheel/inherited/readme-probes/conftest.py.txt",
+      "sha256": "bc63e0633db70011130d26da6d8bc01da8cb045e0f1e1a64a5f825f5379ca235",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/readme-probes/conftest.py"
+    },
+    "wheel/inherited/readme-probes/test_receipt_readme_literal.py": {
+      "path": "originals/wheel/inherited/readme-probes/test_receipt_readme_literal.py.txt",
+      "sha256": "8bf1ee2612bb6aeb4329daf89870c05b70b19c4c7524253da5b47db8366b83af",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/readme-probes/test_receipt_readme_literal.py"
+    },
+    "wheel/inherited/test_oracle_controls.py": {
+      "path": "originals/wheel/inherited/test_oracle_controls.py.txt",
+      "sha256": "e1d4cbb2c40e9afc581ca77bbeda6c069c4c87716079b822f4b5f387e85e8171",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/test_oracle_controls.py"
+    },
+    "wheel/inherited/runtime_provenance.py": {
+      "path": "originals/wheel/inherited/runtime_provenance.py.txt",
+      "sha256": "49828b6c681395e337483860761f97d7aa9c7432531a96d3abdb7b3e1dfd74a2",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/runtime_provenance.py"
+    },
+    "wheel/inherited/capacity_domain_independent.py": {
+      "path": "originals/wheel/inherited/capacity_domain_independent.py.txt",
+      "sha256": "fe184d6bb8d7b7bb475cf4a028dbe713e387b91e877c0e31b2613c75b10466a5",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/capacity_domain_independent.py"
+    },
+    "wheel/inherited/readme_as_native_r2.py": {
+      "path": "originals/wheel/inherited/readme_as_native_r2.py.txt",
+      "sha256": "db6cea7a2ba3fccab51d9e2fd0e5d3cb43617107a908eff8b87a3a9928b4f803",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/readme_as_native_r2.py"
+    },
+    "wheel/inherited/readme_driver.py": {
+      "path": "originals/wheel/inherited/readme_driver.py.txt",
+      "sha256": "bf6cb5720130544733d71ed3d21b27e51352dd5086f41d84dbc2a54ec52504e8",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/readme_driver.py"
+    },
+    "wheel/inherited/readme-snippet.py": {
+      "path": "originals/wheel/inherited/readme-snippet.py.txt",
+      "sha256": "163b199820077c9ba46b6129fcc5578f277dfb22d6e1a2cdfe49d0b59ed2301b",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/readme-snippet.py"
+    },
+    "wheel/inherited/demo_driver.py": {
+      "path": "originals/wheel/inherited/demo_driver.py.txt",
+      "sha256": "bb682171639f3f05f4b2042608f3266eb3978e87d02ad1405d47b2ce2900ad38",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/demo_driver.py"
+    },
+    "wheel/inherited/readme_gateway_native_r3.py": {
+      "path": "originals/wheel/inherited/readme_gateway_native_r3.py.txt",
+      "sha256": "75729a57471cd0da3ff98461dd0c935dc69e3b2e904c20dab775619785fbb0c7",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/inherited/readme_gateway_native_r3.py"
+    },
+    "wheel/environment_observer.py": {
+      "path": "originals/wheel/environment_observer.py.txt",
+      "sha256": "2c57ca068c6fc96d6ffb67647a3b043da4d160caae130045296e15f54608b141",
+      "source": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-wheel/wheel-tests/environment_observer.py"
+    }
+  },
+  "groups": {
+    "source-ordinary": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "tests",
+        "--ignore=tests/integration",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--basetemp=/tmp/a31-246ccd7d9336/46b42ce373bf4b53/t",
+        "--junitxml=/e/s2-results/s2-source-ordinary-run-1791734621712826595/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-246ccd7d9336/46b42ce373bf4b53/cache"
+      ]
+    },
+    "source-current-pg-nonclock": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "tests/integration",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--ignore=tests/integration/test_audit_clock.py",
+        "--basetemp=/tmp/a31-246ccd7d9336/4995d3dcbeaf8887/t",
+        "--junitxml=/e/s2-results/s2-source-current-pg-nonclock-run-1791735093109281591/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-246ccd7d9336/4995d3dcbeaf8887/cache"
+      ]
+    },
+    "source-current-clock1000": {
+      "argv": [
+        "-m",
+        "pytest",
+        "tests/integration/test_audit_clock.py"
+      ]
+    },
+    "source-a1-original-controls": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "/e/source-tests/inherited/historical-original/a1/test_missing_invariants.py",
+        "/e/source-tests/inherited/historical-original/a1/test_root_rebuild.py",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--rootdir=/e/source-tests/inherited/historical-original",
+        "--basetemp=/tmp/a31-246ccd7d9336/b119ce1a326075c5/t",
+        "--junitxml=/e/s2-results/s2-source-a1-original-controls-run-1791743239780332126/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-246ccd7d9336/b119ce1a326075c5/cache"
+      ]
+    },
+    "source-a1-upgrade-equivalent": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "/e/source-tests/inherited/historical-adapted/a1/test_upgrade_nonzero.py",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--rootdir=/e/source-tests/inherited/historical-adapted",
+        "--basetemp=/tmp/a31-246ccd7d9336/5f8fefaeb85dfa67/t",
+        "--junitxml=/e/s2-results/s2-source-a1-upgrade-equivalent-run-1791743243438515836/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-246ccd7d9336/5f8fefaeb85dfa67/cache"
+      ]
+    },
+    "source-a2-original": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "/e/source-tests/inherited/historical-original/a2",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--rootdir=/e/source-tests/inherited/historical-original",
+        "--basetemp=/tmp/a31-246ccd7d9336/e42e72f51d07b949/t",
+        "--junitxml=/e/s2-results/s2-source-a2-original-run-1791743247582132004/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-246ccd7d9336/e42e72f51d07b949/cache"
+      ]
+    },
+    "source-b-equivalent": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "/e/source-tests/inherited/historical-adapted/b",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--rootdir=/e/source-tests/inherited/historical-adapted",
+        "--basetemp=/tmp/a31-246ccd7d9336/ba70cb39b94ff91f/t",
+        "--junitxml=/e/s2-results/s2-source-b-equivalent-run-1791743405942897592/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-246ccd7d9336/ba70cb39b94ff91f/cache"
+      ]
+    },
+    "source-enhanced-original-remainder": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "/e/source-tests/inherited/historical-enhanced-source",
+        "--rootdir=/e/source-tests/inherited/historical-enhanced-source",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--ignore=/e/source-tests/inherited/historical-enhanced-source/probes/test_real_serialization.py",
+        "--ignore=/e/source-tests/inherited/historical-enhanced-source/fresh-probes/test_r2_trusted_material.py",
+        "--basetemp=/tmp/a31-246ccd7d9336/ff4d1eb50902af43/t",
+        "--junitxml=/e/s2-results/s2-source-enhanced-original-remainder-run-1791743548404377005/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-246ccd7d9336/ff4d1eb50902af43/cache"
+      ]
+    },
+    "source-independent-original-probes": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "/e/source-tests/inherited/probes/test_precise_deadline.py",
+        "/e/source-tests/inherited/probes/test_coherent_quote_v2.py",
+        "/e/source-tests/inherited/probes/test_reviewer_variants.py",
+        "/e/source-tests/inherited/probes/test_independent.py",
+        "/e/source-tests/inherited/probes/test_noncanonical_ready_v2.py",
+        "/e/source-tests/inherited/probes/test_public_boundary.py",
+        "/e/source-tests/inherited/probes/test_reviewer_precommit_payload.py",
+        "--rootdir=/e/source-tests/inherited/probes",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--basetemp=/tmp/a31-246ccd7d9336/8226772110e3e8b1/t",
+        "--junitxml=/e/s2-results/s2-source-independent-original-probes-run-1791744143882158378/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-246ccd7d9336/8226772110e3e8b1/cache"
+      ]
+    },
+    "source-oracle60": {
+      "argv": [
+        "-m",
+        "pytest",
+        "--assert=plain",
+        "--rootdir=/e/source-tests",
+        "/e/source-tests/inherited/test_oracle_controls.py",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--basetemp=/tmp/a31-246ccd7d9336/49b2acafd1b047c4/t",
+        "--junitxml=/e/s2-results/s2-source-oracle60-run-1791745401564306502/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-246ccd7d9336/49b2acafd1b047c4/cache"
+      ]
+    },
+    "source-independent-capacity-domain": {
+      "argv": [
+        "/e/source-tests/inherited/capacity_domain_independent.py"
+      ]
+    },
+    "source-readme-AS-literal": {
+      "argv": [
+        "/e/source-tests/inherited/readme_as_native_r2.py",
+        "source"
+      ]
+    },
+    "source-readme-old-two-flows": {
+      "argv": [
+        "/e/source-tests/inherited/readme_driver.py",
+        "source",
+        "ag31_a32_review_4d3a43f4_reviewer_source"
+      ]
+    },
+    "source-readme-publisher-literal": {
+      "argv": [
+        "-m",
+        "pytest",
+        "--rootdir=/e/source-tests/inherited/readme-probes",
+        "/e/source-tests/inherited/readme-probes",
+        "-vv",
+        "-s",
+        "--basetemp=/tmp/a31-246ccd7d9336/cd4bf45cc9b8db3d/t",
+        "--junitxml=/e/s2-results/s2-source-readme-publisher-literal-run-1791745509689142552/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-246ccd7d9336/cd4bf45cc9b8db3d/cache"
+      ]
+    },
+    "source-receipt-demo": {
+      "argv": [
+        "/e/source-tests/inherited/demo_driver.py"
+      ]
+    },
+    "source-AS-demo": {
+      "argv": [
+        "-m",
+        "tests.demo_b_flow"
+      ]
+    },
+    "source-ruff-check": {
+      "argv": [
+        "-m",
+        "ruff",
+        "check",
+        "/e/snapshot-r6",
+        "--config",
+        "/e/snapshot-r6/pyproject.toml",
+        "--no-cache"
+      ]
+    },
+    "source-ruff-format": {
+      "argv": [
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "/e/snapshot-r6",
+        "--config",
+        "/e/snapshot-r6/pyproject.toml",
+        "--no-cache"
+      ]
+    },
+    "source-readme-gateway": {
+      "argv": [
+        "/e/source-tests/inherited/readme_gateway_native_r3.py",
+        "source"
+      ]
+    },
+    "source-environment": {
+      "argv": [
+        "/e/source-tests/environment_observer.py"
+      ]
+    },
+    "wheel-ordinary": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "tests",
+        "--ignore=tests/integration",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--basetemp=/tmp/a31-ee620b223d9d/d4d5d66595addf81/t",
+        "--junitxml=/e/s2-results/s2-wheel-ordinary-run-1791735189014278344/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-ee620b223d9d/d4d5d66595addf81/cache"
+      ]
+    },
+    "wheel-current-pg-nonclock": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "tests/integration",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--ignore=tests/integration/test_audit_clock.py",
+        "--basetemp=/tmp/a31-ee620b223d9d/908964979f9cd634/t",
+        "--junitxml=/e/s2-results/s2-wheel-current-pg-nonclock-run-1791737562188214428/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-ee620b223d9d/908964979f9cd634/cache"
+      ]
+    },
+    "wheel-current-clock1000": {
+      "argv": [
+        "-m",
+        "pytest",
+        "tests/integration/test_audit_clock.py"
+      ]
+    },
+    "wheel-a1-original-controls": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "/e/wheel-tests/inherited/historical-original/a1/test_missing_invariants.py",
+        "/e/wheel-tests/inherited/historical-original/a1/test_root_rebuild.py",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--rootdir=/e/wheel-tests/inherited/historical-original",
+        "--basetemp=/tmp/a31-ee620b223d9d/586fa8091f0ab9ee/t",
+        "--junitxml=/e/s2-results/s2-wheel-a1-original-controls-run-1791745688012498926/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-ee620b223d9d/586fa8091f0ab9ee/cache"
+      ]
+    },
+    "wheel-a1-upgrade-equivalent": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "/e/wheel-tests/inherited/historical-adapted/a1/test_upgrade_nonzero.py",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--rootdir=/e/wheel-tests/inherited/historical-adapted",
+        "--basetemp=/tmp/a31-ee620b223d9d/c197e966e481cbbb/t",
+        "--junitxml=/e/s2-results/s2-wheel-a1-upgrade-equivalent-run-1791745691880252303/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-ee620b223d9d/c197e966e481cbbb/cache"
+      ]
+    },
+    "wheel-a2-original": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "/e/wheel-tests/inherited/historical-original/a2",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--rootdir=/e/wheel-tests/inherited/historical-original",
+        "--basetemp=/tmp/a31-ee620b223d9d/894b55a77de3652b/t",
+        "--junitxml=/e/s2-results/s2-wheel-a2-original-run-1791745695883132138/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-ee620b223d9d/894b55a77de3652b/cache"
+      ]
+    },
+    "wheel-b-equivalent": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "/e/wheel-tests/inherited/historical-adapted/b",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--rootdir=/e/wheel-tests/inherited/historical-adapted",
+        "--basetemp=/tmp/a31-ee620b223d9d/ac7378f2c118e1c1/t",
+        "--junitxml=/e/s2-results/s2-wheel-b-equivalent-run-1791745844244830012/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-ee620b223d9d/ac7378f2c118e1c1/cache"
+      ]
+    },
+    "wheel-enhanced-original-remainder": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "/e/wheel-tests/inherited/historical-enhanced-wheel",
+        "--rootdir=/e/wheel-tests/inherited/historical-enhanced-wheel",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--ignore=/e/wheel-tests/inherited/historical-enhanced-wheel/probes/test_real_serialization.py",
+        "--ignore=/e/wheel-tests/inherited/historical-enhanced-wheel/fresh-probes/test_r2_trusted_material.py",
+        "--basetemp=/tmp/a31-ee620b223d9d/706ea839ca0ba369/t",
+        "--junitxml=/e/s2-results/s2-wheel-enhanced-original-remainder-run-1791745980477529672/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-ee620b223d9d/706ea839ca0ba369/cache"
+      ]
+    },
+    "wheel-independent-original-probes": {
+      "argv": [
+        "-m",
+        "pytest",
+        "-p",
+        "runtime_provenance",
+        "/e/wheel-tests/inherited/probes/test_precise_deadline.py",
+        "/e/wheel-tests/inherited/probes/test_coherent_quote_v2.py",
+        "/e/wheel-tests/inherited/probes/test_reviewer_variants.py",
+        "/e/wheel-tests/inherited/probes/test_independent.py",
+        "/e/wheel-tests/inherited/probes/test_noncanonical_ready_v2.py",
+        "/e/wheel-tests/inherited/probes/test_public_boundary.py",
+        "/e/wheel-tests/inherited/probes/test_reviewer_precommit_payload.py",
+        "--rootdir=/e/wheel-tests/inherited/probes",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--basetemp=/tmp/a31-ee620b223d9d/c63b213927122900/t",
+        "--junitxml=/e/s2-results/s2-wheel-independent-original-probes-run-1791746731779666840/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-ee620b223d9d/c63b213927122900/cache"
+      ]
+    },
+    "wheel-oracle60": {
+      "argv": [
+        "-m",
+        "pytest",
+        "--assert=plain",
+        "--rootdir=/e/wheel-tests",
+        "/e/wheel-tests/inherited/test_oracle_controls.py",
+        "-vv",
+        "-s",
+        "--color=no",
+        "--basetemp=/tmp/a31-ee620b223d9d/f50ed95784f51840/t",
+        "--junitxml=/e/s2-results/s2-wheel-oracle60-run-1791747975486053929/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-ee620b223d9d/f50ed95784f51840/cache"
+      ]
+    },
+    "wheel-independent-capacity-domain": {
+      "argv": [
+        "/e/wheel-tests/inherited/capacity_domain_independent.py"
+      ]
+    },
+    "wheel-readme-AS-literal": {
+      "argv": [
+        "/e/wheel-tests/inherited/readme_as_native_r2.py",
+        "wheel"
+      ]
+    },
+    "wheel-readme-old-two-flows": {
+      "argv": [
+        "/e/wheel-tests/inherited/readme_driver.py",
+        "wheel",
+        "ag31_a32_review_4d3a43f4_reviewer_wheel"
+      ]
+    },
+    "wheel-readme-publisher-literal": {
+      "argv": [
+        "-m",
+        "pytest",
+        "--rootdir=/e/wheel-tests/inherited/readme-probes",
+        "/e/wheel-tests/inherited/readme-probes",
+        "-vv",
+        "-s",
+        "--basetemp=/tmp/a31-ee620b223d9d/74778a7331cd94e7/t",
+        "--junitxml=/e/s2-results/s2-wheel-readme-publisher-literal-run-1791748079652763630/junit.xml",
+        "-o",
+        "cache_dir=/tmp/a31-ee620b223d9d/74778a7331cd94e7/cache"
+      ]
+    },
+    "wheel-receipt-demo": {
+      "argv": [
+        "/e/wheel-tests/inherited/demo_driver.py"
+      ]
+    },
+    "wheel-AS-demo": {
+      "argv": [
+        "-m",
+        "tests.demo_b_flow"
+      ]
+    },
+    "wheel-ruff-check": {
+      "argv": [
+        "-m",
+        "ruff",
+        "check",
+        "/e/snapshot-r6",
+        "--config",
+        "/e/snapshot-r6/pyproject.toml",
+        "--no-cache"
+      ]
+    },
+    "wheel-ruff-format": {
+      "argv": [
+        "-m",
+        "ruff",
+        "format",
+        "--check",
+        "/e/snapshot-r6",
+        "--config",
+        "/e/snapshot-r6/pyproject.toml",
+        "--no-cache"
+      ]
+    },
+    "wheel-readme-gateway": {
+      "argv": [
+        "/e/wheel-tests/inherited/readme_gateway_native_r3.py",
+        "wheel"
+      ]
+    },
+    "wheel-environment": {
+      "argv": [
+        "/e/wheel-tests/environment_observer.py"
+      ]
+    }
+  }
+}

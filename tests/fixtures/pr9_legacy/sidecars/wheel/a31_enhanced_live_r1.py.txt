@@ -1,0 +1,52 @@
+import hashlib,json,pathlib,os
+if os.environ.get('AG31_SESSION_DIR'):
+ gate=json.loads(pathlib.Path(os.environ['AG31_GATE']).read_text())
+ assert os.geteuid()==501 and gate['mode']==os.environ['AG31_MODE']
+ token=gate['role_owner_token'];root=pathlib.Path('/tmp')/('a31-'+hashlib.sha256(token.encode()).hexdigest()[:12])
+ assert json.loads((root/'owner.json').read_text())=={'owner_uuid':gate['owner_uuid'],'role':gate['role'],'py_fullID':gate['py_fullID']}
+ observed=pathlib.Path(os.environ['AG31_OBSERVER_DIR']);assert observed.is_relative_to(root) and observed.is_dir()
+ LIVE_DIRECTORY=observed/'live-provenance';LIVE_DIRECTORY.mkdir(mode=0o700,exist_ok=True)
+ PREFIX=pathlib.Path('/e/'+gate['mode']+'-venv/lib/python3.11/site-packages')
+ import sys,os,json,pathlib,atexit
+ LIVE_MODE=gate['mode']
+ import threading,time
+
+ def live_record():
+  deadline=time.monotonic()+20
+  while time.monotonic()<deadline:
+   modules=sys.modules.copy()
+   main_file=getattr(modules.get('__main__'),'__file__',None)
+   main_spec=getattr(getattr(modules.get('__main__'),'__spec__',None),'name',None)
+   ready=('agent_guard.execution.service' in modules or 'agent_guard.gateway.http_app' in modules or bool(main_spec and main_spec.startswith('agent_guard.')))
+   if main_spec=='agent_guard.execution.worker':
+    ready='agent_guard.execution.service' in modules
+   elif main_spec=='agent_guard.gateway.__main__':
+    ready='agent_guard.gateway.http_app' in modules
+   # Actual runpy CLI body must have begun; for forked pytest probes an
+   # inherited non-package main file is legitimate and separately classified.
+   if ready and main_file:
+    paths={k:getattr(v,'__file__',None) for k,v in modules.items() if k=='agent_guard' or k.startswith('agent_guard.')}
+    for name,value in paths.items():
+     if value is not None:
+      path=pathlib.Path(value).resolve();relative=str(path.relative_to(PREFIX));assert hashlib.sha256(path.read_bytes()).hexdigest()==gate['installed_modules_sha256'][relative]
+    text=pathlib.Path('/proc/self/stat').read_text();tail=text[text.rfind(')')+2:].split()
+    data=dict(pid=os.getpid(),ppid=os.getppid(),uid=os.getuid(),kernel_start_ticks=int(tail[19]),py_fullID=gate['py_fullID'],owner_uuid=gate['owner_uuid'],role=gate['role'],exe=sys.executable,main_file=main_file,main_spec=main_spec,modules=paths)
+    dest=LIVE_DIRECTORY/f'{LIVE_MODE}-{os.getpid()}.json'
+    temporary=dest.with_suffix('.tmp')
+    temporary.write_text(json.dumps(data));temporary.replace(dest)
+    return
+   time.sleep(.01)
+
+ def start_live():
+  threading.Thread(target=live_record,daemon=True).start()
+
+ start_live()
+ os.register_at_fork(after_in_child=start_live)
+
+ BASE='/e/'+LIVE_MODE+'-venv/lib/python3.11/site-packages/agent_guard/'
+ def exit_record():
+  modules={k:getattr(v,'__file__',None) for k,v in sys.modules.copy().items() if k=='agent_guard' or k.startswith('agent_guard.')}
+  if not modules:return
+  data=dict(pid=os.getpid(),ppid=os.getppid(),executable=sys.executable,main_file=getattr(sys.modules.get('__main__'),'__file__',None),main_spec=getattr(getattr(sys.modules.get('__main__'),'__spec__',None),'name',None),modules=modules,violations=[(k,v) for k,v in modules.items() if v is not None and not v.startswith(BASE)])
+  with open(LIVE_DIRECTORY/'exit-import-witness.jsonl','a') as f:f.write(json.dumps(data)+'\n')
+ atexit.register(exit_record)

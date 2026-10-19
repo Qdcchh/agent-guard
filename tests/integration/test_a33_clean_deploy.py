@@ -6,9 +6,11 @@ Full nodes require final resources and retained complete inherited JUnit reports
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
+import shutil
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -127,6 +129,7 @@ def test_s0_install_cli_precheck(a33_install):
         .stdout.decode()
         .strip()
     )
+    a33_install["record_container"](container_id)
     try:
         result = json.loads(native.call(["docker", "inspect", container_id]).stdout)[0]
         assert (
@@ -156,21 +159,28 @@ def _junit_complete(path):
     return {case.attrib["classname"] + "::" + case.attrib["name"] for case in root.iter("testcase")}
 
 
-def _required_inherited(a33_final, a33_install, roots):
+def _required_inherited(a33_final, a33_install, roots, *, group_mode=None):
     """Execute unchanged inherited assertions in a finite owned test controller.
 
     Test administrator connections never enter a normal role's environment or
     private mount. S2 supplies an exclusive three-domain test connection file;
     the controller mounts final tests read-only and imports the installed package.
     """
-    connections = Path(os.environ["AG33_TEST_CONNECTIONS_FILE"]).resolve()
+    connections = Path(
+        getattr(a33_final, "controller_inputs", None) or os.environ["AG33_TEST_CONNECTIONS_FILE"]
+    ).resolve()
     assert connections.is_file() and connections.stat().st_mode & 0o077 == 0
+    if hasattr(a33_final, "owner_controller"):
+        assert (connections.parent / "a31-tls/receipt.json").is_file()
     input_values = json.loads(connections.read_bytes())
     assert set(input_values) == {"authority", "downstream", "audit"}
-    program = r"""import json, os, subprocess, sys
+    program = (
+        r"""import json, os, subprocess, sys
 from pathlib import Path
 from psycopg.conninfo import conninfo_to_dict
 
+os.umask(0o077)
+Path(os.environ["HOME"]).mkdir(mode=0o700, exist_ok=True)
 connections = json.loads(Path("/test-inputs/connections.json").read_bytes())
 hosts = set()
 for key, domain in (
@@ -184,6 +194,12 @@ for key, domain in (
     os.environ[key] = connections[domain]
 assert len(hosts) == 3
 os.environ["PYTHONPATH"] = ""
+os.environ["PR9_TEST_CONTROLLER_OWNER"] = __CONTROLLER_OWNER__
+os.environ["PR9_TEST_CONTROLLER_RUN"] = __CONTROLLER_RUN__
+os.environ["PR9_TEST_CONTROLLER_IMAGE"] = __CONTROLLER_IMAGE__
+if Path("/test-inputs/a31-tls/receipt.json").is_file():
+    os.environ["PR9_A31_TLS_RECEIPT"] = "/test-inputs/a31-tls/receipt.json"
+    os.environ["PR9_CI_OWNER"] = EXPECTED_OWNER
 os.environ["AG31_SERVICE_EVIDENCE_DIR"] = "/tmp/a33-inherited/native"
 os.environ["A31_TEST_EVIDENCE_DIR"] = "/tmp/a33-inherited/native"
 Path("/tmp/a33-inherited/native").mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -203,7 +219,120 @@ result = subprocess.run(
 )
 raise SystemExit(result.returncode)
 """.replace("ROOTS", repr(roots))
+        .replace("EXPECTED_OWNER", repr(a33_final.owner))
+        .replace("__CONTROLLER_OWNER__", repr(a33_install["owner"]))
+        .replace("__CONTROLLER_RUN__", repr(a33_install["run_id"]))
+        .replace("__CONTROLLER_IMAGE__", repr(a33_install["image"]))
+    )
+    if group_mode is not None:
+        prefix = program.split("result = subprocess.run(", 1)[0]
+        if group_mode == "child-probe":
+            program = prefix + (
+                "import sys; sys.path.insert(0, '/testsource')\n"
+                "from tools.pr9_deploy_inputs import run_legacy_child_probe\n"
+                "value = run_legacy_child_probe("
+                + repr(a33_install["mode"])
+                + ", '/tmp/a33-inherited/child-probe')\n"
+                "Path('/tmp/a33-inherited/child-probe.json').write_text(json.dumps(value))\n"
+            )
+        elif group_mode == "legacy-closure":
+            program = prefix + (
+                "import sys; sys.path.insert(0, '/testsource')\n"
+                "from tools.pr9_deploy_inputs import run_legacy_closure_groups\n"
+                "run_legacy_closure_groups("
+                + repr(a33_install["mode"])
+                + ", '/tmp/a33-inherited/groups', "
+                + repr(a33_final.run_id)
+                + ", "
+                + repr(a33_final.owner)
+                + ")\n"
+            )
+        else:
+            program = prefix + (
+                "import sys; sys.path.insert(0, '/testsource')\n"
+                "from tools.pr9_deploy_inputs import run_inherited_groups\n"
+                "run_inherited_groups("
+                + repr(group_mode)
+                + ", '/tmp/a33-inherited/groups', "
+                + repr(a33_final.run_id)
+                + ", "
+                + repr(a33_final.owner)
+                + ")\n"
+            )
+    capacity_mount = []
+    if os.environ.get("PR9_CAPACITY_INPUTS_ROOT"):
+        from tools.pr9_deploy_inputs import validate_capacity_inputs
+
+        capacity_root = validate_capacity_inputs(os.environ["PR9_CAPACITY_INPUTS_ROOT"])
+        capacity_mount = [
+            "--mount",
+            "type=bind,src=" + str(capacity_root) + ",dst=/capacity/inputs,readonly",
+        ]
+        binding_program = (
+            "import sysconfig; sys.path.insert(0, '/testsource')\n"
+            "from tools.pr9_capacity_inputs import bind_installed\n"
+            "bind_installed('/capacity/inputs/container-binding.json', "
+            "sysconfig.get_path('purelib'), '/testsource/src', "
+            "'/tmp/a33-inherited/consumer-capacity-binding.json')\n"
+            "os.environ['AG32_FIXED_CAPACITY_DEPENDENCY'] = "
+            "'/tmp/a33-inherited/consumer-capacity-binding.json'\n"
+        )
+        program = program.replace(
+            'Path("/tmp/a33-inherited/native").mkdir(parents=True, exist_ok=True, mode=0o700)\n',
+            'Path("/tmp/a33-inherited/native").mkdir(parents=True, exist_ok=True, mode=0o700)\n'
+            + binding_program,
+        )
     native = a33_install["native"]
+    cli_source = Path(shutil.which("docker"))
+    cli_bytes = cli_source.read_bytes()
+    assert cli_bytes.startswith(b"\x7fELF"), "trusted nested Docker CLI must be Linux ELF"
+    cli = a33_install["evidence"] / "linux-docker-cli"
+    if not cli.exists():
+        cli.write_bytes(cli_bytes)
+        cli.chmod(0o500)
+    cli_sha = hashlib.sha256(cli_bytes).hexdigest()
+    assert digest(cli) == cli_sha
+    expected_cli_sha = os.environ.get("PR9_TRUSTED_DOCKER_CLI_SHA256")
+    if expected_cli_sha is not None:
+        assert re.fullmatch(r"[0-9a-f]{64}", expected_cli_sha) and cli_sha == expected_cli_sha
+    cli_version = native.call([str(cli), "version", "--format", "{{.Client.Version}}"])
+    (a33_install["evidence"] / "trusted-docker-cli-binding.json").write_text(
+        json.dumps({"sha256": cli_sha, "client_version": cli_version.stdout.decode().strip()})
+    )
+    (a33_install["evidence"] / "trusted-docker-cli-binding.json").chmod(0o600)
+    pg_ids = _pgs(a33_final)
+    networks = set()
+    for pg_id in pg_ids.values():
+        pg = json.loads(a33_final.native.call(["docker", "inspect", pg_id]).stdout)[0]
+        for network in pg["NetworkSettings"]["Networks"].values():
+            network_id = network["NetworkID"]
+            assert re.fullmatch(r"[0-9a-f]{64}", network_id)
+            net = json.loads(native.call(["docker", "network", "inspect", network_id]).stdout)[0]
+            assert net["Id"] == network_id and net["Labels"]["agent-guard.owner"] == a33_final.owner
+            assert net["Labels"]["agent-guard.run"] == a33_final.run_id
+            networks.add(network_id)
+    assert len(networks) >= 3
+    networks = sorted(networks)
+    authority = json.loads(native.call(["docker", "inspect", pg_ids["authority"]]).stdout)[0]
+    legacy_pg_gate = {
+        "version": 1,
+        "owner_id": a33_final.owner,
+        "run_id": a33_final.run_id,
+        "pg_full_id": authority["Id"],
+        "pg_image_full_id": authority["Image"],
+        "network_full_ids": sorted(
+            n["NetworkID"] for n in authority["NetworkSettings"]["Networks"].values()
+        ),
+        "host": "pg-authority.agent-guard.test",
+        "port": 5432,
+        "ca_sha256": digest(connections.parent / "ca.pem"),
+    }
+    program = (
+        "import os\nos.environ['PR9_LEGACY_PG_GATE'] = "
+        + repr(json.dumps(legacy_pg_gate))
+        + "\n"
+        + program
+    )
     name = "ag-a33-inherited-" + str(__import__("uuid").uuid4())
     created = (
         native.call(
@@ -214,16 +343,39 @@ raise SystemExit(result.returncode)
                 "linux/amd64",
                 "--name",
                 name,
+                "--hostname",
+                name,
+                "--user",
+                str(os.getuid()) + ":" + str(os.getgid()),
+                "--tmpfs",
+                "/private:rw,noexec,nosuid,nodev,size=16m,uid="
+                + str(os.getuid())
+                + ",gid="
+                + str(os.getgid())
+                + ",mode=0700",
+                "--add-host",
+                "audit.agent-guard.test:127.0.0.1",
+                "--add-host",
+                "gateway.agent-guard.test:127.0.0.2",
+                "--group-add",
+                str(Path("/var/run/docker.sock").stat().st_gid),
+                "--env",
+                "HOME=/tmp/pr9-controller-home",
                 "--label",
                 "agent-guard.owner=" + a33_install["owner"],
                 "--label",
                 "agent-guard.run=" + a33_install["run_id"],
                 "--network",
-                "none",
+                networks[0],
                 "--mount",
                 "type=bind,src=" + str(REPO) + ",dst=/testsource,readonly",
                 "--mount",
                 "type=bind,src=" + str(connections.parent) + ",dst=/test-inputs,readonly",
+                *capacity_mount,
+                "--mount",
+                "type=bind,src=" + str(cli) + ",dst=/usr/local/bin/docker,readonly",
+                "--mount",
+                "type=bind,src=/var/run/docker.sock,dst=/var/run/docker.sock",
                 a33_install["image"],
                 "/opt/runtime/bin/python",
                 "-c",
@@ -235,32 +387,33 @@ raise SystemExit(result.returncode)
     )
     assert re.fullmatch(r"[0-9a-f]{64}", created)
     a33_install["containers"].append(created)
+    a33_install["record_container"](created)
     value = json.loads(native.call(["docker", "inspect", created]).stdout)[0]
     assert (
         value["Id"] == created
         and value["Config"]["Labels"]["agent-guard.owner"] == a33_install["owner"]
     )
-    pg_ids = _pgs(a33_final)
-    networks = set()
-    for pg_id in pg_ids.values():
-        pg = json.loads(a33_final.native.call(["docker", "inspect", pg_id]).stdout)[0]
-        for network in pg["NetworkSettings"]["Networks"].values():
-            network_id = network["NetworkID"]
-            net = json.loads(native.call(["docker", "network", "inspect", network_id]).stdout)[0]
-            assert net["Id"] == network_id and net["Labels"]["agent-guard.owner"] == a33_final.owner
-            assert net["Labels"]["agent-guard.run"] == a33_final.run_id
-            networks.add(network_id)
-    assert len(networks) >= 3
-    for network_id in sorted(networks):
+    for network_id in networks[1:]:
         native.call(["docker", "network", "connect", network_id, created])
     result = native.call(["docker", "start", "-a", created], timeout=14460, check=False)
     value = json.loads(native.call(["docker", "inspect", created]).stdout)[0]
-    assert value["State"]["ExitCode"] == 0, result.stdout.decode()[-1500:]
     path = native.evidence / ("inherited-" + str(native.sequence))
-    path.mkdir()
-    native.call(["docker", "cp", created + ":/tmp/a33-inherited/.", str(path)])
+    path.mkdir(mode=0o700)
+    copied = native.call(
+        ["docker", "cp", created + ":/tmp/a33-inherited/.", str(path)], check=False
+    )
+    assert value["State"]["ExitCode"] == 0, result.stdout.decode()[-1500:]
+    assert copied.returncode == 0, "actual inherited evidence must be retained"
     native.call(["docker", "rm", created])
     a33_install["containers"].remove(created)
+    if group_mode == "child-probe":
+        value = json.loads((path / "child-probe.json").read_bytes())
+        assert value["actual_live_child_records"] >= 7
+        assert len(value["negative_controls"]) == 4
+        assert all(row["native_exit"] != 0 for row in value["negative_controls"])
+        return value
+    if group_mode is not None:
+        return path / "groups/index.json"
     ids = _junit_complete(path / "results.xml")
     for node in roots:
         file, _, function = node.partition("::")
@@ -287,6 +440,13 @@ def test_clean_source_wheel_without_model_api(a33_final, a33_install):
         AG33_PROJECT=a33_final.manifest["project"],
         AG33_REPOSITORY=str(REPO),
     )
+    if hasattr(a33_final, "owner_controller"):
+        environment.update(
+            AG33_FINAL_RESOURCE_MANIFEST=str(
+                a33_final.owner_controller.root / "allocated-resources.json"
+            ),
+            AG33_FINAL_RUN_CONFIG=str(a33_final.config),
+        )
     environment.pop("PYTHONPATH", None)
     for key in tuple(environment):
         if key.endswith("API_KEY"):
@@ -328,7 +488,10 @@ print(
     assert result["locked_versions"] == locks
     # Full inherited group inventory is supplied as test XML, with exact node
     # coverage. JSON status booleans are deliberately not accepted as execution.
-    index = Path(os.environ["AG33_INHERITED_XML_INDEX"])
+    if hasattr(a33_final, "owner_controller"):
+        index = _required_inherited(a33_final, a33_install, [], group_mode=a33_install["mode"])
+    else:
+        index = Path(os.environ["AG33_INHERITED_XML_INDEX"])
     groups = json.loads(index.read_bytes())
     registry = json.loads(
         (REPO / "tasks/workflow/runs/A3.3-delivery-20261011/node-bindings-v3.json").read_bytes()

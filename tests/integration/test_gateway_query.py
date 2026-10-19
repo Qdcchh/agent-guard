@@ -654,10 +654,27 @@ def test_original_context_same_shape_corruption(ledger, dsn, downstream_dsn, fie
 
 def test_new_query_proof_accepts_expired_original_proof(ledger, dsn, downstream_dsn):
     env = signed_env(dsn, downstream_dsn)
-    original = env.bundle(proof_lifetime=1)
+    original = env.bundle(proof_lifetime=10)
     accepted = env.adapter.accept(original)
     with psycopg.connect(dsn) as conn:
+        assert conn.execute(
+            "SELECT clock_timestamp() < to_timestamp(%s)", (original.invocation.proof_exp,)
+        ).fetchone() == (True,)
         _wait_expired(conn, datetime.fromtimestamp(original.invocation.proof_exp, timezone.utc))
+        db_epoch, old_proof_expired, token_current = conn.execute(
+            "SELECT extract(epoch FROM clock_timestamp()), "
+            "clock_timestamp() >= to_timestamp(%s), clock_timestamp() < to_timestamp(%s)",
+            (original.invocation.proof_exp, original.invocation.token_exp),
+        ).fetchone()
+        assert old_proof_expired is True and token_current is True
+        print(
+            "ORIGINAL_QUERY_EXPIRY_WITNESS",
+            {
+                "db_epoch": str(db_epoch),
+                "old_proof_expired": old_proof_expired,
+                "token_current": token_current,
+            },
+        )
     before = state(dsn, proofs=False)
     result = AuthorizedQuery(dsn, evidence_store=env.evidence).query(
         query_bundle(env, accepted.operation_id)

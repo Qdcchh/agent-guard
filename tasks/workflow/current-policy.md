@@ -1,3 +1,24 @@
+# 最新真人范围调整（2026-10-19）
+
+用户明确指出不需要完整复核、测试不用如此仔细，并要求交付测试结果和论文性能指标。停止追加本地完整独立验收/重试；已完成、跳过、失败及取消如实保留，不伪称完整历史验收ACCEPTED。下面历史完整复核门控由本段最新授权覆盖；仅完成本次修改和正常合并所需检查、最新head GitHub CI，CI通过后按此前授权正常合并。纳入用户本地文档/前端更新。论文指标仅引用实测原始数据及明确计时/环境，不把CI耗时当密码性能。结果见[测试与论文指标](../../docs/test-results-and-paper-metrics-20261019.md)。
+
+# 当前任务覆盖：PR #9 全部历史验收环境修复及绿色CI后合并（2026-10-18）
+
+真人请求把最新分支PR到main并合并；得知历史集成阻断后明确选择：“先修复并补齐历史验收环境，CI 通过后再合并（推荐）”。这授权修复真实历史测试适配、完整验收环境/可复现输入和CI必需装配，以及必要commit/push/更新PR/最终正常squash合并。不得绕过保护或合并失败CI，不得删/跳过/放松原测试。原COSM2阶段已接受的事实保留；修复历史CI不等于宣称旧A3完整实验正式接受。worker gpt-6.1-sol/low，每轮全新独立reviewer gpt-6.1-sol/high，后台effective metadata UNKNOWN。
+
+本轮范围/门控见[runs/pr9-historical-ci-20261018/package-v1.md](runs/pr9-historical-ci-20261018/package-v1.md)。只在必需实测约束下恢复容量/部署验收前提；没有需要不得无谓重跑四万次实验。原历史数据不改写，不上传私钥/令牌/DSN/原始敏感档案；需要大/敏感历史输入时应做真实、可复现、安全的本轮生成与来源绑定，不得伪造旧结果。共享源码写入前包审ready；文件/资源独占；候选STOP/SHA后全新完整独验，最终GitHub最新head全部CI绿后才合并PR9。
+
+真人随后明确要求“本地文档有一些小更新，好像还变了前端，请一并合并到main分支”。这覆盖此前不提交这些文件的范围限制：纳入实际更新的style.css、03阶段汇报docx及论文main.pdf，保留其内容并检查可读性；不提交aux/out/synctex缓存，详见[本地更新补充](runs/pr9-historical-ci-20261018/user-local-updates.md)。全部自有Docker/PG/网络以owner/fullID核验，源码/候选/秘密分开，raw敏感证据0600只本地，公开证据显式脱敏。旧远端/本地失败与报告保留。
+
+C5拒绝时PR9尚未接受或合并：全新high r2以真实旧验收节点失败拒绝，1212起止SHA一致、原204夹具核验通过但完整矩阵未跑；[原样报告](runs/pr9-historical-ci-20261018/implementation-review-r2-NOT_ACCEPTED.md)及[统一补正契约](runs/pr9-historical-ci-20261018/candidate5-rejected.md)保留。后续仅low独占补齐真实旧DB身份、历史六SQL输入、私密日志路径及当前追加迁移/表集合的精确资格校验，不能动原SQL/业务安全语义或用单项绿替代下一轮全新完整独验。此前候选及取消的长测均不作为最终接受；最终结论以本轮正式接受记录及[PR9实际检查与合并状态](https://github.com/Qdcchh/agent-guard/pull/9)为准。
+
+C6亦被全新high r3拒绝：真实公开密文解包后的重建binding被误当作原binding身份，导致严格部署校验失败，完整矩阵未运行；[拒绝与限定修复](runs/pr9-historical-ci-20261018/candidate6-rejected.md)要求区分并验证两层来源，不放松原件/安装校验。旧候选与单项诊断不构成接受；修复后须新候选和全新high完整验收。
+
+C7被全新high r4独立确认启动采样竞态后拒绝：Rosetta包装进程argv短暂不同，原A1五项通过但真实观察器守卫拒绝；[C7拒绝与限定修复](runs/pr9-historical-ci-20261018/candidate7-rejected.md)仅授权父进程有界等待严格声明argv与稳定kernel身份，不放宽任何最终回执/模块或业务门。其后仍须新候选及全新high完整验收。
+
+---
+以下为此前阶段政策及过程历史；发布禁止等旧范围限制由上面最新真人授权覆盖，安全不变量保持。
+
 # 现行角色与范围：COSM2全量实施（2026-10-17）
 
 真人最新授权：“你直接把B的部分也做了吧，从头开始，一直到我发给你的那个markdown里面的所有内容都被实施”。范围为原《双域协同SM2实施规划》第0–5节、A1–A7、B1–B9及C交接清单，覆盖此前只做A/不得接管B的限制。不恢复旧A3.3/A3.4四万次长实验。原始规划保持原样，当前任务包及澄清见[package-v1](runs/cosm2-full-20261017/package-v1.md)、[包审](runs/cosm2-full-20261017/package-review-r1.md)、[实施接口](runs/cosm2-full-20261017/implementation-notes-v1.md)。

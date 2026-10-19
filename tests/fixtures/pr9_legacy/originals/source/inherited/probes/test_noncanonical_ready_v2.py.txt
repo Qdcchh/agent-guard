@@ -1,0 +1,95 @@
+"""Own valid historical raw-JWS input and exact SDK boundary controls.
+
+Only an owned row is replaced through the explicit privileged corruption helper.
+The replacement is real SM2 signed with the independently trusted gateway key.
+It is not an output of the current canonical InternalPublisher.
+"""
+import json
+import os
+from pathlib import Path
+
+import psycopg
+import pytest
+
+from agent_guard.contracts.encoding import b64url_encode, canonical_json_bytes, load_strict_json
+from agent_guard.crypto.sm import JWS_ALG, sign_sm2_message, verify_compact_jws, _der_to_jws_signature
+from agent_guard.evidence.receipt import ReceiptVerificationError, verify_receipt_bundle
+from agent_guard.execution.receipt_publication import evidence_bundle
+from agent_guard.execution.receipt_projection import project_receipt
+from tests.fixtures.gateway import query_bundle
+from tests.fixtures.receipts import CorruptRow, full_state, result_read_only, staged_only
+from tests.integration.test_gateway_receipt_query import app, query_http
+from tests.integration.test_receipt_publication import final_env
+
+
+def raw_signed_length(key, claims, target):
+    header = canonical_json_bytes({"alg": JWS_ALG, "typ": "ag-receipt+jwt", "kid": "gw-receipt-1"})
+    payload = canonical_json_bytes(claims)
+    # Independent arithmetic and raw-input SM2 signing; JSON trailing space is
+    # legal strict JSON and is intentionally not canonical producer encoding.
+    for payload_padding in range(3):
+        payload_part = b64url_encode(payload + b" " * payload_padding)
+        for header_padding in range(target):
+            header_part = b64url_encode(header + b" " * header_padding)
+            if len(header_part) + 1 + len(payload_part) + 1 + 86 == target:
+                signing_input = header_part + "." + payload_part
+                signature = b64url_encode(_der_to_jws_signature(sign_sm2_message(key, signing_input.encode("ascii"))))
+                signed = signing_input + "." + signature
+                assert len(signed) == target
+                return signed, header_padding, payload_padding
+    raise AssertionError("requested exact JWS size unreachable in independent padding search")
+
+
+@pytest.mark.parametrize("jws_bytes", [16384, 16385])
+def test_new_real_noncanonical_trusted_ready_jws_boundary_and_current_query(
+    ledger, dsn, downstream_dsn, jws_bytes
+):
+    env, op, key, verifier, publisher = final_env(dsn, downstream_dsn)
+    original = publisher.publish(op)
+    with psycopg.connect(dsn) as conn:
+        projection = project_receipt(conn, op)
+        trust = verifier._trust_tx(conn, op)
+    claims = load_strict_json(projection.claims_bytes)
+    signed, hp, pp = raw_signed_length(key, claims, jws_bytes)
+    assert hp > 0
+    assert verify_compact_jws(signed, expected_type="ag-receipt+jwt", trusted_keys=trust.gateway_keys) == claims
+    bundle = evidence_bundle(projection, signed)
+    if jws_bytes == 16384:
+        verified = verify_receipt_bundle(bundle, trust=trust)
+        assert verified.operation_id == op and verified.status == "SUCCEEDED"
+    else:
+        with pytest.raises(ReceiptVerificationError, match="invalid receipt_jws"):
+            verify_receipt_bundle(bundle, trust=trust)
+    current = query_bundle(env, op)
+    application = app(env, dsn, verifier)
+    try:
+        with CorruptRow(dsn, "ag_receipt_outbox", {"operation_id": op}, {"receipt_jws": signed}):
+            before = full_state(dsn, downstream_dsn)
+            status, response, headers = query_http(application, dsn, current)
+            if jws_bytes == 16384:
+                assert status == 200 and response["receipt_jws"] == signed
+                assert response["receipt_status"] == "READY"
+                with psycopg.connect(dsn) as conn:
+                    assert verifier.read_tx(conn, op).receipt_jws == signed
+                    ref = conn.execute("SELECT evidence_ref FROM ag_proofs WHERE proof_jti=%s", (current.query.proof_jti,)).fetchone()[0]
+                result_read_only(before, full_state(dsn, downstream_dsn), evidence_ref=ref, proof_jti=current.query.proof_jti, operation_id=op, staging=True)
+                envelope_bytes = len(canonical_json_bytes(response))
+            else:
+                assert status == 503 and response["error"]["code"] == "TRUSTED_STATE_UNAVAILABLE"
+                assert headers[b"cache-control"] == b"no-store"
+                staged_only(before, full_state(dsn, downstream_dsn), proof_jti=current.query.proof_jti)
+                envelope_bytes = None
+        if jws_bytes == 16385:
+            before = full_state(dsn, downstream_dsn)
+            status, repaired, _ = query_http(application, dsn, current)
+            assert status == 200 and repaired["receipt_jws"] == original.receipt_jws
+            with psycopg.connect(dsn) as conn:
+                ref = conn.execute("SELECT evidence_ref FROM ag_proofs WHERE proof_jti=%s", (current.query.proof_jti,)).fetchone()[0]
+            result_read_only(before, full_state(dsn, downstream_dsn), evidence_ref=ref, proof_jti=current.query.proof_jti, operation_id=op, staging=True)
+        before = full_state(dsn, downstream_dsn)
+        status, replay, _ = query_http(application, dsn, current)
+        assert status == 409 and replay["error"]["code"] == "REPLAY"
+        staged_only(before, full_state(dsn, downstream_dsn), proof_jti=current.query.proof_jti)
+        Path(os.environ["A23_RECEIPT_EVIDENCE"], f"noncanonical-ready-{jws_bytes}.json").write_text(json.dumps({"classification": "PRIVILEGED_PERSISTED_REPLACEMENT_REAL_VALID_SM2_NOT_CURRENT_CANONICAL_PRODUCER", "jws_bytes": jws_bytes, "header_spaces": hp, "payload_spaces": pp, "exact_17_claims": len(claims), "sdk_accepts": jws_bytes == 16384, "initial_public_status": 200 if jws_bytes == 16384 else 503, "public_envelope_bytes": envelope_bytes, "repair_same_proof_status": 200 if jws_bytes == 16385 else None, "replay_status": 409, "oracle": "all ag_* and ds_*; only permitted STAGED/proof/link"}, indent=2) + "\n")
+    finally:
+        application._executor.shutdown()

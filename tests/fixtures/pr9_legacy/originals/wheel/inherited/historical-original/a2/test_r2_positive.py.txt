@@ -1,0 +1,38 @@
+import dataclasses
+import psycopg
+from agent_guard.contracts.execution import ToolId,QuoteItem
+from agent_guard.tools.catalog import CatalogQuote,CatalogQuoteLine,snapshot_from_bytes
+from tests.fixtures.execution import build_env,read_params,document_params,notification_params,order_params,constraints_for
+from tests.fixtures.dbstate import fetch_counts
+from test_review import observe,counters,effects
+
+def test_legal_notification_failure_and_document_fixed_result(a2):
+ ref=a2.service.accept_invocation(a2.tree.invocation(idempotency_key='doc',tool_id=ToolId.DOCUMENT_READ.value,params=document_params()),a2.permission()).operation_id
+ success=a2.service.run_operation(ref)
+ assert success.status=='SUCCEEDED' and success.outcome.amount_fen==0
+ assert a2.downstream.query(service_secret=a2.secret,operation_id=ref).result_bytes==success.outcome.result_bytes
+ env=build_env(tree=a2.tree,gateway_dsn=a2.gateway_dsn,downstream_dsn=a2.downstream_dsn,approved_recipients=frozenset())
+ params=notification_params(operation_id=ref)
+ op=env.service.accept_invocation(a2.tree.invocation(idempotency_key='legal-refusal',tool_id=ToolId.NOTIFICATION_SEND.value,params=params),env.permission()).operation_id
+ assert all(v['calls_reserved']==1 and v['calls_settled']==1 for v in counters(env))
+ result=env.service.run_operation(op)
+ assert result.status=='FAILED' and all(v=={'amount_reserved':0,'amount_settled':0,'calls_reserved':0,'calls_settled':1} for v in counters(env))
+ assert effects(env)['ds_notifications']==0 and fetch_counts(env.gateway_dsn)['ag_receipt_outbox']==2 and fetch_counts(env.gateway_dsn)['ag_ledger_event_nodes']==12
+ again=env.downstream.execute(service_secret=env.secret,operation_id=op,tool_id=ToolId.NOTIFICATION_SEND,canonical_params=params,quote=None,expected_amount_fen=0)
+ assert again.final_rejection and again.effect_ref is None
+ observe('r2-legal-zero-tools',{'document_fixed_result':True,'legal_notification_failed':True,'all_counters':counters(env),'effects':effects(env)})
+
+def test_equal_total_two_line_reallocation_stays_unknown(a2):
+ a2.catalog.replace_quote(CatalogQuote('quote-001','1','supplier-001','req-001',(CatalogQuoteLine('sku-001',1,20000),CatalogQuoteLine('sku-002',1,50000))))
+ permission=a2.permission(chain=tuple(constraints_for(i,skus=('sku-001','sku-002')) for i in range(3)))
+ params=order_params(items=(('sku-001',1),('sku-002',1)))
+ accepted=a2.service.accept_invocation(a2.tree.invocation(tool_id=ToolId.ORDER_CREATE.value,params=params),permission)
+ snap=snapshot_from_bytes(accepted.cost.quote_snapshot)
+ other=dataclasses.replace(snap,items=(QuoteItem('sku-001',1,40000),QuoteItem('sku-002',1,30000)))
+ assert other.total_fen==snap.total_fen==70000
+ actual=a2.downstream.execute(service_secret=a2.secret,operation_id=accepted.operation_id,tool_id=ToolId.ORDER_CREATE,canonical_params=params,quote=other,expected_amount_fen=70000)
+ assert actual.effect_ref is not None
+ result=a2.service.reconcile(accepted.operation_id)
+ assert result.status=='UNKNOWN' and a2.service.outbox_entry(accepted.operation_id) is None
+ assert all(v=={'amount_reserved':70000,'amount_settled':0,'calls_reserved':1,'calls_settled':0} for v in counters(a2))
+ observe('r2-equal-total-reallocation',{'status':result.status,'counters':counters(a2),'effects':effects(a2)})

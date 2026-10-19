@@ -1,0 +1,23 @@
+import ssl,http.client,json
+from pathlib import Path
+import psycopg,pytest
+import tests.integration.test_server_tls as tls
+pytest_plugins=['tests.integration.conftest']
+def test_real_validating_tls_oversized_browser_and_revoke_are_client_errors(ledger,dsn,tmp_path,monkeypatch):
+ observations=[];done=[]
+ def request(port,method,path,body=None,headers=None):
+  context=ssl.create_default_context(cafile=str(tmp_path/'tls-cert.pem'));assert context.check_hostname and context.verify_mode==ssl.CERT_REQUIRED
+  def send(method,path,body,headers):
+   c=http.client.HTTPSConnection('localhost',port,context=context,timeout=10)
+   try:
+    c.request(method,path,body=body,headers=headers or {});r=c.getresponse();return r.status,{k.lower():v for k,v in r.getheaders()},r.read()
+   finally:c.close()
+  if not done:
+   done.append(True)
+   for endpoint,ctype in [('/ag/login','application/x-www-form-urlencoded'),('/ag/consent','application/x-www-form-urlencoded'),('/ag/tasks/task-001/revoke','application/json'),('/oauth/token','application/x-www-form-urlencoded')]:
+    status,_,_=send('POST',endpoint,b'a'*65537,{'Content-Type':ctype});observations.append({'endpoint':endpoint,'bytes':65537,'status':status})
+   with psycopg.connect(dsn) as c:
+    assert c.execute('SELECT count(*) FROM ag_authorization_codes').fetchone()==(0,);assert c.execute('SELECT count(*) FROM ag_operations').fetchone()==(0,);assert c.execute('SELECT count(*) FROM ag_auth_events').fetchone()==(0,)
+  return send(method,path,body,headers)
+ monkeypatch.setattr(tls,'_request',request);tls.test_tls_server_runs_the_full_as_flow(ledger,dsn,tmp_path)
+ Path('/evidence/logs/http-bounds-observations.json').write_text(json.dumps(observations,indent=2));assert all(400<=x['status']<500 for x in observations),observations

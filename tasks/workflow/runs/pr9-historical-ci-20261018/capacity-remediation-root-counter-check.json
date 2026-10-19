@@ -1,0 +1,21 @@
+{
+  "xml_sha256": "9c73263aea2114b9812c62441dd8413ffbe4adf5edcbd0f6541a65e071bcbebc",
+  "native_counts": {
+    "passed": 1,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "original_counter": {
+    "native_operations": 10000,
+    "journal": 30009,
+    "fixed_legal_batches": 668,
+    "objects": 203285,
+    "raw_bytes": 291623992,
+    "exact_object_chunk_wire_bytes": 439169636,
+    "acceptance": "NOT_ASSERTED",
+    "footer_roots_are_length_only_seed_placeholders_not_valid_bundle": true,
+    "terminal_material_is_original_row_arithmetic_not_new_PG_project_receipt": true
+  },
+  "scope": "Corrected public input chain preflight only; requires fresh full independent candidate review and latest-head CI."
+}

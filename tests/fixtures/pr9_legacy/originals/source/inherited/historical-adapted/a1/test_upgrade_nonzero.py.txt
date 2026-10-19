@@ -1,0 +1,47 @@
+"""Independent upgrade check with a real nonzero reservation and its evidence."""
+
+import os
+
+import psycopg
+
+from agent_guard.ledger.migrate import DEFAULT_MIGRATIONS_DIR, apply_migrations
+from agent_guard.ledger.service import ExecutionLedger
+from tests.fixtures.state import build_tree
+
+TABLE_ORDER = {
+    "ag_tasks": "tenant_id, task_id",
+    "ag_principals": "tenant_id, client_id, kid",
+    "ag_grants": "grant_id",
+    "ag_operations": "operation_id",
+    "ag_proofs": "holder_kid, purpose, endpoint, proof_jti",
+    "ag_ledger_events": "event_id",
+    "ag_ledger_event_nodes": "event_id, position",
+}
+
+
+def snapshot(dsn):
+    with psycopg.connect(dsn, connect_timeout=5) as conn:
+        return {
+            table: conn.execute(f"SELECT * FROM {table} ORDER BY {order}").fetchall()
+            for table, order in TABLE_ORDER.items()
+        }
+
+
+def test_upgrade_preserves_nonzero_reservation_and_all_evidence(tmp_path):
+    dsn = os.environ["AGENT_GUARD_TEST_DATABASE_URL"]
+    directory = tmp_path / "only001"
+    directory.mkdir()
+    (directory / "001_init.sql").write_bytes(
+        (DEFAULT_MIGRATIONS_DIR / "001_init.sql").read_bytes()
+    )
+    with psycopg.connect(dsn, connect_timeout=5) as conn:
+        assert conn.execute("SELECT current_database()").fetchone()[0] == "ag_review_upgrade_adapted"
+        assert apply_migrations(conn, directory) == ["001"]
+        tree = build_tree(conn)
+    result = ExecutionLedger(dsn).accept(tree.invocation(), tree.cost(amount_fen=70000))
+    before = snapshot(dsn)
+    assert result.cost.amount_fen == 70000
+    assert all(before[table] for table in TABLE_ORDER)
+    with psycopg.connect(dsn, connect_timeout=5) as conn:
+        assert apply_migrations(conn) == ["002", "003", "004", "005", "006"]
+    assert snapshot(dsn) == before

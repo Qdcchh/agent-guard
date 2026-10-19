@@ -427,3 +427,30 @@ kbd { font-family: var(--mono); font-size: 11.5px; border: 1px solid var(--hair)
 }
 
 .cosign-refusal .tick circle { fill: var(--seal); }
+
+/* ==================== 页面背景 · 开始 ====================
+   整段删除即恢复纯色背景，不影响其他样式。
+   只用横竖细网格与大面积柔光：斜纹专门表示"示意推演"，背景不用斜纹；
+   CSP 不允许外部图片与 data: 图片，因此全部用 CSS 渐变。
+   亮度变化控制在 4% 以内，文字描边与标题栏遮罩不会露出明显色块。 */
+body {
+  background:
+    radial-gradient(1100px 680px at -8% -12%, rgba(36, 69, 212, .11), transparent 64%),
+    radial-gradient(980px 640px at 108% 112%, rgba(30, 120, 150, .085), transparent 62%),
+    linear-gradient(180deg, #FCFCFE 0%, #F7F8FB 100%);
+  background-attachment: fixed;
+}
+/* 左上角淡出的工程网格，只在顶栏与左栏一带可见 */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(rgba(24, 32, 58, .06) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, rgba(24, 32, 58, .06) 1px, transparent 1px) 0 0 / 28px 28px;
+  -webkit-mask-image: radial-gradient(ellipse 85% 90% at 0% 0%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(ellipse 85% 90% at 0% 0%, #000 0%, transparent 75%);
+}
+/* 吸顶的章内导航改为半透明，背景从下面透出来 */
+.subnav { background: rgba(251, 251, 252, .5); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+/* 无边框按钮不带底色，避免在背景上露出白块 */
+.btn.ghost-btn { background: transparent; }
+/* ==================== 页面背景 · 结束 ==================== */

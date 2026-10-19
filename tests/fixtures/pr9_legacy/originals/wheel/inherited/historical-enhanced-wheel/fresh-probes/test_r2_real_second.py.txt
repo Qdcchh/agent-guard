@@ -1,0 +1,81 @@
+"""Fresh AS two-level issuance after exactly one real root second boundary."""
+import json
+import time
+from datetime import datetime,timezone
+from concurrent.futures import ThreadPoolExecutor
+import psycopg
+import pytest
+from agent_guard.crypto.sm import verify_compact_jws
+from agent_guard.execution.query import AuthorizedQuery
+from agent_guard.contracts.ledger import ErrorCode,LedgerError
+from tests.integration import test_verified_execution as setup
+from tests.fixtures.gateway import query_bundle
+from tests.integration.test_consent_final_decision import _wait_blocked,_wait_expired
+from tests.integration.test_a31_inherited_trusted_material import full
+from tests.fixtures.receipts import _journal_delta
+
+@pytest.mark.parametrize('round_id',range(10))
+@pytest.mark.parametrize('window',['root','mid','leaf','token'])
+@pytest.mark.parametrize('positive',[False,True])
+def test_real_root_cross_second_two_children_and_persisted_deadline(ledger,dsn,downstream_dsn,monkeypatch,round_id,window,positive):
+    root_fn,form_fn=setup._root,setup._form
+    issuance=[]
+    def root(*args,approved_overrides=None):
+        values=dict(approved_overrides or {})
+        if window=='root':values['task_expires_at']=int(time.time())+8
+        return root_fn(*args,approved_overrides=values)
+    def form(key,parent_token,**kwargs):
+        parent=verify_compact_jws(parent_token,expected_type='ag-at+jwt',trusted_keys={'as-sign-1':key.public_key()})
+        if parent['ag_delegation_remaining']==2:
+            start=time.monotonic()
+            while int(time.time())<=parent['iat']:
+                assert time.monotonic()-start<2
+                time.sleep(.005)
+            assert int(time.time())==parent['iat']+1,'one actual second boundary, no intentional window exhaustion'
+        now=int(time.time())
+        requested=kwargs.get('ttl',180)
+        if window=='root':requested=min(requested,8)
+        if window=='mid':requested=min(requested,6)
+        remaining=parent['exp']-now-2
+        assert remaining>0 and now<parent['exp']
+        ttl=min(requested,remaining)
+        assert 0<ttl and now+ttl<=parent['exp']-2
+        kwargs['ttl']=ttl
+        issuance.append({'parent_iat':parent['iat'],'parent_exp':parent['exp'],'depth':parent['ag_delegation_remaining'],'now':now,'ttl':ttl})
+        return form_fn(key,parent_token,**kwargs)
+    monkeypatch.setattr(setup,'_root',root);monkeypatch.setattr(setup,'_form',form)
+    env=setup.signed_env(dsn,downstream_dsn,leaf_ttl=3)
+    assert len(issuance)==2 and issuance[0]['now']==issuance[0]['parent_iat']+1
+    with psycopg.connect(dsn) as c:
+        signed=c.execute('SELECT t.token_jws,g.expires_at FROM ag_grants g JOIN ag_grant_tokens t USING(grant_id) ORDER BY g.depth').fetchall()
+    claims=[verify_compact_jws(t,expected_type='ag-at+jwt',trusted_keys={'as-sign-1':env.as_key.public_key()}) for t,_ in signed]
+    assert len(claims)==3 and all(c['exp']==int(exp.timestamp()) for c,(_,exp) in zip(claims,signed))
+    assert all(p['iat']<=c['iat']<c['exp']<=p['exp'] for p,c in zip(claims,claims[1:]))
+    op=env.adapter.accept(env.bundle()).operation_id;bundle=query_bundle(env,op)
+    index={'root':0,'mid':1,'leaf':2,'token':2}[window]
+    deadline=signed[index][1]
+    if window=='token':assert int(deadline.timestamp())==bundle.query.token_exp
+    before,downstream=full(dsn),full(downstream_dsn,'ds_')
+    with psycopg.connect(dsn,autocommit=True) as observer,psycopg.connect(dsn) as blocker,ThreadPoolExecutor(1) as pool:
+        blocker.execute('SELECT operation_id FROM ag_operations WHERE operation_id=%s FOR UPDATE',(op,))
+        future=pool.submit(AuthorizedQuery(dsn,evidence_store=env.evidence).query,bundle)
+        _wait_blocked(observer,blocker.info.backend_pid,'FROM ag_operations')
+        lock_rows=observer.execute("SELECT pid,wait_event_type,pg_blocking_pids(pid) FROM pg_stat_activity WHERE %s=ANY(pg_blocking_pids(pid))",(blocker.info.backend_pid,)).fetchall()
+        assert len(lock_rows)>=1 and all(r[1]=='Lock' for r in lock_rows)
+        if not positive:_wait_expired(observer,deadline)
+        observed_now=observer.execute('SELECT clock_timestamp()').fetchone()[0]
+        if positive:assert observed_now<deadline
+        else:assert observed_now>=deadline
+        blocker.commit()
+        if positive:
+            assert future.result(timeout=5)['status']=='RESERVED'
+            after=full(dsn)
+            _journal_delta({'gateway':before},{'gateway':after},interactions=(('QUERY',op,bundle.evidence_ref),))
+            assert len(after['ag_proofs'])==len(before['ag_proofs'])+1
+            assert {k:v for k,v in after.items() if k!='ag_proofs'}=={k:v for k,v in before.items() if k!='ag_proofs'}
+        else:
+            with pytest.raises(LedgerError) as failure:future.result(timeout=5)
+            assert failure.value.code is ErrorCode.EXPIRED
+            assert full(dsn)==before
+        assert full(downstream_dsn,'ds_')==downstream
+        print('R2_REAL_SECOND_WITNESS',json.dumps({'round':round_id,'window':window,'positive':positive,'issuance':issuance,'selected_exp':int(deadline.timestamp()),'db_clock':observed_now.isoformat(),'blocked_backend_ids':[r[0] for r in lock_rows],'blocker_pid':blocker.info.backend_pid,'ancestor_expiry_bounds_leaf':True},sort_keys=True))

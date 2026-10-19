@@ -1,0 +1,176 @@
+"""Fresh r7 probes: actual concurrent validators, retry/flag faults and P11 clocks."""
+import dataclasses,json,threading,time
+import psycopg,pytest
+from agent_guard.contracts.execution import ExecutionError,ExecutionErrorCode,ToolId
+from agent_guard.contracts.ledger import TrustedCost,LedgerError
+from agent_guard.ledger.service import ExecutionLedger
+from agent_guard.ledger import store as ls
+from agent_guard.ledger.provisioning import revoke_grant
+from agent_guard.tools.params import parse_tool_params
+from agent_guard.tools.catalog import snapshot_from_bytes
+from tests.fixtures.execution import build_env,order_params,read_params
+from tests.fixtures.state import build_tree
+from tests.fixtures.dbstate import fetch_counts
+from test_review import accepted,observe,counters,effects
+
+@pytest.mark.parametrize('round_no',range(10))
+def test_two_live_validators_same_instance_never_cross_talk(a2,round_no):
+ with psycopg.connect(a2.gateway_dsn) as c:
+  trees=[build_tree(c,tenant_id='r7tenant-'+str(i)) for i in range(2)]
+ ledger=a2.ledger; gate=threading.Barrier(2);seen=[];answers=[];errors=[];ids=[]
+ for t in trees:ids.append(ledger.accept(t.invocation(idempotency_key="r7-cross",tool_id=ToolId.REQUEST_READ.value,params=read_params()),TrustedCost(0)).operation_id)
+ def call(i):
+  v=trees[i].invocation(idempotency_key="r7-cross",tool_id=ToolId.REQUEST_READ.value,params=read_params())
+  def validator(conn,row):
+   assert row.operation_id==ids[i]
+   # Same live connection sees request proof but an independent connection cannot.
+   assert conn.execute('SELECT count(*) FROM ag_proofs WHERE proof_jti=%s',(v.proof_jti,)).fetchone()==(1,)
+   with psycopg.connect(a2.gateway_dsn) as other:assert other.execute('SELECT count(*) FROM ag_proofs WHERE proof_jti=%s',(v.proof_jti,)).fetchone()==(0,)
+   seen.append((i,conn.info.backend_pid));gate.wait(10)
+   if i==1:raise ExecutionError(ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID,'r7 intentional refusal')
+  try:answers.append((i,ledger.accept_checked(v,TrustedCost(0),existing_validator=validator).disposition.value))
+  except ExecutionError as e:errors.append((i,e.code.value))
+ threads=[threading.Thread(target=call,args=(i,)) for i in range(2)]
+ for t in threads:t.start()
+ for t in threads:t.join(20)
+ assert not any(t.is_alive() for t in threads)
+ assert answers==[(0,'EXISTING')] and errors==[(1,'LEGACY_SNAPSHOT_INVALID')]
+ assert len(seen)==2 and seen[0][1]!=seen[1][1] and fetch_counts(a2.gateway_dsn)['ag_proofs']==3
+ observe('r7-concurrent-validators',{'round':round_no,'backend_pids':seen,'answers':answers,'errors':errors,'proofs':3})
+
+@pytest.mark.parametrize('fault',['serialization','deadlock','runtime'])
+def test_callback_fault_rollback_and_internal_retry_rechecks(a2,fault):
+ op=accepted(a2).operation_id;v=a2.tree.invocation(idempotency_key="review",tool_id=ToolId.ORDER_CREATE.value,params=order_params());n=[]
+ def validator(conn,row):
+  n.append(conn.info.backend_pid)
+  assert row.operation_id==op
+  if len(n)==1:
+   if fault=='serialization':raise psycopg.errors.SerializationFailure('r7 injection')
+   if fault=='deadlock':raise psycopg.errors.DeadlockDetected('r7 injection')
+   raise RuntimeError('r7 nonDB callback exception')
+ if fault=='runtime':
+  with pytest.raises(RuntimeError):a2.ledger.accept_checked(v,TrustedCost(70000),existing_validator=validator)
+  assert fetch_counts(a2.gateway_dsn)['ag_proofs']==1
+ else:
+  result=a2.ledger.accept_checked(v,TrustedCost(70000),existing_validator=validator)
+  assert result.operation_id==op and len(n)==2 and n[0]!=n[1] and fetch_counts(a2.gateway_dsn)['ag_proofs']==2
+ assert effects(a2)['ds_operations']==0 and all(c['amount_reserved']==70000 for c in counters(a2))
+ observe('r7-callback-retry',{'fault':fault,'backend_pids':n,'proofs':fetch_counts(a2.gateway_dsn)['ag_proofs']})
+
+def test_flag_failure_after_actual_existing_rejection_is_failclosed(a2,monkeypatch):
+ inv=a2.tree.invocation(idempotency_key="r7-flag",tool_id=ToolId.ORDER_CREATE.value,params=order_params())
+ op=a2.ledger.accept(inv,TrustedCost(70000,quote_id='quote-001',quote_version='1',quote_snapshot=b'broken')).operation_id
+ monkeypatch.setattr(a2.service,'_find_candidate',lambda v:None)
+ seen=[]
+ def flag(*args,**kw):
+  # The rejected accept transaction must already be over. NOWAIT cannot block.
+  with psycopg.connect(a2.gateway_dsn) as c:
+   c.execute('SELECT 1 FROM ag_tasks WHERE tenant_id=%s AND task_id=%s FOR UPDATE NOWAIT',(a2.tree.tenant_id,a2.tree.task_id))
+  seen.append(True);raise psycopg.OperationalError('r7 owned flag failure')
+ monkeypatch.setattr(a2.service,'_quarantine',flag)
+ with pytest.raises(psycopg.OperationalError):a2.service.accept_invocation(a2.tree.invocation(idempotency_key="r7-flag",tool_id=ToolId.ORDER_CREATE.value,params=order_params()),a2.permission())
+ assert seen==[True] and fetch_counts(a2.gateway_dsn)['ag_proofs']==1 and a2.service.review_flag(op) is None
+ assert effects(a2)['ds_operations']==0 and all(c['amount_reserved']==70000 for c in counters(a2))
+ observe('r7-flag-failure',{'locks_released_before_flag':True,'proofs':1,'success_returned':False})
+
+@pytest.mark.parametrize('round_no',range(10))
+@pytest.mark.parametrize('variant',['good','bad-material','revoked','replay','expired'])
+def test_p11_resource_disappearance_precise_clock_and_errors(a2,monkeypatch,round_no,variant):
+ key='r7-resource';ready=threading.Event();committed=threading.Event();created=[];timeline=[];errors=[]
+ retry=a2.tree.invocation(idempotency_key=key,tool_id=ToolId.ORDER_CREATE.value,params=order_params())
+ if variant=='expired':retry=dataclasses.replace(retry,proof_iat=int(time.time())-40,proof_exp=int(time.time())-1)
+ other=build_env(tree=a2.tree,gateway_dsn=a2.gateway_dsn,downstream_dsn=a2.downstream_dsn)
+ original=a2.service._find_candidate;first=[True]
+ def stamp(phase):
+  with psycopg.connect(a2.gateway_dsn) as c:now=c.execute('SELECT extract(epoch from clock_timestamp())::float8').fetchone()[0]
+  timeline.append({'phase':phase,'db_epoch':now,'proof_iat':retry.proof_iat,'proof_exp':retry.proof_exp,'token_exp':retry.token_exp})
+ def candidate(v):
+  if first[0]:
+   first[0]=False;assert original(v) is None;stamp('first-miss');ready.set();assert committed.wait(10);return None
+  stamp('fallback-recheck');return original(v)
+ monkeypatch.setattr(a2.service,'_find_candidate',candidate)
+ def compete():
+  try:
+   assert ready.wait(10)
+   if variant=='bad-material':
+    created.append(other.ledger.accept(a2.tree.invocation(idempotency_key=key,tool_id=ToolId.ORDER_CREATE.value,params=order_params()),TrustedCost(70000,quote_id='quote-001',quote_version='1',quote_snapshot=b'bad')).operation_id)
+   else:
+    original_inv=retry if variant=='replay' else a2.tree.invocation(idempotency_key=key,tool_id=ToolId.ORDER_CREATE.value,params=order_params())
+    created.append(other.service.accept_invocation(original_inv,other.permission()).operation_id)
+   if variant=='revoked':
+    with psycopg.connect(a2.gateway_dsn) as c:revoke_grant(c,a2.tree.mid_id)
+   a2.catalog.remove_request('req-001');stamp('accept-committed-resource-removed')
+  except Exception as e:errors.append(type(e).__name__)
+  finally:committed.set()
+ t=threading.Thread(target=compete);t.start();returned=None;code=None;cause=None
+ try:returned=a2.service.accept_invocation(retry,a2.permission())
+ except (ExecutionError,LedgerError) as exc:code=exc.code.value;cause=None if exc.__cause__ is None else type(exc.__cause__).__name__
+ t.join(15);assert not t.is_alive() and not errors and len(created)==1
+ stamp('finished');counts=fetch_counts(a2.gateway_dsn);flag=a2.service.review_flag(created[0]) is not None
+ expected={'good':None,'bad-material':'LEGACY_SNAPSHOT_INVALID','revoked':'REVOKED','replay':'REPLAY','expired':'STALE_REQUEST'}[variant]
+ observe('r7-p11-clocks',{'round':round_no,'variant':variant,'code':code,'cause':cause,'timeline':timeline,'proofs':counts['ag_proofs'],'flag':flag,'counters':counters(a2),'effects':effects(a2)})
+ assert code==expected and counts['ag_proofs']==(2 if variant=='good' else 1)
+ assert flag==(variant=='bad-material') and effects(a2)['ds_operations']==0
+ assert all(c=={'amount_reserved':70000,'amount_settled':0,'calls_reserved':1,'calls_settled':0} for c in counters(a2))
+ if variant=='good':assert returned.operation_id==created[0] and returned.disposition.value=='EXISTING' and timeline[-1]['db_epoch']<retry.proof_exp
+
+@pytest.mark.parametrize('entry',['execute','query'])
+@pytest.mark.parametrize('shape',[None,{},[{}],[None],7,'items',()])
+def test_actual_snapshot_dataclass_bad_items_total_definition(a2,entry,shape):
+ op=accepted(a2).operation_id;row=a2.service.load_operation(op)
+ outcome=a2.downstream.execute(service_secret=a2.secret,operation_id=op,tool_id=ToolId.ORDER_CREATE,canonical_params=row.canonical_params,quote=snapshot_from_bytes(row.quote_snapshot),expected_amount_fen=70000)
+ outcome=dataclasses.replace(outcome,quote=dataclasses.replace(outcome.quote,items=shape))
+ class Port:
+  def execute(self,**kw):return outcome
+  def query(self,**kw):return outcome
+ env=build_env(tree=a2.tree,gateway_dsn=a2.gateway_dsn,downstream_dsn=a2.downstream_dsn,downstream=Port())
+ result=env.service.run_operation(op) if entry=='execute' else env.service.reconcile(op)
+ assert result.status=='UNKNOWN' and env.service.outbox_entry(op) is None and effects(a2)['ds_orders']==1
+ assert all(c['amount_reserved']==70000 and c['calls_reserved']==1 for c in counters(a2))
+
+@pytest.mark.parametrize('version',['01','00','1x','1@2','1/2','1 2','1.0','1e2','1' * 19])
+def test_params_quote_version_full_string_is_required(version):
+ with pytest.raises(ExecutionError) as info:parse_tool_params(ToolId.ORDER_CREATE,order_params(quote_version=version))
+ assert info.value.code is ExecutionErrorCode.INVALID_PARAMS
+
+@pytest.mark.parametrize('round_no',range(10))
+def test_reverse_efficacy_true_held_lock_cycle(a2,round_no):
+ from tests.integration.test_execution_regressions import _hold_and_deadlock
+ op=accepted(a2).operation_id
+ symptoms,waits=_hold_and_deadlock(a2.gateway_dsn,op,(a2.tree.tenant_id,a2.tree.task_id))
+ assert any('DeadlockDetected' in s for s in symptoms)
+ assert any(len(w)>=2 for w in waits),waits
+ observe('r7-reverse-held-cycle',{'round':round_no,'symptoms':symptoms,'both_backends_waiting':True})
+
+def test_real_callback_connection_loss_rolls_back_without_legacy_flag(a2,monkeypatch):
+ op=accepted(a2).operation_id;orig=a2.ledger.accept_checked
+ def invoke(v,c,*,existing_validator,**kwargs):
+  def kill_then_validate(conn,row):
+   with psycopg.connect(a2.gateway_dsn,autocommit=True) as killer:
+    assert killer.execute('SELECT pg_terminate_backend(%s)',(conn.info.backend_pid,)).fetchone()==(True,)
+   existing_validator(conn,row)
+  return orig(v,c,existing_validator=kill_then_validate,**kwargs)
+ monkeypatch.setattr(a2.ledger,'accept_checked',invoke)
+ with pytest.raises(LedgerError) as info:
+  a2.service.accept_invocation(a2.tree.invocation(idempotency_key='review',tool_id=ToolId.ORDER_CREATE.value,params=order_params()),a2.permission())
+ assert info.value.code.value=='TRUSTED_STATE_UNAVAILABLE'
+ assert fetch_counts(a2.gateway_dsn)['ag_proofs']==1 and a2.service.review_flag(op) is None
+ assert effects(a2)['ds_operations']==0
+ observe('r7-real-callback-db-loss',{'code':info.value.code.value,'proofs':1,'flag':False,'effects':0})
+
+@pytest.mark.parametrize('version',['01','1x','1@2'])
+def test_malformed_version_cannot_be_reserved_even_if_present_in_trusted_sets(a2,version):
+ from tests.fixtures.execution import constraints_for
+ from agent_guard.tools.catalog import CatalogQuote,CatalogQuoteLine
+ a2.catalog.add_quote(CatalogQuote('quote-001',version,'supplier-001','req-001',(CatalogQuoteLine('sku-001',1,70000),)))
+ perm=a2.permission(chain=tuple(constraints_for(i,quote_versions=('quote-001@'+version,)) for i in range(3)))
+ result=None;code=None
+ try:result=a2.service.accept_invocation(a2.tree.invocation(idempotency_key='bad-version',tool_id=ToolId.ORDER_CREATE.value,params=order_params(quote_version=version)),perm)
+ except ExecutionError as e:code=e.code.value
+ counts=fetch_counts(a2.gateway_dsn)
+ observe('r7-parameter-version-accept',{'version':version,'code':code,'disposition':None if result is None else result.disposition.value,'counts':counts,'counters':counters(a2),'effects':effects(a2),'trusted_catalog_boundary_case':True})
+ assert code=='INVALID_PARAMS' and result is None and counts['ag_operations']==0 and counts['ag_proofs']==0
+
+@pytest.mark.parametrize('version',['1','2','123456789012345678'])
+def test_valid_parameter_version_positive_controls(version):
+ assert parse_tool_params(ToolId.ORDER_CREATE,order_params(quote_version=version)).quote_version==version

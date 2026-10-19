@@ -7,10 +7,12 @@ resource and fixed child command is checked against this run's full identities.
 from __future__ import annotations
 
 import argparse
+import base64
 import hashlib
 import json
 import os
 import queue
+import re
 import shutil
 import subprocess
 import sys
@@ -47,14 +49,102 @@ def atomic(path, value):
     temporary.replace(path)
 
 
+PUBLIC_CONTROL_FILES = frozenset(
+    (
+        "settings.json",
+        "allocated-plan.json",
+        "approval-messages.json",
+        "approval-proofs.json",
+        "bootstrap.json",
+    )
+)
+
+
+def public_control(directory, name, value):
+    """Publish only the fixed public protocol metadata to role UIDs."""
+    if name not in PUBLIC_CONTROL_FILES:
+        raise ValueError("unknown public control file")
+    directory = Path(directory)
+    if directory.is_symlink() or not directory.is_dir():
+        raise ValueError("invalid public control directory")
+    atomic(directory / name, value)
+    (directory / name).chmod(0o444)
+    directory.chmod(0o755)
+
+
+def validate_bootstrap(value):
+    """Closed public RegistrationDescriptor; never publish operator payloads."""
+    if type(value) is not dict or set(value) != {"scope", "descriptor"}:
+        raise ValueError("closed bootstrap object required")
+    scope = value["scope"]
+    expected = {
+        "journal_profile": "AG-AUDIT-JOURNAL-1",
+        "gateway_id": "https://gateway.agent-guard.test",
+        "tenant_id": "tenant-demo",
+        "task_id": "task-demo",
+        "epoch": 1,
+    }
+    if type(scope) is not dict or set(scope) != {*expected, "stream_id"}:
+        raise ValueError("closed bootstrap scope required")
+    if any(type(scope[k]) is not type(v) or scope[k] != v for k, v in expected.items()):
+        raise ValueError("bootstrap scope mismatch")
+    if (
+        type(scope["stream_id"]) is not str
+        or str(uuid.UUID(scope["stream_id"])) != scope["stream_id"]
+    ):
+        raise ValueError("canonical bootstrap stream required")
+    descriptor = value["descriptor"]
+    keys = {
+        "scope",
+        "genesis_digest",
+        "bootstrap_digest",
+        "boundary",
+        "index_root",
+        "object_count",
+        "chunk_count",
+        "wire_bytes",
+    }
+    if (
+        type(descriptor) is not dict
+        or set(descriptor) != keys
+        or descriptor["scope"] != {k: v for k, v in scope.items() if k != "journal_profile"}
+    ):
+        raise ValueError("closed registration descriptor required")
+    descriptor_scope = descriptor["scope"]
+    expected_scope = {k: v for k, v in scope.items() if k != "journal_profile"}
+    if type(descriptor_scope) is not dict or any(
+        type(descriptor_scope[k]) is not type(v) for k, v in expected_scope.items()
+    ):
+        raise ValueError("registration scope exact types required")
+    for key in ("genesis_digest", "bootstrap_digest", "index_root"):
+        digest = descriptor[key]
+        if type(digest) is not str or not re.fullmatch(r"[A-Za-z0-9_-]{43}", digest):
+            raise ValueError("invalid bootstrap digest")
+        raw = base64.urlsafe_b64decode(digest + "=")
+        if len(raw) != 32 or base64.urlsafe_b64encode(raw).decode().rstrip("=") != digest:
+            raise ValueError("noncanonical bootstrap digest")
+    if descriptor["boundary"] not in ("NEW_EMPTY", "LEGACY_WITH_GAPS"):
+        raise ValueError("invalid bootstrap boundary")
+    for key, maximum in (
+        ("object_count", 200000),
+        ("chunk_count", 400000),
+        ("wire_bytes", 268435456),
+    ):
+        if type(descriptor[key]) is not int or not 0 <= descriptor[key] <= maximum:
+            raise ValueError("invalid bootstrap count")
+    return value
+
+
 class Owner:
     def __init__(self, args):
         self.args = args
         self.run = str(uuid.UUID(args.run_id))
         self.owner = args.owner_id
         self.project = "ag33-" + self.run
-        self.root = Path(args.evidence).resolve()
-        self.root.mkdir(parents=True, exist_ok=False)
+        self.root = Path(args.evidence).absolute()
+        if any(path.is_symlink() for path in (self.root, *self.root.parents)):
+            raise ValueError("owned evidence root symlink forbidden")
+        self.root.mkdir(parents=True, exist_ok=False, mode=0o700)
         self.control = self.root / "control"
         self.control.mkdir()
         self.image = "agent-guard-normal-" + args.mode + ":" + self.run
@@ -94,7 +184,7 @@ class Owner:
             "capacity_items": args.capacity_items,
             "audit_listener_host": subnet + ".13",
         }
-        atomic(self.control / "settings.json", self.settings)
+        public_control(self.control, "settings.json", self.settings)
         self.ids = {}
         self.volumes = []
         self.networks = []
@@ -104,6 +194,35 @@ class Owner:
         self.write_lock = threading.Lock()
         self.queues = {}
         self.bridge = None
+        self.discover_partial = True
+        self.image_full_id = None
+        self.record_state()
+        self.record_resources()
+
+    def record_state(self):
+        atomic(
+            self.root / "owner-state.json",
+            {
+                "version": 2,
+                "run_id": self.run,
+                "owner_id": self.owner,
+                "project": self.project,
+                "image": self.image,
+                "image_full_id": self.image_full_id,
+            },
+        )
+        (self.root / "owner-state.json").chmod(0o600)
+
+    def record_resources(self):
+        atomic(
+            self.root / "owned-resources.json",
+            {
+                "ids": self.ids,
+                "volumes": self.volumes,
+                "networks": self.networks,
+            },
+        )
+        (self.root / "owned-resources.json").chmod(0o600)
 
     def call(self, argv, *, input=None, timeout=120, allow=False, private=False):
         shown = [
@@ -119,19 +238,40 @@ class Owner:
             process = subprocess.Popen(
                 argv,
                 stdin=subprocess.PIPE if input is not None else subprocess.DEVNULL,
-                stdout=stdout,
+                stdout=subprocess.PIPE if private else stdout,
                 stderr=stderr,
                 env=self.env,
             )
+            private_chunks = []
+            private_reader = None
+            if private:
+                stream = process.stdout
+                process.stdout = None
+
+                def capture_private_stdout():
+                    raw = stream.read(65537)
+                    private_chunks.append(raw)
+                    stream.close()
+                    if len(raw) > 65536:
+                        process.kill()
+
+                private_reader = threading.Thread(target=capture_private_stdout, daemon=True)
+                private_reader.start()
             atomic(
                 stem.with_suffix(".started.json"),
                 {"argv": shown, "pid": process.pid, "started": started, "timeout": timeout},
             )
             try:
                 process.communicate(input=input, timeout=timeout)
+                if private_reader is not None:
+                    private_reader.join(timeout=5)
+                    if private_reader.is_alive():
+                        raise RuntimeError("private stdout reader did not finish")
             except subprocess.TimeoutExpired:
                 process.kill()
                 process.wait()
+                if private_reader is not None:
+                    private_reader.join(timeout=5)
                 atomic(
                     stem.with_suffix(".json"),
                     {
@@ -143,7 +283,10 @@ class Owner:
                 )
                 raise
         result = subprocess.CompletedProcess(
-            argv, process.returncode, stdout_path.read_bytes(), stderr_path.read_bytes()
+            argv,
+            process.returncode,
+            b"".join(private_chunks) if private else stdout_path.read_bytes(),
+            stderr_path.read_bytes(),
         )
         stem.with_suffix(".stdout").write_bytes(
             b"PRIVATE_OUTPUT_RETAINED_ONLY_IN_MEMORY\n" if private else result.stdout
@@ -159,6 +302,8 @@ class Owner:
                 "private_output": private,
             },
         )
+        if private and len(result.stdout) > 65536:
+            raise ValueError("private stdout exceeds 65536 bytes: " + str(stem))
         if result.returncode and not allow:
             raise RuntimeError("native command failed: " + str(stem))
         return result
@@ -171,6 +316,7 @@ class Owner:
             value["Id"] != expected
             or labels.get("agent-guard.run") != self.run
             or labels.get("agent-guard.owner") != self.owner
+            or not value["Name"].startswith("/" + self.project + "-")
         ):
             raise ValueError("owned resource mismatch")
         return value
@@ -183,10 +329,7 @@ class Owner:
         ):
             raise ValueError("creation receipt mismatch")
         self.ids[name] = value["Id"]
-        atomic(
-            self.root / "owned-resources.json",
-            {"ids": self.ids, "volumes": self.volumes, "networks": self.networks},
-        )
+        self.record_resources()
         return value["Id"]
 
     def compose(self, *arguments):
@@ -223,7 +366,7 @@ class Owner:
             argv += ["--extra", *extra]
         return self.call(argv, timeout=timeout).stdout
 
-    def init(self, stage, program=None):
+    def init(self, stage, program=None, *, private=False):
         name = "init-" + stage + "-" + str(self.seq)
         argv = [
             "docker",
@@ -257,7 +400,7 @@ class Owner:
             ["-c", program] if program else ["-m", "agent_guard.demo", "actor", "--stage", stage]
         )
         try:
-            return self.call(argv, timeout=180).stdout
+            return self.call(argv, timeout=180, private=private).stdout
         finally:
             value = self.call(["docker", "inspect", self.project + "-" + name], allow=True)
             if value.returncode == 0:
@@ -270,7 +413,13 @@ class Owner:
             shutil.copytree(
                 REPO / name, context / name, ignore=shutil.ignore_patterns("__pycache__", "*.pyc")
             )
-        for name in ("pyproject.toml", "requirements.lock", "requirements-dev.lock", "README.md"):
+        for name in (
+            "pyproject.toml",
+            "requirements.lock",
+            "requirements-dev.lock",
+            "requirements-ci.lock",
+            "README.md",
+        ):
             shutil.copyfile(REPO / name, context / name)
         shutil.copytree(REPO / "deploy/demo", context / "deploy/demo")
         atomic(
@@ -285,6 +434,10 @@ class Owner:
             [
                 "docker",
                 "build",
+                "--label",
+                "agent-guard.owner=" + self.owner,
+                "--label",
+                "agent-guard.run=" + self.run,
                 "--platform",
                 "linux/amd64",
                 "--build-arg",
@@ -300,6 +453,16 @@ class Owner:
             ],
             timeout=1800,
         )
+        built = json.loads(self.call(["docker", "image", "inspect", self.image]).stdout)[0]
+        if (
+            not re.fullmatch(r"sha256:[0-9a-f]{64}", built["Id"])
+            or self.image not in (built.get("RepoTags") or [])
+            or built["Config"]["Labels"].get("agent-guard.owner") != self.owner
+            or built["Config"]["Labels"].get("agent-guard.run") != self.run
+        ):
+            raise ValueError("built image identity differs")
+        self.image_full_id = built["Id"]
+        self.record_state()
 
     def provenance(self):
         modules = [
@@ -324,6 +487,13 @@ import dataclasses, hashlib, importlib, importlib.metadata, inspect, json, platf
 from pathlib import Path
 
 assert sys.version_info[:2] == (3, 11)
+import agent_guard
+package_root = Path(agent_guard.__file__).parent
+actual_source = {str(p.relative_to(package_root)): hashlib.sha256(p.read_bytes()).hexdigest()
+                 for p in package_root.rglob("*.py")}
+assert actual_source == SOURCE_FILES
+dependency_lock = Path(sys.prefix) / "share/agent-guard/requirements-ci.lock"
+assert hashlib.sha256(dependency_lock.read_bytes()).hexdigest() == CI_LOCK_SHA
 rows = []
 for name in MODULES:
     module = importlib.import_module(name)
@@ -360,6 +530,8 @@ print(
         {
             "python": sys.version,
             "architecture": platform.machine(),
+            "source_files": actual_source,
+            "dependency_lock_sha256": hashlib.sha256(dependency_lock.read_bytes()).hexdigest(),
             "modules": rows,
             "versions": {n: importlib.metadata.version(n) for n in LOCKS},
             "SQL": {
@@ -379,9 +551,19 @@ print(
             if "==" in line and not line.startswith("#"):
                 name, version = line.split("==")
                 locks[name] = version
+        source_files = {
+            str(p.relative_to(REPO / "src/agent_guard")): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in (REPO / "src/agent_guard").rglob("*.py")
+        }
         raw = self.init(
             "install-provenance",
-            program.replace("MODULES", repr(modules)).replace("LOCKS", repr(locks)),
+            program.replace("MODULES", repr(modules))
+            .replace("LOCKS", repr(locks))
+            .replace("SOURCE_FILES", repr(source_files))
+            .replace(
+                "CI_LOCK_SHA",
+                repr(hashlib.sha256((REPO / "requirements-ci.lock").read_bytes()).hexdigest()),
+            ),
         )
         value = json.loads(raw)
         if value["versions"] != locks:
@@ -418,6 +600,7 @@ print(
                 ]
             )
             self.volumes.append(name)
+            self.record_resources()
         for suffix in ("front", "authority", "downstream", "audit"):
             name = self.project + "-" + suffix
             argv = [
@@ -434,6 +617,7 @@ print(
                 argv += ["--subnet", self.env["AG33_SUBNET_PREFIX"] + ".0/24"]
             result = self.call([*argv, name])
             self.networks.append({"name": name, "id": result.stdout.decode().strip()})
+            self.record_resources()
         self.provenance()
         self.init("init")
         self.init("pg-init")
@@ -509,14 +693,14 @@ print(
             },
             "networks": [x["name"] for x in self.networks],
         }
-        atomic(self.control / "allocated-plan.json", manifest)
+        public_control(self.control, "allocated-plan.json", manifest)
         messages = self.actor("operator", "messages")
-        (self.control / "approval-messages.json").write_bytes(messages)
+        public_control(self.control, "approval-messages.json", json.loads(messages))
         proofs = {
             "agent-" + r: self.actor(r, "proof").decode().strip()
             for r in ("planner", "selector", "executor")
         }
-        atomic(self.control / "approval-proofs.json", proofs)
+        public_control(self.control, "approval-proofs.json", proofs)
         self.actor("operator", "approve")
         self.init("activate")
         self.actor("operator", "provision")
@@ -534,7 +718,179 @@ print(
             ]
         )
         atomic(self.root / "allocated-resources.json", manifest)
+        self.export_test_inputs()
         self.start_bridge()
+
+    def export_test_inputs(self):
+        """Administrator material is exported only to the trusted controller."""
+        target = self.root / "test-inputs"
+        target.mkdir(mode=0o700)
+        for domain in ("authority", "downstream", "audit"):
+            self.inspect("pg-" + domain)
+            self.call(
+                [
+                    "docker",
+                    "exec",
+                    self.ids["pg-" + domain],
+                    "psql",
+                    "-U",
+                    "postgres",
+                    "-d",
+                    "postgres",
+                    "-v",
+                    "ON_ERROR_STOP=1",
+                    "-c",
+                    "CREATE DATABASE ag_controller_test TEMPLATE template0;",
+                ]
+            )
+        export_program = r"""import json, tempfile, subprocess, os
+from pathlib import Path
+
+os.umask(0o077)
+ca = Path("/owned/run/operator/ca.pem")
+with tempfile.TemporaryDirectory(prefix="pr9-delivery-") as temporary:
+    directory = Path(temporary)
+    key, csr, cert, ext = [directory / n for n in ("server.key", "server.csr", "server.pem", "ext")]
+    ext.write_text("subjectAltName=DNS:localhost\nextendedKeyUsage=serverAuth\n")
+    subprocess.run(
+        [
+            "openssl",
+            "req",
+            "-newkey",
+            "rsa:2048",
+            "-nodes",
+            "-keyout",
+            str(key),
+            "-out",
+            str(csr),
+            "-subj",
+            "/CN=localhost",
+        ],
+        check=True,
+        stdout=subprocess.DEVNULL,
+    )
+    subprocess.run(
+        [
+            "openssl",
+            "x509",
+            "-req",
+            "-in",
+            str(csr),
+            "-CA",
+            str(ca),
+            "-CAkey",
+            "/owned/run/operator/ca-key.pem",
+            "-set_serial",
+            "0x" + __import__("secrets").token_hex(16),
+            "-out",
+            str(cert),
+            "-days",
+            "2",
+            "-extfile",
+            str(ext),
+        ],
+        check=True,
+        stdout=subprocess.DEVNULL,
+    )
+    print(
+        json.dumps(
+            {
+                "connections": json.loads(Path("/owned/test-connections.json").read_bytes()),
+                "ca": ca.read_text(),
+                "pg_certificate": Path("/owned/pg/audit/server.pem").read_text(),
+                "delivery_key": key.read_text(),
+                "delivery_certificate": cert.read_text(),
+            }
+        )
+    )
+"""
+        material = json.loads(self.init("controller-input-export", export_program, private=True))
+        atomic(target / "connections.json", material["connections"])
+        (target / "ca.pem").write_text(material["ca"])
+        for name in ("connections.json", "ca.pem"):
+            (target / name).chmod(0o600)
+        # The nested test controller has this private directory, not role mounts.
+        import shlex
+
+        path = target / "connections.json"
+        values = json.loads(path.read_bytes())
+        for domain, dsn in values.items():
+            params = dict(token.split("=", 1) for token in shlex.split(dsn))
+            if params["host"] != "pg-" + domain + ".agent-guard.test":
+                raise ValueError("controller domain mismatch")
+            if params.get("sslrootcert") != "/owned/run/operator/ca.pem":
+                raise ValueError("unexpected controller CA path")
+            values[domain] = dsn.replace(
+                "sslrootcert=/owned/run/operator/ca.pem", "sslrootcert=/test-inputs/ca.pem"
+            )
+        atomic(path, values)
+        tls = target / "a31-tls"
+        tls.mkdir(mode=0o700)
+        delivery = tls / "delivery"
+        delivery.mkdir(mode=0o700)
+        for filename, value in (
+            (tls / "ca.pem", material["ca"]),
+            (tls / "server.pem", material["pg_certificate"]),
+            (delivery / "ca.pem", material["ca"]),
+            (delivery / "server.pem", material["delivery_certificate"]),
+            (delivery / "server.key", material["delivery_key"]),
+        ):
+            filename.write_text(value)
+            filename.chmod(0o600)
+        self.inspect("pg-audit")
+        actual = json.loads(self.call(["docker", "inspect", self.ids["pg-audit"]]).stdout)[0]
+        if actual["Config"]["Labels"].get("agent-guard.pr9-owner") != self.owner:
+            raise ValueError("audit TLS resource owner differs")
+        proof = self.call(
+            [
+                "docker",
+                "exec",
+                "--user",
+                "postgres",
+                self.ids["pg-audit"],
+                "sh",
+                "-c",
+                'PGPASSWORD="$(cat /pg/admin-password)" exec psql "$@"',
+                "sh",
+                "host=pg-audit.agent-guard.test dbname=ag_controller_test user=postgres "
+                "sslmode=verify-full sslrootcert=/pg/ca.pem",
+                "-X",
+                "-At",
+                "-v",
+                "ON_ERROR_STOP=1",
+                "-c",
+                "SELECT ssl FROM pg_stat_ssl WHERE pid=pg_backend_pid()",
+            ]
+        )
+        if proof.stdout.strip() != b"t":
+            raise ValueError("real audit TCP TLS verification failed")
+        mapped = "/test-inputs/a31-tls"
+        atomic(
+            tls / "receipt.json",
+            {
+                "container_id": self.ids["pg-audit"],
+                "owner": self.owner,
+                "audit_host": "pg-audit.agent-guard.test",
+                "sslmode": "verify-full",
+                "verified_tcp_tls": True,
+                "ephemeral": True,
+                "tls_root": mapped,
+                "ca": mapped + "/ca.pem",
+                "ca_sha256": hashlib.sha256((tls / "ca.pem").read_bytes()).hexdigest(),
+                "server_certificate_sha256": hashlib.sha256(
+                    (tls / "server.pem").read_bytes()
+                ).hexdigest(),
+                "delivery_server_certificate_sha256": hashlib.sha256(
+                    (delivery / "server.pem").read_bytes()
+                ).hexdigest(),
+            },
+        )
+        (tls / "receipt.json").chmod(0o600)
+        values["audit"] = values["audit"].replace(
+            "sslrootcert=/test-inputs/ca.pem", "sslrootcert=" + mapped + "/ca.pem"
+        )
+        atomic(path, values)
+        path.chmod(0o600)
 
     def command(self, role, stage):
         self.inspect(role)
@@ -608,8 +964,14 @@ print(
         self.call(["docker", "exec", self.ids["operator"], "python", "-c", program])
 
     def services(self, resume=False):
+        if resume and "audit" not in self.children:
+            self.start_child("audit", ["audit-serve"])
         roles = WRITERS if resume else ("as", "gateway")
         for role in roles:
+            if resume and role == "publisher":
+                # Delivery is fail-closed: its real remote listener must exist
+                # before the first attempt, including the bootstrap journal.
+                self.ready(include_audit=True)
             if resume:
                 self.call(["docker", "start", self.ids[role]])
             stage = (
@@ -620,8 +982,6 @@ print(
                 else ["actor", "--stage", role, "--role", role]
             )
             self.start_child(role, stage)
-        if resume and "audit" not in self.children:
-            self.start_child("audit", ["audit-serve"])
         self.ready(include_audit=resume)
 
     def writer_status(self, role):
@@ -862,7 +1222,7 @@ print(
                 self.call(["docker", "exec", self.ids[role], "python", "-c", program])
                 result = True
             elif action == "record-bootstrap" and fields == {"value"}:
-                atomic(self.control / "bootstrap.json", value["value"])
+                public_control(self.control, "bootstrap.json", validate_bootstrap(value["value"]))
                 result = True
             elif action == "wait-anchor" and not fields:
                 deadline = time.monotonic() + 30
@@ -968,7 +1328,10 @@ print(
 
     def cleanup(self):
         receipts = []
-        if "operator" in self.ids:
+        if (
+            "operator" in self.ids
+            and self.call(["docker", "inspect", self.ids["operator"]], allow=True).returncode == 0
+        ):
             target = self.root / "normal-result"
             target.mkdir(exist_ok=True)
             self.call(
@@ -991,10 +1354,14 @@ print(
             .stdout.decode()
             .split()
         )
-        for container in actual:
-            if container not in self.ids.values():
-                self.capture("partial-" + container[:12], container)
+        if getattr(self, "discover_partial", False):
+            for container in actual:
+                if container not in self.ids.values():
+                    self.capture("partial-" + container[:12], container)
         for role, container in reversed(list(self.ids.items())):
+            if self.call(["docker", "inspect", container], allow=True).returncode != 0:
+                receipts.append({"container": container, "already_removed": True})
+                continue
             try:
                 self.inspect(role)
                 result = self.call(["docker", "rm", "-f", container], allow=True)
@@ -1002,15 +1369,22 @@ print(
             except Exception as exc:
                 receipts.append({"container": container, "error": type(exc).__name__})
         for network in reversed(self.networks):
-            value = json.loads(self.call(["docker", "network", "inspect", network["id"]]).stdout)[0]
+            found = self.call(["docker", "network", "inspect", network["id"]], allow=True)
+            if found.returncode != 0:
+                continue
+            value = json.loads(found.stdout)[0]
             if (
                 value["Id"] != network["id"]
                 or value["Labels"].get("agent-guard.owner") != self.owner
+                or value["Labels"].get("agent-guard.run") != self.run
             ):
                 raise ValueError("owned network mismatch")
             self.call(["docker", "network", "rm", network["id"]])
         for volume in reversed(self.volumes):
-            value = json.loads(self.call(["docker", "volume", "inspect", volume]).stdout)[0]
+            found = self.call(["docker", "volume", "inspect", volume], allow=True)
+            if found.returncode != 0:
+                continue
+            value = json.loads(found.stdout)[0]
             if (
                 value["Labels"].get("agent-guard.owner") != self.owner
                 or value["Labels"].get("agent-guard.run") != self.run
@@ -1033,6 +1407,33 @@ print(
             )
             if result.stdout.strip():
                 raise ValueError("owned " + kind + " remain")
+        image = self.call(["docker", "image", "inspect", self.image], allow=True)
+        if image.returncode == 0:
+            value = json.loads(image.stdout)[0]
+            if (
+                value["Config"]["Labels"].get("agent-guard.owner") != self.owner
+                or value["Config"]["Labels"].get("agent-guard.run") != self.run
+                or value["Id"] != getattr(self, "image_full_id", None)
+                or self.image not in (value.get("RepoTags") or [])
+            ):
+                raise ValueError("owned image full ID/tag mismatch")
+            self.call(["docker", "image", "rm", self.image])
+        remaining_images = self.call(
+            [
+                "docker",
+                "image",
+                "ls",
+                "-q",
+                "--filter",
+                "label=agent-guard.run=" + self.run,
+                "--filter",
+                "label=agent-guard.owner=" + self.owner,
+            ]
+        )
+        if remaining_images.stdout.strip():
+            raise ValueError(
+                "unrecorded owned images remain; refusing to delete unknown identities"
+            )
         atomic(
             self.root / "cleanup.json", {"resources_remaining": 0, "container_receipts": receipts}
         )
@@ -1066,7 +1467,15 @@ def main():
 
     signal.signal(signal.SIGALRM, timed_out)
     signal.alarm(args.cap_seconds)
+    os.umask(0o077)
     owner = Owner(args)
+    stopping = threading.Event()
+
+    def stop_requested(*_):
+        stopping.set()
+
+    signal.signal(signal.SIGTERM, stop_requested)
+    signal.signal(signal.SIGINT, stop_requested)
     started = time.time()
     code = 1
     atomic(
@@ -1083,8 +1492,8 @@ def main():
     try:
         owner.setup()
         if args.serve_only:
-            while time.time() - started < args.cap_seconds:
-                time.sleep(0.5)
+            while time.time() - started < args.cap_seconds and not stopping.wait(0.5):
+                pass
         else:
             owner.call(
                 owner.command(

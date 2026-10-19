@@ -1,0 +1,237 @@
+"""New independent r4 probes; security expectations, not worker-selected cases."""
+import dataclasses,json,threading
+import psycopg,pytest
+from agent_guard.contracts.execution import ExecutionError,ToolId,TerminalAction
+from agent_guard.contracts.ledger import TrustedCost
+from agent_guard.tools import results
+from agent_guard.tools.catalog import snapshot_from_bytes,snapshot_to_bytes
+from agent_guard.ledger import store as ls
+from agent_guard.execution import store as es
+from agent_guard.execution.service import ExecutionService
+from agent_guard.ledger.migrate import apply_migrations,DEFAULT_MIGRATIONS_DIR
+from agent_guard.ledger.service import ExecutionLedger
+from agent_guard.ledger.provisioning import revoke_grant
+from tests.fixtures.execution import build_env,read_params,order_params,expire_lease
+from tests.fixtures.state import build_tree
+from tests.fixtures.dbstate import fetch_counts
+from tests.fixtures.isolation import create_scratch_database,drop_scratch_database
+from test_review import accepted,observe,counters,effects
+from test_upgrade import snapshot as db_snapshot
+
+@pytest.mark.parametrize('field',['quote_id','quote_version','supplier_id','sku'])
+def test_snapshot_identifier_trailing_lf_refused(field):
+ obj={'quote_id':'quote-001','quote_version':'1','supplier_id':'supplier-001','items':[{'sku':'sku-001','quantity':1,'unit_price_fen':70000}],'total_fen':70000,'currency':'CNY'}
+ if field=='sku':obj['items'][0]['sku']+='\n'
+ else:obj[field]+='\n'
+ error=None
+ try:snapshot_from_bytes(json.dumps(obj).encode())
+ except ExecutionError as exc:error=exc.code.value
+ observe('r4-trailing-LF-snapshot',{'field':field,'error':error})
+ assert error=='LEGACY_SNAPSHOT_INVALID'
+
+@pytest.mark.parametrize('entry',['run','reconcile','candidate','fallback','helper'])
+def test_deep_legacy_params_durably_isolated(a2,monkeypatch,entry):
+ raw=b'{"request_id":'+b'['*1500+b'0'+b']'*1500+b'}'
+ op=a2.ledger.accept(a2.tree.invocation(idempotency_key='deep-params',tool_id=ToolId.REQUEST_READ.value,params=raw),TrustedCost(0,1)).operation_id
+ before=counters(a2);proofs=fetch_counts(a2.gateway_dsn)['ag_proofs'];error=None
+ if entry=='fallback':
+  original=a2.service._find_candidate; calls=[]
+  def find(v):calls.append(1);return None if len(calls)==1 else original(v)
+  monkeypatch.setattr(a2.service,'_find_candidate',find);a2.catalog.remove_request('req-001')
+ try:
+  if entry=='run':a2.service.run_operation(op)
+  elif entry=='reconcile':a2.service.reconcile(op)
+  elif entry=='helper':a2.service.quarantine_if_insufficient(op)
+  else:a2.service.accept_invocation(a2.tree.invocation(idempotency_key='deep-params',tool_id=ToolId.REQUEST_READ.value,params=read_params()),a2.permission())
+ except Exception as exc:error=exc.code.value if isinstance(exc,ExecutionError) else type(exc).__name__
+ observe('r4-deep-legacy-params',{'entry':entry,'error':error,'flag':a2.service.review_flag(op) is not None,'before':before,'after':counters(a2),'effects':effects(a2),'proofs_before':proofs,'proofs_after':fetch_counts(a2.gateway_dsn)['ag_proofs']})
+ assert a2.service.review_flag(op) is not None
+ assert error in ('LEGACY_SNAPSHOT_INVALID',None) and counters(a2)==before and effects(a2)['ds_operations']==0
+
+@pytest.mark.parametrize('entry',['run','reconcile'])
+def test_legacy_supplier_trailing_lf_isolated_without_call(a2,entry):
+ snap=a2.catalog.build_order_snapshot(tenant_id=a2.tree.tenant_id,task_id=a2.tree.task_id,request_id='req-001',quote_id='quote-001',quote_version='1',items=(('sku-001',1),),delivery_id='office-001')
+ raw=snapshot_to_bytes(dataclasses.replace(snap,supplier_id='supplier-001\n'))
+ op=a2.ledger.accept(a2.tree.invocation(idempotency_key='lf-supplier',tool_id=ToolId.ORDER_CREATE.value,params=order_params()),TrustedCost(70000,quote_id='quote-001',quote_version='1',quote_snapshot=raw)).operation_id
+ before=counters(a2);error=None;returned=None
+ try:returned=a2.service.run_operation(op) if entry=='run' else a2.service.reconcile(op)
+ except ExecutionError as exc:error=exc.code.value
+ observe('r4-legacy-lf',{'entry':entry,'error':error,'returned':None if returned is None else returned.status,'flag':a2.service.review_flag(op) is not None,'before':before,'after':counters(a2),'effects':effects(a2)})
+ assert error=='LEGACY_SNAPSHOT_INVALID' and a2.service.review_flag(op) is not None and counters(a2)==before and effects(a2)['ds_operations']==0
+
+@pytest.mark.parametrize('entry',['execute','query'])
+@pytest.mark.parametrize('mutation',['items-none','item-dict','items-list','effect-lf','version-zero'])
+def test_outcome_typed_and_id_boundaries_keep_unknown(a2,entry,mutation):
+ op=accepted(a2).operation_id;row=a2.service.load_operation(op)
+ v=a2.downstream.execute(service_secret=a2.secret,operation_id=op,tool_id=ToolId.ORDER_CREATE,canonical_params=row.canonical_params,quote=snapshot_from_bytes(row.quote_snapshot),expected_amount_fen=70000)
+ if mutation=='items-none':v=dataclasses.replace(v,quote=dataclasses.replace(v.quote,items=None))
+ if mutation=='item-dict':v=dataclasses.replace(v,quote=dataclasses.replace(v.quote,items=(dataclasses.asdict(v.quote.items[0]),)))
+ if mutation=='items-list':v=dataclasses.replace(v,quote=dataclasses.replace(v.quote,items=list(v.quote.items)))
+ if mutation=='effect-lf':
+  obj=json.loads(v.result_bytes);obj['order_id']+='\n';v=dataclasses.replace(v,effect_ref=obj['order_id'],result_bytes=json.dumps(obj).encode())
+ if mutation=='version-zero':
+  obj=json.loads(v.result_bytes);obj['quote_version']='0';v=dataclasses.replace(v,result_bytes=json.dumps(obj).encode())
+ class Port:
+  def execute(self,**kw):return v
+  def query(self,**kw):return v
+ env=build_env(tree=a2.tree,gateway_dsn=a2.gateway_dsn,downstream_dsn=a2.downstream_dsn,downstream=Port())
+ r=None;error=None
+ try:r=env.service.run_operation(op) if entry=='execute' else env.service.reconcile(op)
+ except Exception as exc:error=type(exc).__name__
+ observe('r4-outcome-boundary',{'entry':entry,'mutation':mutation,'error':error,'reported':None if r is None else r.status,'persisted':env.service.operation_status(op),'outbox':env.service.outbox_entry(op) is not None,'counters':counters(a2),'effects':effects(a2)})
+ if mutation=='items-list':
+  assert error is None and r.status=='SUCCEEDED' and env.service.outbox_entry(op) is not None
+  assert effects(a2)['ds_orders']==1
+  assert all(c=={'amount_reserved':0,'amount_settled':70000,'calls_reserved':0,'calls_settled':1} for c in counters(a2))
+ else:
+  assert error is None and r.status=='UNKNOWN' and env.service.outbox_entry(op) is None
+  assert all(c['amount_reserved']==70000 and c['amount_settled']==0 for c in counters(a2))
+
+@pytest.mark.parametrize('entry',['run','reconcile'])
+@pytest.mark.parametrize('newstate',['terminal','live-owner'])
+@pytest.mark.parametrize('round_no',range(10))
+def test_public_unknown_stale_query_accurate(a2,entry,newstate,round_no):
+ op=accepted(a2).operation_id;assert a2.service.reconcile(op,owner_token='initial').status=='UNKNOWN';expire_lease(a2.gateway_dsn,op)
+ ready=threading.Event();release=threading.Event();errors=[];returned=[]
+ class Port:
+  def query(self,**kw):ready.set();assert release.wait(15);return None
+  def execute(self,**kw):return None
+ env=build_env(tree=a2.tree,gateway_dsn=a2.gateway_dsn,downstream_dsn=a2.downstream_dsn,downstream=Port())
+ def old():
+  try:returned.append(env.service.run_operation(op,owner_token='old') if entry=='run' else env.service.reconcile(op,owner_token='old'))
+  except Exception as exc:errors.append(exc.code.value if isinstance(exc,ExecutionError) else type(exc).__name__)
+ t=threading.Thread(target=old);t.start();assert ready.wait(10);expire_lease(a2.gateway_dsn,op)
+ if newstate=='terminal':assert a2.service.run_operation(op,owner_token='new').status=='SUCCEEDED'
+ else:a2.service._claim(op,'new')
+ release.set();t.join(20);assert not t.is_alive()
+ observe('r4-public-stale-unknown',{'entry':entry,'newstate':newstate,'round':round_no,'errors':errors,'returned':[r.status for r in returned],'persisted':a2.service.operation_status(op),'counters':counters(a2),'effects':effects(a2),'outbox':a2.service.outbox_entry(op) is not None})
+ assert errors==(['ILLEGAL_TRANSITION'] if newstate=='terminal' else ['LEASE_LOST']) and not returned
+ assert fetch_counts(a2.gateway_dsn)['ag_receipt_outbox']==(1 if newstate=='terminal' else 0)
+
+@pytest.mark.parametrize('illegal',[False,True])
+def test_005_to_006_seven_tables_and_full_registry(namespace,tmp_path,illegal):
+ db=create_scratch_database(namespace.base_dsn)
+ try:
+  old=tmp_path/'pre003';old.mkdir();pre005=tmp_path/'pre005';pre005.mkdir()
+  for p in sorted(DEFAULT_MIGRATIONS_DIR.glob('*.sql')):
+   if p.name[:3]<='003':(old/p.name).write_bytes(p.read_bytes())
+   if p.name[:3]<='005':(pre005/p.name).write_bytes(p.read_bytes())
+  with psycopg.connect(db.dsn) as c:apply_migrations(c,old);tree=build_tree(c)
+  op=ExecutionLedger(db.dsn).accept(tree.invocation(),tree.cost(70000)).operation_id
+  with psycopg.connect(db.dsn) as c:
+   revoke_grant(c,tree.mid_id)
+   if illegal:
+    other=build_tree(c,tenant_id='other-tenant')
+    c.execute('UPDATE ag_ledger_event_nodes SET grant_id=%s WHERE event_id IN (SELECT event_id FROM ag_ledger_events WHERE operation_id=%s) AND position=2',(other.leaf_id,op))
+  with psycopg.connect(db.dsn) as c:assert apply_migrations(c,pre005)==['004','005']
+  before=db_snapshot(db.dsn);assert all(before[0].values())
+  if illegal:
+   with psycopg.connect(db.dsn) as c:
+    with pytest.raises(psycopg.errors.CheckViolation,match='006 pre-check'):apply_migrations(c)
+   assert db_snapshot(db.dsn)==before
+   with psycopg.connect(db.dsn) as c:assert c.execute("SELECT to_regclass('ag_event_seals')").fetchone()[0] is None
+  else:
+   with psycopg.connect(db.dsn) as c:assert apply_migrations(c)==['006']
+   after=db_snapshot(db.dsn);assert after[0]==before[0] and after[1][:-1]==before[1]
+   with psycopg.connect(db.dsn) as c:assert apply_migrations(c)==[]
+   assert db_snapshot(db.dsn)==after
+  observe('r4-upgrade005',{'illegal':illegal,'seven_full_rows_equal':True,'registry_preserved':True})
+ finally:drop_scratch_database(namespace.base_dsn,db)
+
+@pytest.mark.parametrize('phase',['RESERVE','SETTLE'])
+def test_old_short_event_seal_forgery_concurrent_denied(a2,namespace,tmp_path,phase):
+ from tests.integration.test_execution_r3_regressions import _seed_short_event
+ db,env,tree,op=_seed_short_event(a2,namespace,tmp_path,phase)
+ try:
+  with psycopg.connect(db.dsn) as c:
+   assert apply_migrations(c)==['005','006'];eid=c.execute('SELECT event_id FROM ag_ledger_events WHERE operation_id=%s AND phase=%s',(op,phase)).fetchone()[0]
+  before=db_snapshot(db.dsn);box=env.service.outbox_entry(op)
+  barrier=threading.Barrier(2);errors=[]
+  def forge():
+   try:
+    with psycopg.connect(db.dsn) as c:
+     barrier.wait(10);c.execute('INSERT INTO ag_event_seals VALUES (%s,pg_current_xact_id()::text)',(eid,))
+   except Exception as exc:errors.append((type(exc).__name__,getattr(exc,'sqlstate',None)))
+  for _ in range(10):
+   errors.clear();ts=[threading.Thread(target=forge) for _ in range(2)]
+   for t in ts:t.start()
+   for t in ts:t.join(15)
+   assert not any(t.is_alive() for t in ts) and sorted(errors)==[('CheckViolation','23514')]*2
+  with psycopg.connect(db.dsn) as c:
+   assert c.execute('SELECT count(*) FROM ag_event_seals WHERE event_id=%s',(eid,)).fetchone()[0]==0
+   with pytest.raises(psycopg.errors.CheckViolation,match='current transaction'):
+    with c.transaction():c.execute('INSERT INTO ag_event_seals VALUES (%s,%s)',(eid,'wrong-xid'))
+  assert db_snapshot(db.dsn)==before and env.service.outbox_entry(op)==box
+  observe('r4-old-seal-forge',{'phase':phase,'rounds':10,'concurrent_refusals':20,'all_old_rows_and_registry_equal':True,'outbox_equal':True})
+ finally:drop_scratch_database(namespace.base_dsn,db)
+
+def test_savepoint_seal_does_not_escape_and_retry_legitimate(a2):
+ op=accepted(a2).operation_id;before=fetch_counts(a2.gateway_dsn)
+ with psycopg.connect(a2.gateway_dsn) as c:
+  with c.transaction():
+   c.execute('SAVEPOINT r4')
+   eid=c.execute("INSERT INTO ag_ledger_events(operation_id,phase,seq) VALUES(%s,'RELEASE',1) RETURNING event_id",(op,)).fetchone()[0]
+   assert c.execute('SELECT created_xid=pg_current_xact_id()::text FROM ag_event_seals WHERE event_id=%s',(eid,)).fetchone()==(True,)
+   c.execute('ROLLBACK TO r4')
+   assert c.execute('SELECT count(*) FROM ag_event_seals WHERE event_id=%s',(eid,)).fetchone()==(0,)
+ assert fetch_counts(a2.gateway_dsn)==before
+ assert a2.service.run_operation(op).status=='SUCCEEDED'
+ assert effects(a2)['ds_orders']==1 and fetch_counts(a2.gateway_dsn)['ag_receipt_outbox']==1
+ observe('r4-savepoint-seal',{'rolled_back_seal':True,'legitimate_retry':True})
+
+def test_last_candidate_miss_race_must_verify_before_existing(a2,monkeypatch):
+ # Commit a competing A1 accepted fact AFTER A2 last read miss, BEFORE A1 decides.
+ ready=threading.Event();committed=threading.Event();errors=[];op=[]
+ original=a2.ledger.accept_checked
+ def delayed(v,c,*,existing_validator):ready.set();assert committed.wait(10);return original(v,c,existing_validator=existing_validator)
+ monkeypatch.setattr(a2.ledger,'accept_checked',delayed)
+ def legacy_accept():
+  try:
+   assert ready.wait(10)
+   op.append(ExecutionLedger(a2.gateway_dsn).accept(a2.tree.invocation(idempotency_key='last-miss',tool_id=ToolId.ORDER_CREATE.value,params=order_params()),TrustedCost(70000,quote_id='quote-001',quote_version='1',quote_snapshot=b'invalid legacy material')).operation_id)
+  except Exception as exc:errors.append(type(exc).__name__)
+  finally:committed.set()
+ t=threading.Thread(target=legacy_accept);t.start();error=None;returned=None
+ try:returned=a2.service.accept_invocation(a2.tree.invocation(idempotency_key='last-miss',tool_id=ToolId.ORDER_CREATE.value,params=order_params()),a2.permission())
+ except Exception as exc:error=exc.code.value if isinstance(exc,ExecutionError) else type(exc).__name__
+ t.join(15);assert not t.is_alive() and not errors and len(op)==1
+ observe('r4-last-candidate-miss',{'error':error,'returned':None if returned is None else returned.disposition.value,'flag':a2.service.review_flag(op[0]) is not None,'proofs':fetch_counts(a2.gateway_dsn)['ag_proofs'],'counters':counters(a2),'effects':effects(a2)})
+ assert error=='LEGACY_SNAPSHOT_INVALID' and a2.service.review_flag(op[0]) is not None and fetch_counts(a2.gateway_dsn)['ag_proofs']==1
+
+def test_formal_reverse_efficacy_cannot_pass_without_target_interleaving(a2,monkeypatch):
+ from tests.integration.test_execution_regressions import test_lock_regression_reverse_efficacy_requires_a_real_deadlock
+ # Explicitly serialize after the before-first-lock barrier. No lock inversion exists.
+ final_done=threading.Event();errors=[];realop=es.lock_operation;realfinal=ExecutionService._finalize;realclaim=es.claim_lease
+ def op(c,*a,**kw):
+  if threading.current_thread().name=='claim':assert final_done.wait(15)
+  return realop(c,*a,**kw)
+ def final(self,*a,**kw):
+  try:return realfinal(self,*a,**kw)
+  finally:final_done.set()
+ def claim(*a,**kw):
+  try:return realclaim(*a,**kw)
+  except Exception as exc:errors.append(exc.code.value if isinstance(exc,ExecutionError) else type(exc).__name__);raise
+ monkeypatch.setattr(es,'lock_operation',op);monkeypatch.setattr(ExecutionService,'_finalize',final);monkeypatch.setattr(es,'claim_lease',claim)
+ error=None
+ try:test_lock_regression_reverse_efficacy_requires_a_real_deadlock(a2,monkeypatch)
+ except AssertionError:error='AssertionError'
+ observe('r4-formal-reverse-efficacy',{'formal_rejected_serialized_non_trigger':error is not None,'claim_errors':errors,'outbox':fetch_counts(a2.gateway_dsn)['ag_receipt_outbox'],'effects':effects(a2)})
+ assert error=='AssertionError', 'formal efficacy passes from a normal terminal-state refusal, without any lock overlap'
+
+@pytest.mark.parametrize('inject',['exception','no-progress'])
+def test_formal_lock_regression_rejects_thread_error_and_no_progress(a2,monkeypatch,inject):
+ from tests.integration.test_execution_regressions import test_claim_and_finalize_interleaved_never_deadlock
+ if inject=='exception':
+  real=ls.lock_task
+  def task(*a,**kw):
+   if threading.current_thread().name=='claim':raise RuntimeError('owned deliberate efficacy failure')
+   return real(*a,**kw)
+  monkeypatch.setattr(ls,'lock_task',task)
+ else:
+  real=ExecutionService._finalize
+  def final(self,*a,**kw):
+   if threading.current_thread().name=='final':return None
+   return real(self,*a,**kw)
+  monkeypatch.setattr(ExecutionService,'_finalize',final)
+ with pytest.raises(AssertionError):test_claim_and_finalize_interleaved_never_deadlock(a2,monkeypatch)
+ observe('r4-formal-negative-efficacy',{'injection':inject,'formal_fails':True})

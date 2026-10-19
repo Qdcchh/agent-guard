@@ -1,0 +1,35 @@
+"""Draft new environment evidence. Old editable/len14 observer remains immutable."""
+import hashlib, importlib.metadata, json, os, pathlib, platform, sys
+
+def main():
+ gate=json.loads(pathlib.Path(os.environ['AG31_INSTALLED_GATE']).read_text());mode=gate['mode']
+ assert sys.version_info[:2]==(3,11) and sys.platform=='linux' and platform.machine()=='x86_64'
+ assert os.geteuid()==gate['runtime_uid']
+ for key in ('PYTHONPATH','PYTHONHOME','AGENT_GUARD_DATABASE_URL','AGENT_GUARD_DOWNSTREAM_DATABASE_URL','AG_GATEWAY_DATABASE_URL','AG_GATEWAY_DOWNSTREAM_DATABASE_URL','AG_RECEIPT_DATABASE_URL','DATABASE_URL'):
+  assert not os.environ.get(key)
+ import agent_guard, psycopg
+ from tongsuopy.backends.tongsuo.backend import backend
+ from agent_guard.ledger.migrate import DEFAULT_MIGRATIONS_DIR
+ from agent_guard.ledger.lineage import load_manifest
+ prefix=pathlib.Path('/e/'+mode+'-venv/lib/python3.11/site-packages');module=pathlib.Path(agent_guard.__file__).resolve()
+ assert module.is_relative_to(prefix) and not pathlib.Path('/e/'+mode+'-tests/src').exists()
+ dist=importlib.metadata.distribution('agent-guard');direct=dist.read_text('direct_url.json')
+ if direct:assert not json.loads(direct).get('dir_info',{}).get('editable',False)
+ actual={m.relative_path:m.checksum for m in load_manifest().migrations}
+ assert actual==gate['current_gateway15_registry'] and len(actual)==15
+ rows=[]
+ for relative,checksum in actual.items():
+  p=DEFAULT_MIGRATIONS_DIR/relative;raw=p.read_bytes();h=hashlib.sha256(raw).hexdigest()
+  assert h==gate['current_sql_raw_sha256'][relative]
+  if relative in gate['original14_raw_sha256']:assert h==gate['original14_raw_sha256'][relative]
+  rows.append({'path':relative,'raw_sha256':h,'registry_checksum':checksum})
+ assert len(gate['original14_raw_sha256'])==14
+ assert len(gate['standalone001_006_and_audit001_installed_files'])==16
+ for relative,h in gate['standalone001_006_and_audit001_installed_files'].items():
+  p=pathlib.Path(relative);assert p.is_relative_to(pathlib.Path('/e/'+mode+'-venv/share/agent-guard/migrations')) and hashlib.sha256(p.read_bytes()).hexdigest()==h
+ private=json.loads(pathlib.Path('/private/runtime.json').read_text())
+ with psycopg.connect(private['dsn']['gateway']) as conn:
+  observed=conn.execute('SELECT version(),current_database(),current_user').fetchone()
+  assert 'PostgreSQL 16.' in observed[0] and list(observed[1:])==gate['gateway_database_and_user']
+ print(json.dumps({'mode':mode,'uid':os.geteuid(),'python':sys.version,'architecture':platform.machine(),'module':str(module),'metadata_version':dist.version,'direct_url':direct,'tongsuo':backend.openssl_version_text(),'gateway15_sql':rows,'original14_raw_bound':True,'standalone_and_audit001_files_bound':True,'ordinary_dsn_empty':True,'sys_path':sys.path},indent=2))
+if __name__=='__main__':main()

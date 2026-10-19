@@ -1,0 +1,75 @@
+"""F2 follow-up on an isolated disposable database; no application edits."""
+
+import os
+import uuid
+from dataclasses import replace
+
+import psycopg
+import pytest
+
+from agent_guard.ledger.migrate import apply_migrations
+from agent_guard.ledger.provisioning import create_task_root
+from agent_guard.ledger.service import ExecutionLedger
+from tests.fixtures.state import build_tree
+
+
+def test_used_revoked_root_cannot_be_deleted_and_reinserted_with_same_id():
+    dsn = os.environ["AGENT_GUARD_TEST_DATABASE_URL"]
+    with psycopg.connect(dsn, connect_timeout=5) as conn:
+        assert conn.execute("SELECT current_database()").fetchone()[0] == "history_b_adapted"
+        apply_migrations(conn)
+        tree = build_tree(conn)
+        root_id = "standalone-" + uuid.uuid4().hex
+        task_id = "standalone-task-" + uuid.uuid4().hex
+        create_task_root(
+            conn,
+            tenant_id=tree.tenant_id,
+            task_id=task_id,
+            grant_id=root_id,
+            subject=tree.subject,
+            holder_client_id=tree.planner[0],
+            holder_kid=tree.planner[1],
+            amount_limit=100000,
+            call_limit=10,
+            not_before=tree.not_before,
+            expires_at=tree.expires_at,
+        )
+    request = replace(
+        tree.invocation(grant_id=tree.root_id),
+        task_id=task_id,
+        grant_id=root_id,
+        root_id=root_id,
+        ancestor_ids=(),
+    )
+    ExecutionLedger(dsn).accept(request, tree.cost(amount_fen=70000))
+    with psycopg.connect(dsn, connect_timeout=5) as conn:
+        conn.execute(
+            "UPDATE ag_grants SET revoked=TRUE, revoked_at=clock_timestamp() WHERE grant_id=%s",
+            (root_id,),
+        )
+        assert conn.execute(
+            "SELECT amount_reserved, calls_reserved, revoked FROM ag_grants WHERE grant_id=%s",
+            (root_id,),
+        ).fetchone() == (70000, 1, True)
+
+    with pytest.raises(psycopg.IntegrityError):
+        with psycopg.connect(dsn, connect_timeout=5) as conn:
+            conn.execute(
+                "CREATE TEMP TABLE old_root AS SELECT * FROM ag_grants WHERE grant_id=%s",
+                (root_id,),
+            )
+            conn.execute("DELETE FROM ag_grants WHERE grant_id=%s", (root_id,))
+            conn.execute(
+                "INSERT INTO ag_grants "
+                "(grant_id,parent_grant_id,root_grant_id,tenant_id,task_id,subject,"
+                "holder_client_id,holder_kid,depth,not_before,expires_at,amount_limit,call_limit) "
+                "SELECT grant_id,parent_grant_id,root_grant_id,tenant_id,task_id,subject,"
+                "holder_client_id,holder_kid,depth,not_before,expires_at,amount_limit,call_limit "
+                "FROM old_root"
+            )
+    # A correct implementation must reject before commit and preserve the old state.
+    with psycopg.connect(dsn, connect_timeout=5) as conn:
+        assert conn.execute(
+            "SELECT amount_reserved, calls_reserved, revoked FROM ag_grants WHERE grant_id=%s",
+            (root_id,),
+        ).fetchone() == (70000, 1, True)

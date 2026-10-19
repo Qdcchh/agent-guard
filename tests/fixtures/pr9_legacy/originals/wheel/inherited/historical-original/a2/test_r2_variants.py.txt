@@ -1,0 +1,123 @@
+"""Fresh r2 variants, independent of worker-selected assertions."""
+import dataclasses,json,threading
+from pathlib import Path
+import psycopg,pytest
+from agent_guard.contracts.execution import ExecutionError,ToolId
+from agent_guard.contracts.ledger import TrustedCost
+from agent_guard.tools.catalog import snapshot_from_bytes,snapshot_to_bytes
+from agent_guard.tools.downstream import MockDownstream
+from agent_guard.ledger import store as ls
+from agent_guard.ledger.migrate import apply_migrations,DEFAULT_MIGRATIONS_DIR
+from tests.fixtures.state import build_tree
+from tests.fixtures.execution import build_env,order_params,read_params,notification_params,constraints_for
+from tests.fixtures.isolation import create_scratch_database,drop_scratch_database
+from tests.fixtures.dbstate import fetch_counts
+from test_review import accepted,observe,counters,effects
+
+@pytest.mark.parametrize('entry',['run','reconcile','candidate','helper'])
+def test_upgraded_blank_evidence_all_entries(a2,namespace,tmp_path,entry):
+ db=create_scratch_database(namespace.base_dsn)
+ try:
+  subset=tmp_path/'pre004';subset.mkdir()
+  for p in DEFAULT_MIGRATIONS_DIR.glob('00[123]_*.sql'):(subset/p.name).write_bytes(p.read_bytes())
+  with psycopg.connect(db.dsn) as c:apply_migrations(c,subset);tree=build_tree(c)
+  env=build_env(tree=tree,gateway_dsn=db.dsn,downstream_dsn=a2.downstream_dsn)
+  snap=env.catalog.build_order_snapshot(tenant_id=tree.tenant_id,task_id=tree.task_id,request_id='req-001',quote_id='quote-001',quote_version='1',items=(('sku-001',1),),delivery_id='office-001')
+  op='r2-blank-evidence';inv=tree.invocation(idempotency_key=op,tool_id=ToolId.ORDER_CREATE.value,params=order_params())
+  with psycopg.connect(db.dsn) as c:
+   ls.insert_operation(c,operation_id=op,tenant_id=tree.tenant_id,task_id=tree.task_id,tool_id=ToolId.ORDER_CREATE.value,idempotency_key=op,grant_id=tree.leaf_id,holder_client_id=tree.executor[0],holder_kid=tree.executor[1],tool_version='1',canonical_params=order_params(),currency='CNY',amount_fen=70000,calls=1,quote_id='quote-001',quote_version='1',quote_snapshot=snapshot_to_bytes(snap),token_digest='',proof_digest='synthetic-proof',intent_digest='synthetic-intent',evidence_ref='synthetic-evidence')
+   nodes=[tree.root_id,tree.mid_id,tree.leaf_id]
+   for g in nodes:ls.apply_reservation(c,g,70000,1)
+   ls.insert_reserve_event(c,operation_id=op,seq=0,nodes=[(i,g,70000,1) for i,g in enumerate(nodes)])
+  with psycopg.connect(db.dsn) as c:assert apply_migrations(c)==['004','005','006']
+  error=None
+  try:
+   if entry=='candidate':env.service.accept_invocation(inv,env.permission())
+   elif entry=='helper':assert env.service.quarantine_if_insufficient(op)
+   elif entry=='reconcile':env.service.reconcile(op)
+   else:env.service.run_operation(op)
+  except ExecutionError as e:error=e.code.value
+  state={'entry':entry,'error':error,'flag':env.service.review_flag(op) is not None,'status':env.service.operation_status(op),'counters':counters(env),'effects':effects(env),'counts':fetch_counts(db.dsn)}
+  observe('r2-legacy-entries',state)
+  assert state['flag'] and state['status']=='RESERVED' and state['effects']['ds_operations']==0
+ finally:drop_scratch_database(namespace.base_dsn,db)
+
+@pytest.mark.parametrize('variant',['other-key-success','other-key-refusal','malformed-result','missing-notification-effect'])
+def test_query_outcome_binding_variants(a2,variant):
+ if variant=='missing-notification-effect':
+  ref=a2.service.accept_invocation(a2.tree.invocation(tool_id=ToolId.REQUEST_READ.value,params=read_params()),a2.permission()).operation_id
+  params=notification_params(operation_id=ref);tool=ToolId.NOTIFICATION_SEND
+ else:params=order_params();tool=ToolId.ORDER_CREATE
+ op=a2.service.accept_invocation(a2.tree.invocation(idempotency_key='query-bad',tool_id=tool.value,params=params),a2.permission()).operation_id
+ row=a2.service.load_operation(op);key='other-real-key' if variant.startswith('other-key') else op
+ ds=MockDownstream(a2.downstream_dsn,service_secret=a2.secret) if variant=='other-key-refusal' else a2.downstream
+ value=ds.execute(service_secret=a2.secret,operation_id=key,tool_id=tool,canonical_params=params,quote=snapshot_from_bytes(row.quote_snapshot),expected_amount_fen=row.amount_fen)
+ class Port:
+  def query(self,**kw):
+   if variant=='malformed-result':return dataclasses.replace(value,result_bytes=b'not-json')
+   if variant=='missing-notification-effect':return dataclasses.replace(value,effect_ref=None)
+   return value
+ env=build_env(tree=a2.tree,gateway_dsn=a2.gateway_dsn,downstream_dsn=a2.downstream_dsn,downstream=Port())
+ result=env.service.reconcile(op)
+ observe('r2-query-outcome',{'variant':variant,'status':result.status,'counters':counters(env),'effects':effects(env),'outbox':env.service.outbox_entry(op) is not None})
+ assert result.status=='UNKNOWN' and env.service.outbox_entry(op) is None
+
+@pytest.mark.parametrize('mode',['leaf-only','missing-mid','extra-depth'])
+def test_chain_structure_cannot_omit_restrictive_ancestor(a2,mode):
+ full=(constraints_for(0,skus=()),constraints_for(1,skus=()),constraints_for(2))
+ permission=a2.permission(chain=full)
+ inv=a2.tree.invocation(tool_id=ToolId.ORDER_CREATE.value,params=order_params())
+ with pytest.raises(ExecutionError):a2.service.accept_invocation(inv,permission)
+ chain={'leaf-only':(full[-1],),'missing-mid':(constraints_for(0),full[-1]),'extra-depth':(constraints_for(0),constraints_for(1),full[-1],full[-1])}[mode]
+ error=None;result=None
+ try:result=a2.service.accept_invocation(inv,dataclasses.replace(permission,chain=chain))
+ except ExecutionError:error=True
+ observe('r2-chain-variant',{'mode':mode,'full_rejected':True,'truncated_rejected':bool(error),'accepted':result is not None,'counts':fetch_counts(a2.gateway_dsn),'counters':counters(a2)})
+ assert error and result is None
+
+@pytest.mark.parametrize('raw_variant',['negative-lines','numeric-string','missing-currency','null-identity'])
+def test_snapshot_strict_schema_variants(raw_variant):
+ obj={'quote_id':'quote-001','quote_version':'1','supplier_id':'supplier-001','items':[{'sku':'sku-001','quantity':1,'unit_price_fen':70000}],'total_fen':70000,'currency':'CNY'}
+ if raw_variant=='negative-lines':obj['items'][0].update(quantity=-1,unit_price_fen=-70000)
+ if raw_variant=='numeric-string':obj['items'][0]['quantity']='1'
+ if raw_variant=='missing-currency':del obj['currency']
+ if raw_variant=='null-identity':obj['quote_id']=None
+ raw=json.dumps(obj).encode();refused=False
+ try:snapshot_from_bytes(raw)
+ except ExecutionError:refused=True
+ observe('r2-snapshot-decode',{'variant':raw_variant,'refused':refused})
+ assert refused
+
+@pytest.mark.parametrize('round_no',range(10))
+def test_p11_resource_disappearance_actual_repeat(a2,monkeypatch,round_no):
+ from test_followups import test_p11_actual_miss_recheck_and_rejection_variants
+ original=a2.catalog.remove_quote
+ # function makes a second env catalog; intercept catalog removal at class seam
+ from agent_guard.tools.catalog import TrustedCatalog
+ monkeypatch.setattr(TrustedCatalog,'remove_quote',lambda self,*args:self.remove_request('req-001'))
+ test_p11_actual_miss_recheck_and_rejection_variants(a2,monkeypatch,'same',round_no)
+ observe('r2-p11-resource',{'round':round_no,'original_resource_disappeared':True})
+
+def test_fresh_lease_owner_version_and_lock_after_expiry(a2,monkeypatch):
+ from agent_guard.execution import store as es
+ op=accepted(a2).operation_id;saved={}
+ def pause(c,o):saved.update(claim=c,outcome=o);raise RuntimeError('owned pause')
+ with pytest.raises(RuntimeError):a2.service.run_operation(op,owner_token='r2-correct',pause=pause)
+ claim=saved['claim']
+ for owner,version in [('r2-wrong',claim.lease.fencing_version),('r2-correct',claim.lease.fencing_version+1)]:
+  with psycopg.connect(a2.gateway_dsn) as c:
+   with pytest.raises(ExecutionError) as e:es.assert_terminal_write_allowed(c,operation_id=op,owner_token=owner,fencing_version=version)
+   assert e.value.code.value=='LEASE_LOST'
+ waiting=threading.Event();result=[];original=ls.lock_task
+ def task(c,*args):waiting.set();return original(c,*args)
+ monkeypatch.setattr(ls,'lock_task',task)
+ blocker=psycopg.connect(a2.gateway_dsn);original(blocker,a2.tree.tenant_id,a2.tree.task_id)
+ def finish():
+  try:a2.service._finalize(claim,saved['outcome'],downstream_called=True,reason='');result.append('WRONG-terminal')
+  except ExecutionError as e:result.append(e.code.value)
+ t=threading.Thread(target=finish);t.start();assert waiting.wait(10)
+ with psycopg.connect(a2.gateway_dsn) as c:c.execute("UPDATE ag_execution_leases SET lease_expires_at=clock_timestamp()-interval '1 second' WHERE operation_id=%s",(op,))
+ blocker.commit();blocker.close();t.join(15)
+ assert not t.is_alive() and result==['LEASE_LOST'] and a2.service.operation_status(op)=='EXECUTING'
+ assert effects(a2)['ds_orders']==1 and fetch_counts(a2.gateway_dsn)['ag_receipt_outbox']==0
+ observe('r2-lease-lock-expiry',{'fresh_owner_and_version_refused':True,'result':result,'counters':counters(a2)})

@@ -1,0 +1,8 @@
+{
+  "tests/fixtures/a31_delivery.py": "7a404a085de2b2068a9398ce4b809eb2fc213f9a5a4d38dacee1cd28948e28c7",
+  "tests/unit/test_pr9_a31_tls_context.py": "69b1815053a29552f240e3e9abdeca1acea73d82fd50b0a829817a16b93e1b29",
+  "tests/integration/test_audit_delivery.py": "773f17bcea45ce1ce064b82fe673d813fb4779943ded2ddb8f875fd1db72a7a6",
+  "tests/integration/test_a31_inherited_trusted_material.py": "aa5ad59e49cb9ec0cc35b9ab18688e5cbeb4be1ec8679918c9dfe22602174de6",
+  "tests/integration/test_gateway_query.py": "5ed123fd578a2830357967228db26b7196ac685c1f4811a95363e402878b9326",
+  "tests/integration/test_receipt_publication.py": "3e1503ba36964439e198a008fb20ecbe15dba7b6bef63c73ef7ac5dccbc3e30b"
+}

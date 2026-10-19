@@ -1,0 +1,27 @@
+"""Supplement all original dynamic controls with exact budgets and downstream rows."""
+import psycopg,pytest
+from tests.integration import test_gateway_query as target
+
+@pytest.mark.parametrize('round_id',range(10))
+@pytest.mark.parametrize('ancestor',['root','mid','leaf'])
+@pytest.mark.parametrize('kind',['revoke','deactivate'])
+@pytest.mark.parametrize('winner',['query','mutation'])
+def test_query_dynamic_every_ancestor_zero_budget_and_downstream(ledger,dsn,downstream_dsn,monkeypatch,round_id,ancestor,kind,winner):
+ normal=target.state;observed=[]
+ def audited_state(gateway_dsn,**kwargs):
+  with psycopg.connect(gateway_dsn) as conn:
+   counters=conn.execute('SELECT grant_id,amount_reserved,amount_settled,calls_reserved,calls_settled FROM ag_grants ORDER BY depth').fetchall()
+   grants=conn.execute('SELECT row_to_json(g)::text FROM ag_grants g ORDER BY depth').fetchall()
+  with psycopg.connect(downstream_dsn) as conn:
+   names=[r[0] for r in conn.execute("SELECT tablename FROM pg_tables WHERE schemaname=current_schema() AND tablename LIKE 'ds_%' ORDER BY tablename").fetchall()]
+   assert {'ds_operations','ds_orders','ds_notifications'}<=set(names)
+   downstream={name:conn.execute(f'SELECT row_to_json(t)::text FROM {name} t ORDER BY row_to_json(t)::text').fetchall() for name in names}
+  if observed:
+   assert counters==observed[0][0]
+   assert downstream==observed[0][2]
+   if kind=='deactivate':assert grants==observed[0][1]
+  observed.append((counters,grants,downstream))
+  return normal(gateway_dsn,**kwargs)
+ monkeypatch.setattr(target,'state',audited_state)
+ target.test_query_serializes_with_revocation_and_key_state(ledger,dsn,downstream_dsn,round_id,kind,winner,ancestor)
+ assert len(observed)>=2 and len(observed[0][0])==3
