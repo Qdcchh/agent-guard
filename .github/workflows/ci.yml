@@ -63,12 +63,6 @@ jobs:
       AGENT_GUARD_TEST_DATABASE_URL: postgresql://agent_guard_ci:ci-only-throwaway@127.0.0.1:5432/agent_guard_ci
       AGENT_GUARD_A31_TEST_DOWNSTREAM_DATABASE_URL: postgresql://agent_guard_ci:ci-downstream-only-throwaway@127.0.0.1:5434/agent_guard_ci_downstream
       AGENT_GUARD_A31_TEST_AUDIT_DATABASE_URL: postgresql://agent_guard_ci:ci-audit-only-throwaway@127.0.0.1:5433/agent_guard_ci_audit
-      A32_EXPORT_TLS_DIR: ${{ runner.temp }}/pr9-ci/export-tls
-      A31_TEST_EVIDENCE_DIR: ${{ runner.temp }}/pr9-ci/a31
-      AG31_SERVICE_EVIDENCE_DIR: ${{ runner.temp }}/pr9-ci/ag31
-      PR9_DEPLOY_INPUTS_ROOT: ${{ runner.temp }}/pr9-ci/deployment-owners
-      AG33_EVIDENCE_DIR: ${{ runner.temp }}/pr9-ci/installation-evidence
-      PR9_CAPACITY_INPUTS_ROOT: ${{ runner.temp }}/pr9-ci/capacity-inputs
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
@@ -81,6 +75,14 @@ jobs:
         run: |
           test "$PR9_HEAD_REPOSITORY" = "$GITHUB_REPOSITORY"
           test "$PR9_ACTOR" != 'dependabot[bot]'
+      - name: Set job-local evidence paths after the runner is available
+        run: |
+          echo "A32_EXPORT_TLS_DIR=$RUNNER_TEMP/pr9-ci/export-tls" >> "$GITHUB_ENV"
+          echo "A31_TEST_EVIDENCE_DIR=$RUNNER_TEMP/pr9-ci/a31" >> "$GITHUB_ENV"
+          echo "AG31_SERVICE_EVIDENCE_DIR=$RUNNER_TEMP/pr9-ci/ag31" >> "$GITHUB_ENV"
+          echo "PR9_DEPLOY_INPUTS_ROOT=$RUNNER_TEMP/pr9-ci/deployment-owners" >> "$GITHUB_ENV"
+          echo "AG33_EVIDENCE_DIR=$RUNNER_TEMP/pr9-ci/installation-evidence" >> "$GITHUB_ENV"
+          echo "PR9_CAPACITY_INPUTS_ROOT=$RUNNER_TEMP/pr9-ci/capacity-inputs" >> "$GITHUB_ENV"
       - name: Reserve time for cleanup within the complete job budget
         run: echo "PR9_CI_TEST_DEADLINE=$(( $(date +%s) + 340 * 60 ))" >> "$GITHUB_ENV"
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
