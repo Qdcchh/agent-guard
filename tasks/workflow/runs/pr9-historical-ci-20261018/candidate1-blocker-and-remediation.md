@@ -1,0 +1,10 @@
+# candidate1：部署前置实跑阻断，未接受
+
+1187文件manifest原样保留，SOURCE冻结后尚未派新high完整审查。真实全域driver的source child-probe在Docker29环境前置失败：使用--network none创建trusted测试控制器后再连接自有PG网络被Docker拒绝；原childkill尚未执行。这是实际失败，不能算wheel/20组通过。
+
+主控已只读核对candidate原代码与原observer。授权原部署worker仅修改test_a33_clean_deploy.py、tools/pr9_deploy_inputs.py及对应test_pr9_deploy_inputs.py，恢复以下装配，不改变任何业务源码、正常12角色隔离或原assert：
+
+1. 在create之前真实inspect收集并核验本consumer三PG各网络的完整ID、owner/run身份（保持原>=3约束），以排序后首个自有网络创建trusted pytest控制器，再连接其余已核验网络；不得改用默认bridge/host或赋给普通角色socket/新网络。create成功立即记录fullID，再执行connect，失败走严格记录清理。
+2. 原a31_runtime_observer允许纯ruff/格式wrapper的loaded=[]且仍真实记录atexit/进程身份。新增父验证只能要求loaded是精确list、每个出现模块SHA/路径与实际139绑定匹配；不能用非空要求阻断不导入业务模块的合法工具。原child-probe的7+live/各真实PID/main模块/actualSIGKILL及逐模块SHA验证仍全保留，缺/错观察结果必须父控制器非零。补充空loaded合法/非list、错模块SHA拒绝探针。
+
+candidate1即刻不再作为待接受候选；其它文件继续只读。完整失败XML/native/cleanup保持，先回收本轮自有资源，再用fresh runtime跑source/wheel child-probe四负例及原四文件/20组。补正STOP后重新冻结candidate2，再交全新high完整接受，旧失败不抵销。

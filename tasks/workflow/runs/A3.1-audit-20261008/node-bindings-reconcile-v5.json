@@ -1,0 +1,112 @@
+{
+  "status": "PROPOSED_NOT_COLLECTED_NOT_DISPATCHED",
+  "inherits": [
+    "node-bindings-v2.json",
+    "node-bindings-v3.json",
+    "node-bindings-v4.json"
+  ],
+  "unchanged_complete_obligations": {
+    "parents": 141,
+    "runtime": 133,
+    "inherited_assertions": 269,
+    "new_atoms": 95
+  },
+  "mandatory_modes": [
+    "source",
+    "noneditablewheel"
+  ],
+  "same_exact_files": [
+    "tests/integration/test_audit_delivery.py",
+    "tests/unit/test_audit_client.py"
+  ],
+  "planned_nodes": [
+    {
+      "node": "tests/integration/test_audit_delivery.py::test_reconciliation_child_suffix_and_parent_ack",
+      "atoms": [
+        "A31-18.03",
+        "A31-18.04",
+        "A31-20.01",
+        "A31-20.02"
+      ],
+      "cases": [
+        "partial_remote32_parent64",
+        "remoteCP32_to65_parent64",
+        "nextpending65_to70_covering65",
+        "aligned",
+        "same_pin_reuse",
+        "child_fields_mismatch",
+        "child_samebody_reuse",
+        "changed_pin",
+        "wrong_base",
+        "wrong_body_slice",
+        "late_child_response",
+        "late_parent_ack"
+      ],
+      "applicable_race_fault_rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    {
+      "node": "tests/integration/test_audit_delivery.py::test_reconciliation_child_sigkill_recovery",
+      "atoms": [
+        "A31-18.05",
+        "A31-19.01",
+        "A31-19.02",
+        "A31-19.03",
+        "A31-19.04",
+        "A31-20.02"
+      ],
+      "windows": [
+        "child_saved",
+        "pre_child_send",
+        "remote_child_commit_lost_response",
+        "child_response_before_parent_ack",
+        "pre_parent_ack",
+        "post_parent_ack"
+      ],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "layer": "real SIGKILL/newPID same persistent DB, actual durable network bytes, parent cursor CAS/full rows"
+    },
+    {
+      "node": "tests/integration/test_audit_delivery.py::test_database_lock_timeout_does_not_starve_healthy_stream",
+      "atoms": [
+        "A31-20.04"
+      ],
+      "rounds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "layer": "independent PG backend blocks bad stream delivery row through actual lock_timeout, healthy stream progresses within finite turn; raw SQLSTATE/lock witness/native outcomes/full state"
+    }
+  ],
+  "all_original_controls_preserved": true,
+  "actual_collection": "After correction native STOP, exact cases and source SHA to be rebound; planned IDs not runtime PASS"
+}

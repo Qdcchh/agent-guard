@@ -1,0 +1,58 @@
+{
+  "status": "FINAL_TWO_FILE_SOURCE_STOP_MINIMAL_REAL_CLOSURE_GREEN",
+  "helper_sha256": "e90864b54e329c9c1485e59e913e7366c947d1497065077fc552ae45ab402d7a",
+  "unit_sha256": "27a7f1820c7c50c62987f6a12f2af63b3d7706488d39270627066472dd95f17e",
+  "unit": {
+    "count": 112,
+    "passed": 112,
+    "runtime": "CPython3.14.7 Clang21.0.0",
+    "platform": "macOS27.0.1 arm64",
+    "scope": "stdlib noDocker positive and refusal controls; not a nativeLinux3.11 unit-run claim",
+    "xml": "argv-startup-unit-r2.xml",
+    "xml_sha256": "42f5ff76504d176266dc728302243684d4612ff5077a0bdcde614bfd9f7ed6ae"
+  },
+  "actual_helper_probe": {
+    "cases": 64,
+    "early_non_declared_argv_samples": 44,
+    "stable_declared_mismatches": 0,
+    "atexit_mismatches": 0,
+    "identity_mismatches": 0,
+    "runtime": "fixed Linuxamd64 tools image Python3.11.17 and newly created venv therein",
+    "tool_image_full_id": "sha256:fc9134fe1a2c90c52998c6f44f49e77e1a08faba95a58d7acf78985dd8e4fa1f",
+    "actual_helper_sha256": "e90864b54e329c9c1485e59e913e7366c947d1497065077fc552ae45ab402d7a",
+    "native_exit": 0,
+    "raw_payloads": "retained local0600 only, not published",
+    "safe_receipt": "argv-helper-final-probe-safe-results.json",
+    "cleanup": "argv-helper-final-probe-cleanup.json"
+  },
+  "original_A1_closure": {
+    "source_original_nodes": 5,
+    "wheel_original_nodes": 5,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "top_wrappers": 2,
+    "driver_native_exit": 0,
+    "runtime_scope": "fresh noneditable Linuxamd64 source/wheel in generated python3.11-slim context; actual installedagent_guard.__file__ path lib/python3.11/site-packages plus139bytes each; no separate exact patch-version capture claim for these two ephemeral runtimes",
+    "runtime_receipt": "a1-observer-r13-result.json",
+    "runtime_receipt_sha256": "bb1fd41e03bf48c2a81143fa9621359a41bd8081d63927659c3e47ffd7a3301a",
+    "parent_independent_proc_sample_counts": {
+      "source": 1,
+      "wheel": 2
+    },
+    "owners_four_classes_zero": 5,
+    "strict_cleanup_errors": []
+  },
+  "source_freeze": "root formalSTOP acknowledged; helper/unit only modifications; original204fixtures/139business/18SQL/a33 files unchanged",
+  "preserved_failed_history": [
+    "C7r11 argv observer rejection",
+    "oldr12 controlled cancel with real nonzero cleanup then rootauthorized exactinit rescue receipt"
+  ],
+  "remaining_gates": [
+    "rootC8 complete manifest",
+    "completefivegroups1251permode on C8",
+    "fresh independenthigh complete20 and fullmatrix",
+    "remoteexactheadCI and merge gates remainroot"
+  ],
+  "acceptance_boundary": "This proves minimal actualstartup+originalA1 closure only; no fullacceptance claim"
+}

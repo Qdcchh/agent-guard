@@ -1,0 +1,41 @@
+{
+  "run_id": "20261017-full-02",
+  "status": "COMPLETE",
+  "environment_id": "0e7d843282332f9001f58410c6ec99576b80e1714c43ca6ac2eb533b391bb78a",
+  "command": "python -m experiments.cosm2_bench.plot experiments/cosm2_bench/results/20261017-full-02 --output 复赛冲刺材料-20261018/论文模板/figures/fig-latency.pdf",
+  "sources": {
+    "experiments/cosm2_bench/results/20261017-full-02/summary.json": "e97f8137d00d576ddb51136045561aa243f8f3936cd1289dd20cf2715cfaee3b",
+    "experiments/cosm2_bench/results/20261017-full-02/raw.csv": "2bf14aa3e553ff651a3bb08828556be95eb98355cd33510cee9dc07628e957ad",
+    "experiments/cosm2_bench/results/20261017-full-02/warmup.csv": "e9d7a6f70ce653b76a4b3d475495254643a5cbcc4d799e018c559c3da659f587"
+  },
+  "font": {
+    "path": "/System/Library/Fonts/STHeiti Light.ttc",
+    "sha256": "c2ce69631a8100d77e8174da0f719ceff8c6196b9b2abba35e8feb4114138cc5"
+  },
+  "palette": {
+    "bar": "#007f9f",
+    "ink": "#183954",
+    "p95": "#C63A2E"
+  },
+  "figure_sha256": "14fdad82e10279045fbe97fb0f9507fc4ce8f74de9281c327b8de200324f9282",
+  "limitations": {
+    "emulation": "Docker emulation: arm64 host / amd64 runner",
+    "unmeasured": [],
+    "boundaries": {
+      "cosm2_round1": "ExecParty round1 only; key generation excluded",
+      "cosm2_round2": "AuthzParty round2 crypto only; no policy/database",
+      "cosm2_round3": "ExecParty round3 including mature final SM2 verification",
+      "cosm2_total": "same session round1 through round3, including final verification; no DB",
+      "cosm2_round2_db": "Q1 prepared before timer; real AS fullchain, SELECT-only DB predicates and P2 round2; final P1 round3/verification after timer",
+      "gateway_e2e": "ASGI HTTP invocation send through 202 RESERVED response; fresh business key each attempt; bundle/proof/common signing and raw request preparation excluded; downstream worker/effect/receipt excluded",
+      "sm2_sign": "mature Tongsuo sign only; ephemeral key generation excluded",
+      "sm2_verify": "mature Tongsuo verification incl public_key() retrieval",
+      "frost_sign_quorum": "real Rust 2-of-3 V2 action; Python file I/O + process startup + native quorum + Python Ed25519 verification; enrollment excluded"
+    }
+  },
+  "display_rename": {
+    "date": "2026-10-19",
+    "operation": "title only; all benchmark data unchanged",
+    "previous_figure_sha256": "2ec01669dbb444bd96504771b61e458377bf87a623e4542182d6f0cc0979a07f"
+  }
+}

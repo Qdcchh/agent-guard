@@ -123,6 +123,13 @@ class PermissionSnapshotProvider:
             conn.execute("SET LOCAL statement_timeout='15s'")
             conn.execute("SET LOCAL lock_timeout='10s'")
             records = _chain_rows(conn, grant_id)
+        return self._from_records(records, token, now)
+
+    def load_tx(self, conn, token: str, *, grant_id: str, now: int) -> PermissionSource:
+        """Reconstruct the signed source using the caller's transaction."""
+        return self._from_records(_chain_rows(conn, grant_id), token, now)
+
+    def _from_records(self, records, token: str, now: int) -> PermissionSource:
         previous = None
         constraints = []
         for position, (g, r) in enumerate(records):

@@ -1,0 +1,24 @@
+{
+  "native_status": "STOP",
+  "no_more_writes": true,
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "low",
+  "effective_metadata": "UNKNOWN",
+  "conclusion": "V2_CORRECTION_READY_FOR_FRESH_PACKAGE_REVIEW_NOT_PACKAGE_READY_NOT_ACCEPTED",
+  "runtime": "NOT_RUN",
+  "resources_created": 0,
+  "resources_remaining": 0,
+  "manifest_sha256": "d48b382bc0e3904c7f62dd1bba73550d66ac3bbd8060427cc29ae130f8ab696a",
+  "exact_write_scope": [
+    "tasks/workflow/runs/A3.2-evidence-20261011/package-v2.md",
+    "tasks/workflow/runs/A3.2-evidence-20261011/runtime-plan-v2.json",
+    "tasks/workflow/runs/A3.2-evidence-20261011/node-bindings-v2.json",
+    "tasks/workflow/runs/A3.2-evidence-20261011/ownership-v2.json",
+    "tasks/workflow/runs/A3.2-evidence-20261011/task-package-review-v2.md",
+    "tasks/workflow/runs/A3.2-evidence-20261011/baseline-v2.json",
+    "tasks/workflow/runs/A3.2-evidence-20261011/static-readback-v2.json",
+    "tasks/workflow/runs/A3.2-evidence-20261011/correction-report-r1.md",
+    "tasks/workflow/runs/A3.2-evidence-20261011/manifest-v2.json",
+    "tasks/workflow/runs/A3.2-evidence-20261011/stop-v2.json"
+  ]
+}

@@ -1,0 +1,3 @@
+# Historical public figure evidence fixtures
+
+These five JSON files are byte-for-byte copies of existing local synthetic demo result and negative-matrix records. The production-relative `artifacts/...` paths are preserved under this fixture root so tests exercise the strict production reader with explicit input. `provenance-sha256.json` records each original repository-relative source path and its SHA256, independently documented by PR9 CI review r1. No tokens, private keys, credentials, or service logs are included; structured keys and credential-pattern scanning preceded copying. These are historical test evidence, not new measurements or new production execution claims. Original ignored artifacts and production fixed source/SHA rules are unchanged.

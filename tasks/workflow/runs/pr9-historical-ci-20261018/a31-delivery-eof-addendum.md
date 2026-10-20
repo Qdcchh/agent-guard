@@ -1,0 +1,5 @@
+# SIGKILL后TLS响应写入的测试夹具处理
+
+真实v2整文件53pass/1error：remote_commit测试体已通过，child被原用例真实SIGKILL后，fixture Handler回写响应产生ssl.SSLEOFError；现有fixture只将BrokenPipeError/ConnectionResetError视为断链，导致EOF误记handler_error且尝试send_error再报SSL BAD_LENGTH。原失败与二次异常保留。
+
+授权low pr9_ci_worker仅在tests/fixtures/a31_delivery.py响应self.wfile.write(raw)处对ssl.SSLEOFError进行与已断开客户端相同处理；限已提交结果之后的响应写入，不扩大到整个Handler、请求读取/验签/事务等路径。其它异常继续进入原handler_error/close断言，不能吞通用SSLError/证书错误、业务错误或放松SIGKILL/持久恢复/零效果断言。生产AuditClient/DeliveryWorker不改。真实整文件重跑及其后普通PG诊断，最终全矩阵独验仍必需。

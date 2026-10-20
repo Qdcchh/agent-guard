@@ -1,0 +1,57 @@
+"""r5 independent semantic confirmations; no reviewed source modified."""
+import dataclasses,json,threading
+import pytest
+from agent_guard.contracts.execution import ExecutionError,ToolId
+from agent_guard.contracts.ledger import TrustedCost
+from agent_guard.ledger.service import ExecutionLedger
+from agent_guard.tools.catalog import snapshot_to_bytes,snapshot_from_bytes
+from tests.fixtures.execution import build_env,order_params
+from tests.fixtures.dbstate import fetch_counts
+from test_review import accepted,observe,counters,effects
+
+@pytest.mark.parametrize('round_no',range(10))
+@pytest.mark.parametrize('valid',[False,True])
+def test_atomic_existing_accept_material_at_last_miss(a2,monkeypatch,round_no,valid):
+ ready=threading.Event();done=threading.Event();created=[];errors=[];original=a2.ledger.accept_checked
+ def delayed(v,c,*,existing_validator):ready.set();assert done.wait(10);return original(v,c,existing_validator=existing_validator)
+ monkeypatch.setattr(a2.ledger,'accept_checked',delayed)
+ snap=a2.catalog.build_order_snapshot(tenant_id=a2.tree.tenant_id,task_id=a2.tree.task_id,request_id='req-001',quote_id='quote-001',quote_version='1',items=(('sku-001',1),),delivery_id='office-001')
+ def commit():
+  try:
+   assert ready.wait(10)
+   created.append(ExecutionLedger(a2.gateway_dsn).accept(a2.tree.invocation(idempotency_key='r5-race',tool_id=ToolId.ORDER_CREATE.value,params=order_params()),TrustedCost(70000,quote_id='quote-001',quote_version='1',quote_snapshot=snapshot_to_bytes(snap) if valid else b'invalid accepted legacy quote')).operation_id)
+  except Exception as e:errors.append(type(e).__name__)
+  finally:done.set()
+ t=threading.Thread(target=commit);t.start();returned=None;error=None
+ try:returned=a2.service.accept_invocation(a2.tree.invocation(idempotency_key='r5-race',tool_id=ToolId.ORDER_CREATE.value,params=order_params()),a2.permission())
+ except ExecutionError as e:error=e.code.value
+ t.join(15);assert not t.is_alive() and errors==[] and len(created)==1
+ counts=fetch_counts(a2.gateway_dsn);flag=a2.service.review_flag(created[0]) is not None
+ observe('r5-last-miss-semantic',{'round':round_no,'valid':valid,'error':error,'disposition':None if returned is None else returned.disposition.value,'flag':flag,'proofs':counts['ag_proofs'],'counts':counts,'counters':counters(a2),'effects':effects(a2)})
+ assert effects(a2)['ds_operations']==0 and counts['ag_operations']==1
+ assert all(c=={'amount_reserved':70000,'amount_settled':0,'calls_reserved':1,'calls_settled':0} for c in counters(a2))
+ if valid:assert error is None and returned.operation_id==created[0] and returned.disposition.value=='EXISTING' and counts['ag_proofs']==2 and not flag
+ else:assert error=='LEGACY_SNAPSHOT_INVALID' and flag and counts['ag_proofs']==1
+
+@pytest.mark.parametrize('entry',['execute','query'])
+def test_structurally_identical_list_quote_not_a_field_mismatch(a2,entry):
+ # Contract says field-by-field structural comparison is enough. No data changes.
+ op=accepted(a2).operation_id;row=a2.service.load_operation(op)
+ v=a2.downstream.execute(service_secret=a2.secret,operation_id=op,tool_id=ToolId.ORDER_CREATE,canonical_params=row.canonical_params,quote=snapshot_from_bytes(row.quote_snapshot),expected_amount_fen=70000)
+ v=dataclasses.replace(v,quote=dataclasses.replace(v.quote,items=list(v.quote.items)))
+ class Port:
+  def execute(self,**kw):return v
+  def query(self,**kw):return v
+ env=build_env(tree=a2.tree,gateway_dsn=a2.gateway_dsn,downstream_dsn=a2.downstream_dsn,downstream=Port())
+ result=env.service.run_operation(op) if entry=='execute' else env.service.reconcile(op)
+ assert result.status=='SUCCEEDED' and fetch_counts(a2.gateway_dsn)['ag_receipt_outbox']==1 and effects(a2)['ds_orders']==1
+ assert all(c=={'amount_reserved':0,'amount_settled':70000,'calls_reserved':0,'calls_settled':1} for c in counters(a2))
+ observe('r5-list-semantic',{'entry':entry,'structurally_equal':True,'status':result.status,'semantic_nonfinding':True})
+
+@pytest.mark.parametrize('version',['0\n','1\n'])
+def test_snapshot_version_full_string_positive_required(version):
+ raw=json.dumps({'quote_id':'q','quote_version':version,'supplier_id':'s','items':[{'sku':'a','quantity':1,'unit_price_fen':0}],'total_fen':0,'currency':'CNY'}).encode();error=None
+ try:snapshot_from_bytes(raw)
+ except ExecutionError as e:error=e.code.value
+ observe('r5-version-zero-lf',{'version':version,'error':error})
+ assert error=='LEGACY_SNAPSHOT_INVALID'

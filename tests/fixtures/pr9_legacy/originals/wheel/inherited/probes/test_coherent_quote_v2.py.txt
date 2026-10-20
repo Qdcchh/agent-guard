@@ -1,0 +1,97 @@
+"""Own coherent two-column trusted fault; no candidate guard changes."""
+import copy
+import json
+import os
+import hashlib
+from datetime import datetime
+from pathlib import Path
+import psycopg
+import pytest
+
+from agent_guard.authorization.evidence_store import EvidenceError
+from agent_guard.contracts.encoding import canonical_json_bytes, load_strict_json
+from agent_guard.contracts.execution import ExecutionError
+from agent_guard.contracts.ledger import LedgerError
+from agent_guard.evidence.receipt import verify_receipt_bundle
+from agent_guard.execution.receipt_publication import evidence_bundle
+from agent_guard.execution.receipt_projection import project_receipt
+from tests.fixtures.gateway import query_bundle
+from tests.fixtures.receipts import CorruptRow, full_state, staged_only, publication_only
+from tests.integration.test_gateway_receipt_query import app, query_http
+from tests.integration.test_receipt_publication import final_env
+
+
+def test_new_coherent_quote_result_wrong_arithmetic_must_not_publish(
+    ledger, dsn, downstream_dsn
+):
+    env, op, key, verifier, publisher = final_env(dsn, downstream_dsn)
+    baseline = full_state(dsn, downstream_dsn)
+    with psycopg.connect(dsn) as conn:
+        quote_raw = bytes(conn.execute("SELECT quote_snapshot FROM ag_operations WHERE operation_id=%s", (op,)).fetchone()[0])
+        result_raw = bytes(conn.execute("SELECT result_bytes FROM ag_receipt_outbox WHERE operation_id=%s", (op,)).fetchone()[0])
+    quote = load_strict_json(quote_raw)
+    result = load_strict_json(result_raw)
+    assert quote["items"] == result["items"] and quote["total_fen"] == result["total_fen"]
+    bad_quote, bad_result = copy.deepcopy(quote), copy.deepcopy(result)
+    bad_quote["items"][0]["unit_price_fen"] += 1
+    bad_result["items"][0]["unit_price_fen"] += 1
+    assert sum(x["quantity"]*x["unit_price_fen"] for x in bad_quote["items"]) != quote["total_fen"]
+    # Normal production protection is observed first, without bypassing guards.
+    with pytest.raises(psycopg.Error):
+        with psycopg.connect(dsn) as conn:
+            conn.execute("UPDATE ag_operations SET quote_snapshot=%s WHERE operation_id=%s", (canonical_json_bytes(bad_quote), op))
+    assert full_state(dsn, downstream_dsn) == baseline
+    observed = {"classification":"OWNED_PRIVILEGED_COHERENT_TRUSTED_ROW_FAULT_NOT_EXTERNAL_SQL_BYPASS", "ordinary_update_refused":True, "first_evidence_params_totals_and_ds_rows_unchanged":True, "quote_result_unit_price_both_incremented":True, "arithmetic_wrong":True}
+    snapshots = Path(os.environ["A23_RECEIPT_EVIDENCE"])
+    def save_snapshot(name, state):
+        def encode(v):
+            if isinstance(v, bytes): return {"raw_bytes_hex":v.hex()}
+            if isinstance(v, datetime): return v.isoformat()
+            return str(v)
+        raw = json.dumps(state, default=encode, indent=2).encode()
+        path = snapshots/(name+".private.json");path.write_bytes(raw);path.chmod(0o600)
+        return {"path":str(path),"sha256":hashlib.sha256(raw).hexdigest()}
+    observed["baseline_full_state"] = save_snapshot("baseline",baseline)
+    application = app(env, dsn, verifier)
+    current = query_bundle(env, op)
+    try:
+        with CorruptRow(dsn, "ag_operations", {"operation_id":op}, {"quote_snapshot":canonical_json_bytes(bad_quote)}), CorruptRow(dsn, "ag_receipt_outbox", {"operation_id":op}, {"result_bytes":canonical_json_bytes(bad_result), "receipt_status":"PENDING", "receipt_jws":None, "signed_at":None}):
+            faulty = full_state(dsn, downstream_dsn)
+            observed["damaged_before_publish_full_state"] = save_snapshot("damaged-before-publish",faulty)
+            try:
+                publication = publisher.publish(op)
+            except (EvidenceError, ExecutionError, LedgerError, ValueError) as exc:
+                observed["publisher_refused"] = True
+                observed["publisher_exception_type"] = type(exc).__name__
+                assert full_state(dsn, downstream_dsn) == faulty
+            else:
+                published = full_state(dsn, downstream_dsn)
+                publication_only(faulty, published)
+                observed["damaged_after_publish_full_state"] = save_snapshot("damaged-after-publish",published)
+                observed["only_publication3_changed_all_other_ag_and_ds_unchanged"] = True
+                observed["publisher_refused"] = False
+                observed["publication_status"] = publication.receipt_status
+                with psycopg.connect(dsn) as conn:
+                    verified = verify_receipt_bundle(evidence_bundle(project_receipt(conn, op), publication.receipt_jws), trust=verifier._trust_tx(conn, op))
+                observed["independent_sdk_accepts_corrupt_material"] = verified.operation_id == op
+                before_query = full_state(dsn, downstream_dsn)
+                status, response, _ = query_http(application, dsn, current)
+                observed["current_query_http_status"] = status
+                observed["current_query_code"] = response.get("error", {}).get("code")
+                assert status == 503
+                staged_only(before_query, full_state(dsn, downstream_dsn), proof_jti=current.query.proof_jti)
+            Path(os.environ["A23_RECEIPT_EVIDENCE"], "coherent-quote-result-fault.json").write_text(json.dumps(observed, indent=2)+"\n")
+        before_repair = full_state(dsn, downstream_dsn)
+        repaired = publisher.publish(op)
+        assert repaired.receipt_status == "READY"
+        publication_only(before_repair, full_state(dsn, downstream_dsn))
+        status, response, _ = query_http(application, dsn, current)
+        assert status == 200 and response["receipt_jws"] == repaired.receipt_jws
+        assert query_http(application, dsn, current)[0] == 409
+        observed["trusted_material_restoration_publish_ready"] = True
+        observed["same_proof_after_restoring_original_quote_result_http"] = 200
+        observed["replay_after_repair_http"] = 409
+        snapshots.joinpath("coherent-quote-result-fault-v2.json").write_text(json.dumps(observed,indent=2)+"\n")
+        assert observed["publisher_refused"], "A23-05 malformed original quote arithmetic was signed and committed READY"
+    finally:
+        application._executor.shutdown()

@@ -1,0 +1,38 @@
+{
+  "status": "PACKAGE_READY",
+  "review_kind": "PACKAGE_REVIEW",
+  "not_IMPLEMENTATION_ACCEPTANCE": true,
+  "UTC": "2026-10-13T04:47:35.339222+00:00",
+  "reviewer_task": "/root/a33_a34_joint_package_review_sol_high_r1",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "high",
+  "effective_metadata": "UNKNOWN",
+  "report": "tasks/workflow/runs/A3.3-A3.4-joint-20261013/package-review-r1.md",
+  "report_SHA256": "49a74f61109cedac897f03caeaee6ef1310ec16006c3e04707b409a9f753cc03",
+  "original_REPORT": "artifacts/workflow/A3.3-A3.4-joint-package-review-r1-cefbd637-e1b7-4912-bff7-3facac60d7a8/REPORT.md",
+  "manifest": {
+    "path": "artifacts/workflow/A3.3-A3.4-joint-package-review-r1-cefbd637-e1b7-4912-bff7-3facac60d7a8/manifest.json",
+    "bytes": 7505,
+    "sha256": "c481310c5ada1380281a0169d1c054646395d5fd2382b9aec634c9f3ece82eea"
+  },
+  "STOP_sha256": "98594513ef68c0c7c95e9897eac7cb66456b3b732a1a01cea57ef7fd8ed56459",
+  "candidate_sha256": "ab3426d56d722e21ab478226b9890ec8af60c048e5bffc792476eca37436c623",
+  "candidate648_start_end_root_current_match": true,
+  "complete_parent185_originals_match": true,
+  "atom568_all_present": true,
+  "counts": {
+    "parents": 185,
+    "runtime": 177,
+    "A2_atoms": 269,
+    "A31_atoms": 95,
+    "A32_atoms": 73,
+    "A33_atoms": 71,
+    "A34_atoms": 60,
+    "original_atoms": 568,
+    "regressions": 55,
+    "registration": 6
+  },
+  "resources_created": [],
+  "resources_remaining": 0,
+  "implementation_acceptance": false
+}

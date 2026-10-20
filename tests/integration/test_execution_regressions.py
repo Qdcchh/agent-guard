@@ -741,7 +741,7 @@ def test_legacy_material_is_auto_quarantined_at_every_entry(
                     operation_id=operation_id,
                 )
         with psycopg.connect(db.dsn) as conn:
-            assert set(apply_migrations(conn)) == {"004", "005", "006"}
+            assert set(apply_migrations(conn)) == {"004", "005", "006", "008", "009"}
 
         error = None
         try:

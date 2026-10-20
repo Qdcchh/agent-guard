@@ -1,0 +1,39 @@
+
+# Independent pinned original14 SQL/registry/ownership and current007 inventories.
+A31_ORIGINAL31 = frozenset({'ag_grants', 'ag_event_seals', 'ag_auth_events', 'ag_schema_legacy_binding', 'ag_auth_evidence', 'ag_ledger_event_nodes', 'ag_proofs', 'ag_test_ownership', 'ag_grant_tokens', 'ag_operation_review_flags', 'ag_receipt_outbox', 'ag_operation_evidence', 'ag_users', 'ag_authorization_requests', 'ag_login_sessions', 'ag_principals', 'ag_tasks', 'ag_exchange_evidence', 'ag_schema_migrations', 'ag_grant_revocations', 'ag_ledger_events', 'ag_task_revocations', 'ag_authorization_codes', 'ag_operations', 'ag_schema_migration_lineages', 'ag_execution_leases', 'ag_login_csrf', 'ag_tenant_admins', 'ag_verified_evidence', 'ag_delegations', 'ag_task_policies'})
+A31_CURRENT007_SIX = frozenset({'ag_audit_delivery_batches', 'ag_audit_streams', 'ag_audit_bootstrap_chunks', 'ag_audit_records', 'ag_audit_bootstrap', 'ag_audit_delivery'})
+"""This review independently selected strict persisted price and row shapes."""
+import copy,json,os
+from pathlib import Path
+import pytest,psycopg
+from agent_guard.authorization.evidence_store import EvidenceError
+from agent_guard.contracts.encoding import load_strict_json,canonical_json_bytes
+from agent_guard.execution import store
+from tests.fixtures.receipts import CorruptRow,full_state,publication_only
+from tests.integration.test_receipt_publication import final_env
+
+@pytest.mark.parametrize('variant',['boolean-price','negative-price','extra-line-key','missing-supplier','empty-items'])
+def test_reviewer_coherent_strict_shapes_fail_before_sign(ledger,dsn,downstream_dsn,monkeypatch,variant):
+ import agent_guard.execution.receipt_publication as publication
+ _,op,_,verifier,publisher=final_env(dsn,downstream_dsn)
+ with psycopg.connect(dsn) as c:
+  original=store.fetch_outbox(c,op);quote=load_strict_json(bytes(store.fetch_operation(c,op).quote_snapshot));result=load_strict_json(original['result_bytes'])
+ badq,badr=copy.deepcopy(quote),copy.deepcopy(result)
+ for value in (badq,badr):
+  if variant=='boolean-price':value['items'][0]['unit_price_fen']=True
+  elif variant=='negative-price':value['items'][0]['unit_price_fen']=-1
+  elif variant=='extra-line-key':value['items'][0]['assumed_authorized']=True
+  elif variant=='missing-supplier':value.pop('supplier_id')
+  else:value['items']=[]
+ signs=[];real=publication.sign_compact_jws
+ def signing(*a,**k):signs.append(k['token_type']);return real(*a,**k)
+ monkeypatch.setattr(publication,'sign_compact_jws',signing)
+ with CorruptRow(dsn,'ag_operations',{'operation_id':op},{'quote_snapshot':json.dumps(badq,sort_keys=True,separators=(",", ":")).encode()}),CorruptRow(dsn,'ag_receipt_outbox',{'operation_id':op},{'result_bytes':json.dumps(badr,sort_keys=True,separators=(",", ":")).encode()}):
+  before=full_state(dsn,downstream_dsn);assert len(before['gateway'].keys() & A31_ORIGINAL31)==31 and set(before['gateway']) == A31_ORIGINAL31 | A31_CURRENT007_SIX and len(before['downstream'])==3
+  with pytest.raises(EvidenceError):publisher.publish(op)
+  assert signs==[] and full_state(dsn,downstream_dsn)==before
+  with psycopg.connect(dsn) as c:
+   out=store.fetch_outbox(c,op);assert (out['receipt_status'],out['receipt_jws'],out['signed_at'],out['receipt_id'],out['created_at'])==('PENDING',None,None,original['receipt_id'],original['created_at'])
+ restored=full_state(dsn,downstream_dsn);ready=publisher.publish(op);assert ready.receipt_status=='READY' and signs==['ag-receipt+jwt'];publication_only(restored,full_state(dsn,downstream_dsn))
+ with psycopg.connect(dsn) as c:verifier.verify_tx(c,op,ready.receipt_jws)
+ Path(os.environ['A23_RECEIPT_EVIDENCE'],variant+'.json').write_text(json.dumps({'independently_designed':True,'variant':variant,'zero_sign_before_refusal':True,'original_gateway_tables':31,'current_gateway_tables':37,'full_ds_tables':3,'pending_stable_id_iat':True,'repair_same_operation_ready':True}))

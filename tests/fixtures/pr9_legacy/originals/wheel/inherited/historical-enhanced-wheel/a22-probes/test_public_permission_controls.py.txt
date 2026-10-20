@@ -1,0 +1,60 @@
+"""Worker self-check supplements: real signed requests and true PG effect snapshots."""
+import copy,json,time
+from dataclasses import replace
+import psycopg,pytest
+from agent_guard.authorization.proof import sign_ag_proof
+from agent_guard.contracts.encoding import canonical_json_bytes
+from agent_guard.contracts.ledger import INVOKE_ENDPOINT
+from agent_guard.crypto.sm import sign_compact_jws,verify_compact_jws
+from tests.fixtures.gateway import app_for,raw_material,request,state
+from tests.integration.test_verified_execution import signed_env
+
+@pytest.mark.parametrize('variant,expected',[
+ ('float',400),('negative',400),('string-quantity',400),('duplicate-json',400),
+ ('missing-param',400),('empty-items',400),('path',400),('notification-url',400),
+ ('empty-skus',403),('empty-request',403),('missing-set',401),('scope',403),
+ ('cross-tenant-resource',403),('document-association',403),('parent-token-child-proof',401),
+ ('ancestor-constraints',503),('cross-task',403),('cross-tenant',401),
+])
+def test_public_rejects_full_scope_and_schema_matrix(ledger,dsn,downstream_dsn,variant,expected):
+ env=signed_env(dsn,downstream_dsn);bundle=env.bundle();token,proof,raw=raw_material(dsn,bundle)
+ body=json.loads(raw);claims=verify_compact_jws(token.decode(),expected_type='ag-at+jwt',trusted_keys={'as-sign-1':env.as_key.public_key()})
+ original_token=token.decode();original_claims=canonical_json_bytes(claims)
+ if variant=='float':body['params']['items'][0]['quantity']=1.5
+ if variant=='negative':body['params']['items'][0]['quantity']=-1
+ if variant=='string-quantity':body['params']['items'][0]['quantity']='1'
+ if variant=='missing-param':del body['params']['delivery_id']
+ if variant=='empty-items':body['params']['items']=[]
+ if variant=='path':body['params']['request_id']='../req-001'
+ if variant=='notification-url':
+  body['tool_id']='notification.template.send';body['params']={'template_id':'order-created','recipient_id':'https://evil.test','operation_id':'unknown'}
+ if variant=='empty-skus':claims['ag_constraints']['skus']=[]
+ if variant=='empty-request':claims['ag_constraints']['request_ids']=[]
+ if variant=='missing-set':del claims['ag_constraints']['skus']
+ if variant=='scope':claims['scope']='procurement.request.read'
+ if variant=='cross-task':body['task_id']='other-task'
+ if variant=='cross-tenant':claims['ag_tenant_id']='other-tenant'
+ if variant=='ancestor-constraints':claims['ag_constraints']['skus'].append('unauthorized-parent-sku')
+ if variant=='cross-tenant-resource':
+  current=env.service._catalog._requests['req-001'];env.service._catalog._requests['req-001']=replace(current,tenant_id='other-tenant')
+ if variant=='document-association':
+  body['tool_id']='procurement.document.read';body['params']={'request_id':'req-001','document_id':'doc-001'}
+  current=env.service._catalog._documents['doc-001'];env.service._catalog._documents['doc-001']=replace(current,request_id='other-request')
+ token=(original_token if canonical_json_bytes(claims)==original_claims else sign_compact_jws(env.as_key,claims,key_id='as-sign-1',token_type='ag-at+jwt'))
+ if variant=='parent-token-child-proof':
+  with psycopg.connect(dsn) as conn:token=conn.execute('SELECT token_jws FROM ag_grant_tokens WHERE grant_id=%s',(bundle.source.snapshot.chain_grant_ids[0],)).fetchone()[0]
+ # Invalid numeric JSON still carries authentic credentials and is rejected
+ # by independent schema before signature-binding, not by test construction.
+ signing_body=copy.deepcopy(body)
+ if variant in ('float','negative'):signing_body['params']['items'][0]['quantity']=1
+ proof=sign_ag_proof(env.keys['executor'],kid=env.registrations[('tenant-001','agent-executor')].kid,client_id='agent-executor',purpose='invoke',endpoint=INVOKE_ENDPOINT,token=token,body=signing_body,now=int(time.time()))
+ raw=json.dumps(body,separators=(',',':')).encode()
+ if variant=='duplicate-json':raw=raw[:-1]+b',"task_id":"task-001"}'
+ before=state(dsn);app=app_for(env,dsn)
+ try:
+  status,error,headers=request(app,body=raw,headers=[(b'content-type',b'application/json'),(b'authorization',b'AGPoP '+token.encode()),(b'ag-proof',proof.encode())])
+  assert status==expected,(variant,status,error)
+  assert state(dsn)==before
+  with psycopg.connect(downstream_dsn) as conn:assert conn.execute('SELECT count(*) FROM ds_operations').fetchone()==(0,)
+  assert token not in str(error) and proof not in str(error) and dsn not in str(error)
+ finally:app._executor.shutdown()

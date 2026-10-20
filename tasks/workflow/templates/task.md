@@ -26,4 +26,4 @@
 
 ## 交付和停止
 
-实施报告路径、原A2-report摘要更新、实际tracked/untracked/deleted清单、状态READY_FOR_REVIEW、停写交主控。阶段内自动返修；本阶段ACCEPTED后主控停等用户批准下一段。
+实施报告路径、原A2-report摘要更新、实际tracked/untracked/deleted清单、状态READY_FOR_REVIEW、停写交主控。阶段内按已批准范围返修；本阶段ACCEPTED后worker停写交主控。主控先核已有真人持续授权：覆盖下一段时继续正式建包与fresh独立包审，没有覆盖时才等待用户批准。不得把模板本身当授权，也不继承管理员审核例外。

@@ -1,0 +1,18 @@
+[
+  {
+    "mode": "source",
+    "xml_sha256": "e07c2c81564bd7c26482a19d537ce2c402b633469950b46a77de6cafa7089fd9",
+    "tests": 5,
+    "native_exit": 0,
+    "parent_samples": 1,
+    "actual_declared_match": true
+  },
+  {
+    "mode": "wheel",
+    "xml_sha256": "22474055e6b83a47b00f8343d27bb3e15e8a915ea823bd75b266f7e2caa741a8",
+    "tests": 5,
+    "native_exit": 0,
+    "parent_samples": 2,
+    "actual_declared_match": true
+  }
+]

@@ -1,0 +1,77 @@
+import os,ssl,socket,threading,subprocess,sys,stat,json
+from pathlib import Path
+from http.server import BaseHTTPRequestHandler,HTTPServer
+from dataclasses import replace
+import pytest
+from agent_guard.identity.resolver import IdentityResolver,IdentityError,RegisteredIdentity
+from agent_guard.crypto.sm import generate_sm2_private_key,serialize_sm2_public_key
+from agent_guard.contracts.encoding import canonical_json_bytes
+from agent_guard.server.private_files import read_private_file,write_private_file
+from agent_guard.server.config import ConfigError
+from agent_guard.server.__main__ import init_config,check_config
+from tests.test_authorization import _fixture,DID,KID
+@pytest.fixture
+def network(tmp_path,monkeypatch):
+ a,k,doc,v,staged=_fixture();reg=RegisteredIdentity('tenant-001','agent-planner',DID,KID,serialize_sm2_public_key(k.public_key()));cert=tmp_path/'cert.pem';key=tmp_path/'key.pem'
+ p=subprocess.run(['openssl','req','-x509','-newkey','rsa:2048','-nodes','-days','1','-subj','/CN=identity.agent-guard.test','-addext','subjectAltName=DNS:identity.agent-guard.test','-keyout',str(key),'-out',str(cert)],capture_output=True);assert p.returncode==0;key.chmod(0o600)
+ settings={'mode':'valid','hits':[],'document':doc}
+ class Handler(BaseHTTPRequestHandler):
+  def log_message(self,*args):pass
+  def do_GET(self):
+   settings['hits'].append(self.path)
+   if settings['mode']=='redirect':self.send_response(302);self.send_header('Location','https://127.0.0.1/internal');self.end_headers();return
+   self.send_response(200);self.send_header('Content-Type','application/did+json');self.end_headers();self.wfile.write(canonical_json_bytes(settings['document']))
+ server=HTTPServer(('127.0.0.1',443),Handler);context=ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER);context.load_cert_chain(cert,key);server.socket=context.wrap_socket(server.socket,server_side=True);t=threading.Thread(target=server.serve_forever);t.start()
+ old=socket.getaddrinfo
+ def mapped(host,port,*args,**kwargs):return old('127.0.0.1' if host=='identity.agent-guard.test' else host,port,*args,**kwargs)
+ monkeypatch.setattr(socket,'getaddrinfo',mapped);monkeypatch.setenv('SSL_CERT_FILE',str(cert));monkeypatch.setenv('NO_PROXY','*');monkeypatch.delenv('HTTPS_PROXY',raising=False);monkeypatch.delenv('https_proxy',raising=False)
+ resolver=IdentityResolver({('tenant-001','agent-planner'):reg},allowed_hosts=frozenset({'identity.agent-guard.test'}))
+ try:yield resolver,settings,reg
+ finally:server.shutdown();server.server_close();t.join(5);assert not t.is_alive()
+def test_default_https_tls_and_no_redirect(network,monkeypatch):
+ r,s,reg=network;assert r.resolve_registered('agent-planner','tenant-001','capabilityInvocation').registration==reg;assert s['hits']==['/agents/planner/did.json']
+ monkeypatch.delenv('SSL_CERT_FILE');
+ with pytest.raises(IdentityError,match='unavailable'):r.resolve_registered('agent-planner','tenant-001','authentication')
+ # TLS rejection occurred before an HTTP request reached the server.
+ assert len(s['hits'])==1
+def test_redirect_to_private_never_followed(network):
+ r,s,reg=network;s['mode']='redirect'
+ with pytest.raises(IdentityError,match='redirect'):r.resolve_registered('agent-planner','tenant-001','authentication')
+ assert s['hits']==['/agents/planner/did.json']
+@pytest.mark.parametrize('variant',['unknown-client','tenant','unapproved-host','private-ip','path-traversal','unknown-purpose'])
+def test_untrusted_targets_zero_network(network,variant):
+ r,s,reg=network;client='agent-planner';tenant='tenant-001';purpose='authentication'
+ if variant=='unknown-client':client='unknown'
+ elif variant=='tenant':tenant='other'
+ elif variant=='unknown-purpose':purpose='gateway-receipt'
+ else:
+  did={'unapproved-host':'did:web:evil.example:agents:planner','private-ip':'did:web:127.0.0.1:agents:planner','path-traversal':'did:web:identity.agent-guard.test:..:planner'}[variant];r=IdentityResolver({('tenant-001','agent-planner'):replace(reg,did=did,kid=did+'#key-1')},allowed_hosts=frozenset({'identity.agent-guard.test'}))
+ with pytest.raises(IdentityError):r.resolve_registered(client,tenant,purpose)
+ assert s['hits']==[]
+@pytest.mark.parametrize('purpose',['authentication','capabilityInvocation','capabilityDelegation'])
+def test_live_did_purpose_and_key_substitution(network,purpose):
+ r,s,reg=network;s['document'][purpose]=[]
+ with pytest.raises(IdentityError,match='purpose'):r.resolve_registered('agent-planner','tenant-001',purpose)
+ s['document'][purpose]=[KID];s['document']['verificationMethod'][0]['controller']='did:web:evil.example'
+ with pytest.raises(IdentityError):r.resolve_registered('agent-planner','tenant-001',purpose)
+@pytest.mark.parametrize('mask',[0o022,0o077])
+def test_private_cli_no_permission_repair(tmp_path,mask):
+ target=tmp_path/'generated';p=subprocess.run([sys.executable,'-m','agent_guard.server','init','--out',str(target)],capture_output=True,umask=mask);assert p.returncode==0
+ assert stat.S_IMODE(target.stat().st_mode)==0o700
+ for name in ['as-sign-key.pem','agent-planner.pem','agent-selector.pem','agent-executor.pem','config.json','secrets.json']:
+  f=target/name;assert stat.S_IMODE(f.stat().st_mode)==0o600;assert read_private_file(f)
+ subprocess.run([sys.executable,'-m','agent_guard.server','check','--config',str(target/'config.json')],capture_output=True,check=True)
+ original=(target/'secrets.json').read_bytes()
+ with pytest.raises(FileExistsError):write_private_file(target/'secrets.json',b'overwrite')
+ assert (target/'secrets.json').read_bytes()==original
+def test_nonregular_fifo_must_be_rejected_without_blocking(tmp_path):
+ fifo=tmp_path/'credential-fifo';os.mkfifo(fifo,0o600)
+ # Separate owned subprocess ensures a product hang cannot hang reviewer.
+ p=subprocess.Popen([sys.executable,'-c',"from agent_guard.server.private_files import read_private_file; from agent_guard.server.config import ConfigError; import sys;\ntry: read_private_file(sys.argv[1])\nexcept ConfigError: sys.exit(0)\nelse: sys.exit(2)",str(fifo)],stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+ try:
+  try:out,err=p.communicate(timeout=2);observed=p.returncode
+  except subprocess.TimeoutExpired:p.kill();p.communicate();observed='BLOCKED_FIFO_OPEN'
+ finally:
+  if p.poll() is None:p.kill();p.wait()
+ with Path('/evidence/logs/private-observations.jsonl').open('a') as f:f.write(json.dumps({'case':'nonregular_fifo','observed':observed,'owned_process_stopped':p.poll() is not None})+'\n')
+ assert observed==0,'private reader blocked before regular-file rejection: '+str(observed)

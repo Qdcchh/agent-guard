@@ -1,0 +1,42 @@
+{
+  "status": "NATIVE_SPAWNED_SOLE_CORRECTION_ACTIVE",
+  "exact_write_paths": [
+    "src/agent_guard/audit/client.py",
+    "src/agent_guard/audit/delivery.py",
+    "src/agent_guard/audit/delivery_cli.py",
+    "tests/fixtures/a31_delivery.py",
+    "tests/integration/test_audit_delivery.py",
+    "tests/unit/test_audit_client.py"
+  ],
+  "read_only": "all other product/SQL/locks/shared32/service12/formal contracts",
+  "scope": "Concentrated v5 remote-ahead durable-child/covered-parentACK and lock_timeout fairness only; no rewrites of accepted work",
+  "mandatory_tests": [
+    "All original exact delivery own group source/noneditablewheel 685 baseline collection plus new controls; preserve original assertions",
+    "partial32 parent64, remote32to65 parent64, next65to70, samepin progress, aligned",
+    "factory provenance/mutable or forgedDTO rejected, wrongbase/slice/body/sig/history/record/page/scope/keyrole/range rejected; pending and allbusiness domains unchanged",
+    "child exactbody deterministic persisted before network, immutable repeated recovery, collision/mismatch refused, latechild and lateparent cannotclearnewpending",
+    "6 child crash windows x10 actual SIGKILL/newprocess persistent DB in eachmode, native PID UID start argv/exit and complete fullstate witness",
+    "actual independently blocked delivery row produces real psycopg SQLSTATE lock_timeout; healthy nextstream progresses x10 eachmode",
+    "strict network outside any DB locks, parentACK onlyafter complete fresh proof covers exact end, never cursorjumpN",
+    "whole quality/format and installedsource/wheel/SQL provenance; no production secret output; retain failedattempts"
+  ],
+  "resource_role": "Same sole actual delivery owner; independent delivery-source and delivery-wheel physical PG/DS/audit/net/private; complete989 parallel, no crossmode sharing",
+  "gate": "All product changes complete before single rebuild/snapshot, never prepare while active test uses old paths; failures genuine finish groups after fix no partialstitch",
+  "delivery_result": "report/candidate exact6 hashes/actual testID union/native raw+XML originalfailure manifest, native STOP no resourceleft; no own ACCEPTED",
+  "task": "/root/a31_reconcile_correction_sol_r5",
+  "requested_model": "gpt-6.1-sol/medium",
+  "effective_metadata": "UNKNOWN",
+  "formal_packet": [
+    "task-reconcile-v5.md",
+    "interface-reconcile-v5.md",
+    "ownership-reconcile-v5.json",
+    "node-bindings-reconcile-v5.json"
+  ],
+  "review_report": "package-reconcile-review-r5.md",
+  "review_report_sha256": "e8a7b900b82b4be8a414057c0796688dd823a4cb588ff4d1403f110e7ff509c3",
+  "native_previous_writers_stop": true,
+  "resource_creator": "root on behalf of exactdelivery solecorrector; worker owns subsequent ownresource cleanup",
+  "resource_readback": "artifacts/workflow/A3.1-audit-20261008/controller/reconcile-r5-isolated-mode-transfer-readback.json",
+  "native_task": "/root/a31_reconcile_correction_sol_r5",
+  "finite_runtime_binding": "artifacts/workflow/A3.1-audit-20261008/controller/correction-mode-isolation-plan-r5.json"
+}

@@ -1,0 +1,135 @@
+{
+  "stage": "A3.1",
+  "effective_metadata": "UNKNOWN",
+  "requested_roles": {
+    "controller": "gpt-6.1-sol",
+    "controller_effort": "USER_CURRENT_SETTING_NOT_OBSERVED",
+    "worker": "gpt-6.1-sol/medium",
+    "reviewer": "gpt-6.1-sol/high"
+  },
+  "finite_adaptation_source": "authorization.md + current-policy persistent human approval for analogous native metadata limitation; old machine gates immutable",
+  "resources": {
+    "shared": {
+      "owner_uuid": "78baf870-8f66-4961-9e24-8f4554e65c65",
+      "role_owner_token": "78baf8708f66-shared",
+      "network_name": "ag-a31-78baf8708f66-shared",
+      "GW_DS_PG_name": "ag-a31-78baf8708f66-shared-pg",
+      "audit_PG_name": "ag-a31-78baf8708f66-shared-audit",
+      "python_name": "ag-a31-78baf8708f66-shared-py",
+      "project_label": "ag-a31-78baf8708f66-shared",
+      "db_names": {
+        "gateway": "ag31_gw_78baf8708f66",
+        "downstream": "ag31_ds_78baf8708f66",
+        "audit": "ag31_audit_78baf8708f66"
+      },
+      "schema": "run-exclusive random marker validated by fixtures",
+      "evidence_dir": "artifacts/workflow/A3.1-audit-20261008/shared-78baf8708f66",
+      "private_dir": "/tmp/ag31-78baf8708f66-shared",
+      "binding_status": "PROPOSED_NO_RESOURCE_CREATED; fullIDs/mounts/labels/ports/digests recorded immediately after self-created resource only"
+    },
+    "service": {
+      "owner_uuid": "78baf870-8f66-4961-9e24-8f4554e65c65",
+      "role_owner_token": "78baf8708f66-service",
+      "network_name": "ag-a31-78baf8708f66-service",
+      "GW_DS_PG_name": "ag-a31-78baf8708f66-service-pg",
+      "audit_PG_name": "ag-a31-78baf8708f66-service-audit",
+      "python_name": "ag-a31-78baf8708f66-service-py",
+      "project_label": "ag-a31-78baf8708f66-service",
+      "db_names": {
+        "gateway": "ag31_gw_78baf8708f66",
+        "downstream": "ag31_ds_78baf8708f66",
+        "audit": "ag31_audit_78baf8708f66"
+      },
+      "schema": "run-exclusive random marker validated by fixtures",
+      "evidence_dir": "artifacts/workflow/A3.1-audit-20261008/service-78baf8708f66",
+      "private_dir": "/tmp/ag31-78baf8708f66-service",
+      "binding_status": "PROPOSED_NO_RESOURCE_CREATED; fullIDs/mounts/labels/ports/digests recorded immediately after self-created resource only"
+    },
+    "delivery": {
+      "owner_uuid": "78baf870-8f66-4961-9e24-8f4554e65c65",
+      "role_owner_token": "78baf8708f66-delivery",
+      "network_name": "ag-a31-78baf8708f66-delivery",
+      "GW_DS_PG_name": "ag-a31-78baf8708f66-delivery-pg",
+      "audit_PG_name": "ag-a31-78baf8708f66-delivery-audit",
+      "python_name": "ag-a31-78baf8708f66-delivery-py",
+      "project_label": "ag-a31-78baf8708f66-delivery",
+      "db_names": {
+        "gateway": "ag31_gw_78baf8708f66",
+        "downstream": "ag31_ds_78baf8708f66",
+        "audit": "ag31_audit_78baf8708f66"
+      },
+      "schema": "run-exclusive random marker validated by fixtures",
+      "evidence_dir": "artifacts/workflow/A3.1-audit-20261008/delivery-78baf8708f66",
+      "private_dir": "/tmp/ag31-78baf8708f66-delivery",
+      "binding_status": "PROPOSED_NO_RESOURCE_CREATED; fullIDs/mounts/labels/ports/digests recorded immediately after self-created resource only"
+    },
+    "integrator": {
+      "owner_uuid": "78baf870-8f66-4961-9e24-8f4554e65c65",
+      "role_owner_token": "78baf8708f66-integrator",
+      "network_name": "ag-a31-78baf8708f66-integrator",
+      "GW_DS_PG_name": "ag-a31-78baf8708f66-integrator-pg",
+      "audit_PG_name": "ag-a31-78baf8708f66-integrator-audit",
+      "python_name": "ag-a31-78baf8708f66-integrator-py",
+      "project_label": "ag-a31-78baf8708f66-integrator",
+      "db_names": {
+        "gateway": "ag31_gw_78baf8708f66",
+        "downstream": "ag31_ds_78baf8708f66",
+        "audit": "ag31_audit_78baf8708f66"
+      },
+      "schema": "run-exclusive random marker validated by fixtures",
+      "evidence_dir": "artifacts/workflow/A3.1-audit-20261008/integrator-78baf8708f66",
+      "private_dir": "/tmp/ag31-78baf8708f66-integrator",
+      "binding_status": "PROPOSED_NO_RESOURCE_CREATED; fullIDs/mounts/labels/ports/digests recorded immediately after self-created resource only"
+    },
+    "reviewer": {
+      "owner_uuid": "78baf870-8f66-4961-9e24-8f4554e65c65",
+      "role_owner_token": "78baf8708f66-reviewer",
+      "network_name": "ag-a31-78baf8708f66-reviewer",
+      "GW_DS_PG_name": "ag-a31-78baf8708f66-reviewer-pg",
+      "audit_PG_name": "ag-a31-78baf8708f66-reviewer-audit",
+      "python_name": "ag-a31-78baf8708f66-reviewer-py",
+      "project_label": "ag-a31-78baf8708f66-reviewer",
+      "db_names": {
+        "gateway": "ag31_gw_78baf8708f66",
+        "downstream": "ag31_ds_78baf8708f66",
+        "audit": "ag31_audit_78baf8708f66"
+      },
+      "schema": "run-exclusive random marker validated by fixtures",
+      "evidence_dir": "artifacts/workflow/A3.1-audit-20261008/reviewer-78baf8708f66",
+      "private_dir": "/tmp/ag31-78baf8708f66-reviewer",
+      "binding_status": "PROPOSED_NO_RESOURCE_CREATED; fullIDs/mounts/labels/ports/digests recorded immediately after self-created resource only"
+    }
+  },
+  "images": {
+    "python": "python:3.11-slim (linux/amd64 for accepted Tongsuo wheel); exact actual digest/Python/arch captured on creation before run",
+    "postgres": "postgres:16-alpine; exact digest/version/arch captured before tests"
+  },
+  "isolated_domains": "GW+AS same authoritative TX domain; independent DS database/connections/TX; audit independent PG instance/key/store; reviewer separate own everything",
+  "platform_preflight": {
+    "Docker": "Desktop daemon restored; actual29.8.1 Linuxaarch64 NCPU15 MemTotal8318844928 observed; no A31 resources yet",
+    "host_python": "3.14 observed; not substituted for required3.11",
+    "hardware": "actual Docker/CPU/RAM/architecture quota read before resource creation, historical counts not frozenfacts"
+  },
+  "per_PG_memory_mib": 512,
+  "python_memory_mib": 768,
+  "resource_timeout_s": {
+    "startup": 120,
+    "health": 90,
+    "connect": 5,
+    "lock_ordinary": 3,
+    "statement_ordinary": 30,
+    "barrier": 15,
+    "http_connect": 5,
+    "http_read": 15,
+    "child_phase": 120,
+    "child_total": 180,
+    "reap": 10,
+    "specific_cross_expiry": 180
+  },
+  "secrets": "newCSPRNG from trusted explicit init;0700 own dirs and0600 or0400 files; no token/proof/private/password/DSN output; ordinary deploymentenv and proxy-product config cleared in runtime; localhost bind only, TLS trustedCA/SAN",
+  "resource_creation_gate": "Formal PACKAGE_READY plus authorization before new resources. Manifest created immediately; no pre-existing name reuse, rejectcollision. Images/install build dependencies exact locks, no new runtime library unless reviewed.",
+  "source_wheel": "Each full stage selfcheck and independentacceptance uses separate noneditable source/wheel Python3.11 locks/PEP517 install outsidecwd, source/childpaths+SQL manifests+SHA verified; no src/tests shadow.",
+  "evidence": "All actual commands/exits/XML/cases/beforeafteroracle/raw+sanitized pairs saved withSHA;failures retained; no fixed passcount thresholds",
+  "cleanup": "FullID+owner_uuid+role_owner_token+project/mount/network verified against creationmanifest before remove; never prune/shareddown/exec or read unrelated containers; no direct global config changes",
+  "actual_hardware_preflight_reference": "artifacts/workflow/A3.1-audit-20261008/controller/daemon-restoration-baseline.json"
+}

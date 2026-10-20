@@ -1,0 +1,57 @@
+"""Fresh reviewer compositions, independently chosen legal and tampered inputs."""
+import json, os
+from pathlib import Path
+import psycopg
+import pytest
+from agent_guard.contracts.encoding import canonical_json_bytes, load_strict_json
+from agent_guard.crypto.sm import generate_sm2_private_key, sign_compact_jws
+from agent_guard.evidence.receipt import verify_receipt_bundle
+from agent_guard.execution.original_material import scoped_trust_tx
+from agent_guard.execution.receipt_projection import project_receipt
+from agent_guard.execution.receipt_publication import evidence_bundle
+from tests.fixtures.gateway import query_bundle
+from tests.fixtures.receipts import receipt_services, full_state, publication_only, staged_only, CorruptRow
+from tests.integration.test_receipt_publication import final_env
+from tests.integration.test_gateway_receipt_query import app, query_http, verify_compact_payload
+
+
+def test_fixture_smoke(ledger, dsn, downstream_dsn):
+    with psycopg.connect(dsn) as c, psycopg.connect(downstream_dsn) as d:
+        assert c.execute('select current_database()').fetchone()[0] != d.execute('select current_database()').fetchone()[0]
+        assert c.execute('show server_version_num').fetchone()[0].startswith('16')
+    assert full_state(dsn, downstream_dsn)['gateway']
+
+
+def test_new_max_escaped_signing_kid_rotation_corruption_same_proof(ledger, dsn, downstream_dsn):
+    # Quotes and backslashes are printable ASCII permitted at the real kid domain.
+    # Exercise canonical expansion at length128 in actual signing/public/SDK path.
+    env, op, _, _, _ = final_env(dsn, downstream_dsn)
+    kid='"\\'*64
+    assert len(kid)==128
+    _, verifier, publisher=receipt_services(env, dsn, signing_kid=kid)
+    before=full_state(dsn, downstream_dsn)
+    publication=publisher.publish(op)
+    after=full_state(dsn, downstream_dsn)
+    publication_only(before, after)
+    bundle=query_bundle(env, op)
+    application=app(env, dsn, verifier)
+    # Real correctly signed but untrusted rotated key must not claim READY;
+    # rollback permits this exact genuine query proof after original bytes return.
+    claims=load_strict_json(verify_compact_payload(publication.receipt_jws))
+    other=generate_sm2_private_key()
+    forged=sign_compact_jws(other, claims, key_id=kid, token_type='ag-receipt+jwt')
+    with CorruptRow(dsn, 'ag_receipt_outbox', {'operation_id':op}, {'receipt_jws':forged}):
+        before_bad=full_state(dsn, downstream_dsn)
+        status,response,_=query_http(application,dsn,bundle)
+        assert status==503 and response['error']['code']=='TRUSTED_STATE_UNAVAILABLE'
+        staged_only(before_bad,full_state(dsn,downstream_dsn),proof_jti=bundle.query.proof_jti)
+    status,response,_=query_http(application,dsn,bundle)
+    assert status==200 and response['receipt_jws']==publication.receipt_jws
+    assert query_http(application,dsn,bundle)[0]==409
+    with psycopg.connect(dsn) as c:
+        projection=project_receipt(c,op)
+        trust=scoped_trust_tx(c,op,issuer=verifier.issuer,as_keys=verifier.as_keys,gateway_keys=verifier.gateway_keys,registrations=verifier.registrations,permission_provider=verifier.permission_provider)
+        outcome=verify_receipt_bundle(evidence_bundle(projection,publication.receipt_jws),trust=trust)
+        assert outcome.operation_id==op and outcome.anchoring_status=='UNANCHORED'
+        with pytest.raises(TypeError): trust.gateway_keys['attacker']=other.public_key()
+    Path(os.environ['A23_RECEIPT_EVIDENCE'],'independent-escaped-kid.json').write_text(json.dumps({'kid_chars':128,'kid_canonical_bytes':len(canonical_json_bytes(kid)),'receipt_jws_bytes':len(publication.receipt_jws),'public_response_bytes':len(canonical_json_bytes(response)),'corruption_HTTP':503,'same_proof_repaired_HTTP':200,'replay_HTTP':409,'offline':outcome.anchoring_status},indent=2))

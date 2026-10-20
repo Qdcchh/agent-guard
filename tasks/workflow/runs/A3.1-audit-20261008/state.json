@@ -1,0 +1,1229 @@
+{
+  "stage": "A3.1-audit",
+  "status": "ACCEPTED",
+  "implementation_authorized": true,
+  "authorization": "authorization.md",
+  "package_ready": true,
+  "dispatch_ready": true,
+  "execution": "INDEPENDENT_IMPLEMENTATION_ACCEPTANCE_R2_ROOT_VERIFIED",
+  "requested_roles": {
+    "controller": "gpt-6.1-sol",
+    "controller_effort": "high",
+    "worker": "gpt-6.1-sol/low",
+    "reviewer": "gpt-6.1-sol/high"
+  },
+  "effective_metadata": "UNKNOWN",
+  "owner_uuid": "78baf870-8f66-4961-9e24-8f4554e65c65",
+  "stop_after": "A3.2 actual acceptance and owned-resource cleanup",
+  "baseline": "baseline.json",
+  "expected_requirement_ids": [
+    "A2-P01",
+    "A2-P02",
+    "A2-P03",
+    "A2-P04",
+    "A2-P05",
+    "A2-P06",
+    "A2-P07",
+    "A2-P08",
+    "A2-P09",
+    "A2-P10",
+    "A2-P11",
+    "A2-P12",
+    "A2-P13",
+    "A2-P14",
+    "A2-P15-CORE",
+    "A2-P19",
+    "A2-P20",
+    "A2-CKPT1-OBL01",
+    "A2-CKPT1-OBL02",
+    "A2-CKPT1-OBL03",
+    "A2-CKPT1-OBL04",
+    "A2-CKPT1-OBL05",
+    "A2-CKPT1-OBL06",
+    "WF-A1-REGRESSION",
+    "WF-INDEPENDENT-PROBES",
+    "WF-QUALITY-CHECKS",
+    "WF-PY311-ENV",
+    "WF-RESOURCE-ISOLATION",
+    "WF-IMMUTABLE-BASELINE",
+    "WF-DOCS-REPORT",
+    "WF-SNAPSHOT-COVERAGE",
+    "B-01-CRYPTO",
+    "B-02-ENCODING",
+    "B-03-IDENTITY",
+    "B-04-TOKEN-POLICY",
+    "B-05-INVOKE-PROOF",
+    "B-06-CODE-OIDC",
+    "B-07-ROOT-ISSUANCE",
+    "B-08-DELEGATION",
+    "B-09-DYNAMIC-STATE",
+    "B-10-HTTP-TLS",
+    "B-11-RESULT-READ",
+    "B-12-EVIDENCE-RECEIPT",
+    "B-13-ROTATION-INTEROP",
+    "B-14-DB-FAILURES",
+    "B-15-CONCURRENCY-TEST-EFFICACY",
+    "B-16-A1-REGRESSION",
+    "B-17-B-SUITE-QUALITY",
+    "B-18-RESOURCE-ISOLATION",
+    "B-19-CONTRACT-MERGE",
+    "B-20-MIGRATION-MERGE",
+    "B-21-SHARED-FILE-MERGE",
+    "B-22-ORIGINAL-GOAL",
+    "B-23-HANDOFF-REPRODUCIBILITY",
+    "B-24-FINAL-BINDING",
+    "BR-01-CONSENT-FINAL",
+    "BR-02-HTTP-REJECTION",
+    "BR-03-PRIVATE-PATHS",
+    "BR-04-LINEAGE-HISTORY",
+    "BR-05-LINEAGE-ATOMIC",
+    "BR-06-REAL-PERMISSIONS",
+    "BR-07-QUERY-DTO",
+    "BR-08-EVIDENCE-BINDING",
+    "BR-09-RECEIPT-PROJECTION",
+    "BR-10-IMPORT-PROVENANCE",
+    "BR-11-CLEAN-CANDIDATE",
+    "BR-12-WORKFLOW-BARRIER",
+    "A2-P15",
+    "A2-P16",
+    "A2-P17",
+    "A2-P21-HTTP",
+    "A22-01-REUSE",
+    "A22-02-TRANSPORT",
+    "A22-03-FRAMING",
+    "A22-04-INVOKE",
+    "A22-05-QUERY-BUNDLE",
+    "A22-06-QUERY-LOCKS",
+    "A22-07-QUERY-OWNERSHIP",
+    "A22-08-QUERY-FINAL-CLOCK",
+    "A22-09-QUERY-REPLAY",
+    "A22-10-QUERY-ZERO-COST",
+    "A22-11-QUERY-EVIDENCE",
+    "A22-12-QUERY-PERMISSION",
+    "A22-13-DYNAMIC-RACES",
+    "A22-14-ERRORS",
+    "A22-15-FAIL-CLOSED",
+    "A22-16-PRIVATE-CONFIG",
+    "A22-17-STARTUP",
+    "A22-18-REAL-TLS",
+    "A22-19-PRIVACY",
+    "A22-20-BOUNDARIES",
+    "A22-21-DOCS",
+    "A22-22-REGRESSION",
+    "A22-23-ENV-PROVENANCE",
+    "A22-24-FREEZE-RESOURCES",
+    "A2-P18",
+    "A2-P21",
+    "A23-01-REAL-SIGNER",
+    "A23-02-KEY-SEPARATION",
+    "A23-03-PRIVATE-INIT",
+    "A23-04-TRUST-ROTATION",
+    "A23-05-IMMUTABLE-MATERIAL",
+    "A23-06-ATOMIC-PUBLICATION",
+    "A23-07-STABLE-CLAIMS",
+    "A23-08-SIGN-FAILURE",
+    "A23-09-PRECOMMIT-CRASH",
+    "A23-10-POSTCOMMIT-LOSS",
+    "A23-11-CONCURRENCY",
+    "A23-12-HISTORICAL-FRESHNESS",
+    "A23-13-PUBLIC-READY-QUERY",
+    "A23-14-PUBLIC-INVOKE-STATUS",
+    "A23-15-NONTERMINAL",
+    "A23-16-INTERNAL-CLI",
+    "A23-17-REAL-HTTPS-CHAIN",
+    "A23-18-ATTACK-CLOSURE",
+    "A23-19-OFFLINE-MUTATIONS",
+    "A23-20-SOURCE-WHEEL",
+    "A23-21-A2-ACCEPTANCE",
+    "A23-22-FREEZE-RESOURCES",
+    "A31-01",
+    "A31-02",
+    "A31-03",
+    "A31-04",
+    "A31-05",
+    "A31-06",
+    "A31-07",
+    "A31-08",
+    "A31-09",
+    "A31-10",
+    "A31-11",
+    "A31-12",
+    "A31-13",
+    "A31-14",
+    "A31-15",
+    "A31-16",
+    "A31-17",
+    "A31-18",
+    "A31-19",
+    "A31-20",
+    "A31-21",
+    "A31-S01"
+  ],
+  "counts": {
+    "parents": 141,
+    "runtime": 133,
+    "inherited_original_assertions": 269,
+    "new_atoms": 95
+  },
+  "package_build_workers": "a31_interface_package and a31_inherited_package native FINAL STOP; resources0",
+  "pause_message": "先暂停吧，我要出门",
+  "resume_from": "Accepted r4 six-path correction then complete S0 selfcheck",
+  "last_package_review": {
+    "round": 4,
+    "decision": "PACKAGE_READY_DESIGN_ONLY",
+    "report": "artifacts/workflow/A3.1-audit-20261008/package-reviewer-r4/report.md",
+    "sha256": "76c54dad4782d47644804d60537e7a8f946be091026b145a3335658d3e3a9854",
+    "readback": "artifacts/workflow/A3.1-audit-20261008/controller/user-pause-after-package-r4-readback.json"
+  },
+  "open_issues": [],
+  "owned_business_resources_remaining": 0,
+  "resume_message": "继续",
+  "resume_date": "2026-10-09",
+  "resume_authorization": "user-resume-after-package-r4-20261009.md",
+  "current_task": null,
+  "current_interfaces": "interface-contract-v4.md",
+  "current_nodes": "node-bindings-v4.json supplements original v2/v3",
+  "current_ownership": "ownership-ia-remediation-r1.json",
+  "current_inherited_plan": "inherited-plan-v3.md",
+  "current_package_version": 4,
+  "issue_remediation_status": "CLOSED_REVIEWED_R2_DESIGN_ONLY",
+  "package_issue_closure": "CLOSED_REVIEWED_R2_DESIGN_ONLY; future implementation still NOT_RUN",
+  "current_dispatch": "tasks/workflow/runs/A3.1-audit-20261008/dispatch-s2-r1.json",
+  "inherited_runtime_preparation": {
+    "agent": "/root/a31_inherited_runtime_prepare_sol_r1",
+    "native_status": "COMPLETED_STOPPED",
+    "manifest_sha256": "aaf8bf92ec5c7be998a6afd112eb648862349027bdc99ad8c6f1a0fa762ac4b5",
+    "status": "STATIC_NOT_RUN",
+    "owned_resources_remaining": 0,
+    "confirmed_design_compatibility_items": 10,
+    "candidate_diagnostics_not_blockers": 137,
+    "extra_product_test_path_readonly_pending": "tests/integration/test_gateway_query.py"
+  },
+  "preliminary_selfcheck_observations": {
+    "not_current_candidate_acceptance": true,
+    "source_unit": {
+      "label": "s0-unit-r1",
+      "passed": 61,
+      "exit": 0,
+      "xml_sha256": "2c76e5624e84adb02d4fdd68eab2777aa887ae89ce56a5b409202c685f52da89"
+    },
+    "wheel_unit": "NOT_RUN",
+    "PG_smoke_failures_preserved": [
+      "s0-first-smoke-r1",
+      "s0-first-smoke-r2"
+    ],
+    "correction": "SQL CASE source smoke passed; full source/wheel S0 still pending",
+    "fresh_source_wheel_install": "actual successful offline installs observed; all19 dependency/build wheels independently checked against official hashes; physical original unknown-package hash mismatch cause UNKNOWN",
+    "source_smoke": {
+      "label": "s0-first-smoke-r4",
+      "passed": 1,
+      "exit": 0,
+      "scope": "FIRST/RETRY/QUERY actual chain; not complete S0"
+    },
+    "source_fence": {
+      "label": "s0-fence-r2",
+      "passed": 20,
+      "exit": 0
+    },
+    "kill_assembly_failure": {
+      "label": "s0-terminal-publish-r3",
+      "exit": -9,
+      "complete_xml": "ABSENT",
+      "status": "PRESERVED_SOURCE10_RETRY_PASS_FULL_SOURCE_WHEEL_PENDING",
+      "actual_business_recovery_rounds": "NOT_ESTABLISHED"
+    },
+    "additional_verified_runs": {
+      "s0-kill-only-r5": {
+        "mode": "source",
+        "passed": 10,
+        "exit": 0,
+        "raw_sha256": "20ba0e9bb782804792d3ff48c4dc63509ddc449cc47f98348771259a2ab11e93",
+        "xml_sha256": "27f69ed05ba38e7dbf6359cf7f5eac62e93f691ffcd250dc8d5b99ae36ca16b7"
+      },
+      "s0-race-lock-r5": {
+        "mode": "source",
+        "passed": 30,
+        "exit": 0,
+        "raw_sha256": "97b3173e3307911c29b78ef5111a2286ac7d4bd9161e2de583270c0f284f093d",
+        "xml_sha256": "bd237497385183a8cffffa12b1affb586441133744df3642b82166fad5ac9792"
+      },
+      "s0-ordinary-r1": {
+        "mode": "source",
+        "passed": 1254,
+        "exit": 0,
+        "raw_sha256": "f2b81d81f4790474935bf18f75862865f579dda8a685ab7bf38c6fe537903dc7",
+        "xml_sha256": "1c5b580235e784f54099c4e989e109af12f6268fb203de3f5e23e3b2e4719631"
+      },
+      "s0-required-small-r3": {
+        "mode": "source",
+        "passed": 94,
+        "exit": 0,
+        "raw_sha256": "67378447cb70472c3d1d1a036daad54a81813aa4311cb1e37a51dd0bd99c950c",
+        "xml_sha256": "5d031217278059dacdf2d9d9949914cd6f4a67b7b45415537d9c6d7ea08bb8e7",
+        "scope": "Targeted correction controls; not complete S0 or independent acceptance"
+      }
+    },
+    "flush_wait_failure": {
+      "label": "s0-final-source-clock-r1",
+      "passed_before_failure": 60,
+      "failed": 1,
+      "exit": 1,
+      "actual_thread_cause": "STALE_REQUEST",
+      "assembly_root_cause": "outer SET CONSTRAINTS query mismatches observer internal advisory SQL filter",
+      "live_lock_readback_sha256": "c19f24e495f815ecf0b784b5f020d22a65fb768937bd5ee4faec5b5a19d43c3a",
+      "status": "TARGETED22_PASS_FULL_SOURCE_WHEEL_PENDING"
+    },
+    "current_candidate_readback": {
+      "verified": [
+        {
+          "label": "s0-final-ruff-check-r4",
+          "exit": 0,
+          "raw_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+          "mode": "source"
+        },
+        {
+          "label": "s0-final-ruff-format-r4",
+          "exit": 0,
+          "raw_sha256": "3782c2a7a8f4eb1a3da1167300a44b4d0f3966fa249bb7d05403812301be5ae8",
+          "mode": "source"
+        },
+        {
+          "label": "s0-source-installed-readback-r1",
+          "exit": 0,
+          "raw_sha256": "f0627674ebab26cafc8c04e937d809b642a4c8318527d9c140d30a3b11f46640",
+          "mode": "source"
+        },
+        {
+          "label": "s0-wheel-installed-readback-r1",
+          "exit": 0,
+          "raw_sha256": "43ecb4d1f6fdcba4f6543783871753f76238e622ab6a846dbbbbc767a684c535",
+          "mode": "wheel"
+        },
+        {
+          "label": "s0-flush-pub-small-r3",
+          "exit": 0,
+          "raw_sha256": "e7e2c50062845f61b24f5f5edad733b9ec03d9d0ae4907b923f43c0b9913eb0c",
+          "mode": "source",
+          "counts": {
+            "tests": 22,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "4d67e56f2d8840f57866c3a0b5b047f1df42ab6467c13e315e57bd63395423c5"
+        },
+        {
+          "label": "s0-final-source-ordinary-r2",
+          "exit": 0,
+          "raw_sha256": "271bba8917581f0bd05b9de0ba5fad270925946ab576733459fac158fcf5a214",
+          "mode": "source",
+          "counts": {
+            "tests": 1261,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "09b713af52d8daba16717d2f6011c92375e4ef3009ef28ee84725f4c4440b64d"
+        },
+        {
+          "label": "s0-final-wheel-ordinary-r2",
+          "exit": 0,
+          "raw_sha256": "0ef7a87fa95369b3d1517a3310bbc1f8501f5b73f2ed52ed6cc8f3ad488631d1",
+          "mode": "wheel",
+          "counts": {
+            "tests": 1261,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "146c9b29c1aa1a15c5a79f4485490fab7f1b7e7f31791ec2c49a4b126e6cbc01"
+        }
+      ],
+      "not_full_S0_or_acceptance": true
+    },
+    "remaining_coverage_checks": {
+      "initial_seed_chunk_waits": "Existing-stream800 source/wheel PASS verified; formal FROM_EMPTY_TASK200 per mode being added; current complete S0 pending",
+      "post_bootstrap_AS_branch": "Real introduced-zero positive/negative coverage pending; no equivalence to initial grants",
+      "offpath_nonzero_counters": "All four counter rejection controls pending",
+      "native_bootstrap_cli": "source/wheel r2 realexit0; CLI command/descriptor tests; qualified checksum/applied_at require separate inventory/migration evidence",
+      "CLI_r1_evidence_limitation": "Incorrect fresh-new migration count expectation caused realexit1; nested initial payload not persisted; retained raw cannot establish original complete payload"
+    },
+    "current_clock_matrix": [
+      {
+        "label": "s0-final-source-clock-r2",
+        "mode": "source",
+        "exit": 0,
+        "counts": {
+          "tests": 800,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "raw_sha256": "ffd94e2b39a487235c14589feec8413ea33501c1eab6453037ea39db043e685f",
+        "xml_sha256": "bd87c90cd33a5aece910d6c75b3c0e29319f894913b89d219daa9912e6a3525d",
+        "not_full_S0_or_acceptance": true
+      },
+      {
+        "label": "s0-final-wheel-clock-r2",
+        "mode": "wheel",
+        "exit": 0,
+        "counts": {
+          "tests": 800,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "raw_sha256": "07f207f879af6401d5d52b27a4b1c1cc5576f7368f215ed80bebcff998116190",
+        "xml_sha256": "749825800aed411dd0482693ac916cba6764b14d5360e102cd677214a259c211",
+        "not_full_S0_or_acceptance": true
+      }
+    ],
+    "new_formal_candidate_readback": {
+      "verified": [
+        {
+          "label": "s0-final-ruff-check-r5",
+          "exit": 0,
+          "raw_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+          "mode": "source"
+        },
+        {
+          "label": "s0-final-ruff-format-r5",
+          "exit": 0,
+          "raw_sha256": "3782c2a7a8f4eb1a3da1167300a44b4d0f3966fa249bb7d05403812301be5ae8",
+          "mode": "source"
+        },
+        {
+          "label": "s0-source-installed-readback-r2",
+          "exit": 0,
+          "raw_sha256": "f0627674ebab26cafc8c04e937d809b642a4c8318527d9c140d30a3b11f46640",
+          "mode": "source"
+        },
+        {
+          "label": "s0-wheel-installed-readback-r2",
+          "exit": 0,
+          "raw_sha256": "43ecb4d1f6fdcba4f6543783871753f76238e622ab6a846dbbbbc767a684c535",
+          "mode": "wheel"
+        },
+        {
+          "label": "s0-new-formal-small-r1",
+          "exit": 0,
+          "raw_sha256": "dee3cac4d96b1f494c4145a09875ea702ced8daae89f247fe8c068660d9cbc37",
+          "mode": "source",
+          "counts": {
+            "tests": 106,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "e280bfcd3bdf38702595f47317097ea340ae12b3ab395a89a9e0d9c207a8ee2b"
+        },
+        {
+          "label": "s0-new-nonzero-small-r1",
+          "exit": 0,
+          "raw_sha256": "ac3e367c23461116209751ad988f3ca3eef91104912858db74e69bc008d3e022",
+          "mode": "source",
+          "counts": {
+            "tests": 8,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "xml_sha256": "05345eba76b87609a0aaf4cb431b88c13a2b60e52a8a03df7f8c39a0e0a4e18c"
+        }
+      ],
+      "not_full_S0_or_acceptance": true
+    },
+    "source_initial200": {
+      "label": "s0-final-source-initial-r1",
+      "mode": "source",
+      "exit": 0,
+      "counts": {
+        "tests": 200,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "raw_sha256": "5052e5dca5427ddea9c7d91924bc4662eed6f12e9cf1606627017fe707a513ad",
+      "xml_sha256": "d0155b8050bdd8975e46545346549bc265f08957c0ba8f25a8ecc99c6738e701",
+      "candidate_before_legacy_B7_fix": true,
+      "not_full_S0_or_acceptance": true
+    },
+    "legacy_lineage_fix": "Writer reports namespace-qualified fix and additional stale/mutable controls, freshprepare ongoing; complete migration source/wheel pending; current90-production unchanged mapping is historical before fix only",
+    "concentrated_current_161_readback": "artifacts/workflow/A3.1-audit-20261008/controller/concentrated161-readback-r1.json",
+    "current_fixed_snapshot_candidate": {
+      "quality_source_wheel_provenance": "r13/r10 exit0; root artifacts/workflow/A3.1-audit-20261008/controller/current183-migration110-quality-readback-r1.json",
+      "targeted_origin_initial_oracle": {
+        "label": "s0-origin-oracle-small-r1",
+        "tests": 23,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "complete_clocks": {
+        "source": "s0-final-source-clock-r3",
+        "wheel": "s0-final-wheel-clock-r3",
+        "tests_planned_per_mode": 1000,
+        "breakdown": "original800 + initial200",
+        "status": "VERIFIED1000_PASS_EACH_CURRENT_SELF_CHECK_ONLY",
+        "parallel_isolation": "distinct venv,cwd,cache,run-owned namespace/lock ID; writer owns resources; no source edits; Py memory preflight preserved",
+        "readback": "artifacts/workflow/A3.1-audit-20261008/controller/fixed-current-clock1000-readback-r1.json"
+      },
+      "prior_seed_consumer_mapping": "HISTORICAL_ONLY; no borrow PASS after TEXT raw classification change",
+      "S0_STOP": "NATIVE_STOPPED_NEEDS_REPLAN_NOT_READY_FOR_REVIEW",
+      "S1": "NOT_RUN",
+      "independent_acceptance": "NOT_RUN",
+      "owned_integration": "SOURCE_R7_1139_PASS; WHEEL_R6_834P1F_DEADLOCK; correction/full reruns pending",
+      "fixed31_manifest": "s0-fixed-candidate-r6.json",
+      "clock_unaffected_mapping_readback": "artifacts/workflow/A3.1-audit-20261008/controller/current183-migration110-quality-readback-r1.json",
+      "full_runs_readback": "artifacts/workflow/A3.1-audit-20261008/controller/resume-r2-full-run-and-resource-readback-r1.json"
+    }
+  },
+  "pending_package_amendment": {
+    "version": 4,
+    "status": "PACKAGE_READY_DISPATCHED_SIX_PATH_ONLY",
+    "ownership_paths": 67,
+    "S0_exact_exception_paths": [
+      "src/agent_guard/audit/journal.py",
+      "src/agent_guard/execution/receipt_publication.py",
+      "src/agent_guard/authorization/evidence_store.py",
+      "tests/integration/test_audit_lock_order.py",
+      "tests/integration/test_audit_atomicity.py",
+      "tests/integration/test_gateway_query.py"
+    ],
+    "files_sha256": {
+      "task-v4.md": "6376bcef0a8152783d17994ca854b469cbc7d6f2155e56da5bf41ca4046a3fcd",
+      "interface-contract-v4.md": "01235d69c88a5fa1bb28673d702eb9a3047f914b3647117b2c2b6f324964ccea",
+      "ownership-v4.json": "683cbb51173e1de225137a81c92ccea0c96127f485bb840ef9312d152fa28113",
+      "node-bindings-v4.json": "e097df2961984b25b3d045f8c6688a0f4e78805f40121deb0122f85daecf71c3"
+    },
+    "gate": "fresh package review before6-path sole worker; completeS0 STOP0/freeze beforeS1"
+  },
+  "runtime_current_wake_condition": {
+    "last_human_reply": "已打开并接电",
+    "current_human_condition_reverified": false,
+    "guard_pid": 67385,
+    "guard_uid": 501,
+    "guard_deadline_seconds": 14400,
+    "guard_start_local": "Fri Oct 9 19:30:44 2026",
+    "guard_argv": [
+      "/usr/bin/caffeinate",
+      "-i",
+      "-t",
+      "14400"
+    ],
+    "guard_role": "shared",
+    "global_power_settings_changed": false,
+    "exact_PID_identity_cleanup_required": true,
+    "not_all_clamshell_sleep_prevention_claimed": true,
+    "guard_observer_record": "artifacts/workflow/A3.1-audit-20261008/shared-78baf8708f66/r4-caffeinate-live-r3.json",
+    "parent_actual_ps_verified": true,
+    "guard_status": "CLEANED_NATIVE143_PARENT_ABSENT"
+  },
+  "active_writer_replacement": {
+    "reason": "prior child absent from native team after interrupted turn; resumed same31 ownership",
+    "dispatch": "dispatch-s0-r1.json",
+    "requested": "gpt-6.1-sol/medium",
+    "effective_metadata": "UNKNOWN"
+  },
+  "shared_stop_readback": "artifacts/workflow/A3.1-audit-20261008/controller/shared-needs-replan-stop-r2.json",
+  "last_accepted_package_version": "reconcile-v5",
+  "current_package_review": {
+    "task": "/root/a31_reconcile_package_review_sol_r5",
+    "kind": "PACKAGE_REVIEW_NOT_IMPLEMENTATION_ACCEPTANCE",
+    "status": "NATIVE_FINAL_STOP_PACKAGE_READY_DESIGN_ONLY",
+    "version": "reconcile-v5",
+    "report": "tasks/workflow/runs/A3.1-audit-20261008/package-reconcile-review-r5.md",
+    "sha256": "e8a7b900b82b4be8a414057c0796688dd823a4cb588ff4d1403f110e7ff509c3",
+    "freeze_sha256": "f379b6cb9fa5a21f4b878f615b0c50629a0b81c82172d73f412b35b2cefae608",
+    "effective_metadata": "UNKNOWN"
+  },
+  "pause_date": "2026-10-09 Asia/Shanghai",
+  "pause_record": "user-pause-after-package-r4-20261009.md",
+  "pause_confirmed_blockers": [
+    "retry control must reflect actual SELECT/weak FK, no artificial FOR UPDATE",
+    "TrustedAfterLink callback ignored; exact evidence_store.py/test_audit_atomicity.py scope and valid callback counts/errors/rollback needed"
+  ],
+  "current_runtime_readback": "artifacts/workflow/A3.1-audit-20261008/controller/current-shared-runtime-r4-recreated-readback.json",
+  "current_wakeguard_evidence": "artifacts/workflow/A3.1-audit-20261008/controller/continuous-through-a33-wakeguard-r2.json",
+  "current_correction": "r4-gq-site-correction.md",
+  "gq_site_correction_status": "SOURCE_R3_523_PASS_SHA_BOUND_WHEEL_R5_523_PASS_FINAL_BOUNDED_ADAPTER",
+  "current_runtime_issue": {
+    "status": "CLOSED_NATIVE_CONTROLS_AND_COMPLETE_ORDINARY_BOTH_MODES",
+    "scope": "private runner synchronous observer/nativeFS short basetemp; product and tests unchanged",
+    "failed_history_retained": true,
+    "readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-final-runtime-ordinary1338-readback-r1.json",
+    "ordinary": {
+      "source": 1338,
+      "wheel": 1338,
+      "failures_errors_skips": 0,
+      "native_exits": [
+        0,
+        0
+      ]
+    },
+    "next": "final complete PG and historical/native matrix; independent acceptance NOT_RUN"
+  },
+  "current_runtime_adaptation": "r4-shortproof-runtime-adaptation.md",
+  "current_runtime_assembly_error": {
+    "label": "s0-r4-source-gateway-r4",
+    "actual_scope": "TEST_PATH_REMOVED_BY_DRIVER_SLICE_FULL_COLLECTION",
+    "status": "NATIVE_EXIT2_INTERRUPTED_NOT_PASS",
+    "product_modified": false,
+    "required_correction": "Replace only -m pytest (2 args); assert exact target before launch; preserve interruption evidence",
+    "source_gateway_complete_valid": "s0-r4-source-gateway-r3 523P",
+    "xml_named_cases": 1050,
+    "xml_total_case_elements": 1051,
+    "anonymous_interruption_case_elements": 1,
+    "parent_readback": "artifacts/workflow/A3.1-audit-20261008/controller/r4-dispatch-scope-error-readback.json"
+  },
+  "bounded_adaptation_target_readback": "artifacts/workflow/A3.1-audit-20261008/controller/r4-final-bounded-target-both-mode-readback.json",
+  "final_gateway_readbacks": [
+    "artifacts/workflow/A3.1-audit-20261008/controller/r4-source523-current-reuse-independent-readback.json",
+    "artifacts/workflow/A3.1-audit-20261008/controller/r4-wheel523-final-bounded-readback.json"
+  ],
+  "current_source_owned_readback": "artifacts/workflow/A3.1-audit-20261008/controller/r4-source-owned1177-readback.json",
+  "current_wheel_owned_readback": "artifacts/workflow/A3.1-audit-20261008/controller/r4-wheel-owned1177-readback.json",
+  "current_owned_integration": "SOURCE1177_PASS_WHEEL1177_PASS_COMPLETE_GROUPS",
+  "clock_start_parent_readback": "artifacts/workflow/A3.1-audit-20261008/controller/r4-cli-and-clock-start-independent-readback.json",
+  "current_cli": "SOURCE_WHEEL_6_NATIVE_CHILDREN_EACH_EXPECTED_0_0_2_0_0_0_COMPLETE",
+  "historical_wake_condition_before_r4": {
+    "human_reply": "已打开并接电",
+    "guard_pid": 52110,
+    "guard_uid": 501,
+    "guard_deadline_seconds": 1800,
+    "guard_role": "shared",
+    "global_power_settings_changed": false,
+    "exact_PID_identity_cleanup_required": true,
+    "not_all_clamshell_sleep_prevention_claimed": true,
+    "guard_observer_record": "wakeguard-r2.json",
+    "prior49094": "actual absent; native exit UNOBSERVED, not reconstructed"
+  },
+  "current_clock_full_readback": "artifacts/workflow/A3.1-audit-20261008/controller/r4-clock1000-both-mode-full-readback.json",
+  "current_clock": "SOURCE1000_PASS_WHEEL1000_PASS_COMPLETE_GROUPS",
+  "S0_native_stop_verified": true,
+  "S0_resource0_verified": true,
+  "current_S0_stop_record": "s0-stop-r4.json",
+  "current_resource_counts": {
+    "containers": 0,
+    "networks": 0,
+    "anonymous_volumes": 0,
+    "private_dirs": 0
+  },
+  "S1": "ALL_NATIVE_STOP_SELFCHECK_RESOURCE0_NOT_A31_ACCEPTANCE",
+  "S2": {
+    "status": "SELF_CHECK_COMPLETE_WRITER_STOPPED",
+    "writer": "/root/a31_s2_resume_low_r1",
+    "requested_worker": "gpt-6.1-sol/low",
+    "effective_metadata": "UNKNOWN",
+    "groups_per_mode": 20,
+    "evidence_manifest": "/Users/qdcc/Documents/ChatGPT/密码竞赛/agent-guard-handoff/artifacts/workflow/A3.1-audit-20261008/s2-integration-r1/resume-low-r3-final-evidence-manifest.json",
+    "root_readback": "/Users/qdcc/Documents/ChatGPT/密码竞赛/agent-guard-handoff/artifacts/workflow/A3.1-audit-20261008/controller/s2-final-native-sessions-root-readback-r1.json",
+    "resources_remaining": 0,
+    "acceptance": "NOT_ASSERTED"
+  },
+  "implementation_acceptance": {
+    "status": "NOT_ACCEPTED",
+    "round": 1,
+    "report": "review-r1.md",
+    "report_sha256": "369245c720cef021be337c613e2fc77b651a9f4dece4b483c2b25225efae64be",
+    "issue": "A31-IA-R1-001",
+    "next": "minimal correction then whole freeze and new fresh Sol/high complete acceptance",
+    "root_readback": "artifacts/workflow/A3.1-audit-20261008/controller/ia-r1-complete-report-root-readback.json"
+  },
+  "current_shared_interface": "artifacts/workflow/A3.1-audit-20261008/controller/shared32-frozen-interface-r4.json",
+  "current_shared_interface_sha256": "ec8bf59a8fa6d5fd4b62b33b3951219a4cdc291de7f2ff4db931dfadfd5af060",
+  "current_S0_complete_freeze": "artifacts/workflow/A3.1-audit-20261008/shared-r4-freeze/freeze.json",
+  "current_S0_complete_freeze_sha256": "297c2409c537eaeddcd62ab078180340df3b99e1d171ce916563704b17e6e35c",
+  "S0": "COMPLETE_SELFCHECK_NATIVE_STOP_RESOURCE0_INTERFACE_FROZEN_NOT_A31_ACCEPTANCE",
+  "active_writers": [],
+  "current_resource_transfer_readback": "artifacts/workflow/A3.1-audit-20261008/controller/reconcile-r5-isolated-mode-transfer-readback.json",
+  "current_user_resume": {
+    "message": "继续",
+    "date": "2026-10-09",
+    "scope": "Complete A3.1 through A3.3; no A3.4/Git publication",
+    "actual_effective_metadata": "UNKNOWN"
+  },
+  "current_S1_blockers": [
+    {
+      "id": "A31-S1-RECONCILE-PENDING-BOUNDARY",
+      "status": "FIXED_PENDING_A31_FULL_INDEPENDENT_ACCEPTANCE",
+      "scope": "A31-20.02 positive remote-ahead -> verified prefix -> exact matching ACK",
+      "evidence": "migrations/007_audit_journal.sql:427-430 plus interface-contract-v2 §7; delivery native worker observation",
+      "scenario": "Pending1..64 vs external original CP32->CP65; no CP64. Existing exact-end ACK rejects CP65, guard prohibits direct cursor65 while pending.end64. Keeping RECONCILE_REQUIRED forever is incomplete.",
+      "rule": "No current sharedSQL/guard change; service/delivery continue unaffected exact owned paths. Sole integration must resolve covered-prefix ACK with full pinned proof or precisely reviewed minimal schema supplement. Full acceptance remains NOT_RUN.",
+      "proposed_minimal_resolution": "Separate durable deterministic reconciliation child suffix plus fully proved covering exact-parent ACK; no SQL/wire/oldrange relaxation. Pending formal supplement/fresh design review after all S1 STOP.",
+      "design_draft": "artifacts/workflow/A3.1-audit-20261008/controller/reconcile-child-suffix-design-draft-r2.md",
+      "current_selfcheck_readback": "artifacts/workflow/A3.1-audit-20261008/controller/reconcile-r5-final-stop-resource0-manifest-readback-r1.json"
+    },
+    {
+      "id": "A31-S1-LOCKTIMEOUT-FAIRNESS",
+      "status": "FIXED_PENDING_A31_FULL_INDEPENDENT_ACCEPTANCE",
+      "scope": "A31-20.04 finite per-stream fairness",
+      "actual": "deliver_round catches semantic/transport failures but not psycopg.Error; real one-stream lock_timeout can terminate round before healthy stream",
+      "exact_paths": [
+        "src/agent_guard/audit/delivery.py",
+        "tests/integration/test_audit_delivery.py"
+      ],
+      "gate": "current S1 candidate unchanged, concentrated proposed v5 correction after fresh package review",
+      "test_required": "real independent PG lockwait timeout + healthy stream progress,10 rounds per mode, no catch BaseException/falseACK",
+      "current_selfcheck_readback": "artifacts/workflow/A3.1-audit-20261008/controller/reconcile-r5-final-stop-resource0-manifest-readback-r1.json"
+    }
+  ],
+  "current_continuous_authorization": {
+    "record": "user-extend-through-a33-20261009.md",
+    "verbatim": "请一直继续到做完A3.3，遇到问题先不要问我，注意不要陷入到解决问题->又给自己找了个要修的小问题->继续修的怪圈中，不影响功能的问题要处理的快一些，加快速度",
+    "timestamp_utc": "2026-10-09T15:26:22.664592+00:00",
+    "finish_through": "A3.3",
+    "A3.4": "NOT_AUTHORIZED",
+    "Git_publication": "NOT_AUTHORIZED",
+    "priority": "functional/security/mandatory acceptance blockers first; quick bounded nonblocker handling; no repetitive unrelated repairs"
+  },
+  "active_auxiliary_preparation": null,
+  "A32_A33_preparation": {
+    "status": "NATIVE_STOP_STATIC_PREPARATION_NOT_PACKAGE_READY",
+    "report": "artifacts/workflow/A3.1-audit-20261008/a32-a33-dependency-prepare-r1/report.md",
+    "sha256": "4746ef9f5f75c81ce6b873c4c703071274bd114e925736d5e871f6fbb8a0c873",
+    "resource_created_and_remaining": 0,
+    "effective_metadata": "UNKNOWN"
+  },
+  "S1_delivery": "V5_COMPLETE_SELFCHECK_989_BOTH_MODES_NATIVE_STOP_RESOURCE0_NOT_A31_ACCEPTANCE",
+  "S1_delivery_stop_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s1-delivery-stop379-resource0-readback-r1.json",
+  "S1_service_native_test_resource_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s1-service-native252-ordinary1304-resource0-readback-r1.json",
+  "active_writer": null,
+  "S1_service": "STOP_SELFCHECK_252_AND_1304_BOTH_MODES_RESOURCE0",
+  "S1_all_stop_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s1-all-native-stop-readback-r1.json",
+  "S1_correction": "COMPLETE_NATIVE_STOP_RESOURCE0_989_BOTH_MODES_NOT_ACCEPTED",
+  "S1_correction_dispatch": "dispatch-reconcile-correction-r5.json",
+  "full_runner_preparation": {
+    "status": "R1_AND_R2_NATIVE_FINAL_STOP_STATIC_ONLY",
+    "readback": "artifacts/workflow/A3.1-audit-20261008/controller/full-runner-r2-selected-stop-readback-r1.json",
+    "runtime": "NOT_RUN"
+  },
+  "controller_owned_wake_guard": {
+    "pid": 33749,
+    "identity": "501 Sun Oct 11 03:46:31 2026 /usr/bin/caffeinate -i -t 14400",
+    "wall": 1791661591.99584,
+    "scope": "A31_A32_CURRENT_HUMAN_EXTENSION",
+    "finite_seconds": 14400,
+    "expires_utc": "2026-10-10T23:46:31.995840+00:00",
+    "previous84814_exact_identity_verified_and_STOP": true,
+    "previous_identity": "501 Sun Oct 11 00:28:09 2026 /usr/bin/caffeinate -i -t 14400",
+    "formal_candidate_unchanged": true
+  },
+  "auxiliary_preparation_boundary": "self-owned ignored static drafts only; no business reads of active delivery6, no business execution/resource creation/formal writes; native STOP before candidate adoption",
+  "S2_static_preparation": {
+    "status": "TWO_AUXILIARIES_NATIVE_FINAL_STOP_STATIC_ONLY",
+    "joint_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-joint-five-static-stop-readback-r1.json",
+    "runner_readback": "artifacts/workflow/A3.1-audit-20261008/controller/full-runner-r2-selected-stop-readback-r1.json",
+    "runtime": "NOT_RUN",
+    "r2_same_material_AS_HTTP_binding": "NATIVE_FINAL_STOP_TWO_AST_DRAFTS_SOURCE_SHA_VERIFIED_NOT_RUN",
+    "r2_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-same-material-AS-static-stop-readback-r2.json"
+  },
+  "current_full989_failure_readback": "artifacts/workflow/A3.1-audit-20261008/controller/reconcile-r5-isolated-full989-failure-readback-r1.json",
+  "current_native_atomic_readback": "artifacts/workflow/A3.1-audit-20261008/controller/reconcile-r5-native120-atomic-marker-readback-r1.json",
+  "current_phase": "IMPLEMENTATION_REMEDIATION",
+  "s1_reconcile_final_selfcheck": {
+    "status": "COMPLETE_NATIVE_FINAL_STOP_RESOURCE0_NOT_ACCEPTED",
+    "source": 989,
+    "wheel": 989,
+    "failures_errors_skips": 0,
+    "readback": "artifacts/workflow/A3.1-audit-20261008/controller/reconcile-r5-final-stop-resource0-manifest-readback-r1.json"
+  },
+  "current_resource_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-initial-resource-readback-r1.json",
+  "s2_runner_static_handoff_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-runner15-static-stop-readback-r1.json",
+  "s2_selfcheck_candidate_scope": {
+    "product_and_tests": "STOP_FOR_EXECUTION",
+    "snapshot_entries": 485,
+    "selfcheck_frozen_entries": 484,
+    "excluded_entry": "tasks/workflow/runs/A3.1-audit-20261008/state.json (controller scheduling metadata only)",
+    "final_IMPLEMENTATION_ACCEPTANCE_fullfreeze": "NOT_RUN_REQUIRES_ALL_NATIVE_STOP_RESOURCE0_AND_COMPLETE_READBACK"
+  },
+  "current_A2_historical_failure": {
+    "source": {
+      "tests": 482,
+      "failures": 419,
+      "errors": 0,
+      "skips": 0
+    },
+    "wheel": {
+      "tests": 482,
+      "failures": 419,
+      "errors": 0,
+      "skips": 0
+    },
+    "status": "COMPLETE_FAILED_GROUP_PRESERVED_CONCENTRATED_STATIC_DIAGNOSIS",
+    "categories": [
+      "394 missing old /evidence/probe-observations.jsonl",
+      "21 old test monkeypatch unexpected before_create keyword",
+      "1 legacy thread AssertionError",
+      "3 old migration006 return vs current007 inventory"
+    ],
+    "product_regression": "NOT_YET_DETERMINED",
+    "main_nonclock": "CONTINUES_UNCHANGED",
+    "independent_acceptance": "NOT_RUN"
+  },
+  "A2_legacy_diagnostic": {
+    "status": "NATIVE_FINAL_STOP_RESOURCE0_STATIC_ONLY",
+    "report": "artifacts/workflow/A3.1-audit-20261008/a2-legacy-runtime-diagnosis-r1/report.md",
+    "runtime_authorization": "artifacts/workflow/A3.1-audit-20261008/controller/s2-a2-historical-copy-runtime-authorization-r1.json"
+  },
+  "current_S2_complete_groups": {
+    "ordinary1338": "SOURCE_WHEEL_COMPLETE_NATIVE0",
+    "a1_original_controls5": "SOURCE_WHEEL_COMPLETE_NATIVE0",
+    "oracle60": "SOURCE_WHEEL_COMPLETE_NATIVE0",
+    "ruff_format": "SOURCE_WHEEL_COMPLETE_NATIVE0",
+    "full_nonclock4222": "FINAL_SAME_RUNTIME_NATIVE0_GATE_THEN_COMPLETE_FRESH_GROUP_RUNNING",
+    "clock1000": "NOT_RUN_WAITS_NONCLOCK",
+    "historical_a1_upgrade": "FAILED_TEST_DB_BINDING_PENDING_CONCENTRATED_CORRECTION",
+    "historical_a2_original482": "FAILED_ASSEMBLY_PENDING_CONCENTRATED_CORRECTION",
+    "b250": "NOT_RUN_OLD_EVIDENCE_PATH_DEPENDENCY",
+    "quality_environment": "FAILED_NEW_OBSERVER_DATAFILES_ROOT_BINDING_PENDING_CORRECTION",
+    "independent_capacity_domain": "FAILED_MISSING14_SOURCE_HASH_DATA_COPIES_PENDING_CONCENTRATED_RUNTIME_ASSEMBLY",
+    "independent_probes513": "FAILED_COMPLETE_SOURCE505P7F1E_WRAPPER133_MISSING_COMMAND_WHEEL506P7F_CONTROLLER126_OOM_NOT_PASS"
+  },
+  "current_resource_oracle_rule": {
+    "normal_PG_groups": "one PG group per physical mode at a time; source and wheel use separate owned physical modes",
+    "clock1000": "own physical mode; exact dual500 only if actual current_schema full-state plus independent DS databases, namespace/lock/wait/collect/10round/cap gates all hold",
+    "foreign_rows": "whole GatewayDB and downstream domains remain unfiltered; different schemas insufficient",
+    "failed_attempt": "complete raw/XML/native/executed-unexecuted retained; no partial PASS borrowed"
+  },
+  "current_failed_nonclock_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-whole-db-oracle-concurrency-partial-readback-r1.json",
+  "current_failed_nonclock_counts": {
+    "source": {
+      "executed_testcases": 1143,
+      "passed_in_failed_attempt_not_borrowed": 1113,
+      "failures": 30,
+      "errors": 0,
+      "skips": 0,
+      "extra_interrupt_metadata": 1,
+      "child_exit": 2,
+      "controller_exit": 125,
+      "detached_alive": []
+    },
+    "wheel": {
+      "child_exit": -9,
+      "controller_exit": 126,
+      "OOM_delta": 1,
+      "OOM_kill_delta": 1,
+      "xml_bytes": 0,
+      "complete_XML": "UNAVAILABLE_NOT_RECONSTRUCTED",
+      "detached_alive": []
+    },
+    "status": "HISTORICAL_FAILED_ATTEMPT_PRESERVED"
+  },
+  "current_owned_wheel_recovery": {
+    "status": "EXACT_SAME_PY_FULLID_RESTART_COMPLETE_NATIVE0_OOM_FALSE_NOT_BUSINESS_PASS",
+    "record": "artifacts/workflow/A3.1-audit-20261008/controller/s2-owned-wheel-py-restart-authorization-r1.json",
+    "caps_unchanged": true,
+    "actual_receipt": "artifacts/workflow/A3.1-audit-20261008/s2-integration-r1/wheel-exact-py-recovery-r1.json",
+    "old_PID_continuity_claimed": false
+  },
+  "current_S2_runtime_correction_gate": {
+    "status": "CONTROLLER_COPIED_ASSERT_HASH_INDEPENDENT_TABLE_INVENTORY_PUBLIC_ORACLE_DIFF_READBACK_APPROVED_EXECUTION_NOT_RUNTIME_PASS",
+    "original_test_assertions_retained": true,
+    "full37_not_filtered": true,
+    "actual_raw_outbox_unchanged_separately_asserted": true,
+    "expected_projection_views_explicitly_labelled": true,
+    "affected_full_groups_required": true,
+    "readbacks": [
+      "artifacts/workflow/A3.1-audit-20261008/controller/s2-public-projection-diff-approval-r1.json",
+      "artifacts/workflow/A3.1-audit-20261008/controller/s2-historical-copy-assert-readback-r2.json",
+      "artifacts/workflow/A3.1-audit-20261008/controller/s2-independent31plus6-inventory-readback-r1.json"
+    ],
+    "public2": "SOURCE_WHEEL_2P_0FE_SKIP_NATIVE0_ACTUAL37_OUTBOX_RAW_HTTP65536_CLASSIFIED_VIEWS_READBACK"
+  },
+  "current_S2_runner_issue": {
+    "status": "CONCENTRATED_SHARED_RUNTIME_FIX_NATIVE_CONTROLS_AND_COMPLETE_REAL_SPAWN_PROOF2_BOTH_MODES_PASS_NOT_FULL_ACCEPTANCE",
+    "product_or_formal_tests_changed": false,
+    "original_boundedr5_SHA_unchanged": true,
+    "source_wrapper133_child_exit_UNKNOWN_retained": true,
+    "source_spawn_proof2_child0_controller125_not_PASS": true,
+    "finish_grace_seconds": 2,
+    "deadline_exceeded_still_failclosed": true,
+    "readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-spawn-reentry-partial-actual-readback-r1.json",
+    "readonly_diagnosis": "artifacts/workflow/A3.1-audit-20261008/a31-rosetta-proc-diagnosis-r1/report.md",
+    "independent_acceptance": "NOT_RUN",
+    "root_actual_readbacks": [
+      "artifacts/workflow/A3.1-audit-20261008/controller/s2-final-spawn-proof-gate-native-readback-r1.json",
+      "artifacts/workflow/A3.1-audit-20261008/controller/s2-natural-exit-positive-negative-actual-readback-r2.json"
+    ]
+  },
+  "current_S2_final_nonclock_runs": {
+    "source": "s2-source-current-pg-nonclock-run-1791582014194359717",
+    "wheel": "s2-wheel-current-pg-nonclock-run-1791582016216398301",
+    "old_partial_not_borrowed": true
+  },
+  "current_S2_tls_remediation": {
+    "status": "MINIMAL_FIX_COMPLETE_FINITE22_AND_ORIGINAL_TLS50_BOTH_NATIVE0_COMPLETE_MATRIX_RUNNING",
+    "ownership": "ownership-s2-tls-remediation-r1.json",
+    "source_partial": "1784P1F0E, child/controller2; original framing9 BrokenPipe during client send, exact request value UNKNOWN",
+    "wheel_partial": "2012P0F0E, child/controller2; stopped to avoid obsolete candidate continuation",
+    "partial_acceptance": false,
+    "finite_split_send_diagnostic": "POST65537 10/10 BrokenPipe before response; GET2416 10/10 405; all database unchanged; native child0/controller126 collection_mismatch, NOT complete functional PASS",
+    "scope": "bounded rejection drain <=65537 bytes / <=1s / restore socket timeout; still reject >65536 / no parse-dispatch-or-write",
+    "updated": 1791584982.9928,
+    "candidate_sha256": "2359f42fbb9de39a29b9233a9e181d2b9f7380b518e794e60cca875f93447a32",
+    "root_diff_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-tls-minimal-product-diff-readback-r1.json",
+    "root_control_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-tls-corrected-finite-controls-native-readback-r1.json"
+  },
+  "current_S2_completegroups": {
+    "current_full4222_status": "RUNNING_FRESH_CURRENT_DEMO_STRICT_AUDIT_DELTA_CANDIDATE_FINITE7200",
+    "source_run": "s2-source-current-pg-nonclock-run-1791598272169074965",
+    "wheel_run": "s2-wheel-current-pg-nonclock-run-1791598301763863090",
+    "unaffected_complete_groups": "ordinary1338/A1controls5/oracle60/ruffformat prior complete native0; reuse requires truthful module influence provenance",
+    "fresh_full_acceptance": "NOT_RUN",
+    "actual_finite_limit_seconds": 7200,
+    "other_groups_limit_seconds": 3600,
+    "measurement_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-nonclock-finite7200-measurement-actual-readback-r1.json",
+    "unaffected_reuse_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-tls-unaffected-actual-native-module-reuse-readback-r1.json",
+    "updated": 1791598381.727742,
+    "candidate_sha256": "590ac98f440d5fb50ff09e055bfec1dc81cd447f37d24f86a2c780c8f12677f9"
+  },
+  "current_S2_current_caller_remediation": {
+    "status": "FORMAL_MINIMAL_CALLER_FIXED_ORIGINAL65_BOTH_NATIVE0_COMPLETE_MATRIX_RUNNING",
+    "ownership": "ownership-s2-current-caller-remediation-r1.json",
+    "failure": "20 eachmode unexpected before_create; original 2x10 valid/invalid competition did not enter window",
+    "source_partial": "2369 executed/20F/1853 missing/native2",
+    "wheel_partial": "2513 executed/20F/1709 missing/native2",
+    "partial_acceptance": false,
+    "actual_stop": "source/wheel-actual-execution-stop-r1.json native0/live_uid501[]",
+    "allowed": "Only formal delayed_accept kwargs forward, all assertions/decorators/params/barrier preserved",
+    "complete65_gate": "COMPLETE65_20_VALID_INVALID_REAL_COMPETITION_0FAIL_0ERROR_0SKIP_NATIVE0_EACHMODE",
+    "fresh_full_acceptance": "NOT_RUN",
+    "updated": 1791589163.370244,
+    "candidate_sha256": "eda005234d168918830216fcae479b416faf511ab20692f0b29926d19a29b21c",
+    "root_AST_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-current-r4-formal-caller-whole-AST-readback-r1.json",
+    "root_native65_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-current-r4-complete65-native-node-readback-r1.json"
+  },
+  "current_S2_trusted_initial_expiry": {
+    "status": "FORMAL_SINGLE_LITERAL_FIXED_REAL_EXPIRY_TEN_EACH_MODE_NATIVE0_COMPLETE_MATRIX_RUNNING",
+    "scope": "owned inherited trusted single lifetime literal1to3, real expiry checks unchanged",
+    "root_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-trusted-initial-expiry-actual-readback-r1.json",
+    "independent_acceptance": "NOT_RUN",
+    "root_native_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-trusted-literal-and-twenty-native-real-expiry-readback-r1.json"
+  },
+  "current_S2_root_monitor_incident": {
+    "actual_failed_tests": 0,
+    "source_partial": "2523P native2",
+    "wheel_partial": "2534P native2",
+    "cause": "root counted [FAILED] parameter in PASSED node as failure and mistakenly requested STOP",
+    "code_candidate_changed": false,
+    "root_receipt": "artifacts/workflow/A3.1-audit-20261008/controller/s2-root-param-status-false-alarm-interruption-r1.json",
+    "correction": "exact terminal status only; actual failure node/trace mandatory before STOP; fresh whole reexecution, no partial borrow"
+  },
+  "current_S2_current_demo_remediation": {
+    "status": "FORMAL_STRICT_DELTA_FIXED_FULL_HTTPS33_AND_LITERAL_DEMO_BOTH_NATIVE0_COMPLETE_MATRIX_RUNNING",
+    "ownership": "ownership-s2-current-demo-remediation-r1.json",
+    "source_partial": "3031 executed/21F/0E native2",
+    "wheel_partial": "3030 executed/20F/0E native2",
+    "failure": "Actual publication oracle did not account for required A31 PUBLISH record/head; query helper also requires same integration",
+    "partial_acceptance": false,
+    "actual_stops": "source/wheel-actual-https-real-failure-stop-r1.json native0/live_uid501[]",
+    "root_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-current-https-demo-real-failure-readback-r1.json",
+    "complete_matrix_acceptance": "NOT_RUN",
+    "fresh_independent_acceptance": "NOT_RUN",
+    "root_AST_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-current-demo-narrow-AST-actual-readback-r1.json",
+    "root_native33_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-current-demo-original-full-https33-native-readback-r1.json",
+    "root_expected_view_negative_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-current-demo-expected-view-negative-controls-actual-readback-r1.json",
+    "candidate_sha256": "590ac98f440d5fb50ff09e055bfec1dc81cd447f37d24f86a2c780c8f12677f9"
+  },
+  "current_S2_shared_query_oracle_failure": {
+    "status": "FORMAL_CALLER_REMEDIATED_FOCUSED_NATIVE0_FULL_SELF_CHECK_RUNNING",
+    "candidate": "590ac98f440d5fb50ff09e055bfec1dc81cd447f37d24f86a2c780c8f12677f9",
+    "source_run": "1791598272169074965",
+    "wheel_run": "1791598301763863090",
+    "each_actual": "4222 collected/executed;4202passed;20failed;0error;0skip",
+    "failed_family": "test_shared_kid_concurrent_current_query_cross_owner_and_trust_repair: ten rounds forward/reverse",
+    "root_full_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-current-shared-kid-twenty-failures-full-XML-readback-r1.json",
+    "cause": "old caller direct full equality does not yet validate expected two QUERY audit deltas; actual delta confirmation and formal sole-file transfer pending",
+    "source_controller": "actual Rosetta auxv assertion; worker exact Docker event native133; host outer UNKNOWN; root raw hash verified",
+    "runtime_plan": "artifacts/workflow/A3.1-audit-20261008/controller/s2-source-native-proc-runtime-adaptation-approval-r1.json",
+    "runtime_assets_actual": "artifacts/workflow/A3.1-audit-20261008/controller/s2-native-proc-official-assets-root-byte-readback-r1.json",
+    "acceptance": "NOT_RUN",
+    "updated": 1791605988.413934,
+    "wheel_controller": "root actual command SHA verified:controller1/child1/timeoutfalse/detached[]; original host outer UNKNOWN",
+    "remediation": "sole file23 narrow strict2QUERY call; whole original AST unchanged after one added alias/call; original51 asserts retained; exact original20 per mode native0 plus20positive/120EXPECTED_VIEWreject controls each; no actual DB mutation claim",
+    "current_candidate": "a9fba25115d21bde6e7f477410ec7f8c1c2a17c8f662794ad0dd373aaa303bc1",
+    "focused_root_readback": "artifacts/workflow/A3.1-audit-20261008/controller/s2-shared-query-original20-and-effective-controls-root-native-readback-r1.json",
+    "current_full_runs": {
+      "source": "1791605832020732339",
+      "wheel": "1791605832022099173",
+      "native_deadline_seconds": 7200,
+      "status": "RUNNING_NOT_ACCEPTED"
+    }
+  },
+  "current_human_pause": {
+    "status": "SUPERSEDED_BY_HUMAN_RESUME_20261010",
+    "authorization": "tasks/workflow/runs/A3.1-audit-20261008/user-pause-20261010-r1.md",
+    "quote": "找个地方先暂停一下",
+    "timestamp": "2026-10-10T04:24:15.851225+00:00",
+    "active_candidate": "a9fba25115d21bde6e7f477410ec7f8c1c2a17c8f662794ad0dd373aaa303bc1",
+    "implementation_acceptance": "NOT_RUN",
+    "next": "actual stop/partial evidence/own resource0 then wait human resume"
+  },
+  "current_human_resume": {
+    "status": "SUPERSEDED_STOP_BOUNDARY_BY_A32_EXTENSION",
+    "authorization": "tasks/workflow/runs/A3.1-audit-20261008/user-resume-low-through-a31-20261010.md",
+    "writer": "/root/a31_s2_resume_low_r1",
+    "requested_worker": "gpt-6.1-sol/low",
+    "requested_reviewer": "gpt-6.1-sol/high",
+    "effective_metadata": "UNKNOWN",
+    "stop_boundary": "A3.1 actual acceptance and owned-resource cleanup; no A3.2/A3.3/Git",
+    "actual_resources": "existing6 containers; resume verification pending",
+    "implementation_acceptance": "NOT_RUN",
+    "timestamp": "2026-10-10T05:47:57.353050+00:00"
+  },
+  "current_remediation": {
+    "status": "ACCEPTED_BY_FRESH_COMPLETE_R2",
+    "prior_failure": "review-r1.md",
+    "closure": "review-r2.md"
+  },
+  "owned_resources": 0,
+  "current_human_extension": {
+    "source": "current human message",
+    "quote": "看起来A3.1快完了，我希望你能一直持续到A3.2结束，希望明早起床看到你的好消息",
+    "timestamp": "2026-10-10T14:13:32.265336+00:00",
+    "authorization": "continue through actual A3.1 and A3.2 acceptance and resource cleanup, then STOP; no A3.3/Git",
+    "worker": "gpt-6.1-sol/low",
+    "reviewer": "gpt-6.1-sol/high",
+    "effective_metadata": "UNKNOWN",
+    "formal_authorization_file": "user-extend-through-a32-quota-20261011.md"
+  },
+  "A32_implementation": "AUTHORIZED_BY_CURRENT_HUMAN_AFTER_A31_ACCEPTANCE_AND_A32_PACKAGE_READY",
+  "A33_implementation": "NOT_AUTHORIZED_THIS_EXTENSION",
+  "quota_pause_policy": {
+    "source": "current human message",
+    "quote": "另外，当额度只有10%的时候请暂停，不要继续",
+    "threshold_remaining_percent": 10,
+    "applies_to": "any available effective Codex quota window; optional zero add-on credits not equal exhausted ordinary allowance",
+    "check_interval_seconds": 300,
+    "also_check": "before agent dispatch/new long execution/stage transition",
+    "action": "stop starting new work; safely preserve partial native evidence, stop owned work/resources, record PAUSED_QUOTA_10_PERCENT and wait human resume",
+    "latest_effective_windows": [
+      {
+        "id": "codex",
+        "window": "primary",
+        "usedPercent": 66,
+        "remainingPercent": 34,
+        "windowDurationMins": 10080,
+        "resetsAt": 1792030646
+      }
+    ],
+    "checked_at": "2026-10-10T21:39:57.687616+00:00"
+  },
+  "A32_current_draft": {
+    "status": "STATIC_COMPLETE_NATIVE_STOP_RESOURCE0_NOT_PACKAGE_READY",
+    "readback": "artifacts/workflow/A3.1-audit-20261008/controller/a32-static-draft-root-readback-r1.json",
+    "formal_adoption": "after A31 actual ACCEPTED and final APIs rebind"
+  },
+  "phase": "ACCEPTED",
+  "acceptance_r2": {
+    "status": "ACCEPTED",
+    "accepted_at": "2026-10-10T21:39:57.687616+00:00",
+    "report": "review-r2.md",
+    "acceptance": "acceptance.md",
+    "report_sha256": "013474e8ec824e9dd584decd8310cfb4239ecdf037f71763cbb09fa5169a256e",
+    "manifest_sha256": "57ccfba142ed77f8603f9ac96a646a3a132fd5dbfaaab5645c1396b3c6ef0c79",
+    "root_readback": "artifacts/workflow/A3.1-audit-20261008/controller/ia-r2-complete-report-root-readback.json",
+    "freeze_sha256": "cbaac851b4724778a221644d7ad35203e118762c61c256d8f462a804acf633e0",
+    "counts": {
+      "parents": 141,
+      "runtime": 133,
+      "inherited": 269,
+      "new_atoms": 95,
+      "native": 7,
+      "fresh_groups": 40,
+      "XML_cases_each_mode": 8421
+    },
+    "owned_resources_remaining": 0
+  },
+  "owned_resources_remaining": 0,
+  "historical_open_issues_snapshot": [
+    {
+      "id": "A31-INHERITED-QUERY-ORACLE-SCOPE",
+      "status": "OPEN_CONFIRMED_SCOPE_AMENDMENT_REQUIRED",
+      "path": "tests/integration/test_gateway_query.py",
+      "actual_run": "s0-gateway-scope-r1",
+      "passed": 4,
+      "failed": 1,
+      "exit": 1,
+      "failed_case": "test_final_query_token_and_ancestor_windows[False-True-token-0]",
+      "product_edit_authorized": false
+    },
+    {
+      "id": "A31-S0-LEGACY-B7-NAMESPACE",
+      "label": "s0-final-wheel-owned-r2",
+      "mode": "wheel",
+      "counts": {
+        "tests": 561,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "exit": 1,
+      "failed_nodes": [
+        {
+          "classname": "tests.integration.test_lineage_migrations",
+          "name": "test_public_a_view_rejects_b_legacy_before_bootstrap[7]"
+        }
+      ],
+      "raw_sha256": "e22fa8a63dfcaca83ef4d3b72508629de63daf2e009817766adb79dc8de516e2",
+      "xml_sha256": "80854c12e2241f51a152bf892ef2685f4e1ba4571ca10707fe66b52547fc73ac",
+      "failure_type": "MigrationError; SQLSTATE not applicable",
+      "status": "OPEN_CONFIRMED_IMPLEMENTATION"
+    },
+    {
+      "id": "A31-S0-LEGACY-ROW-SHAPE",
+      "label": "s0-final-source-owned-r3",
+      "mode": "source",
+      "exit": 1,
+      "counts": {
+        "tests": 567,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0
+      },
+      "failed_nodes": [
+        {
+          "classname": "tests.integration.test_lineage_migrations",
+          "name": "test_every_legal_prefix_preserves_all_old_rows[A-1]"
+        }
+      ],
+      "raw_sha256": "f3822395c1e138a47edf156b4a7f4970b643267fce384111db693a3cf456e073",
+      "xml_sha256": "964c5a1f5f0f5b4bd14cd0f44905a45b781edce41673b408233a6fbb541ae344",
+      "status": "OPEN_ACTUAL_DIFFERENCE_DIAGNOSIS",
+      "root_cause": "ACTUAL_A1_BEFORE_AFTER: all old fields/rows/migration registry preserved; only audit_created_xid/audit_terminal_xid/audit_linked_xid added NULL; full legal prefixes still pending",
+      "SQLSTATE": "NOT_APPLICABLE_ASSERTION",
+      "diagnostic_readback": "artifacts/workflow/A3.1-audit-20261008/controller/diagnostic-text-row-readback-r1.json"
+    },
+    {
+      "id": "A31-S0-TEXT-JWS-CAPTURE-CAP",
+      "status": "CONFIRMED_FIXED_PENDING_CURRENT_FULL_SELFCHECK_AND_REVIEW",
+      "actual_pre_fix_probe": "s0-text-capture-diagnostic-r2",
+      "raw_sha256": "90adb051df1bb40737dd7001e8f3ccaa37204bb63ce7a5266e768c2de7d3fc51",
+      "observed": "actual PG capture accepts opaque token TEXT16385; raw token object count0",
+      "limits": "opaque raw-cap control, not legitimate signed token padding",
+      "effect": "snapshot raw/index/wire changed; prior seed consumer800/200 mapping historical only; complete affected source/wheel rerun mandatory"
+    },
+    {
+      "id": "A31-S0-NATIVE-MIGRATION-COUNT",
+      "label": "s0-final-source-owned-r4",
+      "exit": 1,
+      "mode": "source",
+      "raw_sha256": "6b36008eb1ad72331c4dae62ac4468485fc83c4780c4daa4f248c161ce1ff4eb",
+      "xml_sha256": "40c2d471fa64e6f11871fba5b9d7d42ccef55eee1912563e55609ffb19df0312",
+      "counts": {
+        "tests": 623,
+        "failure": 1,
+        "error": 0,
+        "skipped": 0
+      },
+      "failed_nodes": [
+        {
+          "class": "tests.integration.test_lineage_migrations",
+          "name": "test_two_real_migration_processes_serialize[0]"
+        }
+      ],
+      "actual_failure": "sorted counts [0,8] versus old expected[0,7]; two actual native migration children exit0; SQLSTATE not applicable; original15GW/independent audit001 inventory remains",
+      "status": "FIXED_TARGETED_SOURCE_WHEEL10_PENDING_FULL_SELF_CHECK_REVIEW",
+      "readback": "artifacts/workflow/A3.1-audit-20261008/controller/current-lineage10-quality-readback-r1.json"
+    },
+    {
+      "id": "A31-S0-NONZERO-AUTH-WINDOW",
+      "status": "FIXED_DIAGNOSTICS_CURRENT_SOURCE_WHEEL80_PASS_PENDING_FULL_SELF_CHECK_REVIEW",
+      "runs": [
+        {
+          "label": "s0-final-source-owned-r5",
+          "mode": "source",
+          "exit": 1,
+          "raw_sha256": "5c934a61fe8a7e66355f6489eeb2a8a8639546ae15f553fb9758b8da13c0d01c",
+          "xml_sha256": "0cdaf0bd77114132fb95817722248be6d0f75976764011eecf531e69eb7a60cd",
+          "counts": {
+            "tests": 504,
+            "failures": 1,
+            "errors": 0,
+            "skipped": 0
+          },
+          "failed_nodes": [
+            {
+              "class": "tests.integration.test_audit_upgrade",
+              "name": "test_actual_nonzero_new_and_offpath_counter_cannot_be_zero_baseline[amount_settled-introduced-8]",
+              "failure_message": "agent_guard.contracts.ledger.LedgerError: EXPIRED: grant expired: grant-49dfbbfd47634a2d9ec2d6ae8614dc77"
+            }
+          ],
+          "root_cause": "NOT_ESTABLISHED; authorization expiry/invalid access token before intended nonzero JournalError"
+        },
+        {
+          "label": "s0-final-wheel-owned-r4",
+          "mode": "wheel",
+          "exit": 1,
+          "raw_sha256": "243f7d523032637b8a8ca91955be33c7a682dcba7082e2ebf2ce030efcc60d46",
+          "xml_sha256": "83abff5218d577bdf9ec448a44a951012329e33b78b091d68696bbdab10c4d6b",
+          "counts": {
+            "tests": 506,
+            "failures": 1,
+            "errors": 0,
+            "skipped": 0
+          },
+          "failed_nodes": [
+            {
+              "class": "tests.integration.test_audit_upgrade",
+              "name": "test_actual_nonzero_new_and_offpath_counter_cannot_be_zero_baseline[amount_settled-offpath-empty-0]",
+              "failure_message": "agent_guard.authorization.verifier.VerificationError: invalid access token"
+            }
+          ],
+          "root_cause": "NOT_ESTABLISHED; authorization expiry/invalid access token before intended nonzero JournalError"
+        }
+      ],
+      "readback": "artifacts/workflow/A3.1-audit-20261008/controller/nonzero-auth-window-failure-readback-r1.json",
+      "power_evidence": {
+        "path": "artifacts/workflow/A3.1-audit-20261008/shared-78baf8708f66/power-owned-failure-window-r1.json",
+        "sha256": "c5f82967ee4d71089e1c0ac368a592ff497f0fea09accb5453280f2f91b17188",
+        "observed_sleep_seconds": 436,
+        "missing_exact_failed_before_and_exp": "NOT_RECONSTRUCTED; scope teardown, historical evidence limit retained"
+      },
+      "diagnostic_baseline_failures_readback": "artifacts/workflow/A3.1-audit-20261008/controller/counter-diagnostic-stage-baseline-readback-r1.json",
+      "diagnostic_correction": "before_bundle retained; before restored after actual bundle creation, prior to accept",
+      "counter80_readback": "artifacts/workflow/A3.1-audit-20261008/controller/current-counter80-readback-r1.json"
+    },
+    {
+      "id": "A31-S0-STANDALONE-MIGRATION-EXPECTATION",
+      "status": "FIXED_SOURCE_WHEEL110_PASS_PENDING_FULL_SELFCHECK_REVIEW",
+      "runs": [
+        {
+          "label": "s0-final-source-owned-r6",
+          "mode": "source",
+          "passed": 666,
+          "failed": 1,
+          "exit": 1
+        },
+        {
+          "label": "s0-final-wheel-owned-r5",
+          "mode": "wheel",
+          "passed": 666,
+          "failed": 1,
+          "exit": 1
+        }
+      ],
+      "failed_node": "tests/integration/test_migrations.py::test_p13_fresh_database_migrates_and_is_versioned",
+      "actual": "standalone001-006 correctly applied; old default glob includes bundle-only007",
+      "scope": "test_migrations.py and test_a2_migrations.py already within31; custom-directory behavior and production unchanged",
+      "readback": "artifacts/workflow/A3.1-audit-20261008/controller/standalone-migration-expectation-failure-readback-r1.json",
+      "targeted_readback": "artifacts/workflow/A3.1-audit-20261008/controller/current183-migration110-quality-readback-r1.json"
+    },
+    {
+      "id": "A31-S0-PUBLISHER-QUERY-DEADLOCK",
+      "status": "OPEN_CONFIRMED_IMPLEMENTATION_DIAGNOSIS",
+      "mode": "wheel",
+      "label": "s0-final-wheel-owned-r6",
+      "passed": 834,
+      "failed": 1,
+      "exit": 1,
+      "failed_node": "test_publish_query_retry_recovery_races_ten_rounds[0-publisher-query]",
+      "SQLSTATE": "40P01",
+      "actual": "publisher journal record FK KEY SHARE ag_operations conflicts with concurrent query; full cycle diagnosis pending",
+      "readback": "artifacts/workflow/A3.1-audit-20261008/controller/resume-r2-full-run-and-resource-readback-r1.json"
+    }
+  ],
+  "next_stage": "A3.2 formal package adoption and fresh PACKAGE_REVIEW"
+}

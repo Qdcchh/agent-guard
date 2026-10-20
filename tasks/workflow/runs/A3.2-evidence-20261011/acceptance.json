@@ -1,0 +1,86 @@
+{
+  "stage": "A3.2-evidence",
+  "status": "ACCEPTED",
+  "review_kind": "IMPLEMENTATION_ACCEPTANCE",
+  "UTC": "2026-10-11T20:06:45.031521+00:00",
+  "requested_reviewer": "gpt-6.1-sol/high",
+  "effective_metadata": "UNKNOWN",
+  "frozen_candidate_SHA256": "e680193204ef1c25eb656169a0470eb1672422d7549016454f50f7118633629c",
+  "frozen_members": 570,
+  "branch": "handoff/a23-local-20261005",
+  "HEAD": "2a8cc7da4867ad1876350855c0ed5569c5ce6472",
+  "index_empty": true,
+  "counts": {
+    "parents": 159,
+    "runtime_obligations": 151,
+    "A2_assertions": 269,
+    "A31_atoms": 95,
+    "A32_atoms": 73
+  },
+  "each_mode": {
+    "groups": 20,
+    "ordinary": 1710,
+    "new_regression_nodes": 55,
+    "single_complete_PG": 5002,
+    "strict_partitions": [
+      500,
+      500
+    ],
+    "public_mandatory": 420,
+    "independent_public": 90,
+    "real_joint": 10
+  },
+  "report": {
+    "path": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/report.json",
+    "SHA256": "bbfdff45783277c8fb6bcd390c0e10752e309c6b6052101a8487a29590cd6d2b"
+  },
+  "manifest": {
+    "path": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/full-SHA256-manifest.json",
+    "SHA256": "f75df2be2e6c66357ce8eeffda422399390f65549ecf1bf638d014d7fb3c9abf",
+    "files": 41247,
+    "bytes": 7568568701
+  },
+  "STOP": {
+    "path": "artifacts/workflow/A3.2-evidence-20261011/independent-sol-high-r2-4d3a43f4-da45-47d3-bed8-75fc50421d00/STOP.json",
+    "SHA256": "36b5a38d163253a0abb2ac41e92068dfb3b34364027c05e7e75edfbbf6db8f69",
+    "actual_last_writer_native_exit": "tool63002 chunk7081b6 actual0; root ps confirms PID85904 absent"
+  },
+  "root_readbacks": [
+    {
+      "path": "artifacts/workflow/A3.2-evidence-20261011/controller/independent-r2-all-final-evidence-manifest-root-readback.json",
+      "SHA256": "c1e8e31dacd3c1329e11d337db528cf50dbed9504c9b77a996d0ef00ac754a85"
+    },
+    {
+      "path": "artifacts/workflow/A3.2-evidence-20261011/controller/independent-r2-freeze-Git7-resources-final-root-readback.json",
+      "SHA256": "be6a63b1b7534577b2d4bfb70f91e882ee7e1cb6b9929353728ce3b55466061d"
+    },
+    {
+      "path": "artifacts/workflow/A3.2-evidence-20261011/controller/independent-r2-full-matrix-native-closure-root-readback.json",
+      "SHA256": "119bd1e376ef7ae9e7a2b6849ec8b12a67ba798cd445cab8f01d0a9a73bb249d"
+    },
+    {
+      "path": "artifacts/workflow/A3.2-evidence-20261011/controller/independent-r2-all-native-private-PG-tar-members-root-readback.json",
+      "SHA256": "27c839bdcfda3c12c251e48cfa1fc34ae44d07e4f2b8711a814e6f6bd858624d"
+    }
+  ],
+  "A32_IA_R1_001": "CLOSED_BY_FRESH_R2_FULL_ACCEPTANCE",
+  "owned_resources_remaining": 0,
+  "resource_counts": {
+    "containers": 24,
+    "networks": 2,
+    "volumes": 4,
+    "private": 2,
+    "registered_hosts": 55
+  },
+  "limits": [
+    "current_auth UNKNOWN",
+    "ATTESTED_NOT_INDEPENDENTLY_PROVEN downstream",
+    "UNANCHORED runtime/tail and external bootstrap/latest trust",
+    "original10000 native generation narrowly qualified; fresh encoding preflight is not successful beyond-cap10000PG single export",
+    "native argv unavailable after exit/exec or first-observed zombie remains unavailable; no reconstruction"
+  ],
+  "known_confirmed_blocking_issues": [],
+  "overall_project": "PARTIAL",
+  "A33_A34": "NOT_RUN",
+  "continuation": "A33 formal package/fresh package review then implementation; continuous human scope throughA34; no quota monitoring or Git publication"
+}

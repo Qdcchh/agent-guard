@@ -1,0 +1,11 @@
+# PR9 证据导出HTTPS环境前提补齐
+
+candidate2尚无完整接受或发布。普通PG后缀实际1561pass/1fail因test_evidence_export_tls缺A32_EXPORT_TLS_DIR；原文件70个case要求gateway.agent-guard.test独立CA/TLS材料及真实错CA/错SAN拒绝。source/wheel原20组的current-pg-nonclock明确也包含此文件，不能让已知缺环境的长测试继续消耗后伪称通过。
+
+主控只读核对原tests.integration.test_gateway_tls.certificates(directory)：其已生成独立CA、tls.pem/tls.key与仅gateway.agent-guard.test的SAN。授权普通PGworker在自有私密root调用此原函数、0700/全文件0600并设置env，然后从该失败文件起跑后缀；不重跑已过1561前缀、保留分段与原失败，不称一次完整运行。
+
+主控独占ci.yml/docs环境说明：增加独立本轮export-tls0700目录及A32_EXPORT_TLS_DIR，调用相同既有certificate函数并chmod全部600；always清理目录及CA/privatekey。TLS错CA/错SAN等全部原断言保持，不拿PG带127SAN证书冒充导出网关证书，不改现有11字段A31 receipt。
+
+部署worker窄scope仅tools/pr9_deploy_inputs.py的原20组环境装配及必需对应单测：每次完整run_inherited_groups在自己的output/export-tls创建新目录，调用同一已存在证书函数，验证私密路径/owner/mode并把A32_EXPORT_TLS_DIR放入各组env。不能携带其他消费者私钥、改原20命令/节点/断言/正常角色拓扑；用本轮资源真实跑原70项再完整20组。此scope不改业务代码与签名/TLS校验策略。
+
+正在进行的r3 source/wheel短probe2pass/202.82s原样保留；四文件若提前停止则明确标为取消/部分，不冒充完成。先受控终止并严格清理自己的driver/resources，再改源STOP/fresh候选与fresh完整实跑。candidate2因此不再待接受；更新候选冻结及全新high完整接受、exact head所有CI green再正常squash门仍在。

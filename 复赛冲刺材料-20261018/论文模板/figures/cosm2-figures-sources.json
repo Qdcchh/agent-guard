@@ -1,0 +1,1296 @@
+{
+  "schema": "cosm2-figures-sources-v2",
+  "status": "OBSERVED_FIXED_RUN",
+  "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+  "completed_at": 1792236863,
+  "cells": [
+    {
+      "scheme": "sm2-2p",
+      "attack": "盗令牌",
+      "location": "AS",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "盗令牌",
+      "location": "授权域",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "盗令牌",
+      "location": "网关验签",
+      "status": "OBSERVED",
+      "code": "INVALID_SIGNATURE",
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": "stolen-token-wrong-holder"
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "盗令牌",
+      "location": "接受事务",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "行动越权",
+      "location": "AS",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "行动越权",
+      "location": "授权域",
+      "status": "OBSERVED",
+      "code": "AUTHZ_SCOPE",
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": "expanded-scope"
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "行动越权",
+      "location": "网关验签",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "行动越权",
+      "location": "接受事务",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "撤销后",
+      "location": "AS",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "撤销后",
+      "location": "授权域",
+      "status": "OBSERVED",
+      "code": "AUTHZ_REVOKED",
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": "revoked-before-cosign"
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "撤销后",
+      "location": "网关验签",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "撤销后",
+      "location": "接受事务",
+      "status": "OBSERVED",
+      "code": "REVOKED",
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": "revoked-after-cosign"
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "篡改金额",
+      "location": "AS",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "篡改金额",
+      "location": "授权域",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "篡改金额",
+      "location": "网关验签",
+      "status": "OBSERVED",
+      "code": "APPROVAL_MISMATCH",
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": "tampered-amount"
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "篡改金额",
+      "location": "接受事务",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "单域签名",
+      "location": "AS",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "单域签名",
+      "location": "授权域",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "单域签名",
+      "location": "网关验签",
+      "status": "OBSERVED",
+      "code": "INVALID_SIGNATURE",
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": "exec-domain-alone"
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "单域签名",
+      "location": "接受事务",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "伪造签名",
+      "location": "AS",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "伪造签名",
+      "location": "授权域",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "伪造签名",
+      "location": "网关验签",
+      "status": "OBSERVED",
+      "code": "INVALID_SIGNATURE",
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": "fake64-signature"
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "伪造签名",
+      "location": "接受事务",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "超预算",
+      "location": "AS",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "超预算",
+      "location": "授权域",
+      "status": "OBSERVED",
+      "code": "AUTHZ_OVER_BUDGET",
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": "over-remaining-budget"
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "超预算",
+      "location": "网关验签",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    },
+    {
+      "scheme": "sm2-2p",
+      "attack": "超预算",
+      "location": "接受事务",
+      "status": "NOT_TRIGGERED",
+      "code": null,
+      "evidence_path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be",
+      "run_id": "01af29ac-26be-4616-851d-d8afa38fa46e",
+      "command": "python tools/cosm2_gateway_demo.py",
+      "case": null
+    }
+  ],
+  "sources": {
+    "result": {
+      "path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/result.json",
+      "sha256": "047d2224bd6ea23dca49ad175e0ee7dbc37b1dde0b10e8e32e68acaed8c8230a"
+    },
+    "negative_matrix": {
+      "path": "artifacts/cosm2-gateway-demo-live/01af29ac-26be-4616-851d-d8afa38fa46e/negative-matrix.json",
+      "sha256": "4ddc28553bf3d97914b684be2cc7f68999447705277ee2fdcda9955d2c3e55be"
+    }
+  },
+  "observations": [
+    {
+      "case_id": "missing-approval",
+      "location": "gateway",
+      "observed_code": "APPROVAL_REQUIRED",
+      "before": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 0
+      },
+      "after": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "exec-domain-alone",
+      "location": "gateway",
+      "observed_code": "INVALID_SIGNATURE",
+      "before": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 0
+      },
+      "after": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "fake64-signature",
+      "location": "gateway",
+      "observed_code": "INVALID_SIGNATURE",
+      "before": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 0
+      },
+      "after": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "stolen-token-wrong-holder",
+      "location": "gateway",
+      "observed_code": "INVALID_SIGNATURE",
+      "before": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 1
+      },
+      "after": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 1
+      },
+      "passed": true
+    },
+    {
+      "case_id": "expanded-scope",
+      "location": "authorization_domain",
+      "observed_code": "AUTHZ_SCOPE",
+      "before": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 1
+      },
+      "after": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 1
+      },
+      "passed": true
+    },
+    {
+      "case_id": "tampered-amount",
+      "location": "gateway",
+      "observed_code": "APPROVAL_MISMATCH",
+      "before": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 2
+      },
+      "after": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 2
+      },
+      "passed": true
+    },
+    {
+      "case_id": "downstream-no-approval",
+      "location": "downstream",
+      "observed_code": "DOWNSTREAM_UNAUTHORIZED",
+      "before": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "after": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "passed": true
+    },
+    {
+      "case_id": "downstream-changed-amount",
+      "location": "downstream",
+      "observed_code": "DOWNSTREAM_UNAUTHORIZED",
+      "before": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "after": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "passed": true
+    },
+    {
+      "case_id": "downstream-replay-new-operation",
+      "location": "downstream",
+      "observed_code": "DOWNSTREAM_UNAUTHORIZED",
+      "before": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "after": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "passed": true
+    },
+    {
+      "case_id": "over-remaining-budget",
+      "location": "authorization_domain",
+      "observed_code": "AUTHZ_OVER_BUDGET",
+      "before": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "after": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "passed": true
+    },
+    {
+      "case_id": "revoked-before-cosign",
+      "location": "authorization_domain",
+      "observed_code": "AUTHZ_REVOKED",
+      "before": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "after": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "passed": true
+    },
+    {
+      "case_id": "revoked-after-cosign",
+      "location": "gateway_acceptance",
+      "observed_code": "REVOKED",
+      "before": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "after": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "passed": true
+    }
+  ],
+  "additional_effect_observations": [
+    {
+      "case_id": "downstream-no-approval",
+      "location": "downstream",
+      "observed_code": "DOWNSTREAM_UNAUTHORIZED",
+      "before": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "after": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "passed": true
+    },
+    {
+      "case_id": "downstream-changed-amount",
+      "location": "downstream",
+      "observed_code": "DOWNSTREAM_UNAUTHORIZED",
+      "before": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "after": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "passed": true
+    },
+    {
+      "case_id": "downstream-replay-new-operation",
+      "location": "downstream",
+      "observed_code": "DOWNSTREAM_UNAUTHORIZED",
+      "before": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "after": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "passed": true
+    }
+  ],
+  "design_source": "复赛冲刺材料-20261018/01-双域协同SM2实施规划-A与B分工.md",
+  "limitations": [
+    "半诚实、同主机；参考曲线运算非常数时间。",
+    "P1 独立进程不等于 OS 强制隔离；智能体不持份额。",
+    "未触发格无拒绝或通过结论；仅固定运行集，不是普适安全证明。",
+    "本地可写 JSON 为运行证据，不是独立密码学证明。",
+    "B9 效果端独立验签状态单独验收，本图不提前宣称。"
+  ]
+}

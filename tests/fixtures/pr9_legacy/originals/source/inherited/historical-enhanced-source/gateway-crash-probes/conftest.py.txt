@@ -1,0 +1,1 @@
+# Fixture plugin declared once at this copied probe tree root.

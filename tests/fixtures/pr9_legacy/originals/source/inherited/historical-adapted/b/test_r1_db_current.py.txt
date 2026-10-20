@@ -1,0 +1,66 @@
+import time,threading
+from concurrent.futures import ThreadPoolExecutor
+import psycopg,pytest
+from agent_guard.ledger import store
+from agent_guard.authorization.exchange_service import TokenExchangeError
+from agent_guard.authorization.consent import ConsentError
+from tests.integration.test_exchange_service import _root,_form,_exchange
+from tests.integration.test_login_consent import _setup,_session,_params
+pytest_plugins=["tests.integration.conftest"]
+
+def test_real_backend_death_rolls_back_exchange_proof(ledger,dsn,monkeypatch):
+    a,k,r,s,root=_root(dsn); form=_form(a,root.access_token)
+    old=store.record_proof
+    def terminate(c,**kwargs):
+        old(c,**kwargs)
+        with psycopg.connect(dsn,autocommit=True) as admin:
+            assert admin.execute('SELECT pg_terminate_backend(%s)',(c.info.backend_pid,)).fetchone()==(True,)
+        c.execute('SELECT 1')
+    monkeypatch.setattr(store,'record_proof',terminate)
+    with pytest.raises(TokenExchangeError,match='TRUSTED_STATE_UNAVAILABLE'):
+        _exchange(s,k,r,form)
+    with psycopg.connect(dsn) as c:
+        assert c.execute('SELECT count(*) FROM ag_proofs').fetchone()==(1,)
+        assert c.execute('SELECT count(*) FROM ag_grants').fetchone()==(1,)
+        assert c.execute('SELECT count(*) FROM ag_delegations').fetchone()==(0,)
+        assert c.execute('SELECT count(*) FROM ag_exchange_evidence').fetchone()==(0,)
+
+def test_real_sql_timeout_has_bounded_failclosed_effects(ledger,dsn):
+    a,k,r,s,root=_root(dsn); form=_form(a,root.access_token)
+    with psycopg.connect(dsn) as blocker:
+        blocker.execute('SELECT * FROM ag_tasks FOR UPDATE')
+        with ThreadPoolExecutor(1) as pool:
+            start=time.monotonic(); future=pool.submit(_exchange,s,k,r,form)
+            with pytest.raises(TokenExchangeError) as error: future.result(timeout=20)
+            assert error.value.code=='TRUSTED_STATE_UNAVAILABLE'
+            assert error.value.__cause__.sqlstate=='55P03'
+            assert 9<=time.monotonic()-start<=18
+    with psycopg.connect(dsn) as c:
+        assert c.execute('SELECT count(*) FROM ag_proofs').fetchone()==(1,)
+        assert c.execute('SELECT count(*) FROM ag_delegations').fetchone()==(0,)
+
+@pytest.mark.parametrize('round',range(10))
+def test_request_expiry_is_rechecked_after_actual_row_lock(ledger,dsn,round):
+    s=_setup(dsn); session=_session(s)
+    req=s.consent.create_request(session_token=session.session_token,csrf_token=session.csrf_token,params=_params())
+    with psycopg.connect(dsn) as c:
+        c.execute("UPDATE ag_authorization_requests SET expires_at=clock_timestamp()+interval '1 second'")
+    captured=[]
+    def connector(*args,**kwargs):
+        c=psycopg.connect(*args,**kwargs); captured.append(c.info.backend_pid); return c
+    s.consent._connector=connector
+    with psycopg.connect(dsn) as blocker:
+        blocker.execute('SELECT * FROM ag_authorization_requests FOR UPDATE')
+        with ThreadPoolExecutor(1) as pool:
+            future=pool.submit(s.consent.decide,session_token=session.session_token,csrf_token=session.csrf_token,request_id=req.request_id,decision='approve')
+            end=time.monotonic()+5
+            while time.monotonic()<end:
+                with psycopg.connect(dsn) as c:
+                    row=c.execute("SELECT wait_event_type FROM pg_stat_activity WHERE pid=ANY(%s)",(captured,)).fetchone() if captured else None
+                if row==('Lock',): break
+                time.sleep(.01)
+            else: raise AssertionError('consent did not reach real row lock')
+            with psycopg.connect(dsn) as c:
+                while not c.execute('SELECT expires_at<clock_timestamp() FROM ag_authorization_requests').fetchone()[0]: time.sleep(.02)
+            blocker.commit()
+            with pytest.raises(ConsentError,match='REQUEST_EXPIRED'): future.result(10)

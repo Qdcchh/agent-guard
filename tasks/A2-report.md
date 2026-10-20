@@ -1,30 +1,32 @@
 # A2 当前实现与验收索引
 
-更新：2026-10-04。**整体项目 PARTIAL；v1实施交付时五项补正 FIXED_PENDING_REVIEW。后续接受与合并结论以本轮 state 及主控正式报告为准。**
+A3.1与A3.2已正式独立接受；A3.3/A3.4联合v1已通过独立PACKAGE_REVIEW，S2正常装配正在实施。完整联合自查及新独立IMPLEMENTATION_ACCEPTANCE尚未完成，项目仍PARTIAL。保留当前授权UNKNOWN、下游ATTESTED_NOT_INDEPENDENTLY_PROVEN、未锚尾部与bootstrap外部信任限制。
 
-本轮实施证据与67项完整矩阵：[implementation-r1](workflow/runs/local-remediation-20261004/implementation-r1.md)。后续验收和阶段状态：[本轮 state](workflow/runs/local-remediation-20261004/state.json)；问题状态：[台账](workflow/issues.md)。文档同步：[implementation-docs-r1](workflow/runs/local-remediation-20261004/implementation-docs-r1.md)。实施自查不能代替 fresh reviewer 独立接受。
+当前正常装配与接口自查进展见docs/deployment-demo.md、docs/technical-report.md；最终联合全部必跑保持待完成。
 
-## 版本与历史
+更新：2026-10-06。**完整当前 A2 ACCEPTED；复核、证据、自有资源清理与交接完成后停止。** 项目整体PARTIAL，A3未实施。本轮依据[真人恢复](workflow/runs/A2.3-receipts-20261004/user-resume-sol-20261006.md)，未提交/推送/更新PR/运行远端CI/合并。
 
-- 候选分支 `handoff/b-integration-20261003`，实施基线 HEAD `2051b402c99a3d400d8f12749287075e23a9a521`；worker 未执行 Git 提交或发布。
-- main 基线 `153f14e9be180a1eb26b0f0e0898048d45170569`，包含历史已验收 A2.1。
-- 历史依据：[A2.1 acceptance](workflow/runs/A2.1-core/acceptance.md)、[review-r8](workflow/runs/A2.1-core/review-r8.md)、[implementation-r5](workflow/runs/A2.1-core/implementation-r5.md)。仅适用当时版本。
-- 修补前缺陷：[本地质量复核](workflow/runs/local-quality-20261004/review.md)。旧云端数字/XML未完整交付，不作本轮实跑证明。
+[正式接受](workflow/runs/A2.3-receipts-20261004/acceptance.md) · [完整独立review-r2](workflow/runs/A2.3-receipts-20261004/review-r2.md) · [state](workflow/runs/A2.3-receipts-20261004/state.json) · [HANDOFF](../HANDOFF.md)。新独立Sol/xhigh reviewer实际FINAL STOP，主控Sol/high读回原件后接受，后台有效metadata UNKNOWN。119项、112运行义务、269原must_assert、41节点/88原子逐项闭合。
 
-## 实现与边界
-
-| 范围 | 当前说明 |
+| 已验证范围 | 本轮独立依据 |
 | --- | --- |
-| A2.1 生命周期、四工具、可信报价、租约、全祖先预算、UNKNOWN恢复、outbox | 已有实现和历史验收；本轮修正成功结果变体与共享256项边界 |
-| B→A真实验签、权限快照、同事务原证据绑定、最终时刻检查 | 进程内候选，完整复验待fresh reviewer |
-| 离线回执及规范投影SDK | 本轮拒绝非邻接重复grant，future-token真签名触发；不持续发布 |
-| P13测试效力 | 本轮有界全结果/异常收集、精确租约错误及有效失败负控 |
-| A2.2公开invoke与最终动态result-read | 未完成 |
-| A2.3持续签发/发布及完整A2联合验收 | 未完成；outbox保持PENDING |
-| A3独立锚点、导出、完整HTTP演示与规模/对照实验 | 未完成 |
+| 完整普通与PG集成 | source/fresh非editablewheel各1185P＋2810P，四套真实exit0/0F/E/S |
+| 祖先共享预算、撤销、新鲜性、UNKNOWN不释放、幂等与恢复 | 原完整矩阵、有效10轮竞争及60 oracle负控；独立GW/DS事务域，全31ag＋3DS状态比较 |
+| 内部持续发布、当前授权query与SDK | 真实SM2/SM3、17claims、原可信材料及算术签前拒绝、稳定id/iat、core及实际CLI SIGKILL/不同PID恢复 |
+| AS/GW真实HTTPS四工具链 | 真实CA/SAN、login/consent/code/PKCE/IDToken、两次exchange、DS终局、发布/当前query/独立SDK与攻击负例 |
+| 前段/历史/时限/容量/质量/README/迁移 | 各500精确时限、A1原及现行、A2原482、B原失败及精确等价、14SQL/非零数据/锁/轮包来源/原门全部核验 |
+| 增强组 | source原487P；wheel原484P/3F/exit1保留，原407未受影响PASS＋原模块新完整80逐case闭合，未称原487单次全绿 |
 
-## 本轮证据
+P2算术缺陷、source整套覆盖缺口、历史注释及容量/格式/上界标签均依据本轮完整独立证据闭合，见[issues](workflow/issues.md)。原r1 NOT_ACCEPTED、所有操作/封存失败、未知原因、两次工具隐私事件保留。500组本身是实际查询与错误映射探针而非500次HTTP传输；边界故障fixture和包含域上界不冒称合法最大值。容量独立较紧canonical上界51035、兼容rawJWS上界64695，不改64KiB组件/16KiB JWS/65536公开/1MiB外壳门。
 
-独占Linux amd64、Python3.11.17、非root UID501、原锁安装、真实PG16；源码挂载只读且自有逐字执行副本，独立非editable wheel。完整source/wheel非集成与PG、真实进程和10轮竞争、TLS/OpenSSL、README/demo、历史原件失败与等价diff、资源精确清理均以实施报告的实际命令/JUnit/哈希为准。
+受审冻结369首尾与Git无漂移；STOP后只同步当前文档/状态，77Python＋14SQL及测试/依赖/CI不变，实测wheel元数据仍对应冻结README。5172证据对/44XML与51结束制品哈希核过；精确自有container/network/匿名volume及native运行进程0。原始证据留本地Git忽略目录，正式报告不能重建原件。
 
-v1实施交付时五个issue均为FIXED_PENDING_REVIEW，整体项目PARTIAL；后续issue结论见本轮state/台账。用户批准修复/完整复核/条件合并及本轮适配；worker停写后主控冻结并安排fresh reviewer，无验收不放行。
+## Git与历史
+
+既有分支handoff/a23-local-20261005、HEAD2a8cc7da4867ad1876350855c0ed5569c5ce6472及所有dirty/untracked成果保留，暂存区空。本轮未创建提交、推送、更新PR或合并。PR7在本次先前只读查询为旧head138c08a、CI成功、REVIEW_REQUIRED/BLOCKED；新候选远端CI NOT_RUN。main最后核实d7e91c7，不把旧CI或本地接受当新候选合并条件。
+
+B补正67/60已接受并经PR6合并；[接受原件](workflow/runs/local-remediation-20261004/acceptance.md)保留。A2.2为[95/88独立接受](workflow/runs/A2.2-integration-20261004/acceptance.md)，原两P2复验及CTX回归保留。A2.1历史[A2.1接受](workflow/runs/A2.1-core/acceptance.md)、[本地质量复核](workflow/runs/local-quality-20261004/review.md)、[A2.3原r1否决](workflow/runs/A2.3-receipts-20261004/review-r1.md)、[各实施及补正自查](workflow/runs/A2.3-receipts-20261004/implementation-remediation-r2.md)与停止/恢复记录均保留其实际时点，不追改测试数、模型、失败或授权。旧云端缺失原件不能由新接受补造。
+
+## 剩余目标
+
+回执仍UNANCHORED，单operation一致性不等于独立审计完整性；旧无receipt_keys配置保持PENDING兼容。A3检查点/审计链、导出/离线校验、部署/三代理编排、至少50客户端/10000调用与公平对照实验及参赛材料均未实施，见[A3四段规划](A3-plan.md)。Git交付和A3开工均须新真人指令；当前停止。

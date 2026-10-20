@@ -1,0 +1,44 @@
+"""R2 derivation from current validators; no previous bound file is consumed."""
+import json,os,hashlib
+from pathlib import Path
+from agent_guard.contracts.encoding import canonical_json_bytes,MAX_SAFE_INTEGER
+from agent_guard.contracts.execution import MAX_ORDER_ITEMS,MAX_GATEWAY_RESPONSE_BYTES
+from agent_guard.tools.catalog import snapshot_from_bytes
+from agent_guard.tools.results import parse_result
+from agent_guard.evidence.receipt import _BUNDLE_FIELDS,_outer_encoded_size
+from agent_guard.crypto.sm import JWS_ALG
+E=Path('/e/wheel-tests/inherited');C=canonical_json_bytes;M=MAX_SAFE_INTEGER;assert M==9007199254740991 and MAX_ORDER_ITEMS==256 and MAX_GATEWAY_RESPONSE_BYTES==65536
+# Purely numeric necessary condition for valid original quote arithmetic.
+positive=[]
+for qdigits in range(1,17):
+ for pdigits in range(1,17):
+  floor=10**(qdigits-1)*10**(pdigits-1)
+  if floor<=M:positive.append([qdigits,pdigits]);assert qdigits+pdigits<=17
+assert max(sum(v) for v in positive)==17
+# p=0 adds one decimal digit. All256 pairs realize17 digits with q=M,p=0/1,
+# while one price1 gives bounded total M. Token/permission frames may reject
+# these maximal identifiers; this is a containing domain, not a live max witness.
+items=[{'sku':'s'+str(i).zfill(3)+'x'*124,'quantity':M,'unit_price_fen':1 if i==0 else 0} for i in range(256)]
+quote={'quote_id':'q'*128,'quote_version':'9'*18,'supplier_id':'s'*128,'items':items,'total_fen':M,'currency':'CNY'}
+snapshot_from_bytes(C(quote))
+order={k:v for k,v in quote.items() if k!='currency'};order.update(kind='order',operation_id='f'*32,order_id='o'*128)
+refusal={'kind':'refusal','operation_id':'f'*32,'tool_id':'notification.template.send','reason':'\U0010ffff'*512}
+read={'kind':'read','operation_id':'f'*32,'tool_id':'notification.template.send'}
+notification={'kind':'notification','operation_id':'f'*32,'notification_id':'n'*128,'template_id':'t'*128,'recipient_id':'r'*128}
+# Use the actual ledger128 containing domain, real UUID32 operation/receipt
+# generators and longest26-character canonical tool. Printable safe IDs can
+# expand2 bytes each; digests exactly43; int maxima16; no raw JWS JSON escaping.
+claims={'profile':'GM-MVP-1','receipt_id':'f'*32,'operation_id':'f'*32,'tenant_id':'"'*128,'task_id':'"'*128,'root_grant_id':'"'*128,'grant_id':'"'*128,'tool_id':'notification.template.send','tool_version':'1','status':'SUCCEEDED','amount_fen':M,'iat':M}
+claims.update({k:'A'*43 for k in ('token_sm3','proof_sm3','intent_sm3','result_sm3','ledger_sm3')});assert len(claims)==17
+header={'alg':JWS_ALG,'typ':'ag-receipt+jwt','kid':'"'*128};b64=lambda n:(4*n+2)//3
+canonical_jws=b64(len(C(header)))+b64(len(C(claims)))+86+2
+families={}
+for kind,result in [('order',order),('refusal',refusal),('read',read),('notification',notification)]:
+ raw=C(result);parse_result(raw);base={'operation_id':'f'*32,'status':'SUCCEEDED','receipt_status':'READY','result':result,'receipt_jws':'A'*16384};compatible=len(C(base));canonical=len(C(dict(base,receipt_jws='A'*canonical_jws)))
+ assert compatible<65536 and canonical<65536
+ families[kind]={'result_bound_bytes':len(raw),'compatible_original_JWS_public_upper':compatible,'canonical_current_public_upper':canonical,'pending_upper':len(C(dict(base,receipt_status='PENDING',receipt_jws=None)))}
+# Nine independently codec-bounded components; exact object syntax overhead.
+components={k:b'x'*65536 for k in _BUNDLE_FIELDS};outer=_outer_encoded_size(components);assert len(components)==9 and outer==589964 and outer<1048576
+sources=['tools/catalog.py','tools/results.py','execution/service.py','execution/receipt_projection.py','execution/receipt_publication.py','execution/query.py','execution/receipts.py','ledger/service.py','ledger/provisioning.py','ledger/validation.py','crypto/sm.py','evidence/receipt.py','contracts/encoding.py','contracts/execution.py']
+d={'label':os.environ['A23_RUN_LABEL'],'classification':'R2_INDEPENDENT_VALIDATOR_DOMAIN_CONTAINMENT_NOT_MAXIMUM','previous_bound_files_read':False,'digit_argument':'q>=1,p>=0 and sum(q*p)<=2^53-1 gives positive digits(q)+digits(p)<=17; p=0 gives<=16+1. Every summand nonnegative.','positive_digit_pairs':positive,'result_families':families,'canonical_header_bytes':len(C(header)),'canonical_17claims_bytes':len(C(claims)),'canonical_JWS_upper':canonical_jws,'outer_nine_components_upper':outer,'exact_outer_syntax_overhead':outer-9*65536,'legal_domain_public65536_65537_reachable':False,'legal_domain_outer1MiB_plus1_reachable':False,'limitations':['All bounds are containment overapproximations, not jointly reachable live maximum.', 'Receipt32 and operation32 derive from unchanged UUID generators; DB tenant/task/grant128 dominates signed current AS grant38.', 'Raw compatibility includes authentic noncanonical16KiB JWS; canonical producer bound never substitutes for it.', 'Separate actual codec/component/public injected-boundary tests remain required.','SDK total evidence frame and public five-field DTO are separate.'],'source_sha256':{n:hashlib.sha256((E/'sourcecopy/src/agent_guard'/n).read_bytes()).hexdigest() for n in sources}}
+p=Path(os.environ['A23_RECEIPT_EVIDENCE'])/'independent-domain-proof.json';p.write_text(json.dumps(d,indent=2));print(json.dumps({'canonical_jws_upper':canonical_jws,'public':families,'outer':outer},indent=2))

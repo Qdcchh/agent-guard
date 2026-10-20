@@ -1,0 +1,108 @@
+import time,json,threading
+from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
+import psycopg,pytest
+from agent_guard.authorization.consent import ConsentError
+from agent_guard.authorization.login import LoginError
+from agent_guard.contracts.encoding import canonical_json_bytes
+from tests.integration.test_login_consent import _setup,_session,_params,_code_from,_redeem,CONSTRAINTS,TENANT,SUBJECT
+pytest_plugins=['tests.integration.conftest']
+OBS=Path('/evidence/logs/consent-observations.jsonl')
+def observe(data):
+ with OBS.open('a') as f:f.write(json.dumps(data,default=str)+'\n')
+def setup(dsn):
+ s=_setup(dsn);session=_session(s);req=s.consent.create_request(session_token=session.session_token,csrf_token=session.csrf_token,params=_params());return s,session,req
+def call(s,x,r):return s.consent.decide(session_token=x.session_token,csrf_token=x.csrf_token,request_id=r.request_id,decision='approve')
+def state(dsn):
+ with psycopg.connect(dsn) as c:
+  return {'codes':c.execute('SELECT count(*) FROM ag_authorization_codes').fetchone()[0],'events':c.execute("SELECT count(*) FROM ag_auth_events WHERE event_type='consent'").fetchone()[0],'request':c.execute('SELECT status,consent_ref IS NOT NULL FROM ag_authorization_requests').fetchone()}
+def waitlock(dsn,pids,blockpid,table):
+ end=time.monotonic()+5
+ while time.monotonic()<end:
+  with psycopg.connect(dsn,autocommit=True) as c:
+   rows=c.execute("SELECT pid,wait_event_type,wait_event,pg_blocking_pids(pid),query FROM pg_stat_activity WHERE pid=ANY(%s)",(pids,)).fetchall() if pids else []
+  for pid,kind,event,blocks,query in rows:
+   if kind=='Lock' and blockpid in blocks and table in query:
+    observe({'kind':'reachable_lock','pid':pid,'blocker_pid':blockpid,'table':table,'wait':event,'query':query});return
+  time.sleep(.01)
+ raise AssertionError('target lock not reached')
+@pytest.mark.parametrize('round',range(10))
+@pytest.mark.parametrize('lock,expiry',[('request','request'),('session','request'),('user','session'),('policy','request'),('policy','session'),('policy','policy')])
+def test_all_late_locks_revalidate_deadlines(ledger,dsn,round,lock,expiry):
+ s,x,r=setup(dsn);pids=[]
+ def connector(*a,**kw):
+  c=psycopg.connect(*a,**kw);pids.append(c.info.backend_pid);return c
+ s.consent._connector=connector
+ if expiry=='request': table='ag_authorization_requests'
+ elif expiry=='session':table='ag_login_sessions'
+ else:table='ag_task_policies'
+ column='task_expires_at' if expiry=='policy' else 'expires_at'
+ with psycopg.connect(dsn) as c:
+  c.execute(f"UPDATE {table} SET {column}=clock_timestamp()+interval '1 second'")
+  # Policy expiry must be the displayed expiry, not a policy-change rejection.
+ if expiry=='policy':
+  with psycopg.connect(dsn) as c:
+   from agent_guard.authorization.consent import _policy_snapshot
+   policy=s.consent._load_policy(c,TENANT,'task-001');c.execute('UPDATE ag_authorization_requests SET policy_snapshot_json=%s',(_policy_snapshot(policy),))
+ locks={'request':'ag_authorization_requests','session':'ag_login_sessions','user':'ag_users','policy':'ag_task_policies'};locktable=locks[lock]
+ with ThreadPoolExecutor(1) as pool:
+  with psycopg.connect(dsn) as blocker:
+   blocker.execute(f'SELECT * FROM {locktable} FOR UPDATE');blockpid=blocker.info.backend_pid
+   f=pool.submit(call,s,x,r);waitlock(dsn,pids,blockpid,locktable if lock in ('request','policy') else 'ag_login_sessions')
+   with psycopg.connect(dsn,autocommit=True) as clock:
+    end=time.monotonic()+5
+    while not clock.execute(f'SELECT {column}<clock_timestamp() FROM {table}').fetchone()[0]:
+     assert time.monotonic()<end;time.sleep(.01)
+    times=clock.execute(f'SELECT clock_timestamp(),{column} FROM {table}').fetchone()
+   blocker.commit()
+  try:
+   result=f.result(10);outcome='APPROVED'
+  except (ConsentError,LoginError) as e:outcome=e.code
+ st=state(dsn);observe({'round':round,'lock':lock,'expiry':expiry,'times':times,'outcome':outcome,'state':st})
+ assert outcome in {'REQUEST_EXPIRED','SESSION_INVALID','TASK_EXPIRED','CONSENT_SNAPSHOT_EXPIRED'}, {'round':round,'lock':lock,'expiry':expiry,'outcome':outcome,'state':st}
+ assert st=={'codes':0,'events':0,'request':('pending',False)}
+@pytest.mark.parametrize('dimension',['amount','calls','scope','expiry','owner','active','request_ids','document_ids','quote_versions','skus','delivery_ids','template_ids','recipient_ids','max_quantity','restore','legacy','version_reset'])
+def test_policy_all_dimensions(ledger,dsn,dimension):
+ s,x,r=setup(dsn)
+ with psycopg.connect(dsn) as c:
+  fixed={'amount':("amount_limit_fen=900000",()),'calls':('call_limit=90',()),'scope':("scope='openid procurement.order.create procurement.document.read'",()),'expiry':("task_expires_at=task_expires_at+interval '1 hour'",()),'owner':("owner_subject='different-user'",()),'active':('active=false',()),'restore':('amount_limit_fen=900000',()),'version_reset':('policy_version=1',())}
+  if dimension=='legacy': c.execute('UPDATE ag_authorization_requests SET policy_snapshot_json=NULL')
+  elif dimension in fixed:
+   sql,args=fixed[dimension];c.execute('UPDATE ag_task_policies SET '+sql,args)
+   if dimension=='restore':c.execute('UPDATE ag_task_policies SET amount_limit_fen=100000,policy_version=1')
+  else:
+   changed=dict(CONSTRAINTS);changed[dimension]=3 if dimension=='max_quantity' else [*CONSTRAINTS[dimension],'extra-resource'];c.execute('UPDATE ag_task_policies SET constraints_json=%s',(canonical_json_bytes(changed),))
+ with pytest.raises(ConsentError):call(s,x,r)
+ assert state(dsn)=={'codes':0,'events':0,'request':('pending',False)}
+@pytest.mark.parametrize('fault',['deferred_commit','backend_terminate'])
+def test_real_transaction_fault_and_exact_retry(ledger,dsn,monkeypatch,fault):
+ s,x,r=setup(dsn);old=s.codes.issue_code
+ if fault=='deferred_commit':
+  with psycopg.connect(dsn) as c:
+   c.execute("CREATE FUNCTION review_commit_fail() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'review-owned deferred failure' USING ERRCODE='23514'; END $$")
+   c.execute('CREATE CONSTRAINT TRIGGER review_fail AFTER INSERT ON ag_authorization_codes DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION review_commit_fail()')
+ else:
+  def terminate(approved,*,conn):
+   result=old(approved,conn=conn);pid=conn.info.backend_pid
+   with psycopg.connect(dsn,autocommit=True) as admin:assert admin.execute('SELECT pg_terminate_backend(%s)',(pid,)).fetchone()==(True,)
+   observe({'fault':fault,'terminated_owned_pid':pid});conn.execute('SELECT 1');return result
+  monkeypatch.setattr(s.codes,'issue_code',terminate)
+ with pytest.raises(ConsentError,match='TRUSTED_STATE_UNAVAILABLE'):call(s,x,r)
+ assert state(dsn)=={'codes':0,'events':0,'request':('pending',False)}
+ if fault=='deferred_commit':
+  with psycopg.connect(dsn) as c:c.execute('DROP TRIGGER review_fail ON ag_authorization_codes');c.execute('DROP FUNCTION review_commit_fail()')
+ else:monkeypatch.setattr(s.codes,'issue_code',old)
+ result=call(s,x,r);assert state(dsn)=={'codes':1,'events':1,'request':('approved',True)}
+ with pytest.raises(ConsentError,match='ALREADY_DECIDED'):call(s,x,r)
+ issued=_redeem(s,_code_from(result.location))
+ with psycopg.connect(dsn) as c:assert c.execute('SELECT amount_limit,call_limit FROM ag_grants').fetchone()==(100000,10)
+ observe({'fault':fault,'retry_state':state(dsn),'root_amount':100000,'root_calls':10})
+@pytest.mark.parametrize('round',range(10))
+def test_concurrent_double_decide_one_outcome(ledger,dsn,round):
+ s,x,r=setup(dsn);gate=threading.Barrier(2)
+ def decide():
+  gate.wait(5)
+  try:call(s,x,r);return 'APPROVED'
+  except ConsentError as e:return e.code
+ with ThreadPoolExecutor(2) as pool:out=list(pool.map(lambda _:decide(),range(2)))
+ assert sorted(out)==['ALREADY_DECIDED','APPROVED'];assert state(dsn)=={'codes':1,'events':1,'request':('approved',True)}

@@ -630,7 +630,7 @@ def test_pre006_committed_short_event_cannot_be_patched(a2, namespace, tmp_path,
     db, env, tree, operation_id = _seed_short_event(a2, namespace, tmp_path, phase)
     try:
         with psycopg.connect(db.dsn) as conn:
-            assert apply_migrations(conn) == ["005", "006"]
+            assert apply_migrations(conn) == ["005", "006", "008", "009"]
         box = env.service.outbox_entry(operation_id)
         with psycopg.connect(db.dsn) as conn:
             event_id = conn.execute(

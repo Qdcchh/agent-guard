@@ -50,7 +50,11 @@ _VERSION = re.compile(r"[1-9][0-9]*\Z", re.ASCII)
 
 
 class VerificationError(ValueError):
-    """The external token/proof/request is not a valid static invocation."""
+    """Typed external rejection; remains compatible with ValueError callers."""
+
+    def __init__(self, detail: str, *, code: str = "INVALID_SCHEMA"):
+        self.code = code
+        super().__init__(detail)
 
 
 def _id(value: object, name: str) -> str:
@@ -71,10 +75,10 @@ def _validate_intent(body: bytes, claims: AccessClaims) -> tuple[JsonObject, byt
     except EncodingError as exc:
         raise VerificationError("invalid invocation JSON") from exc
     if request["profile"] != PROFILE or request["task_id"] != claims.raw["ag_task_id"]:
-        raise VerificationError("profile or task mismatch")
+        raise VerificationError("profile or task mismatch", code="SCOPE_DENIED")
     tool = request["tool_id"]
     if type(tool) is not str or tool not in _TOOLS or tool not in claims.scopes:
-        raise VerificationError("tool is not in scope")
+        raise VerificationError("tool is not in scope", code="SCOPE_DENIED")
     if request["tool_version"] != "1":
         raise VerificationError("unsupported tool version")
     _id(request["idempotency_key"], "idempotency_key")
@@ -83,7 +87,7 @@ def _validate_intent(body: bytes, claims: AccessClaims) -> tuple[JsonObject, byt
 
     def allowed(field: str, collection: str) -> None:
         if _id(params[field], field) not in constraints[collection]:
-            raise VerificationError(f"{field} is not authorized")
+            raise VerificationError(f"{field} is not authorized", code="SCOPE_DENIED")
 
     if tool in {
         "procurement.request.read",
@@ -100,7 +104,7 @@ def _validate_intent(body: bytes, claims: AccessClaims) -> tuple[JsonObject, byt
         if not _VERSION.fullmatch(version):
             raise VerificationError("invalid quote version")
         if f"{params['quote_id']}@{version}" not in constraints["quote_versions"]:
-            raise VerificationError("quote version is not authorized")
+            raise VerificationError("quote version is not authorized", code="SCOPE_DENIED")
         allowed("delivery_id", "delivery_ids")
         items = params["items"]
         if type(items) is not list or not items:
@@ -110,10 +114,12 @@ def _validate_intent(body: bytes, claims: AccessClaims) -> tuple[JsonObject, byt
             row = _object(item, {"sku", "quantity"}, "order item")
             sku = _id(row["sku"], "sku")
             quantity = row["quantity"]
-            if sku in skus or sku not in constraints["skus"]:
-                raise VerificationError("duplicate or unauthorized SKU")
+            if sku in skus:
+                raise VerificationError("duplicate SKU")
+            if sku not in constraints["skus"]:
+                raise VerificationError("unauthorized SKU", code="SCOPE_DENIED")
             if type(quantity) is not int or not 1 <= quantity <= constraints["max_quantity"]:
-                raise VerificationError("quantity exceeds authorization")
+                raise VerificationError("quantity exceeds authorization", code="SCOPE_DENIED")
             skus.add(sku)
     if tool == "notification.template.send":
         allowed("template_id", "template_ids")
@@ -226,7 +232,7 @@ class InvocationVerifier:
                 now=now,
             )
         except ProofVerificationError as exc:
-            raise VerificationError("invalid AG-Proof") from exc
+            raise VerificationError("invalid AG-Proof", code=exc.code) from exc
         evidence_ref = stage(token, proof, body)
         _id(evidence_ref, "evidence reference")
         return VerifiedInvocation(
@@ -295,7 +301,7 @@ class InvocationVerifier:
         except EncodingError as exc:
             raise VerificationError("invalid operation query JSON") from exc
         if request["profile"] != PROFILE or request["task_id"] != raw_claims["ag_task_id"]:
-            raise VerificationError("profile or task mismatch")
+            raise VerificationError("profile or task mismatch", code="SCOPE_DENIED")
         _id(request["operation_id"], "operation_id")
         try:
             p = verify_ag_proof(
@@ -309,7 +315,7 @@ class InvocationVerifier:
                 now=now,
             )
         except ProofVerificationError as exc:
-            raise VerificationError("invalid AG-Proof") from exc
+            raise VerificationError("invalid AG-Proof", code=exc.code) from exc
         evidence_ref = stage(token, proof, body)
         _id(evidence_ref, "evidence reference")
         return VerifiedOperationQuery(
@@ -341,6 +347,17 @@ class InvocationVerifier:
             raise VerificationError("real trusted permission and evidence providers required")
         return self._permission_provider, self._evidence_store
 
+    @staticmethod
+    def _permission_source(provider, token, *, grant_id, now):
+        from agent_guard.authorization.permission_snapshot import PermissionSnapshotError
+
+        try:
+            return provider.load(token, grant_id=grant_id, now=now)
+        except (ClaimsError, InvalidSm2Signature, EncodingError) as exc:
+            # These bytes came from persistent signed ancestry, after the
+            # external token was verified. Invalid trust is a dependency fault.
+            raise PermissionSnapshotError("unusable trusted signed ancestry") from exc
+
     def verify_bundle(self, token, proof, *, endpoint=INVOKE_ENDPOINT, method="POST", body, now):
         from agent_guard.contracts.verification import VerifiedInvocationBundle
 
@@ -354,7 +371,7 @@ class InvocationVerifier:
             now=now,
             stage=lambda *_: "pending-verified-material",
         )
-        source = provider.load(token, grant_id=invocation.grant_id, now=now)
+        source = self._permission_source(provider, token, grant_id=invocation.grant_id, now=now)
         invocation = replace(invocation, ancestor_ids=source.snapshot.chain_grant_ids[:-1])
         ref = evidence.stage(token=token, proof=proof, body=body, context=invocation, source=source)
         invocation = replace(invocation, evidence_ref=ref)
@@ -363,7 +380,15 @@ class InvocationVerifier:
     def verify_canonical_result_read(
         self, token, proof, *, endpoint=QUERY_ENDPOINT, method="POST", body, now
     ):
+        return self.verify_query_bundle(
+            token, proof, endpoint=endpoint, method=method, body=body, now=now
+        ).query
+
+    def verify_query_bundle(
+        self, token, proof, *, endpoint=QUERY_ENDPOINT, method="POST", body, now
+    ):
         from agent_guard.contracts.execution import VerifiedResultQuery
+        from agent_guard.contracts.verification import VerifiedQueryBundle
 
         provider, evidence = self._providers()
         query = self._verify_result_read(
@@ -375,7 +400,7 @@ class InvocationVerifier:
             now=now,
             stage=lambda *_: "pending-verified-material",
         )
-        source = provider.load(token, grant_id=query.grant_id, now=now)
+        source = self._permission_source(provider, token, grant_id=query.grant_id, now=now)
         canonical = VerifiedResultQuery(
             subject=query.subject,
             profile=query.profile,
@@ -398,7 +423,9 @@ class InvocationVerifier:
             evidence_ref=query.evidence_ref,
         )
         ref = evidence.stage(token=token, proof=proof, body=body, context=canonical, source=source)
-        return replace(canonical, evidence_ref=ref)
+        return VerifiedQueryBundle(
+            replace(canonical, evidence_ref=ref), source.snapshot, ref, source
+        )
 
     def _verify_token_and_holder(
         self, token: str, now: int
@@ -419,9 +446,15 @@ class InvocationVerifier:
                 or raw_claims["ag_cnf"]["kid"] != identity.registration.kid
                 or raw_claims["ag_cnf"]["spki_sm3"] != identity.registration.spki_sm3
             ):
-                raise VerificationError("token holder does not match enterprise registry")
+                raise VerificationError(
+                    "token holder does not match enterprise registry", code="HOLDER_MISMATCH"
+                )
         except VerificationError:
             raise
-        except (InvalidSm2Signature, ClaimsError, IdentityError, TypeError, ValueError) as exc:
-            raise VerificationError("invalid access token or holder") from exc
+        except ClaimsError as exc:
+            raise VerificationError("invalid access token", code=exc.code) from exc
+        except IdentityError as exc:
+            raise VerificationError("invalid holder", code="HOLDER_MISMATCH") from exc
+        except (InvalidSm2Signature, TypeError, ValueError) as exc:
+            raise VerificationError("invalid access token", code="INVALID_SIGNATURE") from exc
         return claims, identity

@@ -1,0 +1,35 @@
+{
+  "pure_tool_exec_boundary": [
+    {
+      "mode": "source",
+      "tool_command": [
+        "/opt/runtime/bin/python",
+        "-m",
+        "ruff",
+        "--version"
+      ],
+      "native_exit": 0,
+      "actual_observer_phase": "startup",
+      "actual_observer_valid": true,
+      "actual_loaded_count": 0,
+      "controller_rejected_missing_atexit": true
+    },
+    {
+      "mode": "wheel",
+      "tool_command": [
+        "/opt/runtime/bin/python",
+        "-m",
+        "ruff",
+        "--version"
+      ],
+      "native_exit": 0,
+      "actual_observer_phase": "startup",
+      "actual_observer_valid": true,
+      "actual_loaded_count": 0,
+      "controller_rejected_missing_atexit": true
+    }
+  ],
+  "original_child_node_reached": false,
+  "original_four_files_reached": false,
+  "twenty_groups_reached": false
+}

@@ -1,0 +1,72 @@
+"""Local pure-function diagnostics; no database or formal stage acceptance."""
+
+import json
+from types import SimpleNamespace
+
+import pytest
+
+from agent_guard.contracts.execution import (
+    DownstreamOutcome,
+    ExecutionError,
+    QuoteItem,
+    TerminalAction,
+    ToolId,
+    TrustedQuoteSnapshot,
+)
+from agent_guard.execution.service import ExecutionService
+from agent_guard.tools.catalog import snapshot_from_bytes, snapshot_to_bytes
+from agent_guard.tools.params import parse_tool_params
+
+
+def order_params(count):
+    return json.dumps({
+        "request_id": "req-001", "quote_id": "quote-001", "quote_version": "1",
+        "delivery_id": "office-001",
+        "items": [{"sku": f"sku-{i}", "quantity": 1} for i in range(count)],
+    }).encode()
+
+
+def quote(count):
+    return TrustedQuoteSnapshot(
+        "quote-001", "1", "supplier-001",
+        tuple(QuoteItem(f"sku-{i}", 1, 1) for i in range(count)), count,
+    )
+
+
+@pytest.mark.parametrize("tool", list(ToolId))
+def test_read_shape_only_settles_read_tools(tool):
+    snapshot = quote(1) if tool is ToolId.ORDER_CREATE else None
+    params = {
+        ToolId.ORDER_CREATE: order_params(1),
+        ToolId.REQUEST_READ: b'{"request_id":"req-001"}',
+        ToolId.DOCUMENT_READ: b'{"request_id":"req-001","document_id":"doc-001"}',
+        ToolId.NOTIFICATION_SEND: b'{"template_id":"order-created","recipient_id":"user-001","operation_id":"prior-op"}',
+    }[tool]
+    operation = SimpleNamespace(
+        operation_id="op-001", tool_id=tool.value, canonical_params=params,
+        quote_snapshot=snapshot_to_bytes(snapshot) if snapshot else None,
+        currency="CNY", quote_id="quote-001" if snapshot else None,
+        quote_version="1" if snapshot else None, amount_fen=1 if snapshot else 0,
+    )
+    outcome = DownstreamOutcome(
+        operation.operation_id, tool, params, snapshot, operation.amount_fen, None,
+        json.dumps({"kind": "read", "operation_id": "op-001", "tool_id": tool.value}).encode(),
+        False, False,
+    )
+    expected = TerminalAction.SETTLE if tool in (ToolId.REQUEST_READ, ToolId.DOCUMENT_READ) else None
+    assert ExecutionService._decide(None, operation, outcome) is expected
+
+
+def test_256_items_remain_readable():
+    assert len(parse_tool_params(ToolId.ORDER_CREATE, order_params(256)).items) == 256
+    assert snapshot_from_bytes(snapshot_to_bytes(quote(256))) == quote(256)
+
+
+def test_257_items_rejected_at_parameter_boundary():
+    with pytest.raises(ExecutionError):
+        parse_tool_params(ToolId.ORDER_CREATE, order_params(257))
+
+
+def test_existing_snapshot_reader_rejects_257_items():
+    with pytest.raises(ExecutionError, match="too many items"):
+        snapshot_from_bytes(snapshot_to_bytes(quote(257)))

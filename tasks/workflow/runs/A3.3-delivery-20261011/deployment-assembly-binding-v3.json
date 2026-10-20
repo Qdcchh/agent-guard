@@ -1,0 +1,31 @@
+{
+  "status": "SERIAL_CONTROLLER_FINAL_ASSEMBLY_NAMES_FOR_S1_TESTS_S2_IMPLEMENTATION_NOT_RUNNING_DEPLOYMENT",
+  "UTC": "2026-10-11T23:39:55.951392+00:00",
+  "scope_interface_change": false,
+  "normal_role_services": {
+    "as": "as",
+    "audit": "audit",
+    "did": "did",
+    "executor": "executor",
+    "export": "export",
+    "gateway": "gateway",
+    "offline": "offline",
+    "operator": "operator",
+    "planner": "planner",
+    "publisher": "publisher",
+    "selector": "selector",
+    "worker": "worker"
+  },
+  "database_services": {
+    "authority": "pg-authority",
+    "downstream": "pg-downstream",
+    "audit": "pg-audit"
+  },
+  "extra_services": "finite explicit init/maintenance only; transient root never replaces nonroot normal roles",
+  "resource_receipt": "existing demo.init.activate_runtime resource_manifest; exact version/run_id/owner_id/project/roles/databases/networks, role uid/gid/listener_host/container_id full64",
+  "evidence_rule": "JSON entrypoint not runtime proof; inspect actual kernel identity, Docker mounts/networks, PG/TLS/permissions",
+  "current_scope": "S1 deploy PRECHECK_ONLY; full clean test requires final S2 compose and normal source/wheel paths",
+  "normal_execution": "no ignored evidence helpers/images/venv dependency",
+  "test_to_S2": "deploy worker supplies exact test prerequisites/commands/observable files; S2 adapts to frozen actual test API after STOP",
+  "not_acceptance": true
+}

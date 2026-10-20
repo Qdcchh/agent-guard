@@ -21,8 +21,9 @@ Guarantees implemented here:
 * reads produce no monetary effect but their result is fixed on first
   execution, and notifications are idempotent exactly like orders.
 
-This module performs no cryptography: no SM2, no SM3, no RFC 8785 canonical
-encoding and no TLS. Byte fields are plain payloads.
+COSM2-configured order effects independently verify the mature SM2 signature
+and exact immutable intent. They do not independently re-query AS, budget or
+revocation state, nor impose a new wall-clock expiry on accepted recovery.
 """
 
 from __future__ import annotations
@@ -40,12 +41,25 @@ from agent_guard.contracts.execution import (
     ToolId,
     TrustedQuoteSnapshot,
 )
+from agent_guard.cosign.effect import check_effect_approval
+from agent_guard.threshold.contracts import ThresholdApprovalPolicy
 from agent_guard.tools.catalog import snapshot_from_bytes, snapshot_to_bytes
 
 #: Tables owned by the downstream domain (never mixed with the gateway schema).
-DOWNSTREAM_TABLES = ("ds_orders", "ds_notifications", "ds_operations")
+DOWNSTREAM_TABLES = ("ds_cosm2_bindings", "ds_orders", "ds_notifications", "ds_operations")
 
 DOWNSTREAM_DDL = """
+CREATE TABLE IF NOT EXISTS ds_cosm2_bindings (
+    tenant_id TEXT NOT NULL,
+    task_id TEXT NOT NULL,
+    action_id TEXT NOT NULL,
+    idempotency_key TEXT NOT NULL,
+    operation_id TEXT NOT NULL UNIQUE,
+    envelope_bytes BYTEA NOT NULL,
+    PRIMARY KEY (tenant_id, task_id, action_id),
+    UNIQUE (tenant_id, task_id, idempotency_key)
+);
+
 CREATE TABLE IF NOT EXISTS ds_operations (
     operation_id     TEXT PRIMARY KEY,
     tool_id          TEXT NOT NULL,
@@ -119,9 +133,15 @@ class MockDownstream:
         served_requests: frozenset[str] | set[str] = frozenset(),
         lock_timeout_ms: int = DEFAULT_LOCK_TIMEOUT_MS,
         statement_timeout_ms: int = DEFAULT_STATEMENT_TIMEOUT_MS,
+        cosign_policy: ThresholdApprovalPolicy | None = None,
     ) -> None:
         if not service_secret:
             raise ValueError("downstream service secret must be configured")
+        if cosign_policy is not None and (
+            type(cosign_policy) is not ThresholdApprovalPolicy or cosign_policy.scheme != "sm2-2p"
+        ):
+            raise ValueError("COSM2 effect policy required")
+        self._cosign_policy = cosign_policy
         self._dsn = dsn
         self._secret = service_secret
         # Downstream-side allow-lists: an empty set serves nothing (fail closed).
@@ -172,6 +192,10 @@ class MockDownstream:
         canonical_params: bytes,
         quote: TrustedQuoteSnapshot | None,
         expected_amount_fen: int,
+        approval_envelope: bytes | None = None,
+        idempotency_key: str | None = None,
+        tenant_id: str | None = None,
+        task_id: str | None = None,
     ) -> DownstreamOutcome:
         """Execute (or idempotently replay) one operation key.
 
@@ -181,10 +205,24 @@ class MockDownstream:
         """
         _check_secret(service_secret, self._secret)
         quote_bytes = snapshot_to_bytes(quote) if quote is not None else None
+        action = None
+        if self._cosign_policy is not None and tool_id == ToolId.ORDER_CREATE:
+            action = check_effect_approval(
+                self._cosign_policy,
+                envelope=approval_envelope,
+                tenant_id=tenant_id,
+                task_id=task_id,
+                idempotency_key=idempotency_key,
+                canonical_params=canonical_params,
+                quote=quote,
+                expected_amount_fen=expected_amount_fen,
+            )
 
         try:
             with self._connect() as conn:
                 with conn.transaction():
+                    if action is not None:
+                        self._bind_cosm2(conn, action, operation_id, approval_envelope)
                     existing = self._load(conn, operation_id)
                     if existing is not None:
                         return self._replay(existing, tool_id, canonical_params, quote_bytes)
@@ -206,6 +244,41 @@ class MockDownstream:
             if row is None:  # pragma: no cover - defensive
                 raise
             return self._replay(row, tool_id, canonical_params, quote_bytes)
+
+    @staticmethod
+    def _bind_cosm2(conn, action, operation_id, envelope):
+        # The insert conflict serializes concurrent action/business-key replay.
+        conn.execute(
+            "INSERT INTO ds_cosm2_bindings "
+            "(tenant_id,task_id,action_id,idempotency_key,operation_id,envelope_bytes) "
+            "VALUES (%s,%s,%s,%s,%s,%s) ON CONFLICT DO NOTHING",
+            (
+                action["tenant_id"],
+                action["task_id"],
+                action["action_id"],
+                action["idempotency_key"],
+                operation_id,
+                envelope,
+            ),
+        )
+        row = conn.execute(
+            "SELECT action_id,idempotency_key,operation_id,envelope_bytes "
+            "FROM ds_cosm2_bindings WHERE tenant_id=%s AND task_id=%s "
+            "AND (action_id=%s OR idempotency_key=%s OR operation_id=%s)",
+            (
+                action["tenant_id"],
+                action["task_id"],
+                action["action_id"],
+                action["idempotency_key"],
+                operation_id,
+            ),
+        ).fetchall()
+        expected = (action["action_id"], action["idempotency_key"], operation_id, envelope)
+        if len(row) != 1 or (*row[0][:3], bytes(row[0][3])) != expected:
+            raise ExecutionError(
+                ExecutionErrorCode.DOWNSTREAM_UNAUTHORIZED,
+                "COSM2 approval already bound to another operation",
+            )
 
     def query(self, *, service_secret: str, operation_id: str) -> DownstreamOutcome | None:
         """Return the persisted record, or ``None`` when nothing is known yet.

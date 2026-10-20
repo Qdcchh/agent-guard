@@ -1,0 +1,141 @@
+"""Fresh r3 security expectations; no production signing or shared resources."""
+import dataclasses,json,threading
+import psycopg,pytest
+from agent_guard.contracts.execution import ExecutionError,ToolId
+from agent_guard.contracts.ledger import TrustedCost
+from agent_guard.ledger import store as ls
+from agent_guard.ledger.migrate import apply_migrations,DEFAULT_MIGRATIONS_DIR
+from agent_guard.tools.catalog import snapshot_from_bytes,snapshot_to_bytes
+from agent_guard.execution import store as es,receipts
+from tests.fixtures.execution import build_env,order_params,read_params,notification_params,constraints_for,expire_lease
+from tests.fixtures.state import build_tree
+from tests.fixtures.isolation import create_scratch_database,drop_scratch_database
+from tests.fixtures.dbstate import fetch_counts
+from test_review import accepted,observe,counters,effects
+
+@pytest.mark.parametrize('entry',['execute','query'])
+@pytest.mark.parametrize('mutation',['effect-id','missing-fields','wrong-total','bool-total','wrong-supplier','wrong-quote','wrong-items','duplicate','unknown','refusal-tool','typed-quote-bool','deep-result'])
+def test_full_outcome_result_binding(a2,entry,mutation):
+ op=accepted(a2).operation_id; row=a2.service.load_operation(op)
+ value=a2.downstream.execute(service_secret=a2.secret,operation_id=op,tool_id=ToolId.ORDER_CREATE,canonical_params=row.canonical_params,quote=snapshot_from_bytes(row.quote_snapshot),expected_amount_fen=row.amount_fen)
+ result=json.loads(value.result_bytes)
+ if mutation=='effect-id':result['order_id']='order-other'
+ if mutation=='missing-fields':result={'kind':'order','operation_id':op}
+ if mutation=='wrong-total':result['total_fen']=1
+ if mutation=='bool-total':result['total_fen']=True
+ if mutation=='wrong-supplier':result['supplier_id']='supplier-other'
+ if mutation=='wrong-quote':result['quote_version']='9'
+ if mutation=='wrong-items':result['items'][0]['quantity']=2
+ if mutation=='unknown':result['unknown_security']=True
+ if mutation=='refusal-tool':
+  result={'kind':'refusal','operation_id':op,'tool_id':ToolId.NOTIFICATION_SEND.value,'reason':'not this tool'}
+  value=dataclasses.replace(value,final_rejection=True,effect_ref=None,amount_fen=0)
+ if mutation=='typed-quote-bool':
+  item=dataclasses.replace(value.quote.items[0],quantity=True)
+  value=dataclasses.replace(value,quote=dataclasses.replace(value.quote,items=(item,)))
+ raw=json.dumps(result,separators=(',',':')).encode()
+ if mutation=='duplicate':raw=raw[:-1]+b',"operation_id":"'+op.encode()+b'"}'
+ if mutation=='deep-result':raw=b'{"kind":"order","operation_id":"'+op.encode()+b'","unknown":'+b'['*1500+b'0'+b']'*1500+b'}'
+ value=dataclasses.replace(value,result_bytes=raw)
+ class Port:
+  def execute(self,**kw):return value
+  def query(self,**kw):return value
+ env=build_env(tree=a2.tree,gateway_dsn=a2.gateway_dsn,downstream_dsn=a2.downstream_dsn,downstream=Port())
+ error=None; r=None
+ try:r=env.service.run_operation(op) if entry=='execute' else env.service.reconcile(op)
+ except Exception as exc:error=type(exc).__name__
+ observe('r3-result-binding',{'entry':entry,'mutation':mutation,'error':error,'returned':None if r is None else r.status,'status':env.service.operation_status(op),'outbox':env.service.outbox_entry(op) is not None,'counters':counters(env),'effects':effects(env)})
+ assert error is None and r.status=='UNKNOWN' and env.service.outbox_entry(op) is None
+ assert all(c['amount_reserved']==70000 and c['calls_reserved']==1 and c['amount_settled']==0 for c in counters(env))
+
+@pytest.mark.parametrize('entry',['run','reconcile','candidate','fallback'])
+@pytest.mark.parametrize('mismatch',['params-quote-id','params-quote-version'])
+def test_params_quote_identity_must_bind_persisted_cost(a2,monkeypatch,entry,mismatch):
+ params=json.loads(order_params());params['quote_id' if mismatch.endswith('id') else 'quote_version']='quote-other' if mismatch.endswith('id') else '2';raw=json.dumps(params,separators=(',',':')).encode()
+ snap=a2.catalog.build_order_snapshot(tenant_id=a2.tree.tenant_id,task_id=a2.tree.task_id,request_id='req-001',quote_id='quote-001',quote_version='1',items=(('sku-001',1),),delivery_id='office-001')
+ inv=a2.tree.invocation(idempotency_key='r3-candidate',tool_id=ToolId.ORDER_CREATE.value,params=raw)
+ op=a2.ledger.accept(inv,TrustedCost(amount_fen=70000,quote_id='quote-001',quote_version='1',quote_snapshot=snapshot_to_bytes(snap))).operation_id
+ permission=a2.permission(chain=tuple(constraints_for(i,quote_versions=(params['quote_id']+'@'+params['quote_version'],)) for i in range(3)))
+ a2.catalog.remove_quote('quote-001','1');before=counters(a2);error=None
+ if entry=='fallback':
+  original=a2.service._find_candidate;lookups=[]
+  def candidate(v):
+   lookups.append(True);return None if len(lookups)==1 else original(v)
+  monkeypatch.setattr(a2.service,'_find_candidate',candidate)
+ try:
+  if entry in ('candidate','fallback'):a2.service.accept_invocation(a2.tree.invocation(idempotency_key='r3-candidate',tool_id=ToolId.ORDER_CREATE.value,params=raw),permission)
+  elif entry=='run':a2.service.run_operation(op)
+  else:a2.service.reconcile(op)
+ except ExecutionError as exc:error=exc.code.value
+ observe('r3-candidate-params',{'entry':entry,'mismatch':mismatch,'error':error,'flag':a2.service.review_flag(op) is not None,'status':a2.service.operation_status(op),'before':before,'after':counters(a2),'effects':effects(a2)})
+ assert error=='LEGACY_SNAPSHOT_INVALID' and a2.service.review_flag(op) is not None and counters(a2)==before and effects(a2)['ds_operations']==0
+
+@pytest.mark.parametrize('entry',['run','reconcile','candidate'])
+def test_deep_legacy_snapshot_is_durably_quarantined(a2,entry):
+ params=order_params();raw=b'{"unknown":'+b'['*1500+b'0'+b']'*1500+b'}'
+ inv=a2.tree.invocation(idempotency_key='deep-old',tool_id=ToolId.ORDER_CREATE.value,params=params)
+ op=a2.ledger.accept(inv,TrustedCost(amount_fen=70000,quote_id='quote-001',quote_version='1',quote_snapshot=raw)).operation_id
+ error=None
+ try:
+  if entry=='run':a2.service.run_operation(op)
+  elif entry=='reconcile':a2.service.reconcile(op)
+  else:a2.service.accept_invocation(a2.tree.invocation(idempotency_key='deep-old',tool_id=ToolId.ORDER_CREATE.value,params=params),a2.permission())
+ except Exception as exc:error=type(exc).__name__
+ observe('r3-deep-snapshot',{'entry':entry,'error':error,'flag':a2.service.review_flag(op) is not None,'counters':counters(a2),'effects':effects(a2)})
+ assert a2.service.review_flag(op) is not None and effects(a2)['ds_operations']==0
+
+@pytest.mark.parametrize('mutation',['version-zero','version-leading-zero','version-text','id-url','id-control','id-long'])
+def test_stored_snapshot_identity_schema(mutation):
+ raw=b'{"quote_id":"quote-001","quote_version":"1","supplier_id":"supplier-001","items":[{"sku":"sku-001","quantity":1,"unit_price_fen":70000}],"total_fen":70000,"currency":"CNY"}'
+ obj=json.loads(raw)
+ if mutation.startswith('version'):obj['quote_version']={'version-zero':'0','version-leading-zero':'01','version-text':'version-x'}[mutation]
+ else:obj['supplier_id']={'id-url':'https://untrusted.test/path','id-control':'bad\nidentity','id-long':'x'*129}[mutation]
+ refused=False
+ try:snapshot_from_bytes(json.dumps(obj).encode())
+ except ExecutionError:refused=True
+ observe('r3-snapshot-identity',{'mutation':mutation,'refused':refused})
+ assert refused
+
+@pytest.mark.parametrize('phase',['RESERVE','SETTLE'])
+def test_pre005_committed_short_event_cannot_be_patched(a2,namespace,tmp_path,phase):
+ db=create_scratch_database(namespace.base_dsn)
+ try:
+  subset=tmp_path/'pre005';subset.mkdir()
+  for p in DEFAULT_MIGRATIONS_DIR.glob('*.sql'):
+   if p.name[:3]<='004':(subset/p.name).write_bytes(p.read_bytes())
+  with psycopg.connect(db.dsn) as c:apply_migrations(c,subset);tree=build_tree(c)
+  env=build_env(tree=tree,gateway_dsn=db.dsn,downstream_dsn=a2.downstream_dsn)
+  snap=env.catalog.build_order_snapshot(tenant_id=tree.tenant_id,task_id=tree.task_id,request_id='req-001',quote_id='quote-001',quote_version='1',items=(('sku-001',1),),delivery_id='office-001')
+  op='r3-short-'+phase
+  with psycopg.connect(db.dsn) as c:
+   ls.insert_operation(c,operation_id=op,tenant_id=tree.tenant_id,task_id=tree.task_id,tool_id=ToolId.ORDER_CREATE.value,idempotency_key=op,grant_id=tree.leaf_id,holder_client_id=tree.executor[0],holder_kid=tree.executor[1],tool_version='1',canonical_params=order_params(),currency='CNY',amount_fen=70000,calls=1,quote_id='quote-001',quote_version='1',quote_snapshot=snapshot_to_bytes(snap),token_digest='synthetic',proof_digest='synthetic',intent_digest='synthetic',evidence_ref='synthetic')
+   for g in (tree.root_id,tree.mid_id,tree.leaf_id):ls.apply_reservation(c,g,70000,1)
+   ls.insert_reserve_event(c,operation_id=op,seq=0,nodes=[(0,tree.root_id,70000,1)] if phase=='RESERVE' else [(i,g,70000,1) for i,g in enumerate((tree.root_id,tree.mid_id,tree.leaf_id))])
+   if phase=='SETTLE':
+    es.transition_status(c,operation_id=op,from_status='RESERVED',to_status='EXECUTING')
+    grants=ls.load_path(c,tree.leaf_id);nodes=es.terminal_node_deltas(grants,__import__('agent_guard.contracts.execution',fromlist=['TerminalAction']).TerminalAction.SETTLE,70000,1)
+    es.apply_terminal_counters(c,nodes);es.insert_terminal_event(c,operation_id=op,action=__import__('agent_guard.contracts.execution',fromlist=['TerminalAction']).TerminalAction.SETTLE,nodes=nodes[:1])
+    reserve=es.fetch_event_nodes(c,op)[0];changes=receipts.ledger_changes_bytes(operation_id=op,reserve_event=reserve,terminal_nodes=nodes[:1],terminal_action=__import__('agent_guard.contracts.execution',fromlist=['TerminalAction']).TerminalAction.SETTLE)
+    es.insert_pending_receipt(c,receipts.build_pending_receipt(operation=es.fetch_operation(c,op),action=__import__('agent_guard.contracts.execution',fromlist=['TerminalAction']).TerminalAction.SETTLE,root_grant_id=tree.root_id,result_bytes=b'{}',ledger_changes=changes,created_at=c.execute('SELECT clock_timestamp()').fetchone()[0]))
+    es.transition_status(c,operation_id=op,from_status='EXECUTING',to_status='SUCCEEDED')
+  with psycopg.connect(db.dsn) as c:assert apply_migrations(c)==['005','006']
+  box=env.service.outbox_entry(op);errors=[]
+  with psycopg.connect(db.dsn) as c:eid=c.execute('SELECT event_id FROM ag_ledger_events WHERE operation_id=%s AND phase=%s',(op,phase)).fetchone()[0]
+  for i,g in enumerate((tree.mid_id,tree.leaf_id),start=1):
+   try:
+    with psycopg.connect(db.dsn) as c:c.execute('INSERT INTO ag_ledger_event_nodes VALUES (%s,%s,%s,%s,%s,%s,%s)',(eid,i,g,70000 if phase=='RESERVE' else -70000,0 if phase=='RESERVE' else 70000,1 if phase=='RESERVE' else -1,0 if phase=='RESERVE' else 1))
+   except psycopg.IntegrityError:errors.append(i)
+  with psycopg.connect(db.dsn) as c:n=c.execute('SELECT count(*) FROM ag_ledger_event_nodes WHERE event_id=%s',(eid,)).fetchone()[0]
+  observe('r3-old-event-append',{'phase':phase,'refused_positions':errors,'nodes_before':1,'nodes_after':n,'outbox_unchanged':env.service.outbox_entry(op)==box})
+  assert n==1 and len(errors)==2
+ finally:drop_scratch_database(namespace.base_dsn,db)
+
+@pytest.mark.parametrize('round_no',range(10))
+def test_stale_unknown_claim_does_not_report_over_new_terminal(a2,round_no):
+ op=accepted(a2).operation_id;first=a2.service.reconcile(op,owner_token='first');assert first.status=='UNKNOWN';expire_lease(a2.gateway_dsn,op)
+ old=a2.service._claim(op,'old');expire_lease(a2.gateway_dsn,op);new=a2.service.run_operation(op,owner_token='new');assert new.status=='SUCCEEDED'
+ error=None;returned=None
+ try:returned=a2.service._finalize(old,None,downstream_called=True,reason='query not found')
+ except ExecutionError as exc:error=exc.code.value
+ observe('r3-stale-unknown',{'round':round_no,'error':error,'reported':None if returned is None else returned.status,'persisted':a2.service.operation_status(op),'effects':effects(a2),'counters':counters(a2)})
+ assert error in ('LEASE_LOST','ILLEGAL_TRANSITION') or returned.status=='SUCCEEDED'

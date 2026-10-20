@@ -1,0 +1,8 @@
+{
+  "version": "2026.10.1",
+  "platform": "darwin-arm64",
+  "license": "Apache-2.0",
+  "url": "https://github.com/cloudflare/cloudflared/releases/download/2026.10.1/cloudflared-darwin-arm64.tgz",
+  "sha256": "647615df99d49cd179ea5e13ef760b9bbfb33630f6ae62f87e33dfadda60adcc",
+  "binary_sha256": "35b7e34c9a3f214d80d859c4223450c69e583c7668d228c45771026fe376cab9"
+}

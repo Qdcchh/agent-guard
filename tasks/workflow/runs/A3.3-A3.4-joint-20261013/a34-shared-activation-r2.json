@@ -1,0 +1,118 @@
+{
+  "status": "AUTHORIZED_SHARED_R2_RESUME_EXISTING_IMPLEMENTATION",
+  "UTC": "2026-10-13T08:07:41.129838+00:00",
+  "worker_agent": "/root/a34_shared_resume_sol_low_r2",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "low",
+  "effective_metadata": "UNKNOWN",
+  "owner": "406b7ffd-168d-4782-91a5-14e90c2c7bfb",
+  "evidence": "artifacts/workflow/A3.3-A3.4-joint-shared-r2-406b7ffd-168d-4782-91a5-14e90c2c7bfb",
+  "S2_root_readback": {
+    "path": "artifacts/workflow/A3.3-delivery-20261011/controller/joint-S2-final-root-readback.json",
+    "sha256": "a70162505261dca7e9d6e68e3a476c7abecd5d804004db2aa2aeeeb5c13deb46"
+  },
+  "normal_interface": {
+    "path": "/Users/qdcc/Documents/ChatGPT/密码竞赛/agent-guard-handoff/artifacts/workflow/A3.3-A3.4-joint-S2-5667db32-6cbd-42b7-ac84-8db4b01c57ba/actual-normal-interface-freeze.json",
+    "sha256": "86167945ce77727db3819e0ae10c970dd5e1b5ccf65b744840676721fe24cd4d"
+  },
+  "pure_inputs_readback": "artifacts/workflow/A3.3-delivery-20261011/controller/joint-workload-root-readback.json",
+  "shared_readonly_preparation": "artifacts/workflow/A3.3-A3.4-joint-shared-readonly-preparation-20261013",
+  "allowed_paths": [
+    "experiments/agent_guard_bench/__init__.py",
+    "experiments/agent_guard_bench/oracle.py",
+    "experiments/agent_guard_bench/research_contracts.py",
+    "experiments/agent_guard_bench/research_store.py",
+    "experiments/agent_guard_bench/research_service.py",
+    "experiments/agent_guard_bench/research_worker.py",
+    "experiments/agent_guard_bench/research_evidence.py",
+    "experiments/research-schema.sql",
+    "experiments/baseline-capabilities.json",
+    "tests/fixtures/a34_experiment.py"
+  ],
+  "excluded_pure_paths": [
+    "experiments/agent_guard_bench/workload.py",
+    "experiments/workload-v1.json",
+    "tests/unit/test_a34_workload.py"
+  ],
+  "full_joint_acceptance": "NOT_RUN_REQUIRED",
+  "pure_inputs_latest_root_correction": {
+    "path": "artifacts/workflow/A3.3-A3.4-joint-warmup-remediation-5ecb0fa5-4868-412b-8679-74b7b1c3e298/root-readback.json",
+    "sha256": "02774e8785b6b019f7ec1fe22410fc5e8a4bd0a8c65edcd69ca4e104e2a90882",
+    "source_pins": [
+      {
+        "path": "experiments/agent_guard_bench/workload.py",
+        "sha256": "66d36160049dbb2da767fbe45b6a8891d9c5f8876038af2f7b0563445bd359e9",
+        "bytes": 7824
+      },
+      {
+        "path": "tests/unit/test_a34_workload.py",
+        "sha256": "69ed40134259a97683d7a6727f39fe6f102a58a29582d2609ff3afe5a74d351c",
+        "bytes": 6783
+      },
+      {
+        "path": "experiments/workload-v1.json",
+        "sha256": "c41a1243fec50e936ecbffcb44c491f0066602472842dcab562023c9e852dc0b",
+        "bytes": 12305
+      }
+    ],
+    "authorized_root_changes": [
+      "experiments/agent_guard_bench/workload.py",
+      "tests/unit/test_a34_workload.py"
+    ],
+    "not_worker_write_scope": true
+  },
+  "previous_errored_writer_root_stop": "artifacts/workflow/A3.3-delivery-20261011/controller/joint-shared-r1-root-stop-recovery.json",
+  "previous_code_evidence": "artifacts/workflow/A3.3-A3.4-joint-shared-82a28b0b-fe19-40fc-89bd-828fa2f1c317",
+  "source_current_at_transfer": [
+    {
+      "path": "experiments/agent_guard_bench/__init__.py",
+      "bytes": 234,
+      "sha256": "72a3072c623d5d91a1f87ae9c7d0b3b5ba7ebff4a85ad81484a365a9eeedc3a5"
+    },
+    {
+      "path": "experiments/agent_guard_bench/oracle.py",
+      "bytes": 3597,
+      "sha256": "ba465897692b7ea4ccce71811347155c6b2c79a389bf88ec30df58e540aeadcd"
+    },
+    {
+      "path": "experiments/agent_guard_bench/research_contracts.py",
+      "bytes": 9123,
+      "sha256": "77b67baf03ad87ec5e3d9c57f82816336a2e78e10a5a20826269060618c33b67"
+    },
+    {
+      "path": "experiments/agent_guard_bench/research_store.py",
+      "bytes": 10991,
+      "sha256": "dbe27050fd3849b5b5a36be51c9c8f96f0842d4eb09323ee1cf736a27a43682c"
+    },
+    {
+      "path": "experiments/agent_guard_bench/research_service.py",
+      "bytes": 23705,
+      "sha256": "699c26747f73d75d946139aa145752f944134e28cfebd00c5d135e05dcfc9afe"
+    },
+    {
+      "path": "experiments/agent_guard_bench/research_worker.py",
+      "bytes": 3478,
+      "sha256": "87757e063c05a7afb22027c2e063ac259c4b7b081b54d174f27ce4b76c0798bc"
+    },
+    {
+      "path": "experiments/agent_guard_bench/research_evidence.py",
+      "bytes": 1925,
+      "sha256": "1a3d3e91fb3826632bc2c515e62e22ea340496b7a3bce254cea8523880662c84"
+    },
+    {
+      "path": "experiments/research-schema.sql",
+      "bytes": 6230,
+      "sha256": "19b04a65b84b4f5c8ea15093aa2b6f0fa42c845e89036bc6a6403560d49460b8"
+    },
+    {
+      "path": "experiments/baseline-capabilities.json",
+      "bytes": 1666,
+      "sha256": "cf43fe9f54b0ef10add8c28b1b958b13bdf156a66bf17684521eec9a8a11ce90"
+    },
+    {
+      "path": "tests/fixtures/a34_experiment.py",
+      "bytes": 19052,
+      "sha256": "9bb7ec05e43d5c34092d19e7d8a0720a04bf7a37a58957e75ee0c2c07c80afba"
+    }
+  ]
+}

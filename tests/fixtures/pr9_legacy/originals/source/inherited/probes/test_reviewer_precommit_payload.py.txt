@@ -1,0 +1,106 @@
+
+# Independent pinned original14 SQL/registry/ownership and current007 inventories.
+A31_ORIGINAL31 = frozenset({'ag_grants', 'ag_event_seals', 'ag_auth_events', 'ag_schema_legacy_binding', 'ag_auth_evidence', 'ag_ledger_event_nodes', 'ag_proofs', 'ag_test_ownership', 'ag_grant_tokens', 'ag_operation_review_flags', 'ag_receipt_outbox', 'ag_operation_evidence', 'ag_users', 'ag_authorization_requests', 'ag_login_sessions', 'ag_principals', 'ag_tasks', 'ag_exchange_evidence', 'ag_schema_migrations', 'ag_grant_revocations', 'ag_ledger_events', 'ag_task_revocations', 'ag_authorization_codes', 'ag_operations', 'ag_schema_migration_lineages', 'ag_execution_leases', 'ag_login_csrf', 'ag_tenant_admins', 'ag_verified_evidence', 'ag_delegations', 'ag_task_policies'})
+A31_CURRENT007_SIX = frozenset({'ag_audit_delivery_batches', 'ag_audit_streams', 'ag_audit_bootstrap_chunks', 'ag_audit_records', 'ag_audit_bootstrap', 'ag_audit_delivery'})
+"""Independently witness actual signing input before SIGKILL and after restart."""
+import hashlib
+import json
+import multiprocessing
+import os
+import signal
+import time
+from pathlib import Path
+
+import psycopg
+
+from agent_guard.contracts.encoding import b64url_decode
+from agent_guard.crypto.sm import verify_compact_jws
+from agent_guard.execution import store
+from tests.fixtures.receipts import full_state, publication_only
+from tests.integration.test_receipt_publication import final_env
+
+
+def _actual_child(publisher, operation, pipe):
+    import agent_guard.execution.receipt_publication as implementation
+
+    original = implementation.sign_compact_jws
+
+    def observe(key, claims, **kwargs):
+        signed = original(key, claims, **kwargs)
+        assert verify_compact_jws(
+            signed, expected_type="ag-receipt+jwt", trusted_keys={kwargs["key_id"]: key.public_key()}
+        ) == claims
+        header, payload, _ = signed.split(".")
+        pipe.send(("signed", os.getpid(), header + "." + payload, claims))
+        return signed
+
+    implementation.sign_compact_jws = observe
+    result = publisher.publish(operation)
+    pipe.send(("committed", os.getpid(), result))
+
+
+def test_reviewer_actual_precommit_signing_input_survives_sigkill(ledger, dsn, downstream_dsn):
+    _, operation, _, verifier, publisher = final_env(dsn, downstream_dsn)
+    before = full_state(dsn, downstream_dsn)
+    assert len(before["gateway"].keys() & A31_ORIGINAL31) == 31 and set(before["gateway"]) == A31_ORIGINAL31 | A31_CURRENT007_SIX and len(before["downstream"]) == 3
+    ctx = multiprocessing.get_context("fork")
+    first_reader, first_writer = ctx.Pipe(duplex=False)
+    with psycopg.connect(dsn, autocommit=True) as observer:
+        observer.execute("SELECT pg_advisory_lock(2387397)")
+        with psycopg.connect(dsn) as setup:
+            setup.execute("CREATE FUNCTION reviewer_before_ready() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.receipt_status='READY' THEN PERFORM pg_advisory_xact_lock(2387397); END IF; RETURN NEW; END $$")
+            setup.execute("CREATE TRIGGER reviewer_before_ready BEFORE UPDATE ON ag_receipt_outbox FOR EACH ROW EXECUTE FUNCTION reviewer_before_ready()")
+        first = ctx.Process(target=_actual_child, args=(publisher, operation, first_writer))
+        first.start()
+        try:
+            assert first_reader.poll(10)
+            signed_before = first_reader.recv()
+            assert signed_before[:2] == ("signed", first.pid)
+            until = time.monotonic() + 10
+            wait = None
+            while time.monotonic() < until:
+                wait = observer.execute("SELECT pid,query,wait_event_type,wait_event FROM pg_stat_activity WHERE datname=current_database() AND wait_event='advisory' AND query LIKE 'UPDATE ag_receipt_outbox SET receipt_status=%'").fetchone()
+                if wait:
+                    break
+                time.sleep(0.01)
+            assert wait and wait[2:] == ("Lock", "advisory")
+            os.kill(first.pid, signal.SIGKILL)
+            first.join(10)
+            assert first.exitcode == -signal.SIGKILL
+            assert full_state(dsn, downstream_dsn) == before
+        finally:
+            if first.is_alive():
+                first.kill()
+                first.join(10)
+            observer.execute("SELECT pg_advisory_unlock(2387397)")
+            with psycopg.connect(dsn) as setup:
+                setup.execute("DROP TRIGGER reviewer_before_ready ON ag_receipt_outbox")
+                setup.execute("DROP FUNCTION reviewer_before_ready()")
+    second_reader, second_writer = ctx.Pipe(duplex=False)
+    second = ctx.Process(target=_actual_child, args=(publisher, operation, second_writer))
+    second.start()
+    try:
+        assert second_reader.poll(10)
+        signed_after = second_reader.recv()
+        assert signed_after[:2] == ("signed", second.pid) and second.pid != first.pid
+        assert signed_after[2:] == signed_before[2:]
+        assert second_reader.poll(10)
+        kind, pid, publication = second_reader.recv()
+        second.join(10)
+        assert second.exitcode == 0 and (kind, pid) == ("committed", second.pid)
+        assert publication.receipt_status == "READY"
+        with psycopg.connect(dsn) as conn:
+            out = store.fetch_outbox(conn, operation)
+            verifier.verify_tx(conn, operation, publication.receipt_jws)
+        assert json.loads(b64url_decode(publication.receipt_jws.split(".")[1])) == signed_before[3]
+        assert signed_before[3]["receipt_id"] == out["receipt_id"]
+        assert signed_before[3]["iat"] == int(out["created_at"].timestamp())
+        publication_only(before, full_state(dsn, downstream_dsn))
+        path = Path(os.environ["A23_RECEIPT_EVIDENCE"], "actual-precommit-payload-restart.json")
+        path.write_text(json.dumps({"first_python_pid": first.pid, "new_python_pid": second.pid, "pg_backend_pid": wait[0], "pg_wait_type": wait[2], "pg_wait_event": wait[3], "actual_signing_input_sha256": hashlib.sha256(signed_before[2].encode()).hexdigest(), "actual_claims_equal": True, "receipt_id_stable": True, "iat_from_original_created_at": True, "original31_gateway_tables_preserved": True, "current37_gateway_and3ds_strict_publication_oracle": True}, indent=2))
+    finally:
+        if second.is_alive():
+            second.kill()
+            second.join(10)
+        for pipe in (first_reader, first_writer, second_reader, second_writer):
+            pipe.close()

@@ -1,0 +1,15 @@
+# 容量输入外部密文实施契约 v1
+
+本契约是主控在已授权CI环境修复范围内的具体实施决定。原PACKAGE_READY与容量安全局部审查不是最终实施接受。独立安全报告为artifacts/pr9-historical-ci-20261018/capacity-security-review/report.md，SHA b79c2585a3d95e719e704cff0dad25f98319b76cee76c4baef893af10946e55f，其第5节全部门控适用。
+
+只在Git保存安全manifest、验证程序、测试及来源说明。全110原成员（包含archive和两份有keyword DSN的原失败日志）原字节进入外部AES-256-GCM密文，不进入Git/LFS；不发布任何明文raw附件、私钥或key。公有Release密文可被任何人留存，仅密钥和明文受控；删除或轮换不能撤回他人已持有的key+cipher，不将其称作私有对象存储。原两日志password有隔离历史测试来源，当前有效性UNKNOWN_NOT_PROBED，不宣称全档无凭据/全部过期。
+
+加密采用已有哈希锁中的cryptography，CSPRNG独立256bit key、每包独立96bit nonce，成熟AESGCM一次认证约107MB压缩消息，不自研分片协议。AAD绑定格式版本、dataset ID、完整公开来源manifest摘要、压缩与未压缩长度/SHA。原内容包采用固定格式头及公开manifest顺序逐文件长度拼接（无tar/zip解包、无路径由payload控制），gzip流压缩；拒绝额外流/尾随、超长、截断、重复/绝对/越界/符号链接/额外成员，所有原成员长度/SHA必须符合110 allowlist。完整认证、压缩SHA、限长解压、逐成员SHA均通过前不得将明文交给consumer；失败删除本轮partial私密树，原件/他人目录不动。
+
+源码独占low worker：tools/pr9_capacity_inputs.py（只按CAPSEC01补充关键字DSN审计；旧报告保留、新增勘误）、新tools/pr9_capacity_transport.py、新tests/unit/test_pr9_capacity_transport.py、dependencies/pr9-capacity/下安全metadata/来源说明。不改原counter/test/fixtures、历史110字节、CI、其他worker或用户文件；不上传/设置Secret/commit/push。公开manifest仅安全路径/role/长度/SHA、原binding安全metadata，禁止值泄漏；传输位置稍后由root以固定asset ID补闭。key只生成到专属0700根内0600文件；CLI参数只传key-file路径，不传key值。
+
+实施CLI边界：pack从原binding/historical-root读取110来源，生成安全manifest与外部cipher/private key；unpack读取固定manifest+cipher，key从必要step环境或私密key-file读取，重建fresh0700 historical-root及原binding供prepare，或提供同等清楚的safe relocation输入。解密器不从任意未认证内嵌路径创建文件。下载与GitHub管理由root唯一负责。先小合成fixture覆盖错key/nonce/AAD/位翻转/截断/换manifest/长度SHA/重复/逃逸/额外流/超长/缺key，再全110本地roundtrip逐SHA；完整原容量测试消费者需自己bind-installed并实际跑，不复用别人的安装身份。
+
+CI采用新鲜same-repo runner，同一审查冻结head覆盖workflow/解密器/build hooks/源码/测试/依赖。第三方Actions固定完整commit SHA、checkout persist-credentials=false、依赖按哈希锁；不使用pull_request_target/workflow_run为fork提供Secret。没有Secret或asset立即硬失败，不能skip或fallback造输入。Secret只给解密step，不写GITHUB_ENV/CLI/key文件/artifact/cache；后续能读明文的代码都在可信审查边界。raw/evidence不整体上传；trap/finally及always清理解密私密树和本轮owner资源，失败不得假报0。
+
+实施STOP及全内容SHA后另全新high审查封装实现、本地真实roundtrip与负例，再由root将仅密文上传专属非latest Release并配置单一repoSecret。固定实际asset ID/长度/SHA回写manifest后再次冻结完整候选，最终全新high完整实施独验、最新head全部GitHub CI绿，再expectedSHA正常squash合并PR9。原10000全部数字/边界/NOT_ASSERTED及6839原集成节点保持。

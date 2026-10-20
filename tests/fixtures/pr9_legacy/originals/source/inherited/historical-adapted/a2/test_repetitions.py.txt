@@ -1,0 +1,35 @@
+import threading
+import psycopg,pytest
+from agent_guard.contracts.execution import ExecutionError
+from agent_guard.execution import store as es
+from tests.fixtures.execution import expire_lease
+from tests.fixtures.dbstate import fetch_counts
+from test_review import accepted,observe,counters,effects
+
+@pytest.mark.parametrize('round_no',range(10))
+def test_old_expired_and_new_terminal_race(a2,round_no):
+ op=accepted(a2).operation_id;saved={}
+ def capture(c,o):saved.update(claim=c,outcome=o);raise RuntimeError('owned sync')
+ with pytest.raises(RuntimeError):a2.service.run_operation(op,owner_token='old',pause=capture)
+ expire_lease(a2.gateway_dsn,op)
+ newer=a2.service._claim(op,'new')
+ assert newer.previous_status=='EXECUTING' and newer.lease.fencing_version==2
+ outcome=a2.downstream.query(service_secret=a2.secret,operation_id=op)
+ barrier=threading.Barrier(2);results=[]
+ def finalize(c):
+  barrier.wait()
+  try:results.append(('ok',a2.service._finalize(c,outcome,downstream_called=True,reason='').status))
+  except ExecutionError as e:results.append(('error',e.code.value))
+ ts=[threading.Thread(target=finalize,args=(c,)) for c in [saved['claim'],newer]]
+ for t in ts:t.start()
+ for t in ts:t.join(10)
+ assert not any(t.is_alive() for t in ts) and len(results)==2 and [r for r in results if r[0]=='ok']==[('ok','SUCCEEDED')]
+ assert all(v=={'amount_reserved':0,'amount_settled':70000,'calls_reserved':0,'calls_settled':1} for v in counters(a2))
+ assert effects(a2)['ds_orders']==1 and fetch_counts(a2.gateway_dsn)['ag_receipt_outbox']==1 and fetch_counts(a2.gateway_dsn)['ag_ledger_events']==2
+ observe('expired-old-new-race',{'round':round_no,'results':results,'counters':counters(a2)})
+
+@pytest.mark.parametrize('round_no',range(10))
+def test_root_initialization_concurrency_repeat(dsn,migrated,namespace,round_no):
+ from tests.integration.test_state_checks import test_p11_concurrent_root_initialization_creates_one_root
+ test_p11_concurrent_root_initialization_creates_one_root(dsn,migrated,namespace)
+ observe('root-init-repeat',{'round':round_no,'counts':fetch_counts(dsn)})

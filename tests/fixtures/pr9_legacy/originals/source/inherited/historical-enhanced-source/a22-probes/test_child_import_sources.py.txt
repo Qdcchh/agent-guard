@@ -1,0 +1,41 @@
+"""Keep exact real CLI argv; read live child module positions before SIGKILL."""
+import json, pathlib, subprocess, time, os
+import agent_guard
+from tests.integration import test_gateway_tls as target
+
+
+def test_real_tls_children_have_live_import_sources(ledger,dsn,downstream_dsn,tmp_path,monkeypatch):
+    original=subprocess.Popen;oldkill=original.kill;processes=[];children=[]
+    base=str(pathlib.Path(agent_guard.__file__).parent)+'/'
+    mode=os.environ['AG31_MODE']
+    assert mode in ('source','wheel') and f'/e/{mode}-venv/lib/python3.11/site-packages/agent_guard/'==base
+    def observed(args,*a,**kw):
+        p=original(args,*a,**kw);processes.append(p)
+        if isinstance(args,(list,tuple)) and len(args)>=3 and args[1]=='-m' and args[2] in ('agent_guard.execution.worker','agent_guard.gateway'):
+            children.append(p.pid)
+        return p
+    def checked_kill(p):
+        if p.pid in children:
+            f=pathlib.Path(os.environ['AG31_OBSERVER_DIR'])/'live-provenance'/f'{mode}-{p.pid}.json'
+            deadline=time.monotonic()+5
+            while not f.exists() and time.monotonic()<deadline:time.sleep(.01)
+            assert f.exists(),'live read-only provenance missing before own SIGKILL'
+            r=json.loads(f.read_text())
+            assert r['main_spec'] in ('agent_guard.execution.worker','agent_guard.gateway.__main__')
+            module='agent_guard.execution.service' if r['main_spec']=='agent_guard.execution.worker' else 'agent_guard.gateway.http_app'
+            assert module in r['modules']
+        return oldkill(p)
+    monkeypatch.setattr(original,'kill',checked_kill)
+    monkeypatch.setattr(subprocess,'Popen',observed)
+    target.test_real_tls_four_tools_killed_worker_and_gateway_restart(ledger,dsn,downstream_dsn,tmp_path)
+    records=[json.loads((pathlib.Path(os.environ['AG31_OBSERVER_DIR'])/'live-provenance'/f'{mode}-{pid}.json').read_text()) for pid in children]
+    assert len(records)>=7 and len({r['pid'] for r in records})==len(records)
+    for r in records:
+        assert r['modules'] and all(v is None or v.startswith(base) for v in r['modules'].values())
+        assert r['main_file'].startswith(base)
+        assert r['main_spec'] in ('agent_guard.execution.worker','agent_guard.gateway.__main__')
+        module='agent_guard.execution.service' if r['main_spec']=='agent_guard.execution.worker' else 'agent_guard.gateway.http_app'
+        assert module in r['modules']
+    killed=[p.pid for p in processes if p.returncode==-9]
+    assert killed and set(killed)<=set(children)
+    assert all(p.poll() is not None for p in processes)

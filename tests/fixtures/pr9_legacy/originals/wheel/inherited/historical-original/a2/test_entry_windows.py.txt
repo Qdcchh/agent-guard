@@ -1,0 +1,40 @@
+import dataclasses,json,os,subprocess,sys,threading
+import pytest
+from agent_guard.contracts.execution import ExecutionError
+from agent_guard.contracts.ledger import TrustedCost
+from agent_guard.ledger import store as ls
+from agent_guard.tools.catalog import snapshot_to_bytes
+from tests.fixtures.execution import order_params
+from tests.fixtures.dbstate import fetch_counts
+from test_review import observe,counters,effects
+
+def test_precommit_interruption_and_real_worker_have_zero_effect(a2,monkeypatch):
+ inserted=threading.Event();interrupt=threading.Event();saved={};errors=[];original=ls.insert_operation
+ def insert(c,**kw):
+  value=original(c,**kw);saved['operation_id']=value.operation_id;inserted.set();assert interrupt.wait(15);raise RuntimeError('interrupt before accept commit')
+ monkeypatch.setattr(ls,'insert_operation',insert)
+ def accept():
+  try:a2.service.accept_invocation(a2.tree.invocation(tool_id='procurement.order.create',params=order_params()),a2.permission())
+  except RuntimeError:errors.append('rolled-back')
+ t=threading.Thread(target=accept);t.start();assert inserted.wait(10)
+ env={k:os.environ[k] for k in ['PATH','PYTHONPATH'] if k in os.environ}
+ env.update(AG_WORKER_GATEWAY_DSN=a2.gateway_dsn,AG_WORKER_DOWNSTREAM_DSN=a2.downstream_dsn,AG_WORKER_SERVICE_SECRET=a2.secret,AG_WORKER_OPERATION_ID=saved['operation_id'],AG_WORKER_APPROVED_SUPPLIERS='supplier-001')
+ try:
+  worker=subprocess.run([sys.executable,'-m','agent_guard.execution.worker'],env=env,capture_output=True,text=True,timeout=10)
+  assert worker.returncode==1 and 'OPERATION_NOT_FOUND' in worker.stderr
+ finally:interrupt.set();t.join(15)
+ assert not t.is_alive() and errors==['rolled-back'] and fetch_counts(a2.gateway_dsn)['ag_operations']==0 and fetch_counts(a2.gateway_dsn)['ag_proofs']==0
+ assert effects(a2)=={'ds_operations':0,'ds_orders':0,'ds_notifications':0} and all(v=={'amount_reserved':0,'amount_settled':0,'calls_reserved':0,'calls_settled':0} for v in counters(a2))
+ observe('precommit-interruption',{'worker_exit':worker.returncode,'operation_hidden_before_commit':True,'rolled_back':True,'effects':effects(a2),'counters':counters(a2)})
+
+def test_candidate_wrong_quote_identity_is_not_usable(a2):
+ snap=a2.catalog.build_order_snapshot(tenant_id=a2.tree.tenant_id,task_id=a2.tree.task_id,request_id='req-001',quote_id='quote-001',quote_version='1',items=(('sku-001',1),),delivery_id='office-001')
+ raw=snapshot_to_bytes(dataclasses.replace(snap,quote_id='wrong-id',quote_version='2'))
+ inv=a2.tree.invocation(idempotency_key='candidate-wrong-identity',tool_id='procurement.order.create',params=order_params())
+ op=a2.ledger.accept(inv,TrustedCost(amount_fen=70000,quote_id='quote-001',quote_version='1',quote_snapshot=raw)).operation_id
+ a2.catalog.remove_quote('quote-001','1')
+ error=None;returned=None
+ try:returned=a2.service.accept_invocation(a2.tree.invocation(idempotency_key='candidate-wrong-identity',tool_id='procurement.order.create',params=order_params()),a2.permission())
+ except ExecutionError:error=True
+ observe('candidate-quote-identity',{'refused':error is not None,'returned_existing':returned is not None,'flagged':a2.service.review_flag(op) is not None,'counters':counters(a2)})
+ assert error is not None and a2.service.review_flag(op) is not None

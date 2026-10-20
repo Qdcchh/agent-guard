@@ -1,0 +1,62 @@
+# A3.2 完整独立实施验收 Sol/high r1
+
+
+DRAFT_NOT_DISPATCHED。须先全部writer真实STOP、独占资源0及root亲核完整候选+六Git controls冻结，才由全新独立reviewerSol/high生效；effective UNKNOWN。不得复用包审reviewer或实施者来验自己的成果。当前完整159父项/151运行义务、A2原269+A31原95+A32原73断言/原子、21P和30goals，不能用PACKAGE_READY/分段自查/计数代实施接受。项目仍PARTIAL。最新真人授权主控连续到A3.4；本reviewer仅验A3.2，不实施或自授下一阶段，也不Git发布。主控在A3.2接受后另开A3.3正式包审。
+
+读取原始任务/接口/安全/验收、approved package-v1+v2+v3/requirements-v1/node-bindings-v3/runtime-plan-v3/ownership-s2-r1、A31正式接受与原r1缺陷/失败原件、S0/S1/S2实施与失败报告、历史失败及当前等价probe，实际全部受影响代码/调用方/测试。逐父/全部子断言审代码及真实探针，不机械关闭父项。begin/end核全候选每成员SHA/bytes/kind及HEAD/branch/status/index/staged/unstaged，任何漂移BLOCKED不回退。自己只写独立ignored证据；禁止正式业务/测试/包/state/Git写入，不能修代码来验收。
+
+亲自全source+新非editablewheel/Py3.11/异cwd安装provenance动态SDK成员与SQL16/原14/锁checksum及真正SM2SM3/OpenSSL；20完整成熟继承组选定闭包、strict两500时钟每mode合1000覆盖所有100variants每partition5合10轮、原A1/A2/B/A31回归/历史探针等价/真进程kill+恢复/原14与新120guard触发以及独立新变体。完整组10800有限controller+runner，其他短3600，isolatedchild120/180不包整组。所有nativeexit/XML原cases/no skip/OOM0/最终host/container注册实际归属0，不能借自查日志代亲跑。
+
+完整A32 actual19节点/所有参数与73atoms+3native需重新独立collect/绑定/运行，逐条input/正负控/oracle审判。真实HTTPSAS授权与两层exchange四工具联合、256SKU、10000固定真实合法四工具精确wire/count容量（含所有旧新材料、CP/metadata/base64/LF，不删材料冒通过）。严格流式object身份/完整索引fold/首尾计数/EOF/raw非canonical保持、全历史registration角色范围/祖先收窄四counter/所有accept-retry-query-terminal-publish与独立bootstrap/genesis/previousCP原ASCII链。外部最新仅固定一次合法readerHTTPS观察；完整公有history独立只读有界取得，remote-ahead无中间GWCP正控及缺页/scope/order/raw/role/range/旧pin/rollback负控；export只读RR S/H全材料先物化结束TX后下载、不网络/sign/register/ack/DB写、容量或失败header前503/原件不变、私有spool断连/真死亡资源清理。全部兼容故障并发tuple source/wheel各10真实轮，独立连接barrier/backendPID/SQLSTATE/childexit/nativekill新进程。
+
+offline独立进程networknone无DB/privatekey/secret/env，公有输入readonly前后SHA一致，CLI四参数exact三inputSHA+0600新report不覆盖input。输入trust不可bundle提升、oldvalidcheckpoint/minimum/UNKNOWN/latest观察准确；unsignedruntime重新fold正控与无外latest未锚尾删减正控不得假称检测；runtime永远UNANCHORED_AS_OF_DB_OBSERVATION即N=S/currentauthUNKNOWN/downstreamATTESTED_NOT_INDEPENDENTLY_PROVEN/legacyGap/prebootstrap局限。真实锚定内删改与缺非legacy原件必须拒绝exit2无VERIFIEDreport。
+
+全矩阵做亲审语义结论与exact原件索引，不从plannedname/count猜覆盖；所有失败集中稳定issue/触发/依据/修复要求与完整复验法，一轮不凭小非功能项拖延，不另加未授权scope/纯格式阻断。只实际足够独立证据全闭合且无已知阻断才建议ACCEPTED（非绝对无缺陷）。失败NOT_ACCEPTED保原件，root本段补正→新freeze→全新reviewer完整复验。
+
+实际新资源独立owner/phase/mode/fullID/labels/project/service/mount/UID-start-argv/backendPID/cap/OOM，不普通DSN/foreign/sharedprojectdown/rootguard。有限同类运行适配已持续真人批准，不降低原TTL300/proof60/预算撤销/signonce/finalclock/轮次/断言、不skip删测试，网络失败先setproxy。最新真人已停止额度监测，不再定期或阶段检查额度；旧10%规则作为历史记录，不再执行监测。完整report+全原始manifest+STOP0/no_more_writes，root亲读与实际回执核后才能正式接受和停止。
+
+集中v3任务包与两S1报告实际原件必须查验：ACCEPT_RESULT原immutable accepted_at/EXISTING+历史状态/quote重建；PendingReceipt原16scalar+2raw/publicledger/canonical result与histQUERY分别digest。新refs/profile严格身份/枚举/nullability/duplicateunknown/非legacymissing拒绝，signed锚内修改+outerfold重算负控；完整10000容量包括全部新增原材料，不重复给每unit派整包。S0反复小mock不代表真实阈值，应亲跑原real bound±1/native义务。全部159/151/269+95+73及成熟20组选定闭包不减；v3新PACKAGE_READY仅设计证据。
+
+自有PG初始化必须显式 --locale=C --encoding=UTF8，连同template1与后建DS/audit域一起核实际server/client encoding。S1初轮SQL_ASCII导致名称/全表oracle bytes错误及第二轮DS模板继承错误原失败保留；这是有限环境补正，原代码/SQL/断言不改。
+
+
+S1阶段局限必须诚实核验：verify早期quick命令原执行回执覆盖，以及final02 source417/final03 20FAIL的原XML缺失，独有完整原stdout/traceback保留；不可称历史原件全完整或将REPRODUCTION冒原件。本轮必须全新、独有执行标签保全全部原始20组source/fresh wheel证据。检查S2实际集中补正：context/source/ancestor_token typed owner一致且严格原关系，QUERY/READY RETRY的必要result/receipt refs真历史绑定，普通statement30s与总materialization600s不混淆。bootstrap已有grant的原token/limits与后续FIRST连续性须按原任务真实检查，不据静态疑点制造新scope。
+
+
+S2 exact补充所有权 ownership-s2-supplement-01.json：仅audit/journal.py必需真实10000生成阻断的集中补正。亲核capture_introduced_tx immutablebootstrap已包含当前全部path时避免full priorFIRST raw解码的正确性；fastpath仍需保原100000 FIRST容量拒绝、所有未知/后引入grant零counter/source/token/acceptedhistory检查，原锁/SQL/TTL/API不变。真实capacity-native1 977完成/9023expiry拒绝和capacity-native2原失败须读，吞吐不作A34性能结论。完整A31/currentPG20组source+freshwheel亲跑，不以优化热点局部绿代整体。
+
+
+原 A32-08.01 义务必须精确解释：真实固定10000合法业务全部编码count/length预检，超原有界单包门时正式规划分页，不强制无限或超限材料单包成功。必读 capacity-pagination-plan.md、capacity-native3 原生成/完整失败/826390481字节原件、counting-native1 真实生产编码计数及 root counter readback。当前10000原生成可在严格原件SHA/业务源码依赖不变前提复用，但本轮新source/wheel编码及独立判定不能借用自查结论。203285对象、291623992 raw、439169636 OBJECT_CHUNK wire、439170405明确数学HEADER/FOOTER示例不是成功PG导出/合法完整包；本地SM2批次不是独立AUDIT观察，TERMINAL纯计数投影不是新PG project_receipt执行。原生产在检查点加入前 seq23963 ledger/raw 门拒绝，原200000对象/256MiB及全部门不改。亲自审全材料/重建/计数/正式未来分页方案是否满足原预检条件及当前19节点/73atoms；其余真实TLS/成功导出/完整预算边界±1/拒绝/恢复必须实际闭合，不能用此容量规划转移原本当前必做功能，也不能自行实施未来profile或A3.3/A3.4。若原范围确有未闭合条件，明确NOT_ACCEPTED。
+
+
+S2最终r4普通source/wheel各1655原生通过仅为实施自查，独立验收须亲跑。原r3唯一旧配置fixture失败与原r4整PG部分209PASS/10FAIL/native2（XML额外无name KeyboardInterrupt testcase不是PASS）及错误gateway loopback首预检失败须保留；缺固定audit DNS、gateway实际bind127.0.0.2和runner遗漏AG31_SERVICE_EVIDENCE_DIR属于自有运行装配补正，产品/CA/SAN/15s期限不变。早次未落地的可选child stderr如实缺失，不重建冒原件。新实际hosts、0700证据目录/native child原stdout+stderr必须核验。
+
+A32-17的全新pure-public阶段不能只跑联合10个正控：source及新wheel均在networknone、无DB/私有材料、实际网络+DB拒绝的独立进程，亲跑原CLI valid/UNKNOWN/badbundle/missingtrust/overwrite各10轮及badtrust/missingpath/overlimit/incomplete适用负控、v3原metadata/材料兼容控制与四工具/状态；输入三SHA前后、报告0600、完整nativeexit/隔离见证必须齐备。旧S1局部240数量不是原义务的硬编码要求，不能借旧240PASS代新运行，也不能自造同数量额外门。
+
+
+r5/r6集中补正须审真实差异及依赖：r5有7文件仅import成员顺序/格式（non-import AST一致），测试a32_common只originals(tail_sizes=tail_sizes)默认绑定，须新source/wheel15实际边界；r6仅ReceiptComponents非法receipt_jws仍保原invalid receipt_jws字段诊断，异常类型/16384/ASCII/其他拒绝不变。保旧wheel513组512PASS+1FAIL原件与旧regex，亲跑原16384/16385及组件负控。原native10000到r4的99byte+1journal是历史事实；r6实际96byte一致+4差异（journal非空guard+格式、export/task_verify仅格式、receipt_semantics拒绝诊断），按完整原依赖实际SHA和原成功分支不进入诊断的限定证明判断复用充分性，不泛称完全unchanged。
+
+S2 r4 final2原整PG部分528PASS/200setupERROR/native2原件须保，根因旧delivery tls_dir ownerUUID硬绑定。当前prepared运行副本只能精确绑定真实mode资源UUID/角色/路径，原严格owner/fullID/mount/private/TLS/verify-full断言必须保留；审原与副本AST允许literal差异和完整旧owner/name库存零残留及相异装配路径预检，再独立新全组。原产品/仓库fixture不因运行owner变更放宽。
+
+新增已确认运行适配与失败证据：S2 source原5002整组实际4999PASS/3FAIL/native1不能称whole-command PASS；同r6精确3原节点新namespace复跑native0，qualified-source-currentPG-5002-case-closure-r6.json逐原5002ID引用实际PASS。原失败永久保留，独立reviewer不能借这份联合自查代亲跑。两isolation节点因readonly_export_factory真实GRANT/REVOKE之后27relation的relacl从NULL变显式ownerACL，旧exact迁移catalog guard正确拒绝，已独立原生复现acl-catalog-native-r6-1791716878609977000；不得改生产_catalog/SQL/ACL安全预期。新自有完整运行可将原test_isolation.py节点排序在export fixture授权前，必须保存原/新collection顺序、完整原5002ID集合相等与全部原断言不变；或新namespace严互斥分区全并集。此次为fixture生命周期运行适配，原安全不变量与真实依赖必须自行审判。另一失败PROOF_EXPIRED在AS exchange而非late-dependency gate，睡眠因果未证明，不能伪称已证明。
+
+主控真实pmset历史显示Mac多次Maintenance Sleep/DarkWake，旧-idle caffeinate不能保证连续唤醒。原whole wall24211秒与原生kernel monotonic预算域不同，10800controller+runner未修改、timeoutfalse；time-domain-r6原件和host-sleep-original-selected证据必读，不虚报原运行host wall未超10800或全程唤醒。现有限caffeinate -i -s -t14400(AC)由root持有精确归属维护，reviewer不能清理rootguard。新运行实际保持唤醒，仍保原token300/proof60和所有有限门，不补长TTL。
+
+source旧误跑单1000命令被精准SIGINT，原109XML含108通过和无名中断，非完整通过。source正确分区两500 runs1791717012659249513/1791717012658508722实际native0与XML各500PASS，root亲验1000原ID并集、200真实waiter、800scope及800deadline markers、不同GW/DS namespace；wheel已有对应严格两500。新的独立验收每mode自己运行两500并核每partition100实际waiter与400+400markers，不能借自查原件。
+
+ACL生命周期诊断不能替代生产调用方审查：独立查看src/agent_guard/ledger/migrate.py和audit/bootstrap_cli.py对apply_bundle_migrations调用、部署权限登记的时序，判断原任务要求中的合法受限reader配置/重复迁移/升级是否保持可用。不得仅因isolation-first收集全绿推断所有实际caller都兼容；也不得把未要求的未来部署接口猜想直接增为当前阻断。有可复现实质违例则给精确原要求/调用路径/最小证据，由本段补正；没有则如实限定运行适配覆盖。
+
+
+## 本轮正式冻结入口与真实收尾差异
+
+review_kind=IMPLEMENTATION_ACCEPTANCE。只验收A3.2完整159父项/151运行义务及269+95+73断言、21原语义组（23声明）/30目标和所有实际前段回归；主控当前真人范围延伸到A3.4，本reviewer不实施后续。请求gpt-6.1-sol/high、有效metadata UNKNOWN，不能自造后台metadata。最新正式原话见user-extend-through-a34-20261011.md；不监测额度、不Git发布。
+
+完整候选入口 artifacts/workflow/A3.2-evidence-20261011/controller/full-acceptance-candidate-r1.json；主控在调度消息给出实际SHA，reviewer开始和结束必须自己核每成员及全部Git控制。冻结时全部writer已STOP，source/wheel各20组整合自查仅支持自查，不代此轮独立执行。源行为r6及全部SQL/测试/依赖未变，收尾文档与行政状态产生新完整候选，不能混用旧r6 whole manifest称此轮全候选SHA。
+
+S2实施者STOP-resume-r2.json的总资源零声明无效：遗漏六个plan内退出capsule以及plan外真实source10 capsule。原STOP/manifest/native-index原文永久保留。主控已接管七capsule，按fullID/owner/mount/state核实、原/tmp存在则归档、源probe不存在/tmp的实际copy失败原件保留，精确删除。主控独立实核完整35容器/3网络/5新匿名卷/两活动私有目录均不存在，foreign两个既有ID仍在。原STOP不能代最终实际核验；root有限wakeguard单独持有，不由reviewer清理。root前两capsule删除stdout未在后续脚本拒绝前写盘的清理记录缺口已诚实记，实际不存在另核，不用再现冒原件；这是主控清理取证边界，不借它豁免新的reviewer完整原生记录。
+
+亲读 tasks/A3.2-report.md；s2-integrator-sol-low-r1的formal159-151-269-95-73-actual-matrix-r6.json（SHA bc2af371a08e3e9d2f5a374ca1333141f28ecca0d07b88f850ac758969b50d9e）、goal30-original21-current-self-evidence-r6.json、native-obligation-index-r6.json和完整manifest（SHA e4c053169a9ff38adc81bd1087652a3dbfb09562b1d4e81ed58b586c7a0fab45）及原失败。主控核112629成员/95711普通文件/13381489176bytes全SHA，root亲核仅是历史日志核对等级。source原5002 qualified union、ordinary旧native0+新affected slices各有明确资格；本reviewer必须全新source/fresh wheel各20组与完整原5002集合自己执行。
+
+root实际证据可按需查 controller/s2-formal159151-2699573-goal30P21-root-readback.json、s2-final112629-evidence-and-doc7-root-readback.json、s2-all35-containers-net3-vol5-private2-actual0-root-readback.json、owned-capsule-cleanup-531949c4-86b3-4b5c-b41d-7702776c8cf2/summary-r2.json。wheel5002实际native0、6621.91s、原10800 budget不重置；原host exit UNKNOWN，后续只读observer独立自然0和原native命令SHA绑定，不能声称消失的旧host0。
+
+所有新资源/new private dirs/new installs/new namespaces/new probes/raw/XML唯一执行标签均仅本reviewer自有。有限运行适配独立核真实作用与原语义；原运行模板作为装配参考而非PASS证据，clone到本reviewer ignored目录并绑定新UUID/完整ID/owner。需要额外安装/装配工作自行做在该目录，不改源码、正式测试和冻结文档。先完整静态代码/调用方审查与机械原矩阵，再亲跑完整必需闭包及独立新变体；遇见确认缺陷集中保存，不能自己补代码/断言或要求纯格式阻断。必需项不能执行/缺库/skip不能通过。全部完成给完整report、原始manifest、STOP/no_more_writes及自己的资源实际0；root亲核后才能记接受。

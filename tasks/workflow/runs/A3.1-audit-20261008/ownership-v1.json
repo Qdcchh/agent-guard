@@ -1,0 +1,268 @@
+{
+  "stage": "A3.1",
+  "phase_order": [
+    "PACKAGE_READY",
+    "S0_SERIAL",
+    "S0_NATIVE_STOP_READBACK_FREEZE",
+    "S1_SERVICE_DELIVERY_PARALLEL",
+    "ALL_NATIVE_STOP",
+    "S2_SOLE_INTEGRATOR",
+    "FULL_SELFCHECK_STOP_FREEZE",
+    "FRESH_FULL_ACCEPTANCE"
+  ],
+  "writers": {
+    "a31-shared": [
+      {
+        "path": "migrations/007_audit_journal.sql",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "migrations/audit/001_checkpoint_store.sql",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "pyproject.toml",
+        "baseline_sha256": "3949c7fa056e62e9cb16f3451b6fd8bb812b92a6c240031473b9bef04cbdfd00"
+      },
+      {
+        "path": "src/agent_guard/audit/__init__.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "src/agent_guard/audit/bootstrap_cli.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "src/agent_guard/audit/contracts.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "src/agent_guard/audit/journal.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "src/agent_guard/authorization/evidence_store.py",
+        "baseline_sha256": "c9c2f1aa617e134c4ab3e849e7dfe106722f41d9b342594ba2282c1cb5c1e4e3"
+      },
+      {
+        "path": "src/agent_guard/crypto/sm.py",
+        "baseline_sha256": "2b00b5df65f741ccae706d89a6549027d30fc76cf5abbd3a838c3b83fbeddd79"
+      },
+      {
+        "path": "src/agent_guard/execution/query.py",
+        "baseline_sha256": "9763ac130ebd0c7f87130f11be3ec64d3beb5a14edf722879a64d205c0d86ac5"
+      },
+      {
+        "path": "src/agent_guard/execution/service.py",
+        "baseline_sha256": "5bd596722f99cc078cf3b5cacb6e91213062e73cbad99468979ec122079c4642"
+      },
+      {
+        "path": "src/agent_guard/execution/store.py",
+        "baseline_sha256": "42b95254488b5c43028efd9284a7726dc8589182cdb32e67fbeafd9741d9e504"
+      },
+      {
+        "path": "src/agent_guard/execution/verified.py",
+        "baseline_sha256": "0555fd5855f478e1fba407dea6c7667ac7270d3bfbe58df9daeacf6a244ee74a"
+      },
+      {
+        "path": "src/agent_guard/execution/receipt_publication.py",
+        "baseline_sha256": "5ff868e408af6270a287b605b555cf239163634adff6f764e8e99d1679d5612f"
+      },
+      {
+        "path": "src/agent_guard/ledger/lineage.py",
+        "baseline_sha256": "036ddd3a02c1d4e3688e325b04e9e3db537872e1b42ad65a9371e7f38dbbae39"
+      },
+      {
+        "path": "src/agent_guard/ledger/migrate.py",
+        "baseline_sha256": "fe55dd46350d3950f2237d3fa85ed87715228d46531f2da61c34bab309b18a2c"
+      },
+      {
+        "path": "src/agent_guard/ledger/service.py",
+        "baseline_sha256": "5b208f73a59ca17bc149db1604ae6612ff9acb613ddc14bf159e3d7370cb108d"
+      },
+      {
+        "path": "tests/fixtures/a31_common.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/fixtures/isolation.py",
+        "baseline_sha256": "de79104ae1c9320224a312f4c1ad4299ed7c9343ac02e0d4ce1f81222993697d"
+      },
+      {
+        "path": "tests/integration/test_audit_atomicity.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/integration/test_audit_clock.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/integration/test_audit_fencing.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/integration/test_audit_lock_order.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/integration/test_audit_upgrade.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/integration/test_lineage_migrations.py",
+        "baseline_sha256": "bb82ee2f6991da40b565b3401a3d47c2edc452ec819d78e992071566f8a4bcc0"
+      },
+      {
+        "path": "tests/integration/test_migrations.py",
+        "baseline_sha256": "859344b5683f0068055ef6a96e76416396f1789566ce7973fad4b542bd864418"
+      },
+      {
+        "path": "tests/integration/test_a2_migrations.py",
+        "baseline_sha256": "dca69eaafbef2165e42fdd07834a85e1c769d82f0cb12595a1183a779102d237"
+      },
+      {
+        "path": "tests/unit/test_audit_journal.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      }
+    ],
+    "a31-service": [
+      {
+        "path": "src/agent_guard/audit/__main__.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "src/agent_guard/audit/checkpoint.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "src/agent_guard/audit/config.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "src/agent_guard/audit/http_app.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "src/agent_guard/audit/migrate.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "src/agent_guard/audit/operator_cli.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "src/agent_guard/audit/server.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "src/agent_guard/audit/store.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/fixtures/a31_audit_service.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/integration/test_audit_service.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/integration/test_audit_tls.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/unit/test_checkpoint_contract.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      }
+    ],
+    "a31-delivery": [
+      {
+        "path": "src/agent_guard/audit/client.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "src/agent_guard/audit/delivery.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "src/agent_guard/audit/delivery_cli.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/fixtures/a31_delivery.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/integration/test_audit_delivery.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/unit/test_audit_client.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      }
+    ],
+    "single-integrator": [
+      {
+        "path": "HANDOFF.md",
+        "baseline_sha256": "a8cef27b8feeae5328173557f5b66c3780275929a7a50d455ff41e45781eeb3e"
+      },
+      {
+        "path": "README.md",
+        "baseline_sha256": "b4f14152c2cc7da734f948b5924863193ed74705b10249beff85cfff72891227"
+      },
+      {
+        "path": "docs/acceptance.md",
+        "baseline_sha256": "c8c26cc340f01a04522e03fc8ac7e4027fc2ffb17407d51d232fd1f4868cbc92"
+      },
+      {
+        "path": "docs/crypto-profile-v1.md",
+        "baseline_sha256": "6cca7fc566cb21fa777c82162df8029d84b125f9e7bc0b8b070ed189530197f4"
+      },
+      {
+        "path": "docs/oauth-oidc-sm2-mvp.md",
+        "baseline_sha256": "1ab8d91458dab9c078be650b499a86ea69c8ba295b52ab82ea76e99eea44a26a"
+      },
+      {
+        "path": "docs/security-model.md",
+        "baseline_sha256": "c0f6bc125b6d80beac2f6c262e4ff5595b42929ac1a63b8d6c9d1f70e8c723c9"
+      },
+      {
+        "path": "tasks/A3.1-report.md",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tasks/workflow/README.md",
+        "baseline_sha256": "ec6d6bbaa0eba64f0e7c6b8c61b01b6eceec493212600c5c289cbb82f53261c3"
+      },
+      {
+        "path": "tasks/workflow/context.md",
+        "baseline_sha256": "27798948ee645366f2ed0abb3e33c135b0c955240e48ec5389aa7e8731176a8d"
+      },
+      {
+        "path": "tasks/workflow/current-policy.md",
+        "baseline_sha256": "3ca2f8b276d36687daa3695a9affd2aa88a44ff83ee0c84aac1de695a2b03352"
+      },
+      {
+        "path": "tasks/workflow/issues.md",
+        "baseline_sha256": "46abb10a31f1fdc1703ebd8d3f9548857ba9bb02feb4cdca92e8bae9c139161c"
+      },
+      {
+        "path": "tasks/workflow/stages/A3.1-audit.md",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/fixtures/a31_joint.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      },
+      {
+        "path": "tests/integration/test_a31_joint_tls.py",
+        "baseline_sha256": "NEW_NOT_IMPLEMENTED"
+      }
+    ]
+  },
+  "S2_transfer_rule": "Only after every S0/S1 writer STOP and ownership/resources readback may controller transfer their exact listed paths to sole integrator; persist explicit path receipt before fixes, no concurrent writing.",
+  "packet_paths": "controller only: authorization/state/baseline/requirements-v1/node-bindings-v1/ownership-v1/runtime-contract-v1/task-v1 and package/review/freeze reports; packageworkers exclusive interface/inherited outputs untilSTOP",
+  "readonly_baseline": "baseline.json 198 files plus full candidate freeze at package dispatch; old14SQL and dependency locks immutable",
+  "no_directory_allowlist": true,
+  "prohibited": "No A3.2 export/verify, research/demo, gateway production bypass, prior workflow gate rewrites, Git writes"
+}

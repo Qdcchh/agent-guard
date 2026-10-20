@@ -85,11 +85,18 @@ def test_atomic_existing_material_in_the_accept_transaction(a2, monkeypatch, rou
     original_checked = env.ledger.accept_checked
 
     def delayed_accept(
-        verified, cost, *, existing_validator, _orig=original_checked, _ready=ready, _done=done
+        verified,
+        cost,
+        *,
+        existing_validator,
+        _orig=original_checked,
+        _ready=ready,
+        _done=done,
+        **kwargs,
     ):
         _ready.set()
         assert _done.wait(20), "the competing accept never finished"
-        return _orig(verified, cost, existing_validator=existing_validator)
+        return _orig(verified, cost, existing_validator=existing_validator, **kwargs)
 
     monkeypatch.setattr(env.ledger, "accept_checked", delayed_accept)
 
@@ -126,7 +133,10 @@ def test_atomic_existing_material_in_the_accept_transaction(a2, monkeypatch, rou
                         params=order_params(),
                     ),
                     TrustedCost(
-                        70000, quote_id="quote-001", quote_version="1", quote_snapshot=_bytes
+                        70000,
+                        quote_id="quote-001",
+                        quote_version="1",
+                        quote_snapshot=_bytes,
                     ),
                 ).operation_id
             )
@@ -191,7 +201,10 @@ def test_a1_default_accept_is_unchanged(a2):
         params=order_params(),
     )
     cost = TrustedCost(
-        70000, quote_id="quote-001", quote_version="1", quote_snapshot=b"opaque-legacy-bytes"
+        70000,
+        quote_id="quote-001",
+        quote_version="1",
+        quote_snapshot=b"opaque-legacy-bytes",
     )
     result = ExecutionLedger(a2.gateway_dsn).accept(inv, cost)
     assert result.disposition.value == "CREATED"
@@ -219,10 +232,15 @@ def test_validators_do_not_cross_talk_on_one_instance(a2):
         items=(("sku-001", 1),),
         delivery_id="office-001",
     )
-    for key, raw in ((good_key, snapshot_to_bytes(snap)), (bad_key, b"legacy bad material")):
+    for key, raw in (
+        (good_key, snapshot_to_bytes(snap)),
+        (bad_key, b"legacy bad material"),
+    ):
         env.ledger.accept(
             tree.invocation(
-                idempotency_key=key, tool_id=ToolId.ORDER_CREATE.value, params=order_params()
+                idempotency_key=key,
+                tool_id=ToolId.ORDER_CREATE.value,
+                params=order_params(),
             ),
             TrustedCost(70000, quote_id="quote-001", quote_version="1", quote_snapshot=raw),
         )
@@ -281,10 +299,15 @@ def test_validator_failure_rolls_back_and_retry_rechecks(a2):
     )
     env.ledger.accept(
         tree.invocation(
-            idempotency_key=key, tool_id=ToolId.ORDER_CREATE.value, params=order_params()
+            idempotency_key=key,
+            tool_id=ToolId.ORDER_CREATE.value,
+            params=order_params(),
         ),
         TrustedCost(
-            70000, quote_id="quote-001", quote_version="1", quote_snapshot=snapshot_to_bytes(snap)
+            70000,
+            quote_id="quote-001",
+            quote_version="1",
+            quote_snapshot=snapshot_to_bytes(snap),
         ),
     )
     proofs_before = fetch_counts(a2.gateway_dsn)["ag_proofs"]
@@ -404,7 +427,10 @@ def test_deep_legacy_params_durably_isolated_at_every_entry(a2, monkeypatch, ent
         error = exc.code.value
 
     assert env.service.review_flag(operation_id) is not None, entry
-    assert error in (ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID.value, None), (entry, error)
+    assert error in (ExecutionErrorCode.LEGACY_SNAPSHOT_INVALID.value, None), (
+        entry,
+        error,
+    )
     assert fetch_counters(a2.gateway_dsn, tree.root_id) == before
     assert _effects(a2.downstream_dsn)["ds_operations"] == 0
     assert fetch_counts(a2.gateway_dsn)["ag_proofs"] == proofs_before

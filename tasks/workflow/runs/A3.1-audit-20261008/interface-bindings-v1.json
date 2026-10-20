@@ -1,0 +1,3138 @@
+{
+  "schema": "AG-A31-INTERFACE-BINDINGS-1",
+  "status": "PROPOSED_FOR_PACKAGE_REVIEW",
+  "business_status": "NOT_RUN",
+  "package_ready_authority": "FRESH_INDEPENDENT_BUSINESS_PACKAGE_REVIEWER_ONLY",
+  "role_request": {
+    "worker": "gpt-6.1-sol/medium",
+    "reviewer": "gpt-6.1-sol/high",
+    "effective_model": "UNKNOWN",
+    "effective_reasoning": "UNKNOWN"
+  },
+  "authority": {
+    "authorization": "tasks/workflow/runs/A3.1-audit-20261008/authorization.md",
+    "current_policy": "tasks/workflow/current-policy.md",
+    "accepted_predecessor": "tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md",
+    "accepted_planning_review": "tasks/workflow/runs/A3-planning-20261008/package-review-final.md",
+    "stale_original_role_text": "Preserved verbatim evidence; current authority overrides historical Astra and Sol/xhigh configuration."
+  },
+  "contract_binding": {
+    "path": "tasks/workflow/runs/A3.1-audit-20261008/interface-contract-v1.md",
+    "sha256": "acb79e96f9141bb0b9f91d185163b609106ca0c760d948f7679f6ee8aa8a6a1b",
+    "bytes": 30825
+  },
+  "read_only_source_bindings": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "bff0879f590af57bfa0a80459e12f307cb9c5e4383aea53e3adffed8f01bc596",
+      "bytes": 235,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "AGENT.md",
+      "sha256": "fd7a38b4ba1e0fe74d52cd77aa4fa6da1ffa9040f6280e8270f5cdc13f160862",
+      "bytes": 4051,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tasks/workflow/current-policy.md",
+      "sha256": "ee2d9ffbcd69ffb1da2c1af1e0119993ef85106b830ba3dcded72f58c259a01b",
+      "bytes": 8394,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tasks/workflow/runs/A3.1-audit-20261008/authorization.md",
+      "sha256": "d9915167934896589e9dd21dfaa3d6552f67e7c785021e833e590153bc1fb6e3",
+      "bytes": 1374,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tasks/workflow/runs/A3-planning-20261008/audit-contract.md",
+      "sha256": "237f4fb234e27c7d00c0a521747a4256fa57cf6cae8de8f48340907ff1683e2f",
+      "bytes": 31086,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tasks/workflow/runs/A3-planning-20261008/package-review-final.md",
+      "sha256": "0490d91f50d5e75857119f96c99d345a8a5c6eb3d51c909441a4d06a17e9aa2d",
+      "bytes": 3712,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tasks/workflow/runs/A3-planning-20261008/package-review-r2.md",
+      "sha256": "9713969d0a3430612f70d91d452a16948e6bc3fac4411fbcf353b71fad3fcb40",
+      "bytes": 23088,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tasks/workflow/runs/A3-planning-20261008/requirements.json",
+      "sha256": "08a82fab93b1c7364da8118631905f4ec29d86c9ff788ba0a3d06bd85edd509b",
+      "bytes": 271504,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tasks/workflow/runs/A3-planning-20261008/test-plan.json",
+      "sha256": "178534ed5a92902e9a310137e016e3a249429f62ec2ba77d2a5f2b61ed7895c3",
+      "bytes": 545243,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md",
+      "sha256": "8504fb0bd158474cfa5233c9c8dea839241c056e453c19d9fc65a06738fecd15",
+      "bytes": 6856,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "README.md",
+      "sha256": "b4f14152c2cc7da734f948b5924863193ed74705b10249beff85cfff72891227",
+      "bytes": 37050,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "docs/oauth-oidc-sm2-mvp.md",
+      "sha256": "1ab8d91458dab9c078be650b499a86ea69c8ba295b52ab82ea76e99eea44a26a",
+      "bytes": 51695,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "docs/security-model.md",
+      "sha256": "c0f6bc125b6d80beac2f6c262e4ff5595b42929ac1a63b8d6c9d1f70e8c723c9",
+      "bytes": 15509,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "docs/acceptance.md",
+      "sha256": "c8c26cc340f01a04522e03fc8ac7e4027fc2ffb17407d51d232fd1f4868cbc92",
+      "bytes": 18306,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "3949c7fa056e62e9cb16f3451b6fd8bb812b92a6c240031473b9bef04cbdfd00",
+      "bytes": 1502,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/service.py",
+      "sha256": "5b208f73a59ca17bc149db1604ae6612ff9acb613ddc14bf159e3d7370cb108d",
+      "bytes": 22648,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/store.py",
+      "sha256": "f86b656ac481a1a2e5d8edcb4d598945ef944e154b0887a22d889a01f57ac4d8",
+      "bytes": 11687,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/provisioning.py",
+      "sha256": "e16168f6397d3303ad2714c953e2e006502cc1996f1b8f649c45f54228b84d57",
+      "bytes": 9549,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/migrate.py",
+      "sha256": "fe55dd46350d3950f2237d3fa85ed87715228d46531f2da61c34bab309b18a2c",
+      "bytes": 8260,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/lineage.py",
+      "sha256": "036ddd3a02c1d4e3688e325b04e9e3db537872e1b42ad65a9371e7f38dbbae39",
+      "bytes": 21041,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/authorization/evidence_store.py",
+      "sha256": "c9c2f1aa617e134c4ab3e849e7dfe106722f41d9b342594ba2282c1cb5c1e4e3",
+      "bytes": 6994,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/authorization/permission_snapshot.py",
+      "sha256": "6e0bfb89d0cc460c3d12c1d253a063623d9d843f5acf098873cd2f8443aea3de",
+      "bytes": 8063,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/authorization/exchange_service.py",
+      "sha256": "1b3d139b4d9068e2f6302bbce643fa0513bb443a3d72cc477d7a4dd4948222cd",
+      "bytes": 21117,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/service.py",
+      "sha256": "5bd596722f99cc078cf3b5cacb6e91213062e73cbad99468979ec122079c4642",
+      "bytes": 47189,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/store.py",
+      "sha256": "42b95254488b5c43028efd9284a7726dc8589182cdb32e67fbeafd9741d9e504",
+      "bytes": 19073,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/verified.py",
+      "sha256": "0555fd5855f478e1fba407dea6c7667ac7270d3bfbe58df9daeacf6a244ee74a",
+      "bytes": 3597,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/query.py",
+      "sha256": "9763ac130ebd0c7f87130f11be3ec64d3beb5a14edf722879a64d205c0d86ac5",
+      "bytes": 9557,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/receipt_publication.py",
+      "sha256": "5ff868e408af6270a287b605b555cf239163634adff6f764e8e99d1679d5612f",
+      "bytes": 11710,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/original_material.py",
+      "sha256": "41ea51dd7c06ccb7122d2871f67cd83154074d82d8ac215ed34bf267e3d846fd",
+      "bytes": 9244,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/receipt_projection.py",
+      "sha256": "4206cf65b9727c73bdbd1614d33fe1d87652ca55ce02f43e8bb8ea000ea28563",
+      "bytes": 8830,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/contracts/ledger.py",
+      "sha256": "d3cd8bf586f4a63d5a6a51c8bb3efed4507cd7f6cd5f4b32576f8b1a041c1954",
+      "bytes": 7031,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/contracts/execution.py",
+      "sha256": "116cd4ab413499d460c0394c0b43d399d7ae826dec32eed8c8e918551ffebfa3",
+      "bytes": 18581,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/contracts/verification.py",
+      "sha256": "02d660caf8a3d15d21f66e8decbaf5b449d82bd45fccfa3281579f4a3299eae6",
+      "bytes": 883,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/contracts/encoding.py",
+      "sha256": "aaa89677f767844f6a8c2e88c0be1f131b993964119b8c701ba3be0d6d9406ba",
+      "bytes": 6924,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/contracts/ledger_changes.py",
+      "sha256": "d813e554f2acba560130c45269272521148ee4612bd12630a3a057084ff82fab",
+      "bytes": 3735,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/crypto/sm.py",
+      "sha256": "2b00b5df65f741ccae706d89a6549027d30fc76cf5abbd3a838c3b83fbeddd79",
+      "bytes": 9290,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tests/fixtures/isolation.py",
+      "sha256": "de79104ae1c9320224a312f4c1ad4299ed7c9343ac02e0d4ce1f81222993697d",
+      "bytes": 10833,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tests/integration/test_verified_execution.py",
+      "sha256": "2dbab1ab160204993e0506c36f26491bfac2de37f7889874f459c4f7071d9d21",
+      "bytes": 32760,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tests/integration/test_gateway_query.py",
+      "sha256": "63a49074ebbbee7e6d95d9f6dd57b41665bc5cc600a5587c7e54935fca4d53ff",
+      "bytes": 34281,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tests/integration/test_gateway_receipt_query.py",
+      "sha256": "e11bc44d1f68fe3d5e80840a2c0237213e6ffe9637b164e5e2247b531fddc831",
+      "bytes": 36827,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tests/integration/test_receipt_publication.py",
+      "sha256": "5e1b5f0a34c58ed80e6eb2ee316d74081690c27489ee14ee6e1c6b4e4be571c1",
+      "bytes": 65137,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tests/integration/test_lineage_migrations.py",
+      "sha256": "bb82ee2f6991da40b565b3401a3d47c2edc452ec819d78e992071566f8a4bcc0",
+      "bytes": 25170,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tests/integration/test_migrations.py",
+      "sha256": "859344b5683f0068055ef6a96e76416396f1789566ce7973fad4b542bd864418",
+      "bytes": 16738,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tests/integration/test_a2_migrations.py",
+      "sha256": "dca69eaafbef2165e42fdd07834a85e1c769d82f0cb12595a1183a779102d237",
+      "bytes": 27703,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tests/integration/test_isolation.py",
+      "sha256": "cebf12cd837f65307337a53efb76f6dc1aac580f95ca81d77dd7053c7a97fb92",
+      "bytes": 5997,
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tests/unit/test_receipt_publication.py",
+      "sha256": "efdb8781f25813ba5f9b2d54b8ca30b83646f32c7973166a88451f716e440337",
+      "bytes": 13058,
+      "status": "EXISTING_READ_ONLY"
+    }
+  ],
+  "existing_api_bindings": [
+    {
+      "path": "src/agent_guard/ledger/service.py",
+      "qualified_name": "ExecutionLedger.accept",
+      "signature": "ExecutionLedger.accept(self, verified: VerifiedInvocation, cost: TrustedCost) -> AcceptResult",
+      "line": 140,
+      "end_line": 146,
+      "file_sha256": "5b208f73a59ca17bc149db1604ae6612ff9acb613ddc14bf159e3d7370cb108d",
+      "definition_sha256": "bb549331013124222bb39f16f9287bb3afa361523864abca78b921e68f2fabd1",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/service.py",
+      "qualified_name": "ExecutionLedger.accept_checked",
+      "signature": "ExecutionLedger.accept_checked(self, verified: VerifiedInvocation, cost: TrustedCost, *, existing_validator: ExistingMaterialValidator) -> AcceptResult",
+      "line": 148,
+      "end_line": 167,
+      "file_sha256": "5b208f73a59ca17bc149db1604ae6612ff9acb613ddc14bf159e3d7370cb108d",
+      "definition_sha256": "cd948f0b9006b5be4d46e9ca16542f7d55daacd131324c426afad03c94318b10",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/service.py",
+      "qualified_name": "ExecutionLedger.accept_bound",
+      "signature": "ExecutionLedger.accept_bound(self, verified: VerifiedInvocation, cost: TrustedCost, *, existing_validator: ExistingMaterialValidator, binding: AcceptBinding)",
+      "line": 169,
+      "end_line": 182,
+      "file_sha256": "5b208f73a59ca17bc149db1604ae6612ff9acb613ddc14bf159e3d7370cb108d",
+      "definition_sha256": "23ca33df142cda1409f960be40658016a18e2efbcb85cec433ab49141a81556f",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/service.py",
+      "qualified_name": "ExecutionLedger._accept_with",
+      "signature": "ExecutionLedger._accept_with(self, verified: VerifiedInvocation, cost: TrustedCost, *, existing_validator: ExistingMaterialValidator | None, binding: AcceptBinding | None=None) -> AcceptResult",
+      "line": 184,
+      "end_line": 220,
+      "file_sha256": "5b208f73a59ca17bc149db1604ae6612ff9acb613ddc14bf159e3d7370cb108d",
+      "definition_sha256": "e5c063e1f5004734b464cedcee7d91a0ebd6e068bf412ebd56a4bb54c5773f5c",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/service.py",
+      "qualified_name": "ExecutionLedger._accept_tx",
+      "signature": "ExecutionLedger._accept_tx(self, conn: psycopg.Connection, verified: VerifiedInvocation, cost: TrustedCost, *, existing_validator: ExistingMaterialValidator | None=None, binding: AcceptBinding | None=None) -> AcceptResult",
+      "line": 238,
+      "end_line": 371,
+      "file_sha256": "5b208f73a59ca17bc149db1604ae6612ff9acb613ddc14bf159e3d7370cb108d",
+      "definition_sha256": "53144d33f7ef3aeffa139dc43ebd8fd975f462b79382cc0672004d679f9e7130",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/service.py",
+      "qualified_name": "ExecutionLedger._final_bound_check",
+      "signature": "ExecutionLedger._final_bound_check(self, conn, grants, keys, verified)",
+      "line": 373,
+      "end_line": 380,
+      "file_sha256": "5b208f73a59ca17bc149db1604ae6612ff9acb613ddc14bf159e3d7370cb108d",
+      "definition_sha256": "a3e249c40ec16b145ee0d26d8bd0f2854c334e06737a12791aafd2d9aebe4aac",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/provisioning.py",
+      "qualified_name": "create_task_root",
+      "signature": "create_task_root(conn: psycopg.Connection, *, tenant_id: str, task_id: str, grant_id: str, subject: str, holder_client_id: str, holder_kid: str, amount_limit: int, call_limit: int, not_before: datetime, expires_at: datetime) -> str",
+      "line": 84,
+      "end_line": 145,
+      "file_sha256": "e16168f6397d3303ad2714c953e2e006502cc1996f1b8f649c45f54228b84d57",
+      "definition_sha256": "5bcbcedb56e34a245847aba292e90c48a2ac6dae963603139fabe732b5c42adf",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/provisioning.py",
+      "qualified_name": "create_child_grant",
+      "signature": "create_child_grant(conn: psycopg.Connection, *, parent_grant_id: str, grant_id: str, holder_client_id: str, holder_kid: str, amount_limit: int, call_limit: int, not_before: datetime, expires_at: datetime) -> str",
+      "line": 148,
+      "end_line": 207,
+      "file_sha256": "e16168f6397d3303ad2714c953e2e006502cc1996f1b8f649c45f54228b84d57",
+      "definition_sha256": "f1549b793f18080e1ce275b758be2cbbfabca0360ebc521840773b739fa73a0b",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/migrate.py",
+      "qualified_name": "_discover",
+      "signature": "_discover(migrations_dir: Path) -> list[tuple[str, str, str, str]]",
+      "line": 53,
+      "end_line": 76,
+      "file_sha256": "fe55dd46350d3950f2237d3fa85ed87715228d46531f2da61c34bab309b18a2c",
+      "definition_sha256": "b451410940b2513fbe7a8c1cbfa91161e8659fb13656e977975abf585e2c57d4",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/migrate.py",
+      "qualified_name": "apply_migrations",
+      "signature": "apply_migrations(conn: psycopg.Connection, migrations_dir: Path | None=None) -> list[str]",
+      "line": 112,
+      "end_line": 153,
+      "file_sha256": "fe55dd46350d3950f2237d3fa85ed87715228d46531f2da61c34bab309b18a2c",
+      "definition_sha256": "2a0eae34eebbfadbf73984bc5d60c6bd33e5738f6d4890943b30a2336f7d57dd",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/migrate.py",
+      "qualified_name": "apply_bundle_migrations",
+      "signature": "apply_bundle_migrations(conn, manifest=None)",
+      "line": 206,
+      "end_line": 209,
+      "file_sha256": "fe55dd46350d3950f2237d3fa85ed87715228d46531f2da61c34bab309b18a2c",
+      "definition_sha256": "c2343dc32a1b1ca19afaa04804b36c1e70b2c2cf8d249b2a0b1603932231043e",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/lineage.py",
+      "qualified_name": "_entries",
+      "signature": "_entries() -> tuple[Migration, ...]",
+      "line": 182,
+      "end_line": 193,
+      "file_sha256": "036ddd3a02c1d4e3688e325b04e9e3db537872e1b42ad65a9371e7f38dbbae39",
+      "definition_sha256": "a4216b9280a114022a3b12852be21d90976272aed86053400e0c68d0774260e3",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/lineage.py",
+      "qualified_name": "load_manifest",
+      "signature": "load_manifest(directory: Path | None=None) -> BundleManifest",
+      "line": 196,
+      "end_line": 201,
+      "file_sha256": "036ddd3a02c1d4e3688e325b04e9e3db537872e1b42ad65a9371e7f38dbbae39",
+      "definition_sha256": "0cab4b689d6a109613922116082515f2401c03c27068b26122d607bbab25bfe0",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/ledger/lineage.py",
+      "qualified_name": "apply_bundle_migrations",
+      "signature": "apply_bundle_migrations(conn: psycopg.Connection, manifest: BundleManifest | None=None) -> list[tuple[str, str]]",
+      "line": 435,
+      "end_line": 495,
+      "file_sha256": "036ddd3a02c1d4e3688e325b04e9e3db537872e1b42ad65a9371e7f38dbbae39",
+      "definition_sha256": "42ca6a96e294ae6decf3252815d3fd637e8c29609a1cae641b862c20fedf3c1c",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/authorization/evidence_store.py",
+      "qualified_name": "EvidenceStore.binding",
+      "signature": "EvidenceStore.binding(self, bundle)",
+      "line": 94,
+      "end_line": 142,
+      "file_sha256": "c9c2f1aa617e134c4ab3e849e7dfe106722f41d9b342594ba2282c1cb5c1e4e3",
+      "definition_sha256": "7de922ac5fb1c8664fd2f08fbd88f302d4ccb8016118f79a4b870a4021854ebe",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/authorization/evidence_store.py",
+      "qualified_name": "EvidenceStore.query_binding",
+      "signature": "EvidenceStore.query_binding(self, bundle)",
+      "line": 144,
+      "end_line": 172,
+      "file_sha256": "c9c2f1aa617e134c4ab3e849e7dfe106722f41d9b342594ba2282c1cb5c1e4e3",
+      "definition_sha256": "df5982185da59d23da131f43acbf03a736f6f93febed5e5d55d18792ba21c389",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/authorization/permission_snapshot.py",
+      "qualified_name": "PermissionSource.material",
+      "signature": "PermissionSource.material(self) -> bytes",
+      "line": 28,
+      "end_line": 42,
+      "file_sha256": "6e0bfb89d0cc460c3d12c1d253a063623d9d843f5acf098873cd2f8443aea3de",
+      "definition_sha256": "366bcadb4e81b02ece7b6e3cc70c8120be9c839191802fb9d2a16799bb027684",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/authorization/permission_snapshot.py",
+      "qualified_name": "PermissionSnapshotProvider.revalidate",
+      "signature": "PermissionSnapshotProvider.revalidate(conn, source: PermissionSource) -> None",
+      "line": 195,
+      "end_line": 198,
+      "file_sha256": "6e0bfb89d0cc460c3d12c1d253a063623d9d843f5acf098873cd2f8443aea3de",
+      "definition_sha256": "95dedb9124998bc5db2ee4338420b78221771327c4989cfb7e5e210e40e46529",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/service.py",
+      "qualified_name": "ExecutionService.accept_invocation",
+      "signature": "ExecutionService.accept_invocation(self, verified: VerifiedInvocation, snapshot: TrustedPermissionSnapshot, *, binding=None) -> AcceptResult",
+      "line": 196,
+      "end_line": 254,
+      "file_sha256": "5bd596722f99cc078cf3b5cacb6e91213062e73cbad99468979ec122079c4642",
+      "definition_sha256": "d9dfbd9d7a9db7225f7e8cc72613b6e96fe8eb62e3a41d685cf4723030e4058a",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/service.py",
+      "qualified_name": "ExecutionService._accept_from_candidate",
+      "signature": "ExecutionService._accept_from_candidate(self, verified, row, db_path, *, binding=None) -> AcceptResult",
+      "line": 291,
+      "end_line": 311,
+      "file_sha256": "5bd596722f99cc078cf3b5cacb6e91213062e73cbad99468979ec122079c4642",
+      "definition_sha256": "564ef53969f480fef64abfa05a58c899c0ffddf4b2118484b919bcf79e6a532f",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/service.py",
+      "qualified_name": "ExecutionService._accept_checked",
+      "signature": "ExecutionService._accept_checked(self, verified, cost: TrustedCost, *, binding=None) -> AcceptResult",
+      "line": 313,
+      "end_line": 356,
+      "file_sha256": "5bd596722f99cc078cf3b5cacb6e91213062e73cbad99468979ec122079c4642",
+      "definition_sha256": "9e54a505351166f06d01681ae67daae9dfbce84108f9e4de0d8ac1fd6e6ddc0b",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/service.py",
+      "qualified_name": "ExecutionService._claim",
+      "signature": "ExecutionService._claim(self, operation_id: str, owner_token: str) -> ClaimResult",
+      "line": 498,
+      "end_line": 546,
+      "file_sha256": "5bd596722f99cc078cf3b5cacb6e91213062e73cbad99468979ec122079c4642",
+      "definition_sha256": "384cda0660b5f2e509ed409184293c665b97239ddfe786b9aa60bc25e2d0994f",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/service.py",
+      "qualified_name": "ExecutionService._finalize",
+      "signature": "ExecutionService._finalize(self, claim: ClaimResult, outcome: DownstreamOutcome | None, *, downstream_called: bool, reason: str) -> RunResult",
+      "line": 686,
+      "end_line": 778,
+      "file_sha256": "5bd596722f99cc078cf3b5cacb6e91213062e73cbad99468979ec122079c4642",
+      "definition_sha256": "98dfe630317b4bc49bb36f6c0d2eace88fb4bd975372a571f1b8342aaa5bf36d",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/service.py",
+      "qualified_name": "ExecutionService._mark_unknown",
+      "signature": "ExecutionService._mark_unknown(self, claim: ClaimResult) -> str",
+      "line": 780,
+      "end_line": 810,
+      "file_sha256": "5bd596722f99cc078cf3b5cacb6e91213062e73cbad99468979ec122079c4642",
+      "definition_sha256": "cbb4a0a51b590ef86006395bbcd158ec66fb8bca510dec3b0281756d9dd57ffc",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/service.py",
+      "qualified_name": "ExecutionService._quarantine",
+      "signature": "ExecutionService._quarantine(self, operation_id: str, *, reason: str, detail: dict) -> None",
+      "line": 814,
+      "end_line": 825,
+      "file_sha256": "5bd596722f99cc078cf3b5cacb6e91213062e73cbad99468979ec122079c4642",
+      "definition_sha256": "804784e74131cfb258c476c0808e20ccba23fd8c5fb532bdbb11cdeaf31860e1",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/store.py",
+      "qualified_name": "assert_terminal_write_allowed",
+      "signature": "assert_terminal_write_allowed(conn: psycopg.Connection, *, operation_id: str, owner_token: str, fencing_version: int) -> ledger_store.OperationRow",
+      "line": 317,
+      "end_line": 351,
+      "file_sha256": "42b95254488b5c43028efd9284a7726dc8589182cdb32e67fbeafd9741d9e504",
+      "definition_sha256": "1b6418b34a1a638bfc64cc16b68a9c18fcdf4666d44a9c91f45b57e75393c006",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/verified.py",
+      "qualified_name": "VerifiedExecution.accept",
+      "signature": "VerifiedExecution.accept(self, bundle: VerifiedInvocationBundle)",
+      "line": 20,
+      "end_line": 27,
+      "file_sha256": "0555fd5855f478e1fba407dea6c7667ac7270d3bfbe58df9daeacf6a244ee74a",
+      "definition_sha256": "1a12cbe7aa014d29bd1c3cc7ef347b55d33c30dee476f018b698ef5d549be749",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/verified.py",
+      "qualified_name": "VerifiedExecution.accept_response",
+      "signature": "VerifiedExecution.accept_response(self, bundle: VerifiedInvocationBundle, *, receipt_verifier) -> dict",
+      "line": 29,
+      "end_line": 72,
+      "file_sha256": "0555fd5855f478e1fba407dea6c7667ac7270d3bfbe58df9daeacf6a244ee74a",
+      "definition_sha256": "0de14ef83131dbebb54a67208e0440a2e1ab2357a95449731f94f49d6a9ab6c0",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/query.py",
+      "qualified_name": "AuthorizedQuery.query",
+      "signature": "AuthorizedQuery.query(self, bundle)",
+      "line": 119,
+      "end_line": 127,
+      "file_sha256": "9763ac130ebd0c7f87130f11be3ec64d3beb5a14edf722879a64d205c0d86ac5",
+      "definition_sha256": "7570814d4cc3dd2062e821b28f321df9ce3f4597ceeb90080f0ee2b0985d4277",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/query.py",
+      "qualified_name": "AuthorizedQuery._query_tx",
+      "signature": "AuthorizedQuery._query_tx(self, conn, bundle, binding)",
+      "line": 129,
+      "end_line": 240,
+      "file_sha256": "9763ac130ebd0c7f87130f11be3ec64d3beb5a14edf722879a64d205c0d86ac5",
+      "definition_sha256": "e2d84e88f88294ddfc255ac544cdd474a69e687a2762d5bbddca5f1c6c408282",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/receipt_publication.py",
+      "qualified_name": "ReceiptVerifier.read_tx",
+      "signature": "ReceiptVerifier.read_tx(self, conn, operation_id) -> ReceiptPublication",
+      "line": 121,
+      "end_line": 160,
+      "file_sha256": "5ff868e408af6270a287b605b555cf239163634adff6f764e8e99d1679d5612f",
+      "definition_sha256": "d8ca5ee92d3fbf4b02f1dccf67d1be9ffde12415414f773d6ec73f6b4df126c5",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/execution/receipt_publication.py",
+      "qualified_name": "InternalPublisher.publish",
+      "signature": "InternalPublisher.publish(self, operation_id) -> ReceiptPublication",
+      "line": 216,
+      "end_line": 250,
+      "file_sha256": "5ff868e408af6270a287b605b555cf239163634adff6f764e8e99d1679d5612f",
+      "definition_sha256": "4ce3a1031bc8496efb266440210057fc7a6bcf8071399f7f48e0dbdb98001b3a",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/contracts/encoding.py",
+      "qualified_name": "load_strict_json",
+      "signature": "load_strict_json(raw: bytes | str) -> JsonValue",
+      "line": 146,
+      "end_line": 150,
+      "file_sha256": "aaa89677f767844f6a8c2e88c0be1f131b993964119b8c701ba3be0d6d9406ba",
+      "definition_sha256": "82727cdef803bf3bdac762775f2301cad57990bf9e49b06fbaa26147b04d907f",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/contracts/encoding.py",
+      "qualified_name": "canonical_json_bytes",
+      "signature": "canonical_json_bytes(value: JsonValue) -> bytes",
+      "line": 153,
+      "end_line": 163,
+      "file_sha256": "aaa89677f767844f6a8c2e88c0be1f131b993964119b8c701ba3be0d6d9406ba",
+      "definition_sha256": "555940cf423000b3ee5c42eaf88ea4ee9dd98107b736dae3e645fb7fae7a255d",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/contracts/ledger_changes.py",
+      "qualified_name": "canonical_ledger_changes_bytes",
+      "signature": "canonical_ledger_changes_bytes(value: object) -> bytes",
+      "line": 58,
+      "end_line": 67,
+      "file_sha256": "d813e554f2acba560130c45269272521148ee4612bd12630a3a057084ff82fab",
+      "definition_sha256": "d8804c20d80819a1b0571232983ced538e1de358f7334512baaee2bb784f99f7",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/crypto/sm.py",
+      "qualified_name": "sm3_digest",
+      "signature": "sm3_digest(message: bytes) -> bytes",
+      "line": 55,
+      "end_line": 62,
+      "file_sha256": "2b00b5df65f741ccae706d89a6549027d30fc76cf5abbd3a838c3b83fbeddd79",
+      "definition_sha256": "1959183628d3e52e208554701987f8a325dfbbe5c1d22c04fe544d666cdfd347",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/crypto/sm.py",
+      "qualified_name": "sign_compact_jws",
+      "signature": "sign_compact_jws(private_key: ec.EllipticCurvePrivateKey, payload: JsonObject, *, key_id: str, token_type: str) -> str",
+      "line": 170,
+      "end_line": 191,
+      "file_sha256": "2b00b5df65f741ccae706d89a6549027d30fc76cf5abbd3a838c3b83fbeddd79",
+      "definition_sha256": "44b842d0cc80813ebae0b07bbf48c7d08ca93acd337ac7498070c82e0d1a6ecb",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/crypto/sm.py",
+      "qualified_name": "verify_compact_jws",
+      "signature": "verify_compact_jws(token: str, *, expected_type: str, trusted_keys: Mapping[str, ec.EllipticCurvePublicKey]) -> JsonObject",
+      "line": 194,
+      "end_line": 234,
+      "file_sha256": "2b00b5df65f741ccae706d89a6549027d30fc76cf5abbd3a838c3b83fbeddd79",
+      "definition_sha256": "82cafe772e251438a9b5e75ae23c40d898190a8f440c66d933f49866965a7eac",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "src/agent_guard/crypto/sm.py",
+      "qualified_name": "sm3_b64url",
+      "signature": "sm3_b64url(message: bytes) -> str",
+      "line": 237,
+      "end_line": 240,
+      "file_sha256": "2b00b5df65f741ccae706d89a6549027d30fc76cf5abbd3a838c3b83fbeddd79",
+      "definition_sha256": "44e67bf3ce174c52e93e2418c10c41150fbe42a673b8877ac59601c4e681faa3",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tests/fixtures/isolation.py",
+      "qualified_name": "assert_owned",
+      "signature": "assert_owned(ns: Namespace) -> None",
+      "line": 173,
+      "end_line": 188,
+      "file_sha256": "de79104ae1c9320224a312f4c1ad4299ed7c9343ac02e0d4ce1f81222993697d",
+      "definition_sha256": "fb67f251f3bb3000909c7bf205103e008591cfb7d226fb774594aa07785a0670",
+      "status": "EXISTING_READ_ONLY"
+    },
+    {
+      "path": "tests/fixtures/isolation.py",
+      "qualified_name": "reset_state",
+      "signature": "reset_state(ns: Namespace) -> None",
+      "line": 191,
+      "end_line": 201,
+      "file_sha256": "de79104ae1c9320224a312f4c1ad4299ed7c9343ac02e0d4ce1f81222993697d",
+      "definition_sha256": "547938904e9e2aa595633bf983214c5369772c676fda7d66fe0bd0b225195fa9",
+      "status": "EXISTING_READ_ONLY"
+    }
+  ],
+  "proposed_interfaces": [
+    {
+      "owner_cell": "audit/contracts.py",
+      "interface_cell": "`JournalScope(gateway_id:str,tenant_id:str,task_id:str,stream_id:str,epoch:int)`",
+      "behavior_cell": "epoch固定1；服务/递送共同使用",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`ExistingStreamRef(scope:JournalScope,genesis_digest:str,bootstrap_digest:str)`",
+      "behavior_cell": "不缓存可变head；写时重新锁head",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`LockedAcceptContext(scope_key:tuple[str,str,str],root_grant_id:str,path_ids:tuple[str,...],invocation_context:bytes,source_digest:str|None,tx_id:str)`",
+      "behavior_cell": "不含conn；source_digest是PermissionSource.digest，另记material摘要",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`SnapshotObject(kind:str,object_id:str,raw:bytes,digest:str)`；`SnapshotChunk(kind:str,object_id:str,index:int,count:int,total_raw_bytes:int,object_digest:str,raw:bytes)`",
+      "behavior_cell": "chunks由同object切24576；不能以拆假ID容超限object",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`EmptyTaskBootstrapSeed(scope_key,root_grant_id,tx_id,captured_at,origin,schema_lineage,objects,chunks,object_count,chunk_count,wire_bytes,index_root,manifest_bytes)`",
+      "behavior_cell": "captured_at固定UTC文本；origin=FROM_EMPTY_TASK；schema_lineage tuple(namespace,version,rawsha)；本TX局部，不含connection/共享dict",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`BeforeCreate(conn,context:LockedAcceptContext)->None`",
+      "behavior_cell": "CREATED材料prepare，ledger先capture再调用；EXISTING不调用",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`AfterLink(conn,operation:OperationRow,disposition:AcceptDisposition,baseline:ExistingStreamRef|EmptyTaskBootstrapSeed|None)->None`",
+      "behavior_cell": "proof-link后材料attach；传不可变baseline不能换seed",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "authorization/evidence_store.py",
+      "interface_cell": "`TrustedAcceptBinding.__call__(conn,operation,disposition)->None`；内部 `compose(callback)->TrustedAcceptBinding`",
+      "behavior_cell": "仅模块内受信factory构造，descriptor不可变；compose保留同descriptor和原bind能力",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "audit/contracts.py",
+      "interface_cell": "`AcceptDescriptor(scope_key,root_id,path_ids,evidence_ref,context_bytes,source_digest,source_material_bytes,token_digest,proof_digest,body_digest)`",
+      "behavior_cell": "从exact VerifiedInvocationBundle/PermissionSource创建并DB复核，不从closure反射或caller dict生成",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "audit/journal.py",
+      "interface_cell": "`capture_empty_task_tx(conn,context)->EmptyTaskBootstrapSeed|ExistingStreamRef|None`",
+      "behavior_cell": "load全task并cap+1，007/可信路线/历史判定；必须insert/reserve之前",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`ensure_stream_tx(conn,seed:EmptyTaskBootstrapSeed)->ExistingStreamRef`",
+      "behavior_cell": "验当前xid/scope/root/raw/root/count再晚建stream/snapshot/chunks/BOOTSTRAP；已有stream不可换genesis",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`append_tx(conn,stream:ExistingStreamRef,*,kind:str,operation_id:str|None,evidence_ref:str|None,facts_bytes:bytes)->JournalRecord`",
+      "behavior_cell": "在真实业务锁/材料完成之后锁head；seq=head+1、不烧号、不自行commit",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`bootstrap_task_tx(conn,*,scope_key:tuple[str,str,str])->RegistrationDescriptor`；`describe_pending_tx(conn,*,scope_key)->RegistrationDescriptor`",
+      "behavior_cell": "维护模式已停writers/drain和强锁；后者只读public descriptor",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "audit/contracts.py",
+      "interface_cell": "`JournalRecord(scope,seq,record_id,kind,operation_id,evidence_ref,previous_digest,recorded_at,facts_bytes,raw,digest)`",
+      "behavior_cell": "raw是完整canonical record；digest=SDK SM3(raw)；不将digest塞进raw",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "execution/store.py",
+      "interface_cell": "`capture_write_fence(conn,*,operation_id,owner_token,fencing_version)->WriteFence`",
+      "behavior_cell": "锁operation/lease，复用原早期四条件，返回prestatus/真实expiry/本TX ID",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`assert_write_fence_current(conn,fence:WriteFence,*,expected_terminal:str)->None`",
+      "behavior_cell": "flush后只重读已锁rows→最终DBclock；合法本TXterminal可通过，无续租",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "audit/contracts.py",
+      "interface_cell": "`WriteFence(operation_id,owner_token,fencing_version,pre_status,expires_at,tx_id)`",
+      "behavior_cell": "expiry固定UTC精确文本；不序列化为public凭据",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`encode_append_batch(stream_id:str,entries:tuple[bytes,...])->AppendBatch`；`decode_append_batch(raw:bytes)->AppendBatch`",
+      "behavior_cell": "strict exactbody及batch_id；service/delivery共同消费",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`AppendBatch(stream_id,entries,exact_body,batch_id,start_sequence,end_sequence,end_digest)`",
+      "behavior_cell": "body只有batch_profile/stream_id/entries；其余均从entries派生",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`decode_checkpoint_claims(raw:bytes)->CheckpointClaims`",
+      "behavior_cell": "仅codec/schema，不自行认证或信任包内key",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`CheckpointTrust(kid,role,spki_der,first_sequence,last_sequence)`；`ObservedCheckpoint(jws,claims,jws_digest,observed_at)`",
+      "behavior_cell": "role=AUDIT_SIGNER；key range由外部operator登记，last nullable开放上界",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`RegistrationDescriptor(scope,genesis_digest,bootstrap_digest,boundary,index_root,object_count,chunk_count,wire_bytes)`",
+      "behavior_cell": "boundary NEW_EMPTY/LEGACY_WITH_GAPS；public本地提交后operator登记",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`PendingBatch(stream_id,batch_id,exact_body,start_sequence,end_sequence,end_digest,base_checkpoint_digest)`；`DeliveryCursor(stream_id,ack_sequence,ack_head_digest,ack_checkpoint_digest,pending_batch_id)`",
+      "behavior_cell": "不含私钥/DSN/网络对象；ACK条件匹配exact pending",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    },
+    {
+      "owner_cell": "同上",
+      "interface_cell": "`HistoryPage(stream_id,observed_checkpoint_id,observed_sequence,checkpoints:tuple[str,...],next_after_sequence:int|None)`",
+      "behavior_cell": "固定观察边界，不以page length判断完整",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "implemented_sha256": null
+    }
+  ],
+  "new_files_not_existing": [
+    {
+      "path": "migrations/007_audit_journal.sql",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "sha256": null
+    },
+    {
+      "path": "migrations/audit/001_checkpoint_store.sql",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "sha256": null
+    },
+    {
+      "path": "src/agent_guard/audit/__init__.py",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "sha256": null
+    },
+    {
+      "path": "src/agent_guard/audit/contracts.py",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "sha256": null
+    },
+    {
+      "path": "src/agent_guard/audit/journal.py",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "sha256": null
+    },
+    {
+      "path": "src/agent_guard/audit/bootstrap_cli.py",
+      "status": "PROPOSED_NOT_IMPLEMENTED",
+      "sha256": null
+    }
+  ],
+  "migration_inventory": {
+    "existing_gw_sql_count": 14,
+    "existing_raw_immutable": [
+      {
+        "path": "migrations/001_init.sql",
+        "sha256": "d5e7bb01b9713b7fd9f80b5da85ea039bdf311e2d4a8b6a191d7c48eb43b148c",
+        "bytes": 9963,
+        "status": "EXISTING_READ_ONLY"
+      },
+      {
+        "path": "migrations/002_root_invariants.sql",
+        "sha256": "bae1d72e1cf3dbe95ea73408e43196cdaa51297279319ac2dbf6111a68d44519",
+        "bytes": 5714,
+        "status": "EXISTING_READ_ONLY"
+      },
+      {
+        "path": "migrations/003_root_delete_guard.sql",
+        "sha256": "1d919f8f59a8d4f4bfe49a278006dd4b79f1bb8d791e701ec604ae051ec7527b",
+        "bytes": 802,
+        "status": "EXISTING_READ_ONLY"
+      },
+      {
+        "path": "migrations/004_execution_lifecycle.sql",
+        "sha256": "41527dc2926c379895527b16d71c059d9bf8adac6d1f0a930d48361cbc964c98",
+        "bytes": 14548,
+        "status": "EXISTING_READ_ONLY"
+      },
+      {
+        "path": "migrations/005_event_node_seal.sql",
+        "sha256": "29529103ec7ffab8f785746edc4823a14e5e41d364010e3578e732e1a4e39c9e",
+        "bytes": 8812,
+        "status": "EXISTING_READ_ONLY"
+      },
+      {
+        "path": "migrations/006_event_seal.sql",
+        "sha256": "3abb279bc88b2fd7b2ff427a57fda407b77908182ec612334d500bea2f76760c",
+        "bytes": 6126,
+        "status": "EXISTING_READ_ONLY"
+      },
+      {
+        "path": "migrations/b/004_authorization_code.sql",
+        "sha256": "ac8f9235fb5601453b225ff95a6ca16241a03c2ada0c0a6a8ae96cb7786c1957",
+        "bytes": 3151,
+        "status": "EXISTING_READ_ONLY"
+      },
+      {
+        "path": "migrations/b/005_delegation.sql",
+        "sha256": "176f3743702022ded8b0d0691e4456a92c392884152f9e9142ffba91a68350f3",
+        "bytes": 1837,
+        "status": "EXISTING_READ_ONLY"
+      },
+      {
+        "path": "migrations/b/006_task_revocation.sql",
+        "sha256": "39a5f4b2c632f86d3511c7d69db04f576d33dfe1bfdc7a868e685a55ebf37784",
+        "bytes": 1122,
+        "status": "EXISTING_READ_ONLY"
+      },
+      {
+        "path": "migrations/b/007_admin_grant_revocation.sql",
+        "sha256": "6d7d44a2056d25f7c085c734b7ead77ffc36b0bec2d6f82cf3542a4d63fb3820",
+        "bytes": 1425,
+        "status": "EXISTING_READ_ONLY"
+      },
+      {
+        "path": "migrations/b/008_login_consent.sql",
+        "sha256": "6bfd359aff88c69909995b85fc15434d07390b93e3d2da9daf10ffe88b5e579e",
+        "bytes": 4033,
+        "status": "EXISTING_READ_ONLY"
+      },
+      {
+        "path": "migrations/b/009_consent_policy_snapshot.sql",
+        "sha256": "ee94ca3672497c0c0d5c67b04041afe12cf1618abb4f26363376dceea44974f1",
+        "bytes": 974,
+        "status": "EXISTING_READ_ONLY"
+      },
+      {
+        "path": "migrations/b/010_evidence_store.sql",
+        "sha256": "a694e2f523b7c44f2ef1d17238552ddf98252d8d37b00d34f19342237dd927e0",
+        "bytes": 2180,
+        "status": "EXISTING_READ_ONLY"
+      },
+      {
+        "path": "migrations/lineage/001_registry.sql",
+        "sha256": "12da43d61229f481a3309e58ab73400615f8740644404e9698177942fe399a13",
+        "bytes": 1743,
+        "status": "EXISTING_READ_ONLY"
+      }
+    ],
+    "proposed_gw_count": 15,
+    "execution007_dependencies": [
+      [
+        "execution",
+        "006"
+      ],
+      [
+        "authorization",
+        "010"
+      ]
+    ],
+    "audit001_domain": "INDEPENDENT_AUDIT_DB_OWN_REGISTRY_NOT_GW_16",
+    "legacy_default_discovery": "FIXED_STANDALONE_001_006",
+    "empty_bundle_bootstrap": "legacy common001..003 execution004..006 first; auth010 before execution007",
+    "v2_completion_floor": "PRESERVE_EXISTING_14_EXACT",
+    "postgresql": "16 supported current lineage; 14 explicitly rejected this package; no run evidence yet"
+  },
+  "strict_facts": {
+    "BOOTSTRAP": {
+      "exact_keys": [
+        "boundary",
+        "root_grant_id",
+        "snapshot_as_of",
+        "schema_lineage_digest",
+        "index_root",
+        "manifest_digest",
+        "object_count",
+        "chunk_count",
+        "wire_bytes"
+      ],
+      "origin_relation": "seq1，小manifest<=32768；schema_lineage_digest取canonical qualified inventory；snapshot含全task原事实能力/GAP，不编造旧FIRST"
+    },
+    "FIRST": {
+      "exact_keys": [
+        "root_grant_id",
+        "grant_id",
+        "path_ids",
+        "intent_digest",
+        "token_digest",
+        "proof_digest",
+        "body_digest",
+        "context_digest",
+        "source_digest",
+        "source_material_digest",
+        "reserve_digest",
+        "quote_digest",
+        "amount_fen",
+        "calls",
+        "currency",
+        "introduced_grants"
+      ],
+      "origin_relation": "token/proof ASCII、request/context/source exact raw、canonical RESERVE全nodes；quote nullable，保原zero price；introduced_grants为严格下述tuple，无后减cost推零"
+    },
+    "RETRY": {
+      "exact_keys": [
+        "first_evidence_ref",
+        "intent_digest",
+        "token_digest",
+        "proof_digest",
+        "body_digest",
+        "context_digest",
+        "source_digest",
+        "source_material_digest",
+        "response_kind",
+        "response_digest",
+        "status",
+        "receipt_status",
+        "receipt_jws_digest"
+      ],
+      "origin_relation": "当次exactsource/material/proof；原first不可替；response_digest是同TX实际返回canonical响应，receipt_jws_digest nullable"
+    },
+    "QUERY": {
+      "exact_keys": [
+        "first_evidence_ref",
+        "token_digest",
+        "proof_digest",
+        "body_digest",
+        "context_digest",
+        "source_digest",
+        "source_material_digest",
+        "response_digest",
+        "status",
+        "receipt_status",
+        "result_digest",
+        "receipt_jws_digest"
+      ],
+      "origin_relation": "result/JWS nullable，proof purpose=result-read/QUERY_ENDPOINT；当前query raw与原op首次材料分开，不能把STAGED当成功"
+    },
+    "TERMINAL": {
+      "exact_keys": [
+        "first_evidence_ref",
+        "status",
+        "action",
+        "result_digest",
+        "ledger_digest",
+        "pending_receipt_digest",
+        "receipt_id",
+        "owner_token",
+        "fencing_version",
+        "lease_expires_at",
+        "path_ids"
+      ],
+      "origin_relation": "full原pending签名材料摘要和canonical完整ledger_changes，结果exact bytes；action SETTLE/RELEASE对应SUCCEEDED/FAILED；最终fence同TX核"
+    },
+    "PUBLISH": {
+      "exact_keys": [
+        "receipt_id",
+        "receipt_jws_digest",
+        "signed_at"
+      ],
+      "origin_relation": "exact ASCII persisted JWS、原receiptID与精确DB signed_at；首次READY同TX、重试不重签"
+    }
+  },
+  "limits": {
+    "journal_raw_bytes": 32768,
+    "json_bytes": 65536,
+    "json_nodes": 4096,
+    "json_depth": 64,
+    "json_total_string_bytes": 65536,
+    "safe_integer_max": 9007199254740991,
+    "id_ascii_bytes": 512,
+    "record_id_ascii_bytes": 2048,
+    "digest_decoded_bytes": 32,
+    "epoch": 1,
+    "batch_entries": 64,
+    "batch_exact_body_bytes": 65536,
+    "checkpoint_ascii_bytes": 16384,
+    "snapshot_chunk_raw_bytes": 24576,
+    "snapshot_wire_bytes": 268435456,
+    "snapshot_frames": 400000,
+    "snapshot_objects": 200000,
+    "snapshot_operations": 20000,
+    "snapshot_journal_records": 100000,
+    "bootstrap_manifest_bytes": 32768
+  },
+  "http_consumption": [
+    {
+      "method": "POST",
+      "path": "/v1/audit/append",
+      "role": "WRITER",
+      "exact_request_keys": [
+        "batch_profile",
+        "stream_id",
+        "entries"
+      ],
+      "exact_response_keys": [
+        "checkpoint_jws"
+      ],
+      "status": "PROPOSED"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/audit/latest",
+      "role": "READER",
+      "exact_request_keys": [
+        "stream_id"
+      ],
+      "exact_response_keys": [
+        "checkpoint_jws"
+      ],
+      "status": "PROPOSED"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/audit/history",
+      "role": "READER",
+      "exact_request_keys": [
+        "stream_id",
+        "observed_checkpoint_id",
+        "after_sequence"
+      ],
+      "exact_response_keys": [
+        "stream_id",
+        "observed_checkpoint_id",
+        "observed_sequence",
+        "checkpoints",
+        "next_after_sequence"
+      ],
+      "status": "PROPOSED"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/audit/records",
+      "role": "READER",
+      "exact_request_keys": [
+        "stream_id",
+        "observed_checkpoint_id",
+        "after_sequence"
+      ],
+      "exact_response_keys": [
+        "stream_id",
+        "observed_checkpoint_id",
+        "observed_sequence",
+        "entries",
+        "next_after_sequence"
+      ],
+      "status": "PROPOSED_REQUIRES_FORMAL_PACKAGE_REVIEW",
+      "reason": "Checkpoint JWS history alone cannot compare all intermediate local sequence/raw/digest; record pages share fixed observed pin and size limits."
+    }
+  ],
+  "finite_errors": {
+    "codec": [
+      "INVALID_SCHEMA",
+      "NONCANONICAL",
+      "LIMIT_EXCEEDED"
+    ],
+    "scope": [
+      "REGISTRATION_REQUIRED",
+      "STREAM_REQUIRED",
+      "LEGACY_BOOTSTRAP_REQUIRED",
+      "SCOPE_MISMATCH"
+    ],
+    "transport": [
+      "UNAVAILABLE",
+      "NO_CHECKPOINT"
+    ],
+    "audit_append": [
+      "FORK",
+      "GAP",
+      "RECONCILE_REQUIRED"
+    ],
+    "sqlstate": {
+      "23514": "immutable/head/creating-xid/coverage/facts guard refusal",
+      "23503": "real FK failure",
+      "40P01": "deadlock retained; bounded retry original semantics",
+      "40001": "serialization retry rebuilds private seed/response",
+      "55P03": "lock timeout retained",
+      "57014": "statement timeout retained"
+    },
+    "existing_public_codes": "Preserve existing LedgerError/TRUSTED_STATE_UNAVAILABLE and ExecutionError codes; proposed audit codes mapped only in future audit modules, sanitized no exception message/DSN/token."
+  },
+  "requirements": {
+    "parents": 22,
+    "runtime_parent_markers": 21,
+    "atom_count": 95,
+    "atoms": [
+      {
+        "id": "A31-01.01",
+        "parent_id": "A31-01",
+        "original_text": "tenant/task/gateway/stream唯一scope/epoch1且无reset，seq从1无nextval烧号",
+        "finite_case_ref": "A31-01.01",
+        "node_union": [
+          {
+            "planned_node": "tests/unit/test_audit_journal.py::test_task_stream_canonical_sm3_schema",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "schema scope constraints only; persistence delegated",
+                "oracle_scope": "codec-only",
+                "finite_case_ref": "A31-01.01"
+              }
+            ]
+          },
+          {
+            "planned_node": "tests/integration/test_audit_atomicity.py::test_task_stream_rows_and_independent_heads",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "PG unique stream and persistent sequence",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-01.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-01.02",
+        "parent_id": "A31-01",
+        "original_text": "使用现SM3 SDK与rfc8785，不变更GM算法/签名域；严格fixed-kind facts/ID/seq/prev字段，record_id有kind前缀",
+        "finite_case_ref": "A31-01.02",
+        "node_union": [
+          {
+            "planned_node": "tests/unit/test_audit_journal.py::test_task_stream_canonical_sm3_schema",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "canonical SM3 and strict typed fields",
+                "oracle_scope": "codec-only",
+                "finite_case_ref": "A31-01.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-01.03",
+        "parent_id": "A31-01",
+        "original_text": "canonical raw<=32768且default65536bytes/4096nodes/depth64/strings65536保持，duplicate/unknown/float/bool-int/negative/overflow拒绝",
+        "finite_case_ref": "A31-01.03",
+        "node_union": [
+          {
+            "planned_node": "tests/unit/test_audit_journal.py::test_task_stream_canonical_sm3_schema",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "codec bounds/rejection",
+                "oracle_scope": "codec-only",
+                "finite_case_ref": "A31-01.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-01.04",
+        "parent_id": "A31-01",
+        "original_text": "different tasks独立head，无global序列瓶颈",
+        "finite_case_ref": "A31-01.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_atomicity.py::test_task_stream_rows_and_independent_heads",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "actual two-task independent head lock barriers",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-01.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-01.05",
+        "parent_id": "A31-01",
+        "original_text": "真实PG stream/records持久连续、拒绝rollback无seq烧号/重启不reset、同task唯一stream；两个task独立head实际锁与barrier证明不需globalhead。每race/crash十轮及source/wheel，全行SHA/不同newPID。",
+        "finite_case_ref": "A31-01.05",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_atomicity.py::test_task_stream_rows_and_independent_heads",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "rollback no burned seq / SIGKILL new PID persistence",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-01.05"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-02.01",
+        "parent_id": "A31-02",
+        "original_text": "first与operation/RESERVE/raw first link同TX；全task可信预留前seed不含本次op/event，真实正成本FIRST只预留/计入一次；retry新proof/link另记录不替换first，不capture新零基线。所有accept候选/报价失败安全recheck分支传播optional材料hooks默认None；结构capture/append由ledger内建，事务retry重建私有seed不共享state。",
+        "finite_case_ref": "A31-02.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_atomicity.py::test_first_retry_query_atomic_coverage",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local first/retry/query成功事实同事务关联 observation: A31-02.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-02.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-02.02",
+        "parent_id": "A31-02",
+        "original_text": "query raw证据/当前source/proof-link/响应digest同TX记录；独立STAGED孤儿不是成功查询",
+        "finite_case_ref": "A31-02.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_atomicity.py::test_first_retry_query_atomic_coverage",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local first/retry/query成功事实同事务关联 observation: A31-02.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-02.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-02.03",
+        "parent_id": "A31-02",
+        "original_text": "same proof并发仅一成功记录，same business key freshproof重试多retry但一reserve/效果/terminal",
+        "finite_case_ref": "A31-02.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_atomicity.py::test_first_retry_query_atomic_coverage",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local first/retry/query成功事实同事务关联 observation: A31-02.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-02.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-02.04",
+        "parent_id": "A31-02",
+        "original_text": "TX creating xid coverage拒绝enabled旧binary缺journal业务写，不依赖client boolean",
+        "finite_case_ref": "A31-02.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_atomicity.py::test_first_retry_query_atomic_coverage",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local first/retry/query成功事实同事务关联 observation: A31-02.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-02.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-02.05",
+        "parent_id": "A31-02",
+        "original_text": "seed为_accept_tx私有局部值，结构writer同connection/TX/scope验证；CREATED预算后insert前由ledger直接capture；BeforeCreate仅材料prepare且返回None，EXISTING不capture；AfterLink只读seed仅可信材料attach，随后结构writer核材料并晚append。EvidenceStore.bind原材料/权限复核不提前append，whole-TX回滚全继承。",
+        "finite_case_ref": "A31-02.05",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_atomicity.py::test_first_retry_query_atomic_coverage",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local first/retry/query成功事实同事务关联 observation: A31-02.05",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-02.05"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-03.01",
+        "parent_id": "A31-03",
+        "original_text": "append前后fault/guard failure/head locktimeout/deferred FK真实失败分别覆盖",
+        "finite_case_ref": "A31-03.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_atomicity.py::test_journal_faults_roll_back_business_facts",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local journal失败业务全回滚 observation: A31-03.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-03.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-03.02",
+        "parent_id": "A31-03",
+        "original_text": "对应TX proof/link/四counter/op/event/allnodes/outbox/journal/head完整rollback；原STAGED可留但不linked",
+        "finite_case_ref": "A31-03.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_atomicity.py::test_journal_faults_roll_back_business_facts",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local journal失败业务全回滚 observation: A31-03.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-03.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-03.03",
+        "parent_id": "A31-03",
+        "original_text": "禁止commit后异步补日志冒原子；下游unknown effect不得release/重做",
+        "finite_case_ref": "A31-03.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_atomicity.py::test_journal_faults_roll_back_business_facts",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local journal失败业务全回滚 observation: A31-03.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-03.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-03.04",
+        "parent_id": "A31-03",
+        "original_text": "原immutable first/quote/result/outbox不被retry修补，收全异常SQLSTATE",
+        "finite_case_ref": "A31-03.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_atomicity.py::test_journal_faults_roll_back_business_facts",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local journal失败业务全回滚 observation: A31-03.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-03.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-04.01",
+        "parent_id": "A31-04",
+        "original_text": "真实另连接锁head跨proof/token/ancestor expiry；invoke/query negative rollback本次proof/journal/counter",
+        "finite_case_ref": "A31-04.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_clock.py::test_final_public_clock_after_journal_wait",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 公开接受/query最后freshclock observation: A31-04.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-04.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-04.02",
+        "parent_id": "A31-04",
+        "original_text": "positive释放后仍fresh真实成功，不mockclock/sleep猜顺序",
+        "finite_case_ref": "A31-04.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_clock.py::test_final_public_clock_after_journal_wait",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 公开接受/query最后freshclock observation: A31-04.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-04.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-04.03",
+        "parent_id": "A31-04",
+        "original_text": "ledger结构capture在预算后insert/reserve前；binding/proof-link全部原等待→可选材料after_link→结构核材料→ensure_stream/append；capture/chunks/head/flush全部等待纳入末尾DBclock。head前预获约束业务锁，flush后只核已锁path/principals/必要权限源再finalclock，之后无SQL/network；晚等跨TTL整TX回滚。",
+        "finite_case_ref": "A31-04.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_clock.py::test_final_public_clock_after_journal_wait",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 公开接受/query最后freshclock observation: A31-04.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-04.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-04.04",
+        "parent_id": "A31-04",
+        "original_text": "原current ownership/完整source/所有ancestor/key要求不弱化",
+        "finite_case_ref": "A31-04.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_clock.py::test_final_public_clock_after_journal_wait",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 公开接受/query最后freshclock observation: A31-04.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-04.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-04.05",
+        "parent_id": "A31-04",
+        "original_text": "各新增/晚等待实际barrier跨proof/token/ancestor expiry：初始fresh不能放行最终expired，真实finalclock拒绝且proof/link/op/所有counter/events/bootstrap/chunks/journal/head整TX回滚；每参数十轮source/wheel，正例仍fresh成功。",
+        "finite_case_ref": "A31-04.05",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_clock.py::test_final_public_clock_after_journal_wait",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 公开接受/query最后freshclock observation: A31-04.05",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-04.05"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-05.01",
+        "parent_id": "A31-05",
+        "original_text": "capture旧helper锁下合法prestatus/owner/version/expiry；业务暂terminal后expected-status helper允许本TXterminal并仍check四条件",
+        "finite_case_ref": "A31-05.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_fencing.py::test_terminal_final_fence_after_journal_wait",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 终局最后owner/fence/state/expiry observation: A31-05.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-05.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-05.02",
+        "parent_id": "A31-05",
+        "original_text": "真实head等待跨expiry整TX rollbackcounter/event/status/outbox/journal/head，不释放已effect预算",
+        "finite_case_ref": "A31-05.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_fencing.py::test_terminal_final_fence_after_journal_wait",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 终局最后owner/fence/state/expiry observation: A31-05.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-05.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-05.03",
+        "parent_id": "A31-05",
+        "original_text": "staleowner/version与newowner接管竞争只一个terminal，不以current已terminal调用旧helper拒绝合法本TX",
+        "finite_case_ref": "A31-05.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_fencing.py::test_terminal_final_fence_after_journal_wait",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 终局最后owner/fence/state/expiry observation: A31-05.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-05.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-05.04",
+        "parent_id": "A31-05",
+        "original_text": "不得续lease为迟到结果洗白；failure恢复只处理原immutable intent",
+        "finite_case_ref": "A31-05.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_fencing.py::test_terminal_final_fence_after_journal_wait",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 终局最后owner/fence/state/expiry observation: A31-05.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-05.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-06.01",
+        "parent_id": "A31-06",
+        "original_text": "public principals→task→grants→op→lease/outbox→head；publisher仅outbox→head",
+        "finite_case_ref": "A31-06.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_lock_order.py::test_public_terminal_publisher_lock_order",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 锁序及publisher无outbox到task反序 observation: A31-06.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-06.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-06.02",
+        "parent_id": "A31-06",
+        "original_text": "publisher缺stream明确failclosed，维护bootstrap先完成，不outbox→task动态创建",
+        "finite_case_ref": "A31-06.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_lock_order.py::test_public_terminal_publisher_lock_order",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 锁序及publisher无outbox到task反序 observation: A31-06.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-06.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-06.03",
+        "parent_id": "A31-06",
+        "original_text": "真实publisher/terminal/query/claim混合barrier无40P01且不隐藏失败，head后不首次取业务锁/外部network",
+        "finite_case_ref": "A31-06.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_lock_order.py::test_public_terminal_publisher_lock_order",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 锁序及publisher无outbox到task反序 observation: A31-06.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-06.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-06.04",
+        "parent_id": "A31-06",
+        "original_text": "不同task head独立；原claim/UNKNOWN/quarantine如未新增journal等待保留已审语义不强加新记录",
+        "finite_case_ref": "A31-06.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_lock_order.py::test_public_terminal_publisher_lock_order",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 锁序及publisher无outbox到task反序 observation: A31-06.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-06.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-07.01",
+        "parent_id": "A31-07",
+        "original_text": "task/root/middle/leaf撤销先commit新公开accept/query拒绝；key deactivate晚依赖后不能旧state成功",
+        "finite_case_ref": "A31-07.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_lock_order.py::test_revocation_key_state_journal_linearization",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 撤销/key状态与新日志等待线性化 observation: A31-07.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-07.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-07.02",
+        "parent_id": "A31-07",
+        "original_text": "先accept后撤销内部恢复原意图允许终局与journal，不新授权/新意图",
+        "finite_case_ref": "A31-07.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_lock_order.py::test_revocation_key_state_journal_linearization",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 撤销/key状态与新日志等待线性化 observation: A31-07.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-07.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-07.03",
+        "parent_id": "A31-07",
+        "original_text": "所有ancestor四counter与ds_*、op/evidence/journal变化匹配真实commit顺序，非walltime猜测",
+        "finite_case_ref": "A31-07.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_lock_order.py::test_revocation_key_state_journal_linearization",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 撤销/key状态与新日志等待线性化 observation: A31-07.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-07.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-07.04",
+        "parent_id": "A31-07",
+        "original_text": "若辅助UNKNOWN/lease路径未来确增等待其最后fence不得省；不要求为此扩大AS全签发审计",
+        "finite_case_ref": "A31-07.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_lock_order.py::test_revocation_key_state_journal_linearization",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 撤销/key状态与新日志等待线性化 observation: A31-07.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-07.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-08.01",
+        "parent_id": "A31-08",
+        "original_text": "停止旧writers排空TX/维护强锁，真实asof/schema lineage/counters/status/material能力快照",
+        "finite_case_ref": "A31-08.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_maintenance_bootstrap_preserves_history",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 维护bootstrap真实历史快照 observation: A31-08.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-08.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-08.02",
+        "parent_id": "A31-08",
+        "original_text": "旧七表allcols/非零四counter/撤销/evidence/opaque/shortnode原值保全，不补历史顺序时间；旧task任何历史缺stream，即使当前新business key miss也拒绝EMPTY seed，必须先停旧writers排空TX独占维护真实bootstrap；维护后新FIRST仅新delta，旧op不重记FIRST。",
+        "finite_case_ref": "A31-08.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_maintenance_bootstrap_preserves_history",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 维护bootstrap真实历史快照 observation: A31-08.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-08.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-08.03",
+        "parent_id": "A31-08",
+        "original_text": "BOOTSTRAP seq1 pin小manifest/chunkroot；外部operator单独预登记scope/genesis/bootstrap digest，不由writer自登记；bootstrap_cli migrate/bootstrap/describe-pending命令实际run，保存仅publicregistrationdescriptor无私钥，S0本地自查不依赖未完成service模块",
+        "finite_case_ref": "A31-08.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_maintenance_bootstrap_preserves_history",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 维护bootstrap真实历史快照 observation: A31-08.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-08.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-08.04",
+        "parent_id": "A31-08",
+        "original_text": "选择方案A：新task initiallocks/freshness→proof→existing miss→budgetcheck→ledger内建全task capture BEFORE insert/reserve；无accepted历史且全部真实四counter=0才生成深不可变per-TX私有seed。binding/proof-link全部原等待→可选材料after_link→结构核材料/ensure_stream(seed)→BOOTSTRAP1/FIRST2→flush→finalDBclock同TX；失败不留本次stream/snapshot/chunks/journal/预算。operator仅提交后独立注册再delivery，不提供reset。",
+        "finite_case_ref": "A31-08.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_maintenance_bootstrap_preserves_history",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 维护bootstrap真实历史快照 observation: A31-08.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-08.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-08.05",
+        "parent_id": "A31-08",
+        "original_text": "正成本c/calls1真实首次：bootstrap全grant零且无本次operation/event，FIRST reserve仅一次；逐全部祖先重算真实DB c/1，seed原件稳定。并发两首accept十轮只一个bootstrap/stream、连续FIRST/seq，失败不留新stream/chunks/records/reservation。",
+        "finite_case_ref": "A31-08.05",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_maintenance_bootstrap_preserves_history",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 维护bootstrap真实历史快照 observation: A31-08.05",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-08.05"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-08.06",
+        "parent_id": "A31-08",
+        "original_text": "完整task保护逐writer核验：实际accept/_claim/_finalize/_mark_unknown/root/child/ASexchange持task锁；publisher/quarantine仅既有op不误称持task。capture全task集合稳定读取，AS并发child持task等待。bootstrap后AS合法新grant仅在其FIRST携完整真实已验签AS链/不可变intent/path/绑定可信来源、trusted预留前核从未执行且真实四零时以introduced-zero纳入完整连续FIRST/TERMINAL逐grant重放；不要求未来所有grant预先bootstrap、不加全AS审计。历史非零/已接受/旧FIRST引用/未知创建来源或gap节点绝不按新grant清零；未来accepted全writer锁合同/具体字段来源重绑。",
+        "finite_case_ref": "A31-08.06",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_maintenance_bootstrap_preserves_history",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local 维护bootstrap真实历史快照 observation: A31-08.06",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-08.06"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-09.01",
+        "parent_id": "A31-09",
+        "original_text": "007显式execution006+authorization010 deps；保留全部原SQL/checksum/registry/_V2_COMPLETION_FLOOR",
+        "finite_case_ref": "A31-09.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_007_audit001_lineage_source_wheel",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local execution007/audit001独立迁移历史兼容 observation: A31-09.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-09.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-09.02",
+        "parent_id": "A31-09",
+        "original_text": "实际A/B/v2 upgrade/repeat/illegalcatalog/checksum/rawSQLTOCTOU，双namespace同version不混淆",
+        "finite_case_ref": "A31-09.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_007_audit001_lineage_source_wheel",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local execution007/audit001独立迁移历史兼容 observation: A31-09.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-09.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-09.03",
+        "parent_id": "A31-09",
+        "original_text": "audit001仅独立DB own registry，不并入业务bundle，错DB/role拒绝启动",
+        "finite_case_ref": "A31-09.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_007_audit001_lineage_source_wheel",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local execution007/audit001独立迁移历史兼容 observation: A31-09.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-09.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-09.04",
+        "parent_id": "A31-09",
+        "original_text": "source/noneditablewheel别cwd发现完整SQL清单；PG16/PG14照现契约真正支持或明确拒绝",
+        "finite_case_ref": "A31-09.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_007_audit001_lineage_source_wheel",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local execution007/audit001独立迁移历史兼容 observation: A31-09.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-09.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-10.01",
+        "parent_id": "A31-10",
+        "original_text": "24576切片/defaultcodec/实际wire限，不含无界digest list或巨型JSON",
+        "finite_case_ref": "A31-10.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_bootstrap_chunks_and_required_coverage",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local bootstrap切片及必要coverageguards observation: A31-10.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-10.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-10.02",
+        "parent_id": "A31-10",
+        "original_text": "全部snapshot objects refs/count/root/wire正确、全taskgrant集合/四counter/无accepted历史探针完整；seed绑定scope/root/current TX/capture DBtime/schema lineage/FROM_EMPTY_TASK，raw与typed tuple深不可变且有界。超过原wire/object/frame/typedraw界限整TX不开stream，不截断offpath grants，不从reserve后减cost倒推清零。",
+        "finite_case_ref": "A31-10.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_bootstrap_chunks_and_required_coverage",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local bootstrap切片及必要coverageguards observation: A31-10.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-10.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-10.03",
+        "parent_id": "A31-10",
+        "original_text": "mandatory guards仅成功first/retry/query/terminal/READY；不强加LEASE/UNKNOWN/quarantine日志。seed由trusted same-TX数据库捕获，不接受客户端skip/zero；真实零acceptedop但任意offpath四counter非零拒绝并保留预算。现有stream只append；缺stream且有历史走维护，不晚期现值伪零bootstrap；publisher禁止outbox→task自建。",
+        "finite_case_ref": "A31-10.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_bootstrap_chunks_and_required_coverage",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local bootstrap切片及必要coverageguards observation: A31-10.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-10.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-10.04",
+        "parent_id": "A31-10",
+        "original_text": "已enabled旧binary缺mandatory日志拒绝；未enabled历史事实不rewrite",
+        "finite_case_ref": "A31-10.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_bootstrap_chunks_and_required_coverage",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local bootstrap切片及必要coverageguards observation: A31-10.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-10.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-10.05",
+        "parent_id": "A31-10",
+        "original_text": "seed bounded typedraw/chunks/root真实字节、四counter/scope/lineage/object counts正确，完整task cap+1超限拒绝不截断；深不可变tuple/bytes不含sharedmutable/connection，rollback重试不复用旧seed。不新加辅助kind coverage。",
+        "finite_case_ref": "A31-10.05",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_upgrade.py::test_bootstrap_chunks_and_required_coverage",
+            "initial_owner": "a31-shared",
+            "local_slices": [
+              {
+                "local_slice": "Local bootstrap切片及必要coverageguards observation: A31-10.05",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-10.05"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-11.01",
+        "parent_id": "A31-11",
+        "original_text": "profile GM-MVP-1/checkpoint_version AG-CHECKPOINT-1/typ ag-checkpoint+jwt沿既有alg/USERID/rawJWS",
+        "finite_case_ref": "A31-11.01",
+        "node_union": [
+          {
+            "planned_node": "tests/unit/test_checkpoint_contract.py::test_checkpoint_sm2_type_scope_version",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local checkpoint真实SM2/profile/typ隔离 observation: A31-11.01",
+                "oracle_scope": "codec-only",
+                "finite_case_ref": "A31-11.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-11.02",
+        "parent_id": "A31-11",
+        "original_text": "payloadkid=protectedkid，scope/epoch/seq/head/previous/issuedat exactfixed，rawASCII<=16384",
+        "finite_case_ref": "A31-11.02",
+        "node_union": [
+          {
+            "planned_node": "tests/unit/test_checkpoint_contract.py::test_checkpoint_sm2_type_scope_version",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local checkpoint真实SM2/profile/typ隔离 observation: A31-11.02",
+                "oracle_scope": "codec-only",
+                "finite_case_ref": "A31-11.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-11.03",
+        "parent_id": "A31-11",
+        "original_text": "receipt/at/pop替代/unknownkid/wrongrole/SPKI/badsig/duplicateunknownfields拒绝",
+        "finite_case_ref": "A31-11.03",
+        "node_union": [
+          {
+            "planned_node": "tests/unit/test_checkpoint_contract.py::test_checkpoint_sm2_type_scope_version",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local checkpoint真实SM2/profile/typ隔离 observation: A31-11.03",
+                "oracle_scope": "codec-only",
+                "finite_case_ref": "A31-11.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-11.04",
+        "parent_id": "A31-11",
+        "original_text": "verify仅独立受信audit publickeys不信包自带key，旧SDK类型限制不弱化",
+        "finite_case_ref": "A31-11.04",
+        "node_union": [
+          {
+            "planned_node": "tests/unit/test_checkpoint_contract.py::test_checkpoint_sm2_type_scope_version",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local checkpoint真实SM2/profile/typ隔离 observation: A31-11.04",
+                "oracle_scope": "codec-only",
+                "finite_case_ref": "A31-11.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-12.01",
+        "parent_id": "A31-12",
+        "original_text": "ownstreamlock→batch查重先于startseq检查→连续allrecord+CP+head同TX",
+        "finite_case_ref": "A31-12.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_atomic_batch_continuity_fork_rejection",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local 远端连续批原子去重分叉拒绝 observation: A31-12.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-12.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-12.02",
+        "parent_id": "A31-12",
+        "original_text": "samebatch exact原JWS/time/ID重试，oldrange换批不重签，same-seq不同raw/gap/prev/scope fork拒绝",
+        "finite_case_ref": "A31-12.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_atomic_batch_continuity_fork_rejection",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local 远端连续批原子去重分叉拒绝 observation: A31-12.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-12.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-12.03",
+        "parent_id": "A31-12",
+        "original_text": "批中任一点真实失败无partialauditrecords/checkpoint/head；writer只预登记scope",
+        "finite_case_ref": "A31-12.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_atomic_batch_continuity_fork_rejection",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local 远端连续批原子去重分叉拒绝 observation: A31-12.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-12.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-12.04",
+        "parent_id": "A31-12",
+        "original_text": "远端DB独立保存为准不信GW localcache",
+        "finite_case_ref": "A31-12.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_atomic_batch_continuity_fork_rejection",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local 远端连续批原子去重分叉拒绝 observation: A31-12.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-12.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-13.01",
+        "parent_id": "A31-13",
+        "original_text": "两个真实PID/backendconn同步同batch一份records/batch/CP/head",
+        "finite_case_ref": "A31-13.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_two_audit_pids_same_batch_original_jws",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local 双audit进程同批唯一原checkpoint observation: A31-13.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-13.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-13.02",
+        "parent_id": "A31-13",
+        "original_text": "两response exact同原JWS即使SM2签名随机也不重签",
+        "finite_case_ref": "A31-13.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_two_audit_pids_same_batch_original_jws",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local 双audit进程同批唯一原checkpoint observation: A31-13.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-13.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-13.03",
+        "parent_id": "A31-13",
+        "original_text": "adjacentbatches合法连续或明确RECONCILE，不反序覆盖",
+        "finite_case_ref": "A31-13.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_two_audit_pids_same_batch_original_jws",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local 双audit进程同批唯一原checkpoint observation: A31-13.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-13.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-13.04",
+        "parent_id": "A31-13",
+        "original_text": "收集所有child exceptions/nativeexit/SQLSTATE/barrier，非mock调用",
+        "finite_case_ref": "A31-13.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_two_audit_pids_same_batch_original_jws",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local 双audit进程同批唯一原checkpoint observation: A31-13.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-13.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-14.01",
+        "parent_id": "A31-14",
+        "original_text": "签前/中insert/precommit SIGKILL无partial持久记录",
+        "finite_case_ref": "A31-14.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_audit_sigkill_commit_response_windows",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local audit存前存后SIGKILL新PID恢复 observation: A31-14.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-14.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-14.02",
+        "parent_id": "A31-14",
+        "original_text": "postcommit/presend死亡或真丢HTTP响应，新PIDexactretry返回原JWS/time/ID",
+        "finite_case_ref": "A31-14.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_audit_sigkill_commit_response_windows",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local audit存前存后SIGKILL新PID恢复 observation: A31-14.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-14.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-14.03",
+        "parent_id": "A31-14",
+        "original_text": "测试barrier只私有fixture，公开服务无skip/sign/fault环境开关",
+        "finite_case_ref": "A31-14.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_audit_sigkill_commit_response_windows",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local audit存前存后SIGKILL新PID恢复 observation: A31-14.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-14.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-14.04",
+        "parent_id": "A31-14",
+        "original_text": "GW预算/receipt/下游效果不因审计失败重执行",
+        "finite_case_ref": "A31-14.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_audit_sigkill_commit_response_windows",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local audit存前存后SIGKILL新PID恢复 observation: A31-14.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-14.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-15.01",
+        "parent_id": "A31-15",
+        "original_text": "真实CA/hostname HTTPS固定endpoint，badhostname/untrustedCA/plainHTTP/redirect拒绝且不verifyFalse",
+        "finite_case_ref": "A31-15.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_tls.py::test_real_audit_tls_registered_roles_and_scope",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local auditTLS凭据角色资源隔离 observation: A31-15.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-15.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-15.02",
+        "parent_id": "A31-15",
+        "original_text": "operator独立预登记writer/reader/scope，AS/holder/GW/downstream credentials不能冒充；audit/operator_cli.py init/register/check为可执行本机operator CLI，writer无register权，无公共注册HTTP，真实pre-register后append成功",
+        "finite_case_ref": "A31-15.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_tls.py::test_real_audit_tls_registered_roles_and_scope",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local auditTLS凭据角色资源隔离 observation: A31-15.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-15.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-15.03",
+        "parent_id": "A31-15",
+        "original_text": "signer/DB/privateconfig仅audit进程，GW publicHTTP无auditkey；同机仅逻辑独立声明",
+        "finite_case_ref": "A31-15.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_tls.py::test_real_audit_tls_registered_roles_and_scope",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local auditTLS凭据角色资源隔离 observation: A31-15.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-15.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-15.04",
+        "parent_id": "A31-15",
+        "original_text": "framing/duplicates/oversize/wrongmethod/schema在DB写前拒绝，sanitized errors无token/DSN/secrets",
+        "finite_case_ref": "A31-15.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_tls.py::test_real_audit_tls_registered_roles_and_scope",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local auditTLS凭据角色资源隔离 observation: A31-15.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-15.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-16.01",
+        "parent_id": "A31-16",
+        "original_text": "latest返回持久原JWS，长期停写不重签伪新时间",
+        "finite_case_ref": "A31-16.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_checkpoint_history_encoded_pages_rotation",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local checkpointhistory分页轮换和latest界限 observation: A31-16.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-16.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-16.02",
+        "parent_id": "A31-16",
+        "original_text": "history固定observedlatest身份/seq，真实encoded<=65536最大合法prefix/page，多page链完整",
+        "finite_case_ref": "A31-16.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_checkpoint_history_encoded_pages_rotation",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local checkpointhistory分页轮换和latest界限 observation: A31-16.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-16.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-16.03",
+        "parent_id": "A31-16",
+        "original_text": "previousdigest=SM3原JWS，operator新key外部历史sequence范围，旧JWS不改",
+        "finite_case_ref": "A31-16.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_checkpoint_history_encoded_pages_rotation",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local checkpointhistory分页轮换和latest界限 observation: A31-16.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-16.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-16.04",
+        "parent_id": "A31-16",
+        "original_text": "本机配置/minpin只能相对该锚；HTTPS reader取得的latest也是该请求时观察值不保证未来不变",
+        "finite_case_ref": "A31-16.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_checkpoint_history_encoded_pages_rotation",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local checkpointhistory分页轮换和latest界限 observation: A31-16.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-16.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-17.01",
+        "parent_id": "A31-17",
+        "original_text": "run-owned auditDB真实备份回退，已独立保留cp对比lowerseq或sameseqwrongheadstartup拒绝",
+        "finite_case_ref": "A31-17.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_audit_restore_behind_external_pin_refused",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local audit旧备份与外部pin反回滚 observation: A31-17.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-17.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-17.02",
+        "parent_id": "A31-17",
+        "original_text": "不能新epoch/register覆盖同scope；无externallatest诚实UNKNOWN非伪检测",
+        "finite_case_ref": "A31-17.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_audit_restore_behind_external_pin_refused",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local audit旧备份与外部pin反回滚 observation: A31-17.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-17.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-17.03",
+        "parent_id": "A31-17",
+        "original_text": "共同key/anchor失陷及same-host逻辑域LIMITATIONS",
+        "finite_case_ref": "A31-17.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_audit_restore_behind_external_pin_refused",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local audit旧备份与外部pin反回滚 observation: A31-17.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-17.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-17.04",
+        "parent_id": "A31-17",
+        "original_text": "仅runowned备份DB/PID资源操作不碰旧容器/生产",
+        "finite_case_ref": "A31-17.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_service.py::test_audit_restore_behind_external_pin_refused",
+            "initial_owner": "a31-service",
+            "local_slices": [
+              {
+                "local_slice": "Local audit旧备份与外部pin反回滚 observation: A31-17.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-17.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-18.01",
+        "parent_id": "A31-18",
+        "original_text": "raw<=32768、entries<=64、实际canonicalbody<=65536计base64metadataoverhead；不rawsum估算；32768boundary若实际fixedschema不可达仅codec边界负例，不能随机blob假冒合法journal",
+        "finite_case_ref": "A31-18.01",
+        "node_union": [
+          {
+            "planned_node": "tests/unit/test_audit_client.py::test_sender_encoded_prefix_and_original_pending_body",
+            "initial_owner": "a31-delivery",
+            "local_slices": [
+              {
+                "local_slice": "encoded bytes incl base64 metadata",
+                "oracle_scope": "codec-only",
+                "finite_case_ref": "A31-18.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-18.02",
+        "parent_id": "A31-18",
+        "original_text": "最大连续合法prefix，不跳条；single装不下明拒，全部原codec限制保持",
+        "finite_case_ref": "A31-18.02",
+        "node_union": [
+          {
+            "planned_node": "tests/unit/test_audit_client.py::test_sender_encoded_prefix_and_original_pending_body",
+            "initial_owner": "a31-delivery",
+            "local_slices": [
+              {
+                "local_slice": "max contiguous prefix and single-too-large rejection",
+                "oracle_scope": "codec-only",
+                "finite_case_ref": "A31-18.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-18.03",
+        "parent_id": "A31-18",
+        "original_text": "短TX保存immutable pendingexactbytes/batchdigest再network，不跨业务head/task锁",
+        "finite_case_ref": "A31-18.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_delivery.py::test_pending_body_persistence_and_growth",
+            "initial_owner": "a31-delivery",
+            "local_slices": [
+              {
+                "local_slice": "PG exact body saved short TX before network, locks released",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-18.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-18.04",
+        "parent_id": "A31-18",
+        "original_text": "restart先用pending不因新增records改变batch边界",
+        "finite_case_ref": "A31-18.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_delivery.py::test_pending_body_persistence_and_growth",
+            "initial_owner": "a31-delivery",
+            "local_slices": [
+              {
+                "local_slice": "journal growth cannot alter saved batch",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-18.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-18.05",
+        "parent_id": "A31-18",
+        "original_text": "真实PG保存immutable pending body/batch_id后新增真实journal，SIGKILL旧PID→不同newPID复用相同exact body/digest/边界；同批remotecommit丢响应恢复拿原checkpoint JWS/time/id而非重签，不额外预算/效果。S1冻结transport harness，禁import同时service半成品；S2实际独立audit重复验证。",
+        "finite_case_ref": "A31-18.05",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_delivery.py::test_pending_body_persistence_and_growth",
+            "initial_owner": "a31-delivery",
+            "local_slices": [
+              {
+                "local_slice": "SIGKILL/new PID/exact persisted batch; S2 real audit original CP",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-18.05"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-19.01",
+        "parent_id": "A31-19",
+        "original_text": "businesscommit后未send仍pending，无重复预算/效果",
+        "finite_case_ref": "A31-19.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_delivery.py::test_sender_sigkill_exact_pending_ack_recovery",
+            "initial_owner": "a31-delivery",
+            "local_slices": [
+              {
+                "local_slice": "Local 递送全部死亡窗口ACK恢复 observation: A31-19.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-19.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-19.02",
+        "parent_id": "A31-19",
+        "original_text": "pendingpersist/send前/remotecommitlostreply/localACK前后SIGKILL，同DBnewPID exactbody/JWS恢复",
+        "finite_case_ref": "A31-19.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_delivery.py::test_sender_sigkill_exact_pending_ack_recovery",
+            "initial_owner": "a31-delivery",
+            "local_slices": [
+              {
+                "local_slice": "Local 递送全部死亡窗口ACK恢复 observation: A31-19.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-19.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-19.03",
+        "parent_id": "A31-19",
+        "original_text": "remoteCP独立验scope/seq/head/previous后local短TX单调ACK+clearmatchingpending",
+        "finite_case_ref": "A31-19.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_delivery.py::test_sender_sigkill_exact_pending_ack_recovery",
+            "initial_owner": "a31-delivery",
+            "local_slices": [
+              {
+                "local_slice": "Local 递送全部死亡窗口ACK恢复 observation: A31-19.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-19.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-19.04",
+        "parent_id": "A31-19",
+        "original_text": "多round核全部GW/DS/AUDIT/DELIVERY rows，旧ACK不覆盖新状态",
+        "finite_case_ref": "A31-19.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_delivery.py::test_sender_sigkill_exact_pending_ack_recovery",
+            "initial_owner": "a31-delivery",
+            "local_slices": [
+              {
+                "local_slice": "Local 递送全部死亡窗口ACK恢复 observation: A31-19.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-19.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-20.01",
+        "parent_id": "A31-20",
+        "original_text": "双sender共用persistedpending，晚旧ACK不退cursor不clear别batch",
+        "finite_case_ref": "A31-20.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_delivery.py::test_two_senders_remote_ahead_rollback_reconcile",
+            "initial_owner": "a31-delivery",
+            "local_slices": [
+              {
+                "local_slice": "Local 双sender晚ACK/history对账及GW回滚 observation: A31-20.01",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-20.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-20.02",
+        "parent_id": "A31-20",
+        "original_text": "remoteahead历史多页逐seq/hash匹配，不凭latestseq直接advance；badsig/missingpage停pending",
+        "finite_case_ref": "A31-20.02",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_delivery.py::test_two_senders_remote_ahead_rollback_reconcile",
+            "initial_owner": "a31-delivery",
+            "local_slices": [
+              {
+                "local_slice": "Local 双sender晚ACK/history对账及GW回滚 observation: A31-20.02",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-20.02"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-20.03",
+        "parent_id": "A31-20",
+        "original_text": "runownedGW旧backup与externalpin lowerseq/fork拒绝，不能新stream绕过",
+        "finite_case_ref": "A31-20.03",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_delivery.py::test_two_senders_remote_ahead_rollback_reconcile",
+            "initial_owner": "a31-delivery",
+            "local_slices": [
+              {
+                "local_slice": "Local 双sender晚ACK/history对账及GW回滚 observation: A31-20.03",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-20.03"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-20.04",
+        "parent_id": "A31-20",
+        "original_text": "无latest只相对现pin/UNKNOWN；坏stream有界轮转无合法task永久饿死，no网络持DBlock",
+        "finite_case_ref": "A31-20.04",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_audit_delivery.py::test_two_senders_remote_ahead_rollback_reconcile",
+            "initial_owner": "a31-delivery",
+            "local_slices": [
+              {
+                "local_slice": "Local 双sender晚ACK/history对账及GW回滚 observation: A31-20.04",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-20.04"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-21.01",
+        "parent_id": "A31-21",
+        "original_text": "actualacceptedA23真实login/consent/root/twochildren/四工具HTTPS/publish/query→独立CP，不用DTO/零签名；source/wheel真实bootstrap_cli→public descriptor→独立operator_cli register→delivery原pending重试→reader observedpin，全CLI subprocess/native回执",
+        "finite_case_ref": "A31-21.01",
+        "node_union": [
+          {
+            "planned_node": "tests/integration/test_a31_joint_tls.py::test_real_four_tools_receipt_checkpoint_flow",
+            "initial_owner": "single-integrator",
+            "local_slices": [
+              {
+                "local_slice": "Real joint TLS/public flow only; inherited/full review assertions assigned to native stage obligations",
+                "oracle_scope": "real persisted/process/TLS as stated in case; allrow_oracle required",
+                "finite_case_ref": "A31-21.01"
+              }
+            ]
+          }
+        ],
+        "native_union": []
+      },
+      {
+        "id": "A31-21.02",
+        "parent_id": "A31-21",
+        "original_text": "source/wheel/README/A1/A2/B/历史trigger/oracle/SQL全mandatory继承不省略，不复制未冻结119/112数",
+        "finite_case_ref": "A31-21.02",
+        "node_union": [],
+        "native_union": [
+          {
+            "atom_ref": "A31-21.02",
+            "owner": "controller + single-integrator + fresh independent reviewer"
+          }
+        ]
+      },
+      {
+        "id": "A31-21.03",
+        "parent_id": "A31-21",
+        "original_text": "30goal实际节点/子断言/command/观察全映射；A33/A34未run内容仍NOT_RUN非projectaccepted",
+        "finite_case_ref": "A31-21.03",
+        "node_union": [],
+        "native_union": [
+          {
+            "atom_ref": "A31-21.03",
+            "owner": "controller + single-integrator + fresh independent reviewer"
+          }
+        ]
+      },
+      {
+        "id": "A31-21.04",
+        "parent_id": "A31-21",
+        "original_text": "worker完整自查/native停写/fullfreeze之后freshsol/xhigh reviewer完整独立复验，补正再freshreview",
+        "finite_case_ref": "A31-21.04",
+        "node_union": [],
+        "native_union": [
+          {
+            "atom_ref": "A31-21.04",
+            "owner": "controller + single-integrator + fresh independent reviewer"
+          }
+        ]
+      },
+      {
+        "id": "A31-S01.01",
+        "parent_id": "A31-S01",
+        "original_text": "原§8/9.5明确first/retry/final和CP；成功query是结果访问关联，terminal必需重算ledger；LEASE/UNKNOWN/quarantine额外记录不是原规范直接必需",
+        "finite_case_ref": "A31-S01.01",
+        "node_union": [],
+        "native_union": [
+          {
+            "atom_ref": "A31-S01.01",
+            "owner": "controller + single-integrator + fresh independent reviewer"
+          }
+        ]
+      },
+      {
+        "id": "A31-S01.02",
+        "parent_id": "A31-S01",
+        "original_text": "LEASE可观测fence恢复但不影响reserve/terminal预算重算；UNKNOWN本身无delta；quarantine仅诊断gap，默认不要求额外journal",
+        "finite_case_ref": "A31-S01.02",
+        "node_union": [],
+        "native_union": [
+          {
+            "atom_ref": "A31-S01.02",
+            "owner": "controller + single-integrator + fresh independent reviewer"
+          }
+        ]
+      },
+      {
+        "id": "A31-S01.03",
+        "parent_id": "A31-S01",
+        "original_text": "若actual正式包选择额外kind，列具体最小关联理由/guard/测试/新等待后fence；否则不编mandatorycoverage导致旧claim失败",
+        "finite_case_ref": "A31-S01.03",
+        "node_union": [],
+        "native_union": [
+          {
+            "atom_ref": "A31-S01.03",
+            "owner": "controller + single-integrator + fresh independent reviewer"
+          }
+        ]
+      },
+      {
+        "id": "A31-S01.04",
+        "parent_id": "A31-S01",
+        "original_text": "任何已新增等待后的finalfreshclock/fence为必需，不因辅助记录不采纳削弱",
+        "finite_case_ref": "A31-S01.04",
+        "node_union": [],
+        "native_union": [
+          {
+            "atom_ref": "A31-S01.04",
+            "owner": "controller + single-integrator + fresh independent reviewer"
+          }
+        ]
+      }
+    ],
+    "inherited_obligations": "A2 119 parents/112 runtime/269 atoms, original 21P/30goals and historical failure-equivalent checks preserved; no synthetic wrapper replacement",
+    "case_execution": "No collect/tests/resources now; actual nodes/params and source/wheel evidence bind only after authorized implementation."
+  },
+  "ownership_findings": {
+    "receipt_publication": "Already explicitly included planning §8 S0",
+    "execution_store_final_fence": "Already included planning §8 S0",
+    "crypto_JWS_TYPES": "Already included planning §8 S0",
+    "new_reader_records_files": "Within already proposed S1 audit/http_app.py, store.py, client.py and service/delivery tests; no added path, interface still needs package review",
+    "scope_expansion_performed": false
+  },
+  "freeze_gate": [
+    "S0 complete implementation selfcheck",
+    "Full file readback and raw SHA/signatures/SQL inventory",
+    "Native writer STOP and owned resources remaining zero",
+    "Controller freezes actual interface and fixture hashes before S1",
+    "S1 each exclusive owner; no peer unfinished imports",
+    "S2 single integrator after both S1 STOP",
+    "Fresh Sol/high independent full implementation review"
+  ],
+  "work_performed": {
+    "product_mutation": false,
+    "tests_or_collect": false,
+    "db_connections": 0,
+    "business_resources_created": 0,
+    "containers": false,
+    "install": false,
+    "git": false,
+    "subagents": 0,
+    "writer_scope": [
+      "tasks/workflow/runs/A3.1-audit-20261008/interface-contract-v1.md",
+      "tasks/workflow/runs/A3.1-audit-20261008/interface-bindings-v1.json",
+      "artifacts/workflow/A3.1-audit-20261008/interface-worker/"
+    ]
+  },
+  "controller_post_STOP_clarification": "recorded_at is exact UTC microsecond text (not integer seconds); no semantic reduction"
+}

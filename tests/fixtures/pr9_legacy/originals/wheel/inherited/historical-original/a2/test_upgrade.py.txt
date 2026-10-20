@@ -1,0 +1,46 @@
+import hashlib
+import psycopg,pytest
+from pathlib import Path
+from agent_guard.ledger.migrate import apply_migrations as _actual_apply_migrations
+DEFAULT_MIGRATIONS_DIR=Path('/e/s2-legacy-standalone')
+def apply_migrations(connection,directory=None):
+ return _actual_apply_migrations(connection,DEFAULT_MIGRATIONS_DIR if directory is None else directory)
+from agent_guard.ledger.service import ExecutionLedger
+from agent_guard.ledger.provisioning import revoke_grant
+from tests.fixtures.state import build_tree
+from tests.fixtures.isolation import create_scratch_database,drop_scratch_database
+from test_review import observe
+ORDER={'ag_tasks':'tenant_id,task_id','ag_principals':'tenant_id,client_id,kid','ag_grants':'grant_id','ag_operations':'operation_id','ag_proofs':'holder_kid,purpose,endpoint,proof_jti','ag_ledger_events':'event_id','ag_ledger_event_nodes':'event_id,position'}
+def snapshot(dsn):
+ with psycopg.connect(dsn) as c:
+  rows={t:c.execute('SELECT * FROM '+t+' ORDER BY '+order).fetchall() for t,order in ORDER.items()}
+  registry=c.execute('SELECT * FROM ag_schema_migrations ORDER BY version').fetchall()
+  return rows,registry
+@pytest.mark.parametrize('old',['001','003','004'])
+@pytest.mark.parametrize('illegal',[False,True])
+def test_full_seven_and_full_registry_upgrade(namespace,tmp_path,old,illegal):
+ db=create_scratch_database(namespace.base_dsn)
+ try:
+  subset=tmp_path/'migration-source';subset.mkdir()
+  oldnames=[p for p in sorted(DEFAULT_MIGRATIONS_DIR.glob('*.sql')) if p.name[:3]<=old]
+  for p in oldnames:(subset/p.name).write_bytes(p.read_bytes())
+  with psycopg.connect(db.dsn) as c:assert apply_migrations(c,subset)==[p.name[:3] for p in oldnames];tree=build_tree(c)
+  op=ExecutionLedger(db.dsn).accept(tree.invocation(),tree.cost(70000)).operation_id
+  with psycopg.connect(db.dsn) as c:revoke_grant(c,tree.mid_id)
+  if illegal:
+   with psycopg.connect(db.dsn) as c:
+    if old=='001':c.execute("INSERT INTO ag_grants (grant_id,parent_grant_id,root_grant_id,tenant_id,task_id,subject,holder_client_id,holder_kid,depth,not_before,expires_at,amount_limit,call_limit) SELECT 'duplicate-root',NULL,'duplicate-root',tenant_id,task_id,subject,holder_client_id,holder_kid,0,not_before,expires_at,amount_limit,call_limit FROM ag_grants WHERE grant_id=%s",(tree.root_id,))
+    elif old=='004':c.execute("INSERT INTO ag_ledger_event_nodes SELECT event_id,3,'unknown-owned-grant',0,0,0,0 FROM ag_ledger_events WHERE operation_id=%s",(op,))
+    else:c.execute("INSERT INTO ag_ledger_events (operation_id,phase,seq) VALUES (%s,'RESERVE',1)",(op,))
+  before,regbefore=snapshot(db.dsn);assert all(before[t] for t in ORDER)
+  if illegal:
+   with psycopg.connect(db.dsn) as c:
+    with pytest.raises(psycopg.IntegrityError):apply_migrations(c)
+   assert snapshot(db.dsn)==(before,regbefore)
+  else:
+   with psycopg.connect(db.dsn) as c:applied=apply_migrations(c);assert applied==[p.name[:3] for p in sorted(DEFAULT_MIGRATIONS_DIR.glob('*.sql')) if p.name[:3]>old]
+   after,regafter=snapshot(db.dsn);assert after==before and regafter[:len(regbefore)]==regbefore
+   with psycopg.connect(db.dsn) as c:assert apply_migrations(c)==[]
+   assert snapshot(db.dsn)==(after,regafter)
+  observe('full-upgrade',{'old':old,'illegal':illegal,'seven_tables_all_rows_equal':True,'complete_registry_preserved':True,'business_hash':hashlib.sha256(repr(before).encode()).hexdigest(),'registry_hash':hashlib.sha256(repr(regbefore).encode()).hexdigest()})
+ finally:drop_scratch_database(namespace.base_dsn,db)

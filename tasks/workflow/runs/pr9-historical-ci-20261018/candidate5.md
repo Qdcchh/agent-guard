@@ -1,0 +1,9 @@
+# PR9 candidate5内容冻结，尚无实施接受
+
+C4新high r1正式STOP_NOT_ACCEPTED/own0；其1204起止内容一致、全局质量绿但未启动完整runtime，因上游原query签前1秒竞争停止，原报告原样保留。随后确定原B追加迁移兼容和A32两个loopback地址环境缺口一并修复，详见各冻结addenda/地址勘误；旧失败/取消不抵销。
+
+Root逐C4全1204内容核对：仅CI、环境说明、deploy helper/clean_deploy/unit、gateway_query六文件改变；214部署文件逐SHA、query单文件SHA与原其他全部顶层AST完全相同/原目标两个assert AST保留，均独立复核。业务139及18迁移和用户CSS/03docx/main.pdf原字节不变。冻结前全局ruff check/format365/diffcheck及CI YAML/bash通过。
+
+query原函数只改10秒初次可达窗口并加真实DB见证，原_wait_expired等旧proof到期后才用新proof查询，原RESERVED/零业务状态assert保留；正常1pass及3次实际签后延迟>2秒各1pass，其他523-file/尾部runtime仍在跑。部署38unit及真实UID1001原B4 legal/illegal均绿、environment/private权限均绿/own0；原70TLS真70pass。A32/A34 34pass加已独立绑定运行的原容量1pass399.37s属于各报告相应source snapshot，不冒称C5一轮全6839。
+
+C5各源码writer SOURCE STOP，runtime报告/own资源清理可继续。fresh全域source/wheel4files/各20组、普通PG完整尾部及新high独验仍待完成。只有完整本地接受后由root唯一精确提交/push，再核验最新head所有GitHub CI green、expectedSHA普通squash main并核对远端。任何源码阻断先root使候选失效/停止审查再授low补正。审查及最终状态输出另列SHA，不与受审源码并发写。

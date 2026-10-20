@@ -1,0 +1,60 @@
+import dataclasses,json,threading
+import pytest,psycopg
+from agent_guard.contracts.execution import ExecutionError,ToolId
+from agent_guard.tools.catalog import snapshot_from_bytes
+from tests.fixtures.execution import build_env,read_params,document_params,notification_params
+from tests.fixtures.dbstate import fetch_counts
+from test_review import observe,counters,effects
+
+@pytest.mark.parametrize('tool',[ToolId.REQUEST_READ,ToolId.DOCUMENT_READ,ToolId.NOTIFICATION_SEND])
+@pytest.mark.parametrize('entry',['execute','query'])
+def test_other_tools_full_result_binding(a2,tool,entry):
+ ref=a2.service.accept_invocation(a2.tree.invocation(tool_id=ToolId.REQUEST_READ.value,params=read_params()),a2.permission()).operation_id
+ params=notification_params(operation_id=ref) if tool is ToolId.NOTIFICATION_SEND else (read_params() if tool is ToolId.REQUEST_READ else document_params())
+ op=a2.service.accept_invocation(a2.tree.invocation(idempotency_key='more-tool',tool_id=tool.value,params=params),a2.permission()).operation_id
+ v=a2.downstream.execute(service_secret=a2.secret,operation_id=op,tool_id=tool,canonical_params=params,quote=None,expected_amount_fen=0)
+ obj=json.loads(v.result_bytes)
+ if tool is ToolId.NOTIFICATION_SEND:obj.update(notification_id='different-effect',recipient_id='other-recipient',template_id='other-template')
+ else:obj['tool_id']=ToolId.ORDER_CREATE.value
+ v=dataclasses.replace(v,result_bytes=json.dumps(obj).encode())
+ class Port:
+  def execute(self,**kw):return v
+  def query(self,**kw):return v
+ env=build_env(tree=a2.tree,gateway_dsn=a2.gateway_dsn,downstream_dsn=a2.downstream_dsn,downstream=Port())
+ r=env.service.run_operation(op) if entry=='execute' else env.service.reconcile(op)
+ observe('r3-other-tool-result',{'tool':tool.value,'entry':entry,'status':r.status,'counters':counters(a2),'effects':effects(a2)})
+ assert r.status=='UNKNOWN' and env.service.outbox_entry(op) is None
+
+def test_formal_deadlock_regression_requires_real_terminal_progress(a2,monkeypatch):
+ from tests.integration.test_execution_regressions import test_claim_and_finalize_interleaved_never_deadlock
+ real=threading.Barrier;errors=[]
+ class RecordedBarrier:
+  def __init__(self,*args,**kw):self.inner=real(*args,**kw)
+  def wait(self):
+   try:return self.inner.wait()
+   except threading.BrokenBarrierError:errors.append(threading.current_thread().name);raise
+ monkeypatch.setattr(threading,'Barrier',RecordedBarrier)
+ test_claim_and_finalize_interleaved_never_deadlock(a2,monkeypatch)
+ counts=fetch_counts(a2.gateway_dsn)
+ observe('r3-formal-lock-test-efficacy',{'broken_barrier_errors':errors,'counts':counts,'effects':effects(a2)})
+ assert errors==[] and counts['ag_receipt_outbox']==10 and counts['ag_ledger_events']==20
+
+def test_notification_wrong_holder_checked_before_reservation(a2):
+ ref=a2.service.accept_invocation(a2.tree.invocation(tool_id=ToolId.REQUEST_READ.value,params=read_params()),a2.permission()).operation_id
+ before=fetch_counts(a2.gateway_dsn); cc=counters(a2)
+ inv=a2.tree.invocation(tool_id=ToolId.NOTIFICATION_SEND.value,params=notification_params(operation_id=ref),holder=('wrong-client','wrong-kid'))
+ with pytest.raises(ExecutionError) as ex:a2.service.accept_invocation(inv,a2.permission())
+ assert ex.value.code.value=='RESOURCE_NOT_AUTHORIZED' and fetch_counts(a2.gateway_dsn)==before and counters(a2)==cc
+ observe('r3-notification-wrong-holder',{'target_exists':True,'refused_before_A1':True,'state_unchanged':True})
+
+@pytest.mark.parametrize('mode',['reordered','wrong-layer','extra','missing-mid'])
+def test_complete_chain_identity_negative(a2,mode):
+ snap=a2.permission();ids=list(snap.chain_grant_ids);chain=list(snap.chain)
+ if mode=='reordered':ids.reverse();chain.reverse()
+ if mode=='wrong-layer':ids[1]='wrong-grant'
+ if mode=='extra':ids.append('wrong-grant');chain.append(chain[-1])
+ if mode=='missing-mid':del ids[1];del chain[1]
+ snap=dataclasses.replace(snap,chain=tuple(chain),chain_grant_ids=tuple(ids));before=fetch_counts(a2.gateway_dsn)
+ with pytest.raises(ExecutionError) as ex:a2.service.accept_invocation(a2.tree.invocation(tool_id=ToolId.REQUEST_READ.value,params=read_params()),snap)
+ assert ex.value.code.value=='CONSTRAINT_MISMATCH' and fetch_counts(a2.gateway_dsn)==before
+ observe('r3-complete-chain-identity',{'mode':mode,'state_unchanged':True})

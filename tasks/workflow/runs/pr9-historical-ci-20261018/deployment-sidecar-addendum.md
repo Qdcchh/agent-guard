@@ -1,0 +1,11 @@
+# PR9 历史20组真实导入观察装配补充
+
+范围仍为P9-05真实source/wheel与原20组；不改变业务源码或安全语义。部署worker独占现有tools/pr9_deploy_inputs.py、test_a33_roles.py/clean_deploy.py、pr9_legacy策展目录/对应单测，允许恢复原公开测试observer前提。精确提案保留于artifacts/pr9-historical-ci-20261018/deploy-worker/sidecar-proposal/，原件来自原A3.2 independent-r2/native-final-archives-r2/{source,wheel}-sidecar-files，两个mode原字节相同。
+
+四种原件SHA：a31_enhanced_live_r1.py=bcc25f52162d7a5d1609df89ecb3643ab801c2b8df1d36039e790d176b7208ec；对应pth=2be4c84c34a38931c59eeca937245691990d7ad68f415b568c97bd6cf573b3ef；a31_runtime_observer.py=3406f8059492ccc0179623b23baa9333e28ffe12f16925aa64d9cfbfa576d6a3；对应pth=c14942db734f447a40d60eb96b7d98d9e4f6df4625627d0b01a4ab99e6fba324。原件以.py.txt/.pth.txt公开策展并记录来源，禁止修改原字节。
+
+只授权原提案物理装配适配：固定历史UID501替换为本轮可信Dockerinspect Config.User与实际process一致的expected_uid；旧/e/{mode}-venv prefix替换为真实非editable解释器sys.prefix。enhanced子进程测试同一动态prefix仅做物理路径迁移。两份pth字节不变。所有原assert除必要路径/当前身份表达式外保持；精确AST/diff/来源SHA记录。
+
+四文件仅进入a33_install生成的独立测试像site-packages，不进入normal12角色像或agent_guard包139源码。每组新建0700 session/observer树，gate/owner.json0600。gate必须验证闭合schema与精确类型（bool不可当UID/int）、真实inspect完整controllerID、当前owner/run/role/imageFullID、currentUID、mode、当前非editable139模块SHA，先核验后调用。role_owner_token只为随机ownership marker，不是认证凭据，不复用历史owner/fullID/记录。导入来源、/proc kernel startticks、PID/PPID/UID、main模块、真实fork/live线程/atexit记录保持真实产生；复制实际生成的证据而非伪造JSON。
+
+原7+live记录、独立PID、actualSIGKILL、全部已加载模块prefix/SHA断言与原20组均保留。先真实source与wheel该原child-kill节点及wrongUID/moduleSHA/fullID/缺live负例，再完整各20组。新门控拒绝须使父控制器非零；Python .pth错误会被解释器吞掉，不能把stderr报错误当拒绝成功。取消/失败清理仅自身记录fullID/owner资源，原失败保留。本补充不代替最终候选冻结及全新high完整实施接受。

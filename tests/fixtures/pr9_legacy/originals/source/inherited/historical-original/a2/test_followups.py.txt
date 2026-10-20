@@ -1,0 +1,126 @@
+"""Supplementary mandatory repetitions, real crash evidence and SQL bypasses."""
+import dataclasses,json,os,signal,subprocess,sys,threading,time
+import psycopg,pytest
+from agent_guard.contracts.execution import ExecutionError,ToolId
+from agent_guard.contracts.ledger import AcceptDisposition,LedgerError,ErrorCode
+from agent_guard.execution import store as es
+from tests.fixtures.execution import build_env,order_params,notification_params,read_params,expire_lease
+from tests.fixtures.state import build_tree
+from tests.fixtures.dbstate import fetch_counts
+from test_review import accepted,observe,counters,effects
+
+@pytest.mark.parametrize('stage',['partial-node','after-event','after-outbox'])
+def test_real_partial_terminal_rollback(a2,monkeypatch,stage):
+ op=accepted(a2).operation_id
+ target={'partial-node':'apply_terminal_counters','after-event':'insert_terminal_event','after-outbox':'insert_pending_receipt'}[stage]
+ original=getattr(es,target)
+ def fail(*args,**kwargs):
+  if stage=='partial-node':original(args[0],args[1][:1])
+  else:original(*args,**kwargs)
+  raise RuntimeError('after actual partial SQL writes')
+ monkeypatch.setattr(es,target,fail)
+ with pytest.raises(RuntimeError):a2.service.run_operation(op,owner_token='partial-owner')
+ state={'stage':stage,'counters':counters(a2),'counts':fetch_counts(a2.gateway_dsn),'status':a2.service.operation_status(op),'effects':effects(a2)}
+ assert state['status']=='EXECUTING' and state['counts']['ag_ledger_events']==1 and state['counts']['ag_ledger_event_nodes']==3 and state['counts']['ag_receipt_outbox']==0
+ assert all(v=={'amount_reserved':70000,'amount_settled':0,'calls_reserved':1,'calls_settled':0} for v in state['counters'])
+ monkeypatch.setattr(es,target,original)
+ assert a2.service.run_operation(op,owner_token='partial-owner').status=='SUCCEEDED'
+ assert effects(a2)['ds_orders']==1 and fetch_counts(a2.gateway_dsn)['ag_receipt_outbox']==1
+ observe('partial-rollback',state)
+
+@pytest.mark.parametrize('round_no',range(10))
+@pytest.mark.parametrize('mode',['same','revoke','replay','altered','new-key'])
+def test_p11_actual_miss_recheck_and_rejection_variants(a2,monkeypatch,mode,round_no):
+ key='race-key';first_key='new-key' if mode=='new-key' else key
+ env=build_env(tree=a2.tree,gateway_dsn=a2.gateway_dsn,downstream_dsn=a2.downstream_dsn)
+ params=order_params(items=(('sku-001',2),)) if mode=='altered' else order_params()
+ inv=a2.tree.invocation(idempotency_key=first_key,jti='shared-proof' if mode=='replay' else 'first-proof',tool_id=ToolId.ORDER_CREATE.value,params=params)
+ missed=threading.Event();committed=threading.Event();original=env.service._find_candidate;times=[]
+ def lookup(v):
+  row=original(v);times.append(row is not None)
+  if len(times)==1:
+   assert row is None;missed.set();assert committed.wait(10)
+  return row
+ monkeypatch.setattr(env.service,'_find_candidate',lookup)
+ result=[]
+ def first():
+  try:result.append(env.service.accept_invocation(inv,env.permission()))
+  except Exception as e:result.append(e)
+ thread=threading.Thread(target=first);thread.start();assert missed.wait(10)
+ second=a2.service.accept_invocation(a2.tree.invocation(idempotency_key=key,jti='shared-proof' if mode=='replay' else 'second-proof',tool_id=ToolId.ORDER_CREATE.value,params=order_params()),a2.permission())
+ if mode=='revoke':
+  from agent_guard.ledger.provisioning import revoke_grant
+  with psycopg.connect(a2.gateway_dsn) as c:revoke_grant(c,a2.tree.mid_id)
+ env.catalog.remove_quote('quote-001','1');committed.set();thread.join(15);assert not thread.is_alive() and len(result)==1
+ r=result[0]
+ if mode=='same':assert r.disposition is AcceptDisposition.EXISTING and r.operation_id==second.operation_id and r.cost==second.cost
+ elif mode=='new-key':assert isinstance(r,ExecutionError)
+ else:assert isinstance(r,LedgerError) and r.code is {'revoke':ErrorCode.REVOKED,'replay':ErrorCode.REPLAY,'altered':ErrorCode.IDEMPOTENCY_CONFLICT}[mode]
+ assert times==[False,mode!='new-key'] and fetch_counts(a2.gateway_dsn)['ag_operations']==1 and fetch_counts(a2.gateway_dsn)['ag_ledger_events']==1
+ assert all(v=={'amount_reserved':70000,'amount_settled':0,'calls_reserved':1,'calls_settled':0} for v in counters(a2)) and effects(a2)['ds_orders']==0
+ observe('p11-repeat',{'mode':mode,'round':round_no,'lookups':times,'result':type(r).__name__})
+
+def test_notification_concurrent_effects_ten_rounds(a2):
+ with psycopg.connect(a2.gateway_dsn) as c:tree=build_tree(c,root_calls=100,mid_calls=100,leaf_calls=100)
+ env=build_env(tree=tree,gateway_dsn=a2.gateway_dsn,downstream_dsn=a2.downstream_dsn)
+ ref=env.service.accept_invocation(tree.invocation(tool_id=ToolId.REQUEST_READ.value,params=read_params()),env.permission()).operation_id
+ assert env.service.run_operation(ref).status=='SUCCEEDED'
+ for i in range(10):
+  params=notification_params(operation_id=ref);op=env.service.accept_invocation(tree.invocation(idempotency_key='note-'+str(i),tool_id=ToolId.NOTIFICATION_SEND.value,params=params),env.permission()).operation_id
+  barrier=threading.Barrier(2);results=[]
+  def call():
+   barrier.wait();results.append(env.downstream.execute(service_secret=env.secret,operation_id=op,tool_id=ToolId.NOTIFICATION_SEND,canonical_params=params,quote=None,expected_amount_fen=0))
+  ts=[threading.Thread(target=call) for _ in range(2)]
+  for t in ts:t.start()
+  for t in ts:t.join(10)
+  assert not any(t.is_alive() for t in ts) and len(results)==2 and len({r.effect_ref for r in results})==1 and sorted(r.already_existed for r in results)==[False,True]
+  assert env.service.reconcile(op).status=='SUCCEEDED'
+  assert effects(env)['ds_notifications']==i+1
+  assert all(v=={'amount_reserved':0,'amount_settled':0,'calls_reserved':0,'calls_settled':i+2} for v in counters(env))
+  assert fetch_counts(env.gateway_dsn)['ag_receipt_outbox']==i+2
+ observe('notification-concurrency',{'rounds':10,'effects':effects(env),'counters':counters(env)})
+
+def test_owned_real_process_kill_and_restart_evidence(a2,tmp_path):
+ op=accepted(a2).operation_id
+ env={k:os.environ[k] for k in ['PATH','PYTHONPATH'] if k in os.environ}
+ env.update(AG_WORKER_GATEWAY_DSN=a2.gateway_dsn,AG_WORKER_DOWNSTREAM_DSN=a2.downstream_dsn,AG_WORKER_SERVICE_SECRET=a2.secret,AG_WORKER_OPERATION_ID=op,AG_WORKER_APPROVED_SUPPLIERS='supplier-001',AG_WORKER_APPROVED_RECIPIENTS='user-demo-001',AG_WORKER_SERVED_REQUESTS='req-001',AG_WORKER_OWNER_TOKEN='review-killed')
+ sync=tmp_path/'sync.json';env.update(AG_WORKER_SYNC_FILE=str(sync),AG_WORKER_RELEASE_FILE=str(tmp_path/'never-release'))
+ proc=subprocess.Popen([sys.executable,'-m','agent_guard.execution.worker'],env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+ try:
+  deadline=time.monotonic()+20
+  while time.monotonic()<deadline:
+   if sync.exists() and sync.stat().st_size:break
+   time.sleep(.02)
+  assert sync.exists();seen=json.loads(sync.read_text());assert seen['pid']==proc.pid and seen['outcome_seen']
+ finally:
+  proc.kill();proc.wait(10)
+ assert proc.returncode==-signal.SIGKILL
+ killed={'pid':proc.pid,'exit':proc.returncode,'status':a2.service.operation_status(op),'counts':fetch_counts(a2.gateway_dsn),'counters':counters(a2),'effects':effects(a2)}
+ assert killed['status']=='EXECUTING' and killed['effects']['ds_orders']==1 and killed['counts']['ag_receipt_outbox']==0 and killed['counts']['ag_ledger_events']==1
+ expire_lease(a2.gateway_dsn,op);env.pop('AG_WORKER_SYNC_FILE');env.pop('AG_WORKER_RELEASE_FILE');env['AG_WORKER_OWNER_TOKEN']='review-restarted'
+ other=subprocess.Popen([sys.executable,'-m','agent_guard.execution.worker'],env=env,stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True)
+ stdout,stderr=other.communicate(timeout=30);assert other.returncode==0 and other.pid!=proc.pid
+ payload=json.loads(stdout);assert payload['status']=='SUCCEEDED' and payload['previous_status']=='EXECUTING' and payload['fencing_version']==2
+ assert effects(a2)['ds_orders']==1 and fetch_counts(a2.gateway_dsn)['ag_ledger_events']==2 and fetch_counts(a2.gateway_dsn)['ag_ledger_event_nodes']==6 and fetch_counts(a2.gateway_dsn)['ag_receipt_outbox']==1
+ assert all(v=={'amount_reserved':0,'amount_settled':70000,'calls_reserved':0,'calls_settled':1} for v in counters(a2))
+ observe('process-restart',{'killed':killed,'restart_pid':other.pid,'restart_exit':other.returncode,'result':payload,'final_counters':counters(a2),'final_effects':effects(a2)})
+
+def test_downstream_wait_must_be_bounded(a2):
+ with a2.downstream._connect() as c:
+  settings=c.execute("SELECT current_setting('connect_timeout', true),current_setting('statement_timeout'),current_setting('lock_timeout')").fetchone()
+ observe('downstream-deadlines',{'statement_timeout':settings[1],'lock_timeout':settings[2]})
+ assert settings[1]!='0' and settings[2]!='0', 'downstream SQL waits unbounded after bounded connect'
+
+@pytest.mark.parametrize('phase',['RESERVE','SETTLE'])
+def test_cannot_append_nodes_to_committed_immutable_event(a2,phase):
+ op=accepted(a2).operation_id;a2.service.run_operation(op)
+ outbox=a2.service.outbox_entry(op)
+ refused=False
+ with psycopg.connect(a2.gateway_dsn) as c:
+  eid=c.execute('SELECT event_id FROM ag_ledger_events WHERE operation_id=%s AND phase=%s',(op,phase)).fetchone()[0]
+  try:
+   with c.transaction():c.execute('INSERT INTO ag_ledger_event_nodes (event_id,position,grant_id,amount_reserved_delta,amount_settled_delta,calls_reserved_delta,calls_settled_delta) VALUES (%s,3,%s,0,0,0,0)',(eid,'unrelated-unregistered-grant'))
+  except psycopg.IntegrityError:refused=True
+ with psycopg.connect(a2.gateway_dsn) as c:n=c.execute('SELECT count(*) FROM ag_ledger_event_nodes WHERE event_id=%s',(eid,)).fetchone()[0]
+ observe('immutable-event-append',{'phase':phase,'refused':refused,'nodes':n,'outbox_unchanged':a2.service.outbox_entry(op)==outbox})
+ assert refused and n==3

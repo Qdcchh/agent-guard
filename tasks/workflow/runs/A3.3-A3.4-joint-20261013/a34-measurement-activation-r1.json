@@ -1,0 +1,78 @@
+{
+  "status": "AUTHORIZED_IMPLEMENTATION",
+  "UTC": "2026-10-13T16:10:23.901497+00:00",
+  "task": "tasks/workflow/runs/A3.3-A3.4-joint-20261013/task-a34-measurement-v1.md",
+  "allowed_paths": [
+    "experiments/agent_guard_bench/runner.py",
+    "experiments/agent_guard_bench/statistics.py",
+    "experiments/agent_guard_bench/microbench.py",
+    "tests/unit/test_a34_statistics.py",
+    "tests/unit/test_a34_microbench.py",
+    "tests/integration/test_a34_experiments.py"
+  ],
+  "evidence": "artifacts/workflow/A3.3-A3.4-joint-measurement-ec30ba69-edcb-48cb-b340-a522c3617da2",
+  "shared_root_readback": "artifacts/workflow/A3.3-delivery-20261011/controller/joint-shared-r2-root-readback.json",
+  "shared_source_pins": [
+    {
+      "path": "experiments/agent_guard_bench/__init__.py",
+      "bytes": 234,
+      "sha256": "72a3072c623d5d91a1f87ae9c7d0b3b5ba7ebff4a85ad81484a365a9eeedc3a5"
+    },
+    {
+      "path": "experiments/agent_guard_bench/oracle.py",
+      "bytes": 4847,
+      "sha256": "7863c5e2773f4b0ebc829d57ea966a0b2d4eed40ad1012ab867b582ee48a085b"
+    },
+    {
+      "path": "experiments/agent_guard_bench/research_contracts.py",
+      "bytes": 11474,
+      "sha256": "82fd2b12dd5cbb82c4b1eaa881dbb60581c71f843815f4f2d191a8a9a7457178"
+    },
+    {
+      "path": "experiments/agent_guard_bench/research_store.py",
+      "bytes": 11283,
+      "sha256": "bdf7d8ab3eed291510e421711a65f91c7ed3263a74f792eb16cdbaec70abdf35"
+    },
+    {
+      "path": "experiments/agent_guard_bench/research_service.py",
+      "bytes": 26874,
+      "sha256": "4676b7c6167d438dd4021d4b50c09afdde5bfa5c5fe74915d1986ad8cf01fb88"
+    },
+    {
+      "path": "experiments/agent_guard_bench/research_worker.py",
+      "bytes": 3573,
+      "sha256": "1cf2afa40229c58ebb2c00ebce29494094ed71f1eea19d9b32eb8a702eb87a5e"
+    },
+    {
+      "path": "experiments/agent_guard_bench/research_evidence.py",
+      "bytes": 1925,
+      "sha256": "1a3d3e91fb3826632bc2c515e62e22ea340496b7a3bce254cea8523880662c84"
+    },
+    {
+      "path": "experiments/research-schema.sql",
+      "bytes": 9072,
+      "sha256": "6aab32d20188af5de81dff791461e09e8a1655c10050015d22f7d6a3d78f50f0"
+    },
+    {
+      "path": "experiments/baseline-capabilities.json",
+      "bytes": 1666,
+      "sha256": "cf43fe9f54b0ef10add8c28b1b958b13bdf156a66bf17684521eec9a8a11ce90"
+    },
+    {
+      "path": "tests/fixtures/a34_experiment.py",
+      "bytes": 43586,
+      "sha256": "ff7aa62cc75f69bdb68f6444c3ddbce9f9ef5228a096b7fd4d6ab08c707b8625"
+    }
+  ],
+  "peer_scope": [
+    "experiments/agent_guard_bench/static_acl.py",
+    "experiments/agent_guard_bench/signed_no_atomic.py",
+    "experiments/agent_guard_bench/sm2_bearer.py",
+    "tests/integration/test_a34_baselines.py"
+  ],
+  "no_peer_consumption": true,
+  "official40000_authorized_now": false,
+  "effective_metadata": "UNKNOWN",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "low"
+}

@@ -1,0 +1,37 @@
+{
+  "kind": "EXACT_CONDITIONAL_CORRECTION_OWNERSHIP",
+  "version": "capacity-v1",
+  "status": "PENDING_NEW_PACKAGE_REVIEW",
+  "worker_owner": "a23-core-capacity-r1-20261005",
+  "exact_writable_paths": [
+    "src/agent_guard/evidence/receipt.py",
+    "tests/fixtures/receipts.py",
+    "tests/unit/test_receipt_publication.py",
+    "tests/integration/test_receipt_publication.py",
+    "tests/integration/test_gateway_receipt_query.py"
+  ],
+  "evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-capacity-r1/",
+  "readonly_stopped_core_source": {
+    "src/agent_guard/execution/receipt_publication.py": "e0dd03d43cb7a2a89a6ae4ba36b956775f009bfad882c889c178daa0683be906",
+    "src/agent_guard/execution/original_material.py": "1c781bd0f6f43855df48214f4859a878a8d2eb17efae1823b62b74355793407f",
+    "src/agent_guard/execution/receipts.py": "32367393ac80a9defe222b314710b11987c767aa05bd046180ced7fc9ff61aff",
+    "src/agent_guard/execution/query.py": "9763ac130ebd0c7f87130f11be3ec64d3beb5a14edf722879a64d205c0d86ac5",
+    "src/agent_guard/execution/verified.py": "96a6c29a3716991ab17956b15e8f2e2d5bae486399eb740c07a06d9f80ee6aa7",
+    "src/agent_guard/execution/store.py": "42b95254488b5c43028efd9284a7726dc8589182cdb32e67fbeafd9741d9e504",
+    "src/agent_guard/gateway/config.py": "e0a5554d0d7eef8da870528d18278255a7f9e345d486c927725a623060c9dbe9",
+    "src/agent_guard/gateway/factory.py": "693ee77387f8174eb3ae7afb2b068c640f40f0547d8f12167cb6b0e4abffd3dc",
+    "src/agent_guard/gateway/endpoint.py": "dd14776c3a709138e04fae76611971b6875246267be2965aadc1a5aa3726e403",
+    "tests/fixtures/receipts.py": "d4e275718917397a2e547445c77011477617d2396adae7deedfe60071afa84d2",
+    "tests/unit/test_receipt_publication.py": "00cd3dc815d85403a3ff0f95dea95f87f08f9b7f0786bfab1aac7793e56715d2",
+    "tests/integration/test_receipt_publication.py": "d17a85151727914563f638c0e73a1dcc41eb3eccfb5501772fef38201e1ec2c3",
+    "tests/integration/test_gateway_receipt_query.py": "f0edd9a4e015c773f410b4ecb956c799d7044753a23db0fb59a06a0095a0a3fa",
+    "src/agent_guard/authorization/permission_snapshot.py": "6e0bfb89d0cc460c3d12c1d253a063623d9d843f5acf098873cd2f8443aea3de"
+  },
+  "readonly_SDK_before_grant_sha256": "cc5043d4e1a63db2f472a9751ccde7d05d6aa15614626936bf6eae203696a9c0",
+  "other_readonly": "all other nonignored candidate, contracts, SQL, locks, docs, control/Git/HEAD/index; complete baseline manifest and ignored full freeze",
+  "scope_activation": "actual new independent PACKAGE_READY plus existing human A23 implementation/conditional scope authorization; NOT granted by this draft",
+  "resources": "new own fullID/owner LinuxPy3.11 and PG16/source and fresh wheel env/cache/HOME/random TEST GW+independent DS DB; source/wheel deadline groups sequential; never reuse old or unrelated containers",
+  "no_children": true,
+  "no_new_SQL_dependencies_or_default_codec_change": true,
+  "later_transfer": "allSTOP own0 then rebind actual SDK/core API; new consumer packages/reviews, CLI4 andHTTPS3, sole integrator29/full119/112, fresh whole-stage independent acceptance"
+}

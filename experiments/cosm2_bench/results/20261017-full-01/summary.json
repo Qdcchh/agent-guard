@@ -1,0 +1,162 @@
+{
+  "schema_version": 2,
+  "run_id": "20261017-full-01",
+  "environment_id": "13a6d195741eac0a69e90e3f8957be6f83c1e11299d4bf23d15a860dac12ba1f",
+  "environment": {
+    "cpu": ": VirtualApple @ 2.50GHz",
+    "python": "3.11.17",
+    "machine": "x86_64",
+    "tongsuopy": "1.0.1",
+    "image": "agent-guard-threshold-gateway-runner:20261017",
+    "image_id": "sha256:997ccb375167a46fb019795a3a59da2d9bc59778b1027e8ec567",
+    "host_cpu": "Apple M5 Pro",
+    "host_arch": "arm64",
+    "emulation": "Docker emulation: arm64 host / amd64 runner",
+    "frost_binary_sha256": "32282203d3fd11e39edf0547e297c6fc65e56fdfbb7585e156039da3b898903b"
+  },
+  "recorded_at": "2026-10-17T11:27:51.081891+00:00",
+  "requested_samples": 100,
+  "warmup": 10,
+  "unit": "ms",
+  "percentile": "nearest-rank ceil(0.95*n)",
+  "status": "COMPLETE",
+  "gateway_evidence": {
+    "accepted": 110,
+    "distinct_business_keys": 110,
+    "approvals": 110,
+    "all_ancestor_counters": [
+      [
+        7700000,
+        0,
+        110,
+        0
+      ],
+      [
+        7700000,
+        0,
+        110,
+        0
+      ],
+      [
+        7700000,
+        0,
+        110,
+        0
+      ]
+    ],
+    "downstream_orders": 0
+  },
+  "adapter_errors": {},
+  "boundaries": {
+    "cosm2_round1": "ExecParty round1 only; key generation excluded",
+    "cosm2_round2": "AuthzParty round2 crypto only; no policy/database",
+    "cosm2_round3": "ExecParty round3 including mature final SM2 verification",
+    "cosm2_total": "same session round1 through round3, including final verification; no DB",
+    "cosm2_round2_db": "Q1 prepared before timer; real AS fullchain, SELECT-only DB predicates and P2 round2; final P1 round3/verification after timer",
+    "gateway_e2e": "ASGI HTTP invocation send through 202 RESERVED response; fresh business key each attempt; bundle/proof/common signing and raw request preparation excluded; downstream worker/effect/receipt excluded",
+    "sm2_sign": "mature Tongsuo sign only; ephemeral key generation excluded",
+    "sm2_verify": "mature Tongsuo verification incl public_key() retrieval",
+    "frost_sign_quorum": "real Rust 2-of-3 V2 action; Python file I/O + process startup + native quorum + Python Ed25519 verification; enrollment excluded"
+  },
+  "metrics": {
+    "cosm2_round1": {
+      "n": 100,
+      "median": 5.3027085,
+      "p95": 5.514584,
+      "min": 5.066875,
+      "max": 6.890916,
+      "status": "MEASURED",
+      "reason": null,
+      "attempts": 100,
+      "failures": 0
+    },
+    "cosm2_round2": {
+      "n": 100,
+      "median": 10.646125,
+      "p95": 10.958584,
+      "min": 10.236375,
+      "max": 11.753708,
+      "status": "MEASURED",
+      "reason": null,
+      "attempts": 100,
+      "failures": 0
+    },
+    "cosm2_round3": {
+      "n": 100,
+      "median": 0.6380415,
+      "p95": 0.701,
+      "min": 0.520125,
+      "max": 1.265375,
+      "status": "MEASURED",
+      "reason": null,
+      "attempts": 100,
+      "failures": 0
+    },
+    "cosm2_total": {
+      "n": 100,
+      "median": 16.5678125,
+      "p95": 16.985875,
+      "min": 15.963125,
+      "max": 18.495,
+      "status": "MEASURED",
+      "reason": null,
+      "attempts": 100,
+      "failures": 0
+    },
+    "cosm2_round2_db": {
+      "n": 100,
+      "median": 26.306645500000002,
+      "p95": 31.344833,
+      "min": 25.41175,
+      "max": 39.406917,
+      "status": "MEASURED",
+      "reason": null,
+      "attempts": 100,
+      "failures": 0
+    },
+    "sm2_sign": {
+      "n": 100,
+      "median": 0.257542,
+      "p95": 0.264709,
+      "min": 0.249541,
+      "max": 0.268292,
+      "status": "MEASURED",
+      "reason": null,
+      "attempts": 100,
+      "failures": 0
+    },
+    "sm2_verify": {
+      "n": 100,
+      "median": 0.2575625,
+      "p95": 0.272666,
+      "min": 0.249917,
+      "max": 0.308167,
+      "status": "MEASURED",
+      "reason": null,
+      "attempts": 100,
+      "failures": 0
+    },
+    "frost_sign_quorum": {
+      "n": 100,
+      "median": 24.70475,
+      "p95": 28.091875,
+      "min": 23.998667,
+      "max": 29.895333,
+      "status": "MEASURED",
+      "reason": null,
+      "attempts": 100,
+      "failures": 0
+    },
+    "gateway_e2e": {
+      "n": 100,
+      "median": 72.02864550000001,
+      "p95": 85.5085,
+      "min": 70.202167,
+      "max": 122.901917,
+      "status": "MEASURED",
+      "reason": null,
+      "attempts": 100,
+      "failures": 0
+    }
+  }
+}

@@ -16,7 +16,11 @@ from agent_guard.ledger.lineage import (
     apply_bundle_migrations,
     load_manifest,
 )
-from agent_guard.ledger.migrate import MigrationError, applied_versions, apply_migrations
+from agent_guard.ledger.migrate import (
+    MigrationError,
+    applied_versions,
+    apply_migrations,
+)
 from agent_guard.ledger.service import ExecutionLedger
 from tests.fixtures.isolation import acquire_namespace, release_namespace
 from tests.fixtures.state import build_tree
@@ -56,9 +60,10 @@ def _prefix(target, tmp_path, source, count):
 def _dump(conn):
     schema = conn.execute("SELECT current_schema()").fetchone()[0]
     tables = conn.execute(
-        "SELECT tablename FROM pg_tables WHERE schemaname=%s ORDER BY tablename", (schema,)
+        "SELECT tablename FROM pg_tables WHERE schemaname=%s ORDER BY tablename",
+        (schema,),
     ).fetchall()
-    return {
+    result = {
         name: sorted(
             conn.execute(
                 sql.SQL("SELECT row_to_json(t)::text FROM {} t").format(
@@ -68,6 +73,45 @@ def _dump(conn):
         )
         for (name,) in tables
     }
+    # Preserve every actual before/after catalog row, including new domains.
+    import time
+
+    from tests.fixtures.a31_common import namespace_evidence
+
+    marker = namespace_evidence(None, connection=conn)
+    evidence = marker.parent / (marker.stem + "-migration-" + str(time.time_ns()) + ".json")
+    evidence.write_text(json.dumps(result, indent=2) + "\n")
+    return result
+
+
+def _old_rows_and_new_audit_initial_values(before, after):
+    allowed = {
+        "ag_operations": {"audit_created_xid", "audit_terminal_xid"},
+        "ag_proofs": {"audit_linked_xid"},
+        "ag_operation_evidence": {"audit_linked_xid"},
+        "ag_receipt_outbox": {"audit_ready_xid"},
+    }
+    for table, encoded in before.items():
+        old = [json.loads(item[0]) for item in encoded]
+        new = [json.loads(item[0]) for item in after[table]]
+        assert len(old) == len(new)
+        for previous, current in zip(old, new, strict=True):
+            additions = set(current) - set(previous)
+            assert additions <= allowed.get(table, set())
+            assert all(current[key] is None for key in additions)
+            assert [key for key in current if key not in additions] == list(previous)
+            assert {
+                key: value for key, value in current.items() if key not in additions
+            } == previous
+    for table in (
+        "ag_audit_streams",
+        "ag_audit_records",
+        "ag_audit_bootstrap",
+        "ag_audit_bootstrap_chunks",
+        "ag_audit_delivery",
+        "ag_audit_delivery_batches",
+    ):
+        assert table in after and after[table] == []
 
 
 def _no_probe(conn):
@@ -86,8 +130,18 @@ def test_public_a_view_rejects_b_legacy_before_bootstrap(target, tmp_path, count
                 applied_versions(conn)
         assert _dump(conn) == before
         apply_bundle_migrations(conn)
-        assert all(_dump(conn)[key] == rows for key, rows in before.items())
-        assert set(applied_versions(conn)) == {"001", "002", "003", "004", "005", "006"}
+        _old_rows_and_new_audit_initial_values(before, _dump(conn))
+        assert set(applied_versions(conn)) == {
+            "001",
+            "002",
+            "003",
+            "004",
+            "005",
+            "006",
+            "007",
+            "008",
+            "009",
+        }
 
 
 def test_completed_bundle_missing_evidence_namespace_refuses(target, downstream_dsn):
@@ -110,7 +164,7 @@ def test_completed_bundle_missing_evidence_namespace_refuses(target, downstream_
         conn.execute(
             "ALTER TABLE ag_schema_migration_lineages ENABLE TRIGGER ag_schema_lineages_guard"
         )
-        conn.execute("DROP TABLE ag_operation_evidence, ag_verified_evidence")
+        conn.execute("DROP TABLE ag_operation_evidence, ag_verified_evidence CASCADE")
         conn.execute("DROP FUNCTION ag_verified_evidence_immutable()")
     with psycopg.connect(target.dsn) as conn:
         before = _dump(conn)
@@ -125,7 +179,8 @@ def test_completed_bundle_missing_evidence_namespace_refuses(target, downstream_
         assert _catalog(conn, schema) == catalog
         conn.execute("SELECT set_config('search_path',%s,true)", (path,))
         assert conn.execute(
-            "SELECT status FROM ag_operations WHERE operation_id=%s", (accepted.operation_id,)
+            "SELECT status FROM ag_operations WHERE operation_id=%s",
+            (accepted.operation_id,),
         ).fetchone() == ("RESERVED",)
         _no_probe(conn)
 
@@ -147,10 +202,20 @@ def test_every_legal_prefix_preserves_all_old_rows(target, tmp_path, source, cou
         path = conn.execute("SHOW search_path").fetchone()[0]
         apply_bundle_migrations(conn)
         after = _dump(conn)
-        assert all(after[k] == v for k, v in before.items())
+        _old_rows_and_new_audit_initial_values(before, after)
         versions = applied_lineage_versions(conn)
-        assert len(versions) == 14
-        assert set(applied_versions(conn)) == {"001", "002", "003", "004", "005", "006"}
+        assert len(versions) == 17
+        assert set(applied_versions(conn)) == {
+            "001",
+            "002",
+            "003",
+            "004",
+            "005",
+            "006",
+            "007",
+            "008",
+            "009",
+        }
         assert apply_bundle_migrations(conn) == []
         assert _dump(conn) == after
         assert conn.execute("SHOW search_path").fetchone()[0] == path
@@ -326,8 +391,8 @@ with psycopg.connect(os.environ['S1_TEST_DSN']) as c:
                 out, err = child.communicate(timeout=10)
                 assert child.returncode == 0, err
                 counts.append(int(out.strip()))
-            assert sorted(counts) == [0, 7]
-            assert len(applied_lineage_versions(observer)) == 14
+            assert sorted(counts) == [0, 10]
+            assert len(applied_lineage_versions(observer)) == 17
             _no_probe(observer)
         finally:
             for child in children:
@@ -385,7 +450,7 @@ with psycopg.connect(os.environ['S1_TEST_DSN']) as c:
             assert _dump(conn) == before
             _no_probe(conn)
             apply_bundle_migrations(conn)
-            assert len(applied_lineage_versions(conn)) == 14
+            assert len(applied_lineage_versions(conn)) == 17
             assert all(_dump(conn)[k] == v for k, v in before.items())
     finally:
         if child.poll() is None:
@@ -423,9 +488,14 @@ def test_b_origin_preserves_available_real_as_history(target, tmp_path, count):
 
     from agent_guard.authorization.code_service import AuthorizationCodeService
     from agent_guard.authorization.consent import AuthorizeClient, ConsentService
-    from agent_guard.authorization.grant_revocation_service import GrantRevocationService
+    from agent_guard.authorization.grant_revocation_service import (
+        GrantRevocationService,
+    )
     from agent_guard.authorization.login import LoginService
-    from agent_guard.authorization.provisioning import register_task_policy, register_user
+    from agent_guard.authorization.provisioning import (
+        register_task_policy,
+        register_user,
+    )
     from agent_guard.authorization.revocation_service import TaskRevocationService
     from tests.integration.test_exchange_service import (
         ISSUER,
@@ -449,7 +519,9 @@ def test_b_origin_preserves_available_real_as_history(target, tmp_path, count):
     if count >= 7:
         _register_admin(target.dsn)
         GrantRevocationService(target.dsn).revoke_grant(
-            tenant_id=TENANT, grant_id=child.ag_grant_id, authenticated_admin_subject=ADMIN
+            tenant_id=TENANT,
+            grant_id=child.ag_grant_id,
+            authenticated_admin_subject=ADMIN,
         )
     if count >= 6:
         TaskRevocationService(target.dsn).revoke_task(
@@ -495,7 +567,9 @@ def test_b_origin_preserves_available_real_as_history(target, tmp_path, count):
             )
             params = _params(ag_task_id="consent-history")
             request = consent.create_request(
-                session_token=session.session_token, csrf_token=session.csrf_token, params=params
+                session_token=session.session_token,
+                csrf_token=session.csrf_token,
+                params=params,
             )
             assert (
                 "code="
@@ -556,7 +630,7 @@ def test_a_origin_preserves_real_terminal_outbox(target, tmp_path, downstream_ds
         assert before["ag_receipt_outbox"] and before["ag_ledger_events"]
         apply_bundle_migrations(conn)
         after = _dump(conn)
-        assert all(after[k] == v for k, v in before.items())
+        _old_rows_and_new_audit_initial_values(before, after)
         assert conn.execute("SELECT count(*) FROM ag_operation_evidence").fetchone() == (0,)
         assert conn.execute(
             "SELECT receipt_status,receipt_jws FROM ag_receipt_outbox"
@@ -584,7 +658,7 @@ def test_bundle_binding_independent_of_session_timezone(target):
     with psycopg.connect(target.dsn) as conn:
         conn.execute("SET TIME ZONE 'Asia/Shanghai'")
         assert apply_bundle_migrations(conn) == []
-        assert len(applied_lineage_versions(conn)) == 14
+        assert len(applied_lineage_versions(conn)) == 17
 
 
 @pytest.mark.parametrize(
@@ -601,7 +675,8 @@ def test_every_original_completion_entry_is_required_without_repair(target, key)
             "ALTER TABLE ag_schema_migration_lineages DISABLE TRIGGER ag_schema_lineages_guard"
         )
         conn.execute(
-            "DELETE FROM ag_schema_migration_lineages WHERE namespace=%s AND version=%s", key
+            "DELETE FROM ag_schema_migration_lineages WHERE namespace=%s AND version=%s",
+            key,
         )
         conn.execute(
             "ALTER TABLE ag_schema_migration_lineages ENABLE TRIGGER ag_schema_lineages_guard"

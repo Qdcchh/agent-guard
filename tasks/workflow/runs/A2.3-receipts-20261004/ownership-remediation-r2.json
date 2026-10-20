@@ -1,0 +1,48 @@
+{
+  "kind": "SUPPLEMENTAL_SAME_STAGE_REMEDIATION_PLAN",
+  "status": "PACKAGE_REVIEW_PENDING_NOT_WRITER_ACTIVE",
+  "sole_writer": "a23-integrator-remediation-r2-20261005",
+  "requested_worker": "gpt-6.1-sol/medium",
+  "effective_metadata": "UNKNOWN",
+  "exact_writable_paths": [
+    "src/agent_guard/execution/original_material.py",
+    "src/agent_guard/execution/receipt_publication.py",
+    "tests/integration/test_receipt_publication.py",
+    "tests/unit/test_receipt_publication.py",
+    "tests/integration/test_receipt_worker_process.py",
+    "README.md",
+    "docs/security-model.md",
+    "docs/acceptance.md",
+    "docs/oauth-oidc-sm2-mvp.md",
+    "tasks/A2-report.md",
+    "docs/crypto-profile-v1.md",
+    "src/agent_guard/execution/__init__.py",
+    ".github/CODEOWNERS"
+  ],
+  "path_count": 13,
+  "default_readonly": true,
+  "resource_status": "NOT_CREATED",
+  "readonly_dependency_binding": "complete remediation-package-freeze-r2.json after controller writes",
+  "historical_v3": {
+    "path": "tasks/workflow/runs/A2.3-receipts-20261004/ownership-v3.json",
+    "sha256": "8a90cd3c1e585d850885683d5b3a2816e8ba1fa6f246e6b65a98066b42d5a174"
+  },
+  "protected_no_changes": [
+    "old SQL and locks",
+    "old workflow machine gates",
+    "shared source APIs",
+    "receipt/JWS semantics and limits",
+    "CI steps",
+    "branch protections and effective CODEOWNER rule"
+  ],
+  "pure_doc_paths": {
+    ".github/CODEOWNERS": "comments only; * @Qdcchh rule bytes remain",
+    "src/agent_guard/execution/__init__.py": "module docstring only; remainder AST and exports unchanged",
+    "docs/crypto-profile-v1.md": "historical/current delivery wording and links only; normative cryptography/encoding unchanged"
+  },
+  "children": "FORBIDDEN",
+  "controller_only": [
+    "state/reports/issues/workflow/task/requirements/bindings",
+    "Git/PR/CI/merge/A3"
+  ]
+}

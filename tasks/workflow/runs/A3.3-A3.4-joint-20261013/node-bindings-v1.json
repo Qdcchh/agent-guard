@@ -1,0 +1,3995 @@
+{
+  "status": "PLANNED_NOT_COLLECTED_NOT_RUN",
+  "inherited_full_binding_pin": {
+    "path": "tasks/workflow/runs/A3.3-delivery-20261011/node-bindings-v3.json",
+    "bytes": 19661385,
+    "sha256": "ed2daaff8b657d8328e3c86f9a7cf9036c377a178439d747a3388618faafc9b0",
+    "read_kind": "complete UTF8 read; JSON parsed where structured; historical/planning not current PASS"
+  },
+  "inherited_obligations_pin": {
+    "path": "tasks/workflow/runs/A3.1-audit-20261008/inherited-bindings-v1.json",
+    "bytes": 17473086,
+    "sha256": "72ce3a703688cc7a928edf32ffbaec783dc140582f1d12154f75f40295d092c5",
+    "read_kind": "complete UTF8 read; JSON parsed where structured; historical/planning not current PASS"
+  },
+  "A33_new_nodes": [
+    {
+      "node_id": "tests/integration/test_a33_roles.py::test_role_init_trust_and_private_mounts",
+      "file": "tests/integration/test_a33_roles.py",
+      "function": "test_role_init_trust_and_private_mounts",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_deploy_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A33-01.01",
+        "A33-01.02",
+        "A33-01.03",
+        "A33-01.04"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A33-01.01.atom",
+          "assertion": "exclusive0700/0600生成AS/各holder/GWreceipt/audit独立用途key",
+          "parent_ref": "A33-01.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-01.02.atom",
+          "assertion": "各角色只读mount，不在日志/model上下文输出secret/token/DSN",
+          "parent_ref": "A33-01.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-01.03.atom",
+          "assertion": "公钥manifest独立交付，不由token/export自带key建trust",
+          "parent_ref": "A33-01.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-01.04.atom",
+          "assertion": "错误kid/role/SPKI、alias路径、重复初始化拒绝且不覆盖",
+          "parent_ref": "A33-01.04",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "new private root exclusive 0700; role keyfiles 0600; CSPRNG independent keys AS/planner/selector/executor/GW/audit",
+          "separate public trust manifest readback"
+        ],
+        "negative": [
+          "repeat init does not overwrite",
+          "alias/symlink path",
+          "wrong kid/role/SPKI",
+          "cross-role secret read denied"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 1,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN",
+      "rounds_note": "Ordinary init/schema cases once per install variant; any actual security race/fault tuple remains ten valid rounds."
+    },
+    {
+      "node_id": "tests/integration/test_a33_roles.py::test_operator_https_did_approval_and_immutable_distribution",
+      "file": "tests/integration/test_a33_roles.py",
+      "function": "test_operator_https_did_approval_and_immutable_distribution",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_deploy_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A33-02.01",
+        "A33-02.02",
+        "A33-02.03",
+        "A33-02.04",
+        "A33-02.05",
+        "A33-02.06"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A33-02.01.atom",
+          "assertion": "operator独立CA hostname验证/无redirect/媒体类型/65536上限、固定三个URL取得",
+          "parent_ref": "A33-02.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-02.02.atom",
+          "assertion": "现有IdentityResolver校验id/controller/kid/SPKI/authentication/invocation/delegation",
+          "parent_ref": "A33-02.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-02.03.atom",
+          "assertion": "错误CA/SAN/跨域redirect/未知URL/错用途/同kid替key拒绝且不形成批准配置",
+          "parent_ref": "A33-02.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-02.04.atom",
+          "assertion": "取得URL时间/cert公开fingerprint/document规范SM3固定批准manifest",
+          "parent_ref": "A33-02.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-02.05.atom",
+          "assertion": "AS/GW受控只读分发approved did_documents，运行远端替换/原dict变化不改变captured字节",
+          "parent_ref": "A33-02.05",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-02.06.atom",
+          "assertion": "缺manifest/hash不符/holder写trust失败；保留B默认HTTPS回归，无生产resolver新mode",
+          "parent_ref": "A33-02.06",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "three fixed HTTPS DID URLs; approved CA and exact SAN; canonical frozen bytes+SM3 and cert fingerprint",
+          "remote/doc caller mutation leaves captured AS/GW bytes unchanged"
+        ],
+        "negative": [
+          "wrong CA",
+          "wrong SAN",
+          "redirect",
+          "unknown URL",
+          "controller/id/purpose/SPKI mismatch",
+          "65537-byte document",
+          "missing/hash-changed manifest",
+          "holder writes trust"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_roles.py::test_three_holder_processes_os_and_network_denials",
+      "file": "tests/integration/test_a33_roles.py",
+      "function": "test_three_holder_processes_os_and_network_denials",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_deploy_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A33-03.01",
+        "A33-03.02",
+        "A33-03.03",
+        "A33-03.04",
+        "A33-03.05",
+        "A33-03.06"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A33-03.01.atom",
+          "assertion": "planner/selector/executor独立PID与身份/私钥，不以线程代替三holder",
+          "parent_ref": "A33-03.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-03.02.atom",
+          "assertion": "OS UID/role容器最小mount实际拒跨角色private读",
+          "parent_ref": "A33-03.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-03.03.atom",
+          "assertion": "holders仅AS/GW/DID/固定handoff route，PG/下游route拒绝",
+          "parent_ref": "A33-03.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-03.04.atom",
+          "assertion": "不把unset env/sharedUID能读全部private目录称隔离",
+          "parent_ref": "A33-03.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-03.05.atom",
+          "assertion": "负例保留role内部读/网络连接exit证据，共同host管理员假设说明",
+          "parent_ref": "A33-03.05",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-03.06.atom",
+          "assertion": "S1 deploy仅冻结S0前置子检查PRECHECK_ONLY，不构成本完整节点PASS；全部S1 native STOP后S2 sole integrator只读执行sole deploy-writer测试，绑定final main/compose/pyproject/docs/README/roles/runner/source/wheel SHA，全参数与原断言不减。",
+          "parent_ref": "A33-03.06",
+          "scope": "S2 final dependencies/phase only; does not convert precheck into fullPASS"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "three different holder PID+role identities and own-key valid requests",
+          "AS/GW/audit real TLS CA hostname checks"
+        ],
+        "negative": [
+          "each other private mount read",
+          "PG TCP route",
+          "downstream route/credential",
+          "arbitrary handoff destination"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_scenarios.py::test_browser_root_and_two_delegations_real_https",
+      "file": "tests/integration/test_a33_scenarios.py",
+      "function": "test_browser_root_and_two_delegations_real_https",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_scenarios_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A33-04.01",
+        "A33-04.02",
+        "A33-04.03",
+        "A33-04.04",
+        "A33-04.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A33-04.01.atom",
+          "assertion": "真实browser cookie/CSRF/state/nonce/redirect/S256+IDToken验签",
+          "parent_ref": "A33-04.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-04.02.atom",
+          "assertion": "operator仅provision user/principal/taskpolicy，不手造root/child代替AS",
+          "parent_ref": "A33-04.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-04.03.atom",
+          "assertion": "三holder真实两次AS签token、root/parent/recipient绑定与scope/resources/金额/次数/时效/depth收窄",
+          "parent_ref": "A33-04.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-04.04.atom",
+          "assertion": "盗parent错误Basic/key拒绝；各维扩权拒绝",
+          "parent_ref": "A33-04.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-04.05.atom",
+          "assertion": "双code根竞态10轮；过期proof锁后/子撤销停用retry不复活",
+          "parent_ref": "A33-04.05",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "real login cookie/CSRF/state/nonce/S256/code and IDToken verify",
+          "real two AS exchanges; depth2/1/0; 100000/80000/70000 amount; calls12/10/8; version1 canonical four tools"
+        ],
+        "negative": [
+          "wrong Basic/key with stolen parent",
+          "every scope/resource/amount/call/time/depth expansion",
+          "double-code root race",
+          "proof expires after lock",
+          "revoked child/key retry"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_scenarios.py::test_three_holder_four_tools_query_receipt_anchor_export",
+      "file": "tests/integration/test_a33_scenarios.py",
+      "function": "test_three_holder_four_tools_query_receipt_anchor_export",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_scenarios_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A33-05.01",
+        "A33-05.02",
+        "A33-05.03",
+        "A33-05.04",
+        "A33-05.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A33-05.01.atom",
+          "assertion": "request.read/document.read/order.create/template.send全固定params与可信资源报价",
+          "parent_ref": "A33-05.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-05.02.atom",
+          "assertion": "金额integer CNY100000/80000/70000示例；四工具each calls1",
+          "parent_ref": "A33-05.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-05.03.atom",
+          "assertion": "结果查询新purpose/jti，原grant/holder当前有效；零额读取通知也次数结算",
+          "parent_ref": "A33-05.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-05.04.atom",
+          "assertion": "query OWNER与proof重放检查不新增账本；各工具结果variant正确",
+          "parent_ref": "A33-05.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-05.05.atom",
+          "assertion": "receipt READY/规范result/真实JWS→journal→独立checkpoint→export→独立offline同任务关联",
+          "parent_ref": "A33-05.05",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "request.read→document.read→order.create trusted70000 quote→template.send original order; each calls1",
+          "fresh result-read purpose/jti→READY real JWS→journal→independent checkpoint→export→independent trust offline"
+        ],
+        "negative": [
+          "wrong query owner",
+          "proof replay",
+          "variant mismatch",
+          "mutated receipt result/path/delta"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_scenarios.py::test_downstream_separate_domain_service_auth_and_effects",
+      "file": "tests/integration/test_a33_scenarios.py",
+      "function": "test_downstream_separate_domain_service_auth_and_effects",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_scenarios_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A33-06.01",
+        "A33-06.02",
+        "A33-06.03",
+        "A33-06.04",
+        "A33-06.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A33-06.01.atom",
+          "assertion": "保留既有MockDownstream，无无依据RPC/TLSdaemon新增",
+          "parent_ref": "A33-06.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-06.02.atom",
+          "assertion": "GW与DS不同数据库连接/事务，worker可信私有凭据",
+          "parent_ref": "A33-06.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-06.03.atom",
+          "assertion": "无/错service_secret execute/query拒绝，order/notify实际effect均核",
+          "parent_ref": "A33-06.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-06.04.atom",
+          "assertion": "holder无DSN/secret/mount/route，固定recipient/template拒任意URL字段",
+          "parent_ref": "A33-06.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-06.05.atom",
+          "assertion": "ds唯一operation意图冲突、迟到终局拒绝仍不能成功",
+          "parent_ref": "A33-06.05",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "gateway and downstream separate DB connections/transactions; real order+notification one effect"
+        ],
+        "negative": [
+          "missing/wrong downstream service secret execute and query",
+          "holder DS route/mount",
+          "arbitrary URL/template/recipient",
+          "same operation changed intent",
+          "late terminal conflicting effect"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_scenarios.py::test_attack_set_exact_binding_no_side_effects",
+      "file": "tests/integration/test_a33_scenarios.py",
+      "function": "test_attack_set_exact_binding_no_side_effects",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_scenarios_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A33-07.01",
+        "A33-07.02",
+        "A33-07.03",
+        "A33-07.04",
+        "A33-07.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A33-07.01.atom",
+          "assertion": "盗token无私钥invoke/exchange均拒绝且零效果",
+          "parent_ref": "A33-07.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-07.02.atom",
+          "assertion": "同proof重放 vs 新proof同键同意图区别",
+          "parent_ref": "A33-07.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-07.03.atom",
+          "assertion": "task/tenant/aud/toolversion/quote/delivery/holder/idem字段替换拒绝",
+          "parent_ref": "A33-07.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-07.04.atom",
+          "assertion": "重复JSON/重复SKU/bool数量/空缺资源/负数/溢出/URL路径/通知扩权拒绝",
+          "parent_ref": "A33-07.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-07.05.atom",
+          "assertion": "全祖先四计数/操作/事件/outbox/ds前后核，staging允许值独立记录",
+          "parent_ref": "A33-07.05",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "valid signed holder controls; fresh proof same key same intent EXISTING"
+        ],
+        "negative": [
+          "stolen token invoke and exchange",
+          "same proof replay",
+          "task/tenant/aud/toolversion/quote/delivery/holder/key changed",
+          "duplicateJSON/SKU/bool/empty/missing/negative/overflow/URL"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_scenarios.py::test_root_mid_calls_revocation_final_clock_races",
+      "file": "tests/integration/test_a33_scenarios.py",
+      "function": "test_root_mid_calls_revocation_final_clock_races",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_scenarios_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A33-08.01",
+        "A33-08.02",
+        "A33-08.03",
+        "A33-08.04",
+        "A33-08.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A33-08.01.atom",
+          "assertion": "双分支70000争100000最多一个accept",
+          "parent_ref": "A33-08.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-08.02.atom",
+          "assertion": "root仍有余额mid不足拒绝；直系/后代共计",
+          "parent_ref": "A33-08.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-08.03.atom",
+          "assertion": "read/notify/order次数共计；UNKNOWN保留",
+          "parent_ref": "A33-08.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-08.04.atom",
+          "assertion": "撤销先commit拒绝与accept先发生可内部恢复区别",
+          "parent_ref": "A33-08.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-08.05.atom",
+          "assertion": "新增journal/query等待后最终TTL检查，10轮独立conn/barrier/clock轨迹",
+          "parent_ref": "A33-08.05",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "distinct mid80000/leaf70000 branches of root100000; two70000 competitors; complete accepts at most1",
+          "root enough/mid insufficient; direct+descendant call sharing",
+          "accept commit before revoke then internal recovery"
+        ],
+        "negative": [
+          "revoke commit before accept",
+          "late proof/token/ancestor expiry after journal/query wait",
+          "calls exhausted reads/notifications/orders"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_scenarios.py::test_process_crash_late_success_recovery_fault_matrix",
+      "file": "tests/integration/test_a33_scenarios.py",
+      "function": "test_process_crash_late_success_recovery_fault_matrix",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_scenarios_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A33-09.01",
+        "A33-09.02",
+        "A33-09.03",
+        "A33-09.04",
+        "A33-09.05",
+        "A33-09.06"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A33-09.01.atom",
+          "assertion": "commit reserve后worker未起/kill新PID恢复",
+          "parent_ref": "A33-09.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-09.02.atom",
+          "assertion": "DS成功后同步点kill→lease接管、UNKNOWN不release",
+          "parent_ref": "A33-09.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-09.03.atom",
+          "assertion": "terminal TX节点/event/outbox故障全回滚，layered exception明确标层",
+          "parent_ref": "A33-09.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-09.04.atom",
+          "assertion": "none后late success/多recoverer/旧lease/恢复期间撤销每组10轮",
+          "parent_ref": "A33-09.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-09.05.atom",
+          "assertion": "接受后quote修改删除保原snapshot，坏金额/意图/variant保持UNKNOWN",
+          "parent_ref": "A33-09.05",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-09.06.atom",
+          "assertion": "业务端到端effect/全计数/事件/outbox/lease精确核",
+          "parent_ref": "A33-09.06",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "true SIGKILL after reserve commit and after DS effect; new PID same owned DB recovery",
+          "none then late success; simultaneous recovery; accepted quote modified/deleted remains original"
+        ],
+        "negative": [
+          "old lease owner/version/status/expiry terminal",
+          "wrong amount/intent/variant UNKNOWN",
+          "terminal node/event/outbox injection rolls back (explicit layered exception)"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_scenarios.py::test_receipt_audit_export_faults_and_offline_mutations",
+      "file": "tests/integration/test_a33_scenarios.py",
+      "function": "test_receipt_audit_export_faults_and_offline_mutations",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_scenarios_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A33-10.01",
+        "A33-10.02",
+        "A33-10.03",
+        "A33-10.04",
+        "A33-10.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A33-10.01.atom",
+          "assertion": "publisher签前/签后save前kill与READY后丢响应新PID恢复",
+          "parent_ref": "A33-10.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-10.02.atom",
+          "assertion": "audit持久checkpoint后丢响应/kill restart原保存结果，连续seq拒分叉/回退",
+          "parent_ref": "A33-10.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-10.03.atom",
+          "assertion": "receipt_id/iat/payload/旧READY bytes不变，真SM2独立公钥验签",
+          "parent_ref": "A33-10.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-10.04.atom",
+          "assertion": "错typ/kid/path/all-node delta/result/raw材料/export截断/重排/锚定删除/rollback拒绝",
+          "parent_ref": "A33-10.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-10.05.atom",
+          "assertion": "未锚定尾部与无latest checkpoint报告有限结论，不本地chain冒充audit",
+          "parent_ref": "A33-10.05",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "publisher kill before signing/after signing before save/READY reply loss; new PID original receipt bytes",
+          "audit commit then reply loss/restart same CP id/time/JWS"
+        ],
+        "negative": [
+          "wrong typ/kid/path/delta/result/raw evidence",
+          "export truncated/reordered/anchored deleted/rolledback",
+          "fork/regressed checkpoint"
+        ],
+        "limits": [
+          "unanchored tail and missing latest checkpoint retain limited conclusion"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_clean_deploy.py::test_clean_source_wheel_without_model_api",
+      "file": "tests/integration/test_a33_clean_deploy.py",
+      "function": "test_clean_source_wheel_without_model_api",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_deploy_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A33-11.01",
+        "A33-11.02",
+        "A33-11.03",
+        "A33-11.04",
+        "A33-11.05",
+        "A33-11.06",
+        "A33-11.07"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A33-11.01.atom",
+          "assertion": "仓库外cwd/cleanPYTHONPATH/no tests import，source/wheel独占namespace",
+          "parent_ref": "A33-11.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-11.02.atom",
+          "assertion": "安装runtime/dev locks/PEP517固定构建，pipcheck与import/migration实际来源",
+          "parent_ref": "A33-11.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-11.03.atom",
+          "assertion": "全套ordinary/integration/A1单列/sourcewheel历史原probe等价，不复制历史PASS",
+          "parent_ref": "A33-11.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-11.04.atom",
+          "assertion": "bundle migration第一次完整apply重复noop，SQLchecksum/resource真实轮包",
+          "parent_ref": "A33-11.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-11.05.atom",
+          "assertion": "noModel API/offline deterministic workflow，README逐字命令实跑并原件保留",
+          "parent_ref": "A33-11.05",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-11.06.atom",
+          "assertion": "S1 deploy仅冻结S0前置子检查PRECHECK_ONLY，不构成本完整节点PASS；全部S1 native STOP后S2 sole integrator只读执行sole deploy-writer测试，绑定final main/compose/pyproject/docs/README/roles/runner/source/wheel SHA，全参数与原断言不减。",
+          "parent_ref": "A33-11.06",
+          "scope": "S2 final dependencies/phase only; does not convert precheck into fullPASS"
+        },
+        {
+          "atom_id": "A33-11.07.atom",
+          "assertion": "最终README逐字命令与normal/attacks/faults/export/offline完整实际流程仅S2最终CLI/wheel/compose/roles/runner冻结后source+wheel实跑；S0main不import未生成S1模块，S2main唯一写权自shared_front转移给single_integrator。",
+          "parent_ref": "A33-11.07",
+          "scope": "S2 final dependencies/phase only; does not convert precheck into fullPASS"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "Python3.11 locked source noneditable + wheel noneditable separate outside-repo cwd cleanPYTHONPATH/no testsimports",
+          "real pipcheck/importsitepackages/migration module and child SHA; first apply+repeat noop",
+          "final README exact commands no model API"
+        ],
+        "negative": [
+          "missing wheel resource/module",
+          "bad checksum",
+          "tests/src shadow import",
+          "all inherited mandatory regressions not run"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_clean_deploy.py::test_rotation_upgrade_backup_restore_owner_cleanup",
+      "file": "tests/integration/test_a33_clean_deploy.py",
+      "function": "test_rotation_upgrade_backup_restore_owner_cleanup",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_deploy_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A33-12.01",
+        "A33-12.02",
+        "A33-12.03",
+        "A33-12.04",
+        "A33-12.05",
+        "A33-12.06"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A33-12.01.atom",
+          "assertion": "AS/GW/audit角色新kid旧历史JWS仍真验签，旧READY不重签",
+          "parent_ref": "A33-12.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-12.02.atom",
+          "assertion": "holder新kid私钥持证明审批旧key停用拒外部，新immutable快照受控分发",
+          "parent_ref": "A33-12.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-12.03.atom",
+          "assertion": "001/003非零/撤销/证据七表逐列保全、非法升级无变、legacy保预算隔离",
+          "parent_ref": "A33-12.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-12.04.atom",
+          "assertion": "备份as-of/缺历史材料边界，latest audit独立信任不回退",
+          "parent_ref": "A33-12.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-12.05.atom",
+          "assertion": "owner labels/project/containerID/net/volume/PID清理只本轮，0遗留证据",
+          "parent_ref": "A33-12.05",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-12.06.atom",
+          "assertion": "S1 deploy仅冻结S0前置子检查PRECHECK_ONLY，不构成本完整节点PASS；全部S1 native STOP后S2 sole integrator只读执行sole deploy-writer测试，绑定final main/compose/pyproject/docs/README/roles/runner/source/wheel SHA，全参数与原断言不减。",
+          "parent_ref": "A33-12.06",
+          "scope": "S2 final dependencies/phase only; does not convert precheck into fullPASS"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "approved holder rotation actual possession; stop old key; retained historical AS/GW/audit public keys and unchanged READY",
+          "001/003 nonzero seven-table per-column upgrade/backup as-of restore; own0 cleanup"
+        ],
+        "negative": [
+          "illegal old data upgrade must unchanged",
+          "old external token after deactivation",
+          "rollback independent latest anchor",
+          "cleanup nonowned resource"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_clean_deploy.py::test_max_legal_payload_bounded_package_and_expired_public_export",
+      "file": "tests/integration/test_a33_clean_deploy.py",
+      "function": "test_max_legal_payload_bounded_package_and_expired_public_export",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_deploy_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A33-13.01",
+        "A33-13.02",
+        "A33-13.03",
+        "A33-13.04",
+        "A33-13.05",
+        "A33-13.06"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A33-13.01.atom",
+          "assertion": "256items最大合法工具body/result/完整两级宽授权真实可达正例+分层超限负例",
+          "parent_ref": "A33-13.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-13.02.atom",
+          "assertion": "固定workload包预检上限256MiB；不因此放宽现有65536HTTP/JWS或A32codec分项限制",
+          "parent_ref": "A33-13.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-13.03.atom",
+          "assertion": "整包超过界限明确失败且不静默丢record；与accepted A32包cap冲突须审包重核",
+          "parent_ref": "A33-13.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-13.04.atom",
+          "assertion": "包manifest每字段规范bytes与SM3/count/path/delta/checkpoint重算",
+          "parent_ref": "A33-13.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-13.05.atom",
+          "assertion": "分发前确认全部export synthetic token最晚exp已过/撤销；不泄私钥/DSN/livecredentials",
+          "parent_ref": "A33-13.05",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-13.06.atom",
+          "assertion": "S1 deploy仅冻结S0前置子检查PRECHECK_ONLY，不构成本完整节点PASS；全部S1 native STOP后S2 sole integrator只读执行sole deploy-writer测试，绑定final main/compose/pyproject/docs/README/roles/runner/source/wheel SHA，全参数与原断言不减。",
+          "parent_ref": "A33-13.06",
+          "scope": "S2 final dependencies/phase only; does not convert precheck into fullPASS"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "real AS three-layer wide chain +256 short-SKU items actual accepted maximum legal body/result→export offline",
+          "actual all bytes/base64/metadata/newline counted cap268435456; HTTP/JWS65536 and tighter A32 codec retained",
+          "public export all synthetic tokens expired/revoked"
+        ],
+        "negative": [
+          "257items",
+          "component cap+1",
+          "aggregate cap+1 must fail without dropping records",
+          "mutated manifest count/path/delta/checkpoint"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/test_a33_documents.py::test_release_materials_commands_and_actual_demo_artifacts",
+      "file": "tests/test_a33_documents.py",
+      "function": "test_release_materials_commands_and_actual_demo_artifacts",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "single_integrator",
+      "sole_write_phase": "S2_SERIAL",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A33-14.01",
+        "A33-14.02",
+        "A33-14.03",
+        "A33-14.04",
+        "A33-14.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A33-14.01.atom",
+          "assertion": "现行README/HANDOFF/tasksA2report等入口状态统一，不改历史原件",
+          "parent_ref": "A33-14.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-14.02.atom",
+          "assertion": "部署/运行/角色/信任/轮换/升级/恢复/清理/noAPI操作自足",
+          "parent_ref": "A33-14.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-14.03.atom",
+          "assertion": "演示5分钟实际脚本及result文件、技术报告绑定版本/限制",
+          "parent_ref": "A33-14.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-14.04.atom",
+          "assertion": "必须交付可执行可复现demo脚本及source/wheel实际运行证据；能真实录制时另交诚实video/terminal.cast与SHA，未录则报告未录，不以假动画替代，也不单因缺视频否定脚本交付",
+          "parent_ref": "A33-14.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A33-14.05.atom",
+          "assertion": "freeze完整tracked/nonignored候选hash→native停写→fresh reviewer全矩阵实跑",
+          "parent_ref": "A33-14.05",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "self-contained deployment/roles/trust/rotation/upgrade/recovery/cleanup instructions and actual ≤300s demonstration script outputs source+wheel",
+          "complete final frozen version technical materials; optional actual video/cast honest status"
+        ],
+        "negative": [
+          "stale entry status",
+          "missing real command evidence",
+          "fake animation as execution",
+          "missing fresh review/native stop/full hash"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_roles.py::test_s0_role_init_private_permissions_precheck",
+      "file": "tests/integration/test_a33_roles.py",
+      "function": "test_s0_role_init_private_permissions_precheck",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_deploy_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S1_FROZEN_S0_PRECHECK_ONLY",
+      "run_owner": "a33_deploy_after_shared_stop",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "PRECHECK_ONLY",
+      "parent_subassertion_refs": [
+        "A33-01.01",
+        "A33-01.03",
+        "A33-01.04"
+      ],
+      "local_assertion_atoms": [
+        {
+          "assertion": "exclusive0700/0600/CSPRNG independent keys",
+          "scope": "PRECHECK_ONLY"
+        },
+        {
+          "assertion": "repeat refuse no overwrite",
+          "scope": "PRECHECK_ONLY"
+        },
+        {
+          "assertion": "public trust manifest only; no S1 role claims",
+          "scope": "PRECHECK_ONLY"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "actual frozen S0 API"
+        ],
+        "negative": [
+          "bad S0 input",
+          "missing S1 modules not imported"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 1,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_roles.py::test_s0_did_bootstrap_approval_precheck",
+      "file": "tests/integration/test_a33_roles.py",
+      "function": "test_s0_did_bootstrap_approval_precheck",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_deploy_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S1_FROZEN_S0_PRECHECK_ONLY",
+      "run_owner": "a33_deploy_after_shared_stop",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "PRECHECK_ONLY",
+      "parent_subassertion_refs": [
+        "A33-02.01",
+        "A33-02.02",
+        "A33-02.03",
+        "A33-02.04",
+        "A33-02.05",
+        "A33-02.06"
+      ],
+      "local_assertion_atoms": [
+        {
+          "assertion": "three fixed HTTPS URL approved CA/SAN/no redirect/registry purpose/SPKI",
+          "scope": "PRECHECK_ONLY"
+        },
+        {
+          "assertion": "captured immutable bytes and approved manifest; no full pipeline claims",
+          "scope": "PRECHECK_ONLY"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "actual frozen S0 API"
+        ],
+        "negative": [
+          "bad S0 input",
+          "missing S1 modules not imported"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 1,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_clean_deploy.py::test_s0_install_cli_precheck",
+      "file": "tests/integration/test_a33_clean_deploy.py",
+      "function": "test_s0_install_cli_precheck",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a33_deploy_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S1_FROZEN_S0_PRECHECK_ONLY",
+      "run_owner": "a33_deploy_after_shared_stop",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "PRECHECK_ONLY",
+      "parent_subassertion_refs": [
+        "A33-11.01",
+        "A33-11.02"
+      ],
+      "local_assertion_atoms": [
+        {
+          "assertion": "source noneditable S0 imports/init/check/provision",
+          "scope": "PRECHECK_ONLY"
+        },
+        {
+          "assertion": "__main__ does not import missing S1 modules; PRECHECK_ONLY",
+          "scope": "PRECHECK_ONLY"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "actual frozen S0 API"
+        ],
+        "negative": [
+          "bad S0 input",
+          "missing S1 modules not imported"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 1,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a33_registration.py::test_registered_confirmation_real_remote_and_delivery",
+      "file": "tests/integration/test_a33_registration.py",
+      "function": "test_registered_confirmation_real_remote_and_delivery",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "S0_remediation_after_fresh_v3_package_ready",
+      "sole_execution_phase": "S0_local_then_S2_complete_and_fresh_independent_acceptance",
+      "kind": "REAL_SEPARATE_PG_TLS_PROCESS_REGISTRATION",
+      "parent_subassertion_refs": [
+        "A33-05.05",
+        "A33-10.02"
+      ],
+      "supplemental_case_refs": [
+        "A33-REG-01",
+        "A33-REG-02"
+      ],
+      "behavior": "true remote committed descriptor/key/principals -> local exact confirmation -> real HTTPS delivery ACK; exact repeat before/after ACK leaves cursor unchanged",
+      "modes": [
+        "source",
+        "noneditable wheel"
+      ],
+      "race_or_crash_rounds": null
+    },
+    {
+      "node_id": "tests/integration/test_a33_registration.py::test_registered_confirmation_rejections_zero_write",
+      "file": "tests/integration/test_a33_registration.py",
+      "function": "test_registered_confirmation_rejections_zero_write",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "S0_remediation_after_fresh_v3_package_ready",
+      "sole_execution_phase": "S0_local_then_S2_complete_and_fresh_independent_acceptance",
+      "kind": "REAL_SEPARATE_PG_TLS_PROCESS_REGISTRATION",
+      "parent_subassertion_refs": [
+        "A33-05.05",
+        "A33-10.02"
+      ],
+      "supplemental_case_refs": [
+        "A33-REG-03",
+        "A33-REG-04"
+      ],
+      "behavior": "wrong scope/epoch/genesis/bootstrap/index/count/bytes/type/bool/missing/uncommitted bootstrap/illegal cursor; exact DB zero-write projection; local confirmation rollback does not alter independent remote rows",
+      "modes": [
+        "source",
+        "noneditable wheel"
+      ],
+      "race_or_crash_rounds": null
+    },
+    {
+      "node_id": "tests/integration/test_a33_registration.py::test_registered_confirmation_crash_recovery",
+      "file": "tests/integration/test_a33_registration.py",
+      "function": "test_registered_confirmation_crash_recovery",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "S0_remediation_after_fresh_v3_package_ready",
+      "sole_execution_phase": "S0_local_then_S2_complete_and_fresh_independent_acceptance",
+      "kind": "REAL_SEPARATE_PG_TLS_PROCESS_REGISTRATION",
+      "parent_subassertion_refs": [
+        "A33-05.05",
+        "A33-10.02"
+      ],
+      "supplemental_case_refs": [
+        "A33-REG-05",
+        "A33-REG-06"
+      ],
+      "behavior": "remote committed/local confirmation not committed: actual killed operator PID/new process original-descriptor retry, ten valid rounds per source/wheel; remote conflicting/failing register leaves local required, no overwrite",
+      "modes": [
+        "source",
+        "noneditable wheel"
+      ],
+      "race_or_crash_rounds": 10
+    }
+  ],
+  "A33_requirement_union": [
+    {
+      "requirement_id": "A33-01",
+      "original_behavior": "代理只持自身key/clientcredential；AS/GW/audit不同key；首次登记和替换需管理员确认及持钥证明；可信公钥来自独立配置。",
+      "mandatory_run": "unit + real-PG integration + trusted TLS/process integration",
+      "race_or_crash_10_rounds": false,
+      "process_evidence": "real role PID/containerID when applicable",
+      "db_oracle_required": "真实PG before/after：root及全部祖先 amount_reserved/amount_settled/calls_reserved/calls_settled、ag_operations状态/原意图/首次材料、events及node delta、proof/evidence关联、leases owner/version/state/expiry、receipt outbox/JWS/signed_at、ds_operations/orders/notifications及results、journal序号/前摘要/记录、audit checkpoint。表名按前段accepted schema重核。业务拒绝零效果/零预留，允许的proof staging须单列；retry/query不替换首次证据、不新增业务计数；UNKNOWN保留预留；terminal最多一次。",
+      "original_planned_test": {
+        "file": "tests/integration/test_a33_roles.py",
+        "function": "test_role_init_trust_and_private_mounts",
+        "status": "PLANNED_NOT_IMPLEMENTED"
+      },
+      "local_node": "tests/integration/test_a33_roles.py::test_role_init_trust_and_private_mounts",
+      "subassertions": [
+        "A33-01.01",
+        "A33-01.02",
+        "A33-01.03",
+        "A33-01.04"
+      ],
+      "whole_parent_proven_by_local_node": false,
+      "union_nodes": [
+        "tests/integration/test_a33_roles.py::test_role_init_trust_and_private_mounts",
+        "tests/integration/test_a33_roles.py::test_s0_role_init_private_permissions_precheck"
+      ]
+    },
+    {
+      "requirement_id": "A33-02",
+      "original_behavior": "真实did:web解析和用途/SPKI校验，预登记域名精确路径；运行online公钥变化不能自动批准；既有factory捕获不可变approved快照。",
+      "mandatory_run": "unit + real-PG integration + trusted TLS/process integration",
+      "race_or_crash_10_rounds": false,
+      "process_evidence": "real role PID/containerID when applicable",
+      "db_oracle_required": "真实PG before/after：root及全部祖先 amount_reserved/amount_settled/calls_reserved/calls_settled、ag_operations状态/原意图/首次材料、events及node delta、proof/evidence关联、leases owner/version/state/expiry、receipt outbox/JWS/signed_at、ds_operations/orders/notifications及results、journal序号/前摘要/记录、audit checkpoint。表名按前段accepted schema重核。业务拒绝零效果/零预留，允许的proof staging须单列；retry/query不替换首次证据、不新增业务计数；UNKNOWN保留预留；terminal最多一次。",
+      "original_planned_test": {
+        "file": "tests/integration/test_a33_roles.py",
+        "function": "test_operator_https_did_approval_and_immutable_distribution",
+        "status": "PLANNED_NOT_IMPLEMENTED"
+      },
+      "local_node": "tests/integration/test_a33_roles.py::test_operator_https_did_approval_and_immutable_distribution",
+      "subassertions": [
+        "A33-02.01",
+        "A33-02.02",
+        "A33-02.03",
+        "A33-02.04",
+        "A33-02.05",
+        "A33-02.06"
+      ],
+      "whole_parent_proven_by_local_node": false,
+      "union_nodes": [
+        "tests/integration/test_a33_roles.py::test_operator_https_did_approval_and_immutable_distribution",
+        "tests/integration/test_a33_roles.py::test_s0_did_bootstrap_approval_precheck"
+      ]
+    },
+    {
+      "requirement_id": "A33-03",
+      "original_behavior": "三个代理两级委托；代理无下游管理凭据/账本写权限；同进程仅逻辑身份，同宿主不等于跨组织。",
+      "mandatory_run": "unit + real-PG integration + trusted TLS/process integration",
+      "race_or_crash_10_rounds": false,
+      "process_evidence": "real role PID/containerID when applicable",
+      "db_oracle_required": "真实PG before/after：root及全部祖先 amount_reserved/amount_settled/calls_reserved/calls_settled、ag_operations状态/原意图/首次材料、events及node delta、proof/evidence关联、leases owner/version/state/expiry、receipt outbox/JWS/signed_at、ds_operations/orders/notifications及results、journal序号/前摘要/记录、audit checkpoint。表名按前段accepted schema重核。业务拒绝零效果/零预留，允许的proof staging须单列；retry/query不替换首次证据、不新增业务计数；UNKNOWN保留预留；terminal最多一次。",
+      "original_planned_test": {
+        "file": "tests/integration/test_a33_roles.py",
+        "function": "test_three_holder_processes_os_and_network_denials",
+        "status": "PLANNED_NOT_IMPLEMENTED"
+      },
+      "local_node": "tests/integration/test_a33_roles.py::test_three_holder_processes_os_and_network_denials",
+      "subassertions": [
+        "A33-03.01",
+        "A33-03.02",
+        "A33-03.03",
+        "A33-03.04",
+        "A33-03.05"
+      ],
+      "whole_parent_proven_by_local_node": false,
+      "union_nodes": [
+        "tests/integration/test_a33_roles.py::test_three_holder_processes_os_and_network_denials"
+      ],
+      "additional_amendment_subassertions": [
+        "A33-03.06"
+      ]
+    },
+    {
+      "requirement_id": "A33-04",
+      "original_behavior": "真登录/同意state nonce PKCE及一次性code、永久唯一root；父proof和Basic委托AS签child，逐维收窄与重试不复活。",
+      "mandatory_run": "unit + real-PG integration + trusted TLS/process integration",
+      "race_or_crash_10_rounds": true,
+      "process_evidence": "real PID/start/kill/restart/exit+barrier trace",
+      "db_oracle_required": "真实PG before/after：root及全部祖先 amount_reserved/amount_settled/calls_reserved/calls_settled、ag_operations状态/原意图/首次材料、events及node delta、proof/evidence关联、leases owner/version/state/expiry、receipt outbox/JWS/signed_at、ds_operations/orders/notifications及results、journal序号/前摘要/记录、audit checkpoint。表名按前段accepted schema重核。业务拒绝零效果/零预留，允许的proof staging须单列；retry/query不替换首次证据、不新增业务计数；UNKNOWN保留预留；terminal最多一次。",
+      "original_planned_test": {
+        "file": "tests/integration/test_a33_scenarios.py",
+        "function": "test_browser_root_and_two_delegations_real_https",
+        "status": "PLANNED_NOT_IMPLEMENTED"
+      },
+      "local_node": "tests/integration/test_a33_scenarios.py::test_browser_root_and_two_delegations_real_https",
+      "subassertions": [
+        "A33-04.01",
+        "A33-04.02",
+        "A33-04.03",
+        "A33-04.04",
+        "A33-04.05"
+      ],
+      "whole_parent_proven_by_local_node": false,
+      "union_nodes": [
+        "tests/integration/test_a33_scenarios.py::test_browser_root_and_two_delegations_real_https"
+      ]
+    },
+    {
+      "requirement_id": "A33-05",
+      "original_behavior": "同一真授权HTTP任务四工具采购/读取/通知/当前result-read闭环，不接受假VerifiedInvocation。",
+      "mandatory_run": "unit + real-PG integration + trusted TLS/process integration",
+      "race_or_crash_10_rounds": false,
+      "process_evidence": "real role PID/containerID when applicable",
+      "db_oracle_required": "真实PG before/after：root及全部祖先 amount_reserved/amount_settled/calls_reserved/calls_settled、ag_operations状态/原意图/首次材料、events及node delta、proof/evidence关联、leases owner/version/state/expiry、receipt outbox/JWS/signed_at、ds_operations/orders/notifications及results、journal序号/前摘要/记录、audit checkpoint。表名按前段accepted schema重核。业务拒绝零效果/零预留，允许的proof staging须单列；retry/query不替换首次证据、不新增业务计数；UNKNOWN保留预留；terminal最多一次。",
+      "original_planned_test": {
+        "file": "tests/integration/test_a33_scenarios.py",
+        "function": "test_three_holder_four_tools_query_receipt_anchor_export",
+        "status": "PLANNED_NOT_IMPLEMENTED"
+      },
+      "local_node": "tests/integration/test_a33_scenarios.py::test_three_holder_four_tools_query_receipt_anchor_export",
+      "subassertions": [
+        "A33-05.01",
+        "A33-05.02",
+        "A33-05.03",
+        "A33-05.04",
+        "A33-05.05"
+      ],
+      "whole_parent_proven_by_local_node": false,
+      "union_nodes": [
+        "tests/integration/test_a33_scenarios.py::test_three_holder_four_tools_query_receipt_anchor_export"
+      ]
+    },
+    {
+      "requirement_id": "A33-06",
+      "original_behavior": "MockDownstream execute/query检查独立服务secret，独立DB/事务/持久幂等/报价；不开放任意通知目标。",
+      "mandatory_run": "unit + real-PG integration + trusted TLS/process integration",
+      "race_or_crash_10_rounds": false,
+      "process_evidence": "real role PID/containerID when applicable",
+      "db_oracle_required": "真实PG before/after：root及全部祖先 amount_reserved/amount_settled/calls_reserved/calls_settled、ag_operations状态/原意图/首次材料、events及node delta、proof/evidence关联、leases owner/version/state/expiry、receipt outbox/JWS/signed_at、ds_operations/orders/notifications及results、journal序号/前摘要/记录、audit checkpoint。表名按前段accepted schema重核。业务拒绝零效果/零预留，允许的proof staging须单列；retry/query不替换首次证据、不新增业务计数；UNKNOWN保留预留；terminal最多一次。",
+      "original_planned_test": {
+        "file": "tests/integration/test_a33_scenarios.py",
+        "function": "test_downstream_separate_domain_service_auth_and_effects",
+        "status": "PLANNED_NOT_IMPLEMENTED"
+      },
+      "local_node": "tests/integration/test_a33_scenarios.py::test_downstream_separate_domain_service_auth_and_effects",
+      "subassertions": [
+        "A33-06.01",
+        "A33-06.02",
+        "A33-06.03",
+        "A33-06.04",
+        "A33-06.05"
+      ],
+      "whole_parent_proven_by_local_node": false,
+      "union_nodes": [
+        "tests/integration/test_a33_scenarios.py::test_downstream_separate_domain_service_auth_and_effects"
+      ]
+    },
+    {
+      "requirement_id": "A33-07",
+      "original_behavior": "真实token/proof绑定holder/请求字节/endpoint/purpose，strict schema/重复SKU/未知字段与集合拒绝。",
+      "mandatory_run": "unit + real-PG integration + trusted TLS/process integration",
+      "race_or_crash_10_rounds": false,
+      "process_evidence": "real role PID/containerID when applicable",
+      "db_oracle_required": "真实PG before/after：root及全部祖先 amount_reserved/amount_settled/calls_reserved/calls_settled、ag_operations状态/原意图/首次材料、events及node delta、proof/evidence关联、leases owner/version/state/expiry、receipt outbox/JWS/signed_at、ds_operations/orders/notifications及results、journal序号/前摘要/记录、audit checkpoint。表名按前段accepted schema重核。业务拒绝零效果/零预留，允许的proof staging须单列；retry/query不替换首次证据、不新增业务计数；UNKNOWN保留预留；terminal最多一次。",
+      "original_planned_test": {
+        "file": "tests/integration/test_a33_scenarios.py",
+        "function": "test_attack_set_exact_binding_no_side_effects",
+        "status": "PLANNED_NOT_IMPLEMENTED"
+      },
+      "local_node": "tests/integration/test_a33_scenarios.py::test_attack_set_exact_binding_no_side_effects",
+      "subassertions": [
+        "A33-07.01",
+        "A33-07.02",
+        "A33-07.03",
+        "A33-07.04",
+        "A33-07.05"
+      ],
+      "whole_parent_proven_by_local_node": false,
+      "union_nodes": [
+        "tests/integration/test_a33_scenarios.py::test_attack_set_exact_binding_no_side_effects"
+      ]
+    },
+    {
+      "requirement_id": "A33-08",
+      "original_behavior": "共享所有祖先累计预算，统一根锁、最终DBclock复核proof/token/祖先/key；撤销先提交拒绝。",
+      "mandatory_run": "unit + real-PG integration + trusted TLS/process integration",
+      "race_or_crash_10_rounds": true,
+      "process_evidence": "real PID/start/kill/restart/exit+barrier trace",
+      "db_oracle_required": "真实PG before/after：root及全部祖先 amount_reserved/amount_settled/calls_reserved/calls_settled、ag_operations状态/原意图/首次材料、events及node delta、proof/evidence关联、leases owner/version/state/expiry、receipt outbox/JWS/signed_at、ds_operations/orders/notifications及results、journal序号/前摘要/记录、audit checkpoint。表名按前段accepted schema重核。业务拒绝零效果/零预留，允许的proof staging须单列；retry/query不替换首次证据、不新增业务计数；UNKNOWN保留预留；terminal最多一次。",
+      "original_planned_test": {
+        "file": "tests/integration/test_a33_scenarios.py",
+        "function": "test_root_mid_calls_revocation_final_clock_races",
+        "status": "PLANNED_NOT_IMPLEMENTED"
+      },
+      "local_node": "tests/integration/test_a33_scenarios.py::test_root_mid_calls_revocation_final_clock_races",
+      "subassertions": [
+        "A33-08.01",
+        "A33-08.02",
+        "A33-08.03",
+        "A33-08.04",
+        "A33-08.05"
+      ],
+      "whole_parent_proven_by_local_node": false,
+      "union_nodes": [
+        "tests/integration/test_a33_scenarios.py::test_root_mid_calls_revocation_final_clock_races"
+      ]
+    },
+    {
+      "requirement_id": "A33-09",
+      "original_behavior": "接受前无效果；UNKNOWN保留；持久不可变意图/报价、真实新进程恢复、late success一效果一terminal。",
+      "mandatory_run": "unit + real-PG integration + trusted TLS/process integration",
+      "race_or_crash_10_rounds": true,
+      "process_evidence": "real PID/start/kill/restart/exit+barrier trace",
+      "db_oracle_required": "真实PG before/after：root及全部祖先 amount_reserved/amount_settled/calls_reserved/calls_settled、ag_operations状态/原意图/首次材料、events及node delta、proof/evidence关联、leases owner/version/state/expiry、receipt outbox/JWS/signed_at、ds_operations/orders/notifications及results、journal序号/前摘要/记录、audit checkpoint。表名按前段accepted schema重核。业务拒绝零效果/零预留，允许的proof staging须单列；retry/query不替换首次证据、不新增业务计数；UNKNOWN保留预留；terminal最多一次。",
+      "original_planned_test": {
+        "file": "tests/integration/test_a33_scenarios.py",
+        "function": "test_process_crash_late_success_recovery_fault_matrix",
+        "status": "PLANNED_NOT_IMPLEMENTED"
+      },
+      "local_node": "tests/integration/test_a33_scenarios.py::test_process_crash_late_success_recovery_fault_matrix",
+      "subassertions": [
+        "A33-09.01",
+        "A33-09.02",
+        "A33-09.03",
+        "A33-09.04",
+        "A33-09.05",
+        "A33-09.06"
+      ],
+      "whole_parent_proven_by_local_node": false,
+      "union_nodes": [
+        "tests/integration/test_a33_scenarios.py::test_process_crash_late_success_recovery_fault_matrix"
+      ]
+    },
+    {
+      "requirement_id": "A33-10",
+      "original_behavior": "回执签名失败不重复业务；稳定原JWS/iat；独立audit单调持久checkpoint；缺最新锚点限制明确。",
+      "mandatory_run": "unit + real-PG integration + trusted TLS/process integration",
+      "race_or_crash_10_rounds": true,
+      "process_evidence": "real PID/start/kill/restart/exit+barrier trace",
+      "db_oracle_required": "真实PG before/after：root及全部祖先 amount_reserved/amount_settled/calls_reserved/calls_settled、ag_operations状态/原意图/首次材料、events及node delta、proof/evidence关联、leases owner/version/state/expiry、receipt outbox/JWS/signed_at、ds_operations/orders/notifications及results、journal序号/前摘要/记录、audit checkpoint。表名按前段accepted schema重核。业务拒绝零效果/零预留，允许的proof staging须单列；retry/query不替换首次证据、不新增业务计数；UNKNOWN保留预留；terminal最多一次。",
+      "original_planned_test": {
+        "file": "tests/integration/test_a33_scenarios.py",
+        "function": "test_receipt_audit_export_faults_and_offline_mutations",
+        "status": "PLANNED_NOT_IMPLEMENTED"
+      },
+      "local_node": "tests/integration/test_a33_scenarios.py::test_receipt_audit_export_faults_and_offline_mutations",
+      "subassertions": [
+        "A33-10.01",
+        "A33-10.02",
+        "A33-10.03",
+        "A33-10.04",
+        "A33-10.05"
+      ],
+      "whole_parent_proven_by_local_node": false,
+      "union_nodes": [
+        "tests/integration/test_a33_scenarios.py::test_receipt_audit_export_faults_and_offline_mutations"
+      ]
+    },
+    {
+      "requirement_id": "A33-11",
+      "original_behavior": "干净环境初始化/迁移/签发/委托/执行/攻击/故障/导出/离线可复现，Python3.11锁安装与实际非editable wheel。",
+      "mandatory_run": "unit + real-PG integration + trusted TLS/process integration",
+      "race_or_crash_10_rounds": false,
+      "process_evidence": "real role PID/containerID when applicable",
+      "db_oracle_required": "真实PG before/after：root及全部祖先 amount_reserved/amount_settled/calls_reserved/calls_settled、ag_operations状态/原意图/首次材料、events及node delta、proof/evidence关联、leases owner/version/state/expiry、receipt outbox/JWS/signed_at、ds_operations/orders/notifications及results、journal序号/前摘要/记录、audit checkpoint。表名按前段accepted schema重核。业务拒绝零效果/零预留，允许的proof staging须单列；retry/query不替换首次证据、不新增业务计数；UNKNOWN保留预留；terminal最多一次。",
+      "original_planned_test": {
+        "file": "tests/integration/test_a33_clean_deploy.py",
+        "function": "test_clean_source_wheel_without_model_api",
+        "status": "PLANNED_NOT_IMPLEMENTED"
+      },
+      "local_node": "tests/integration/test_a33_clean_deploy.py::test_clean_source_wheel_without_model_api",
+      "subassertions": [
+        "A33-11.01",
+        "A33-11.02",
+        "A33-11.03",
+        "A33-11.04",
+        "A33-11.05"
+      ],
+      "whole_parent_proven_by_local_node": false,
+      "union_nodes": [
+        "tests/integration/test_a33_clean_deploy.py::test_clean_source_wheel_without_model_api",
+        "tests/integration/test_a33_clean_deploy.py::test_s0_install_cli_precheck"
+      ],
+      "additional_amendment_subassertions": [
+        "A33-11.06",
+        "A33-11.07"
+      ]
+    },
+    {
+      "requirement_id": "A33-12",
+      "original_behavior": "新kid明确operator登记审批/停用，历史可信公钥保留；旧行保全迁移；恢复不能假造过去审计顺序；只清本轮资源。",
+      "mandatory_run": "unit + real-PG integration + trusted TLS/process integration",
+      "race_or_crash_10_rounds": false,
+      "process_evidence": "real role PID/containerID when applicable",
+      "db_oracle_required": "真实PG before/after：root及全部祖先 amount_reserved/amount_settled/calls_reserved/calls_settled、ag_operations状态/原意图/首次材料、events及node delta、proof/evidence关联、leases owner/version/state/expiry、receipt outbox/JWS/signed_at、ds_operations/orders/notifications及results、journal序号/前摘要/记录、audit checkpoint。表名按前段accepted schema重核。业务拒绝零效果/零预留，允许的proof staging须单列；retry/query不替换首次证据、不新增业务计数；UNKNOWN保留预留；terminal最多一次。",
+      "original_planned_test": {
+        "file": "tests/integration/test_a33_clean_deploy.py",
+        "function": "test_rotation_upgrade_backup_restore_owner_cleanup",
+        "status": "PLANNED_NOT_IMPLEMENTED"
+      },
+      "local_node": "tests/integration/test_a33_clean_deploy.py::test_rotation_upgrade_backup_restore_owner_cleanup",
+      "subassertions": [
+        "A33-12.01",
+        "A33-12.02",
+        "A33-12.03",
+        "A33-12.04",
+        "A33-12.05"
+      ],
+      "whole_parent_proven_by_local_node": false,
+      "union_nodes": [
+        "tests/integration/test_a33_clean_deploy.py::test_rotation_upgrade_backup_restore_owner_cleanup"
+      ],
+      "additional_amendment_subassertions": [
+        "A33-12.06"
+      ]
+    },
+    {
+      "requirement_id": "A33-13",
+      "original_behavior": "请求/结果/证据有界，合成包关联齐全，无秘密；公开示范token已过期，独立trust/latest不信包自带。",
+      "mandatory_run": "unit + real-PG integration + trusted TLS/process integration",
+      "race_or_crash_10_rounds": false,
+      "process_evidence": "real role PID/containerID when applicable",
+      "db_oracle_required": "真实PG before/after：root及全部祖先 amount_reserved/amount_settled/calls_reserved/calls_settled、ag_operations状态/原意图/首次材料、events及node delta、proof/evidence关联、leases owner/version/state/expiry、receipt outbox/JWS/signed_at、ds_operations/orders/notifications及results、journal序号/前摘要/记录、audit checkpoint。表名按前段accepted schema重核。业务拒绝零效果/零预留，允许的proof staging须单列；retry/query不替换首次证据、不新增业务计数；UNKNOWN保留预留；terminal最多一次。",
+      "original_planned_test": {
+        "file": "tests/integration/test_a33_clean_deploy.py",
+        "function": "test_max_legal_payload_bounded_package_and_expired_public_export",
+        "status": "PLANNED_NOT_IMPLEMENTED"
+      },
+      "local_node": "tests/integration/test_a33_clean_deploy.py::test_max_legal_payload_bounded_package_and_expired_public_export",
+      "subassertions": [
+        "A33-13.01",
+        "A33-13.02",
+        "A33-13.03",
+        "A33-13.04",
+        "A33-13.05"
+      ],
+      "whole_parent_proven_by_local_node": false,
+      "union_nodes": [
+        "tests/integration/test_a33_clean_deploy.py::test_max_legal_payload_bounded_package_and_expired_public_export"
+      ],
+      "additional_amendment_subassertions": [
+        "A33-13.06"
+      ]
+    },
+    {
+      "requirement_id": "A33-14",
+      "original_behavior": "最终设计/威胁说明、可复现部署、实际演示脚本/运行证据、技术报告/已知限制与固定版本一致；acceptance§4演示脚本/视频，本轮必须可执行脚本及实际运行证据，视频非另加硬门。",
+      "mandatory_run": "document/CLI validation + source/wheel actual demonstration evidence check",
+      "race_or_crash_10_rounds": false,
+      "process_evidence": "real role PID/containerID when applicable",
+      "db_oracle_required": "No DB interaction; assert filesystem/public-trust invariants; full DB oracle applies in E2E consumer",
+      "original_planned_test": {
+        "file": "tests/test_a33_documents.py",
+        "function": "test_release_materials_commands_and_actual_demo_artifacts",
+        "status": "PLANNED_NOT_IMPLEMENTED"
+      },
+      "local_node": "tests/test_a33_documents.py::test_release_materials_commands_and_actual_demo_artifacts",
+      "subassertions": [
+        "A33-14.01",
+        "A33-14.02",
+        "A33-14.03",
+        "A33-14.04",
+        "A33-14.05"
+      ],
+      "whole_parent_proven_by_local_node": false,
+      "union_nodes": [
+        "tests/test_a33_documents.py::test_release_materials_commands_and_actual_demo_artifacts"
+      ]
+    }
+  ],
+  "A34_atoms": [
+    {
+      "id": "A34-01.01",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-01",
+      "original_json_pointer": "/requirements/14/subassertions/0",
+      "original_index_zero_based": 0,
+      "exact_original_text": "建议正式pkg固定mode4×seed2×5000=每mode10000 measured invoke"
+    },
+    {
+      "id": "A34-01.02",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-01",
+      "original_json_pointer": "/requirements/14/subassertions/1",
+      "original_index_zero_based": 1,
+      "exact_original_text": "seeds2026100501/2026100502，each warmup250排除measured"
+    },
+    {
+      "id": "A34-01.03",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-01",
+      "original_json_pointer": "/requirements/14/subassertions/2",
+      "original_index_zero_based": 2,
+      "exact_original_text": "50真实同时在途client runner slots/threads barrier证据，不仅配置count；无需50套holder角色进程/key"
+    },
+    {
+      "id": "A34-01.04",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-01",
+      "original_json_pointer": "/requirements/14/subassertions/3",
+      "original_index_zero_based": 3,
+      "exact_original_text": "each3500legal/1000attack/500retry=70/20/10；875正常四工具tasks"
+    },
+    {
+      "id": "A34-01.05",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-01",
+      "original_json_pointer": "/requirements/14/subassertions/4",
+      "original_index_zero_based": 4,
+      "exact_original_text": "AS/query/audit不充invoke数；所有HTTP/network failure保row；缺样本INCOMPLETE"
+    },
+    {
+      "id": "A34-02.01",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-02",
+      "original_json_pointer": "/requirements/15/subassertions/0",
+      "original_index_zero_based": 0,
+      "exact_original_text": "same seed/body/可信quote/资源/同task预算/chain3/TLS连接复用/PG设置/maxworkers32/workerquota"
+    },
+    {
+      "id": "A34-02.02",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-02",
+      "original_json_pointer": "/requirements/15/subassertions/1",
+      "original_index_zero_based": 1,
+      "exact_original_text": "staticACL真实distinct rolecredential+tenant/tool/resource/数量/配送scope，不allowall"
+    },
+    {
+      "id": "A34-02.03",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-02",
+      "original_json_pointer": "/requirements/15/subassertions/2",
+      "original_index_zero_based": 2,
+      "exact_original_text": "research模式独占包/port/DB，不生产ENV skip"
+    },
+    {
+      "id": "A34-02.04",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-02",
+      "original_json_pointer": "/requirements/15/subassertions/3",
+      "original_index_zero_based": 3,
+      "exact_original_text": "顺序预先固定轮转，preflight清库owner/迁移、版本与quota一致"
+    },
+    {
+      "id": "A34-02.05",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-02",
+      "original_json_pointer": "/requirements/15/subassertions/4",
+      "original_index_zero_based": 4,
+      "exact_original_text": "faircapabilities.json独立验证每baseline实际许可集而非名称"
+    },
+    {
+      "id": "A34-03.01",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-03",
+      "original_json_pointer": "/requirements/16/subassertions/0",
+      "original_index_zero_based": 0,
+      "exact_original_text": "AS真SM2三层链/PoP/动态撤销/资源逐维验证"
+    },
+    {
+      "id": "A34-03.02",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-03",
+      "original_json_pointer": "/requirements/16/subassertions/1",
+      "original_index_zero_based": 1,
+      "exact_original_text": "research专属表DDL预算readchecklaterwrite不共root锁；不删生产guard/触发器"
+    },
+    {
+      "id": "A34-03.03",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-03",
+      "original_json_pointer": "/requirements/16/subassertions/2",
+      "original_index_zero_based": 2,
+      "exact_original_text": "同下游幂等/quote固定；真实预算race独立10轮barrier展示缺原子风险"
+    },
+    {
+      "id": "A34-03.04",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-03",
+      "original_json_pointer": "/requirements/16/subassertions/3",
+      "original_index_zero_based": 3,
+      "exact_original_text": "普通perf run不加人为sleep/racebarrier拖慢"
+    },
+    {
+      "id": "A34-03.05",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-03",
+      "original_json_pointer": "/requirements/16/subassertions/4",
+      "original_index_zero_based": 4,
+      "exact_original_text": "研究schema/代码与生产入口隔离，expected full zerooverspend oracle可对消融报告违规"
+    },
+    {
+      "id": "A34-04.01",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-04",
+      "original_json_pointer": "/requirements/17/subassertions/0",
+      "original_index_zero_based": 0,
+      "exact_original_text": "真SM2signature/issuer/aud/type/TTL/currentstate/scope/resource/quote共享原子预算保留"
+    },
+    {
+      "id": "A34-04.02",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-04",
+      "original_json_pointer": "/requirements/17/subassertions/1",
+      "original_index_zero_based": 1,
+      "exact_original_text": "Bearer endpoint无需cnf私钥/proof，禁止fake signature/mockverify"
+    },
+    {
+      "id": "A34-04.03",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-04",
+      "original_json_pointer": "/requirements/17/subassertions/2",
+      "original_index_zero_based": 2,
+      "exact_original_text": "有效被盗token在其原资源授权内attacker实际effect；full同token无key零effect"
+    },
+    {
+      "id": "A34-04.04",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-04",
+      "original_json_pointer": "/requirements/17/subassertions/3",
+      "original_index_zero_based": 3,
+      "exact_original_text": "Bearer扩权/篡改token仍拒绝；专项效力negativecontrol"
+    },
+    {
+      "id": "A34-04.05",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-04",
+      "original_json_pointer": "/requirements/17/subassertions/4",
+      "original_index_zero_based": 4,
+      "exact_original_text": "same measured seeds workload完整两次5000，PoP去除功能差额精确声明"
+    },
+    {
+      "id": "A34-05.01",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-05",
+      "original_json_pointer": "/requirements/18/subassertions/0",
+      "original_index_zero_based": 0,
+      "exact_original_text": "attack10类各100：盗token/错holder父交换/重放/body替换/域错配/资源扩权/strictSKU/委托扩权/失效状态/预算次数竞争"
+    },
+    {
+      "id": "A34-05.02",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-05",
+      "original_json_pointer": "/requirements/18/subassertions/1",
+      "original_index_zero_based": 1,
+      "exact_original_text": "AS级失败另记录，测量gatewayinvoke对应冻结攻击意图与body，无validchild则invalidinvoke如实层次"
+    },
+    {
+      "id": "A34-05.03",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-05",
+      "original_json_pointer": "/requirements/18/subassertions/2",
+      "original_index_zero_based": 2,
+      "exact_original_text": "retry250freshidem/100sameproof/100terminalfreshidem/50lostresponsefreshretry"
+    },
+    {
+      "id": "A34-05.04",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-05",
+      "original_json_pointer": "/requirements/18/subassertions/3",
+      "original_index_zero_based": 3,
+      "exact_original_text": "retry原目标来自legal3500，网络丢失原row保留；query另单列"
+    },
+    {
+      "id": "A34-05.05",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-05",
+      "original_json_pointer": "/requirements/18/subassertions/4",
+      "original_index_zero_based": 4,
+      "exact_original_text": "oracle使用预批准authoritypolicy+DB真实effects而非baseline返回自报authorization"
+    },
+    {
+      "id": "A34-06.01",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-06",
+      "original_json_pointer": "/requirements/19/subassertions/0",
+      "original_index_zero_based": 0,
+      "exact_original_text": "1750task/mode两次×875完成4tools顺序terminal；poll不充invoke"
+    },
+    {
+      "id": "A34-06.02",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-06",
+      "original_json_pointer": "/requirements/19/subassertions/1",
+      "original_index_zero_based": 1,
+      "exact_original_text": "每mode明示接受/terminal/READY/journal/anchored/export完结时刻与gap"
+    },
+    {
+      "id": "A34-06.03",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-06",
+      "original_json_pointer": "/requirements/19/subassertions/2",
+      "original_index_zero_based": 2,
+      "exact_original_text": "固定drain deadline在试验manifest审前设定，timeout保未完成与后台继续事件"
+    },
+    {
+      "id": "A34-06.04",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-06",
+      "original_json_pointer": "/requirements/19/subassertions/3",
+      "original_index_zero_based": 3,
+      "exact_original_text": "query freshproof授权窗口内完成；随后过期公开导出审计role操作"
+    },
+    {
+      "id": "A34-06.05",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-06",
+      "original_json_pointer": "/requirements/19/subassertions/4",
+      "original_index_zero_based": 4,
+      "exact_original_text": "baseline缺审计如实N/A能力，不删full发布/审计成本换速度"
+    },
+    {
+      "id": "A34-07.01",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-07",
+      "original_json_pointer": "/requirements/20/subassertions/0",
+      "original_index_zero_based": 0,
+      "exact_original_text": "JSONL一invoke一row：mode/seed/client/task/tool/class/keyhash/bytes/time/status/code/opid"
+    },
+    {
+      "id": "A34-07.02",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-07",
+      "original_json_pointer": "/requirements/20/subassertions/1",
+      "original_index_zero_based": 1,
+      "exact_original_text": "monotonicns send→responseend分合法/attack/retry/tool/失败与全attempt，nearest-rank percentile/n固定"
+    },
+    {
+      "id": "A34-07.03",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-07",
+      "original_json_pointer": "/requirements/20/subassertions/2",
+      "original_index_zero_based": 2,
+      "exact_original_text": "attempt/authpass/acceptnew/terminal/READY/anchor throughput各分母明确"
+    },
+    {
+      "id": "A34-07.04",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-07",
+      "original_json_pointer": "/requirements/20/subassertions/3",
+      "original_index_zero_based": 3,
+      "exact_original_text": "两rep各原始值+汇总范围/平均，不剔失败；少rep统计局限声明"
+    },
+    {
+      "id": "A34-07.05",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-07",
+      "original_json_pointer": "/requirements/20/subassertions/4",
+      "original_index_zero_based": 4,
+      "exact_original_text": "raw无Authorization/AGProof/livekey/DSN；缺重复rows/count失败"
+    },
+    {
+      "id": "A34-08.01",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-08",
+      "original_json_pointer": "/requirements/21/subassertions/0",
+      "original_index_zero_based": 0,
+      "exact_original_text": "legalauthpass与capacityacceptedrate分开，budgetintent分类不藏拒绝"
+    },
+    {
+      "id": "A34-08.02",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-08",
+      "original_json_pointer": "/requirements/21/subassertions/1",
+      "original_index_zero_based": 1,
+      "exact_original_text": "effect用dsrow+authorityoracle；重复按intent expected oneeffect"
+    },
+    {
+      "id": "A34-08.03",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-08",
+      "original_json_pointer": "/requirements/21/subassertions/2",
+      "original_index_zero_based": 2,
+      "exact_original_text": "allancestor高水位/events delta回放，不只root最终snapshot"
+    },
+    {
+      "id": "A34-08.04",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-08",
+      "original_json_pointer": "/requirements/21/subassertions/3",
+      "original_index_zero_based": 3,
+      "exact_original_text": "revokecommit→freshproof拒绝上下界与serverclock，已接受恢复不违规"
+    },
+    {
+      "id": "A34-08.05",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-08",
+      "original_json_pointer": "/requirements/21/subassertions/4",
+      "original_index_zero_based": 4,
+      "exact_original_text": "full0越权仅声明测试集；baseline实际违规保报告"
+    },
+    {
+      "id": "A34-09.01",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-09",
+      "original_json_pointer": "/requirements/22/subassertions/0",
+      "original_index_zero_based": 0,
+      "exact_original_text": "SM2sign/verify/SM3各1000 measured+50warmup建议正式pkg固定"
+    },
+    {
+      "id": "A34-09.02",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-09",
+      "original_json_pointer": "/requirements/22/subassertions/1",
+      "original_index_zero_based": 1,
+      "exact_original_text": "固定key/标准profile/chain3/body、运行真实signverify canonicalSM3"
+    },
+    {
+      "id": "A34-09.03",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-09",
+      "original_json_pointer": "/requirements/22/subassertions/2",
+      "original_index_zero_based": 2,
+      "exact_original_text": "DB等待/connection/query计数trace另run，保instrumentation开销，不影响最后DBclock"
+    },
+    {
+      "id": "A34-09.04",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-09",
+      "original_json_pointer": "/requirements/22/subassertions/3",
+      "original_index_zero_based": 3,
+      "exact_original_text": "TLS空roundtrip独立参考不直接相减端到端当network占比"
+    },
+    {
+      "id": "A34-09.05",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-09",
+      "original_json_pointer": "/requirements/22/subassertions/4",
+      "original_index_zero_based": 4,
+      "exact_original_text": "modelN/A noAPI，sample1000与两rep统计局限明确"
+    },
+    {
+      "id": "A34-10.01",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-10",
+      "original_json_pointer": "/requirements/23/subassertions/0",
+      "original_index_zero_based": 0,
+      "exact_original_text": "host15logicalCPU/24GiB，Docker15CPU约7.75GiB aarch64/amd64conversion，磁盘可用394GiB仅root观察非本agent实测"
+    },
+    {
+      "id": "A34-10.02",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-10",
+      "original_json_pointer": "/requirements/23/subassertions/1",
+      "original_index_zero_based": 1,
+      "exact_original_text": "三PG各512MiB建议起始、少量轻角色服务/50slots，不无证据要求Docker16GiB"
+    },
+    {
+      "id": "A34-10.03",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-10",
+      "original_json_pointer": "/requirements/23/subassertions/2",
+      "original_index_zero_based": 2,
+      "exact_original_text": "每repeat记录实际quota/peakRSS/CPU/arch/translation/PGversionsettings/conn数"
+    },
+    {
+      "id": "A34-10.04",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-10",
+      "original_json_pointer": "/requirements/23/subassertions/3",
+      "original_index_zero_based": 3,
+      "exact_original_text": "heap/index/toast/row/DB/WAL可用度/导出尺寸前后diff"
+    },
+    {
+      "id": "A34-10.05",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-10",
+      "original_json_pointer": "/requirements/23/subassertions/4",
+      "original_index_zero_based": 4,
+      "exact_original_text": "固定workload evidence包256MiB预检及每HTTP/JWS/schema限制，不按perf表现削比例"
+    },
+    {
+      "id": "A34-11.01",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-11",
+      "original_json_pointer": "/requirements/24/subassertions/0",
+      "original_index_zero_based": 0,
+      "exact_original_text": "pilot仅功能/计数/资源可用，行label排除official"
+    },
+    {
+      "id": "A34-11.02",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-11",
+      "original_json_pointer": "/requirements/24/subassertions/1",
+      "original_index_zero_based": 1,
+      "exact_original_text": "official比例/seed/params/order/quota预冻结，不根据pilot结果换seed"
+    },
+    {
+      "id": "A34-11.03",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-11",
+      "original_json_pointer": "/requirements/24/subassertions/2",
+      "original_index_zero_based": 2,
+      "exact_original_text": "两次results与failures完整保留；重跑另run保旧data"
+    },
+    {
+      "id": "A34-11.04",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-11",
+      "original_json_pointer": "/requirements/24/subassertions/3",
+      "original_index_zero_based": 3,
+      "exact_original_text": "source/wheel真实安装与关键E2E双方复现；正式性能安装variant提前固定并说明，其他variant验证测量接口不混统计"
+    },
+    {
+      "id": "A34-11.05",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-11",
+      "original_json_pointer": "/requirements/24/subassertions/4",
+      "original_index_zero_based": 4,
+      "exact_original_text": "所有正式mode实跑由freshreview独立复现或完整审包指定独立run，不只worker logs冒重跑"
+    },
+    {
+      "id": "A34-12.01",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-12",
+      "original_json_pointer": "/requirements/25/subassertions/0",
+      "original_index_zero_based": 0,
+      "exact_original_text": "30goal原行为逐项→actual test/commands/exit/XML/SHA，缺必run不得ACCEPTED"
+    },
+    {
+      "id": "A34-12.02",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-12",
+      "original_json_pointer": "/requirements/25/subassertions/1",
+      "original_index_zero_based": 1,
+      "exact_original_text": "A1/A2/B/A23/A31/A32 accepted全部需求ID及原triggerprobe等价动态展开，不省新A22fix"
+    },
+    {
+      "id": "A34-12.03",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-12",
+      "original_json_pointer": "/requirements/25/subassertions/2",
+      "original_index_zero_based": 2,
+      "exact_original_text": "安全/fairbaseline/实验oracle真negativecontrol非镜像测试"
+    },
+    {
+      "id": "A34-12.04",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-12",
+      "original_json_pointer": "/requirements/25/subassertions/3",
+      "original_index_zero_based": 3,
+      "exact_original_text": "固定release commit/wheel/locks/schema/data/trust/checkpoint SHA与独立freshreview"
+    },
+    {
+      "id": "A34-12.05",
+      "id_origin": "derived stable 1-based planning label; original JSON contains strings without child IDs",
+      "parent_id": "A34-12",
+      "original_json_pointer": "/requirements/25/subassertions/4",
+      "original_index_zero_based": 4,
+      "exact_original_text": "设计/威胁/technicalreport/deployment/rawdata/实际demo脚本与source/wheel真实运行证据为必需；实际录制video/terminal.cast可选，未录诚实报告、不单独作为阻断；knownlimits/统计条件"
+    }
+  ],
+  "A34_nodes": [
+    {
+      "node_id": "tests/unit/test_a34_workload.py::test_fixed_seeds_counts_classes_and_no_posthoc_selection",
+      "file": "tests/unit/test_a34_workload.py",
+      "function": "test_fixed_seeds_counts_classes_and_no_posthoc_selection",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_shared_front",
+      "sole_write_phase": "S0_SERIAL",
+      "sole_execution_phase": "S0_SERIAL_LOCAL",
+      "run_owner": "a34_shared_front",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "LOCAL_UNIT",
+      "parent_subassertion_refs": [
+        "A34-01.01",
+        "A34-01.02",
+        "A34-01.04"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A34-01.local.1",
+          "assertion": "deterministic generator returns4×2×5000 intent descriptors; separate250 warmup each",
+          "scope": "LOCAL_ONLY",
+          "parent_subassertion_refs": [
+            "A34-01.01",
+            "A34-01.02",
+            "A34-01.04"
+          ],
+          "parent_ref_kind": "LOCAL_SCHEMA_ARITHMETIC_SLICE_ONLY"
+        },
+        {
+          "atom_id": "A34-01.local.2",
+          "assertion": "manifest seed values, legal3500/attack1000/retry500 and875×4 tools shape arithmetic",
+          "scope": "LOCAL_ONLY",
+          "parent_subassertion_refs": [
+            "A34-01.01",
+            "A34-01.02",
+            "A34-01.04"
+          ],
+          "parent_ref_kind": "LOCAL_SCHEMA_ARITHMETIC_SLICE_ONLY"
+        },
+        {
+          "atom_id": "A34-01.local.3",
+          "assertion": "50 slot descriptor validation only, cannot establish actual in-flight",
+          "scope": "LOCAL_ONLY",
+          "parent_subassertion_refs": [
+            "A34-01.01",
+            "A34-01.02",
+            "A34-01.04"
+          ],
+          "parent_ref_kind": "LOCAL_SCHEMA_ARITHMETIC_SLICE_ONLY"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "valid local synthetic/schema fixture"
+        ],
+        "negative": [
+          "invalid local fixture must rejected"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 1,
+      "oracle": {
+        "scope": "local synthetic/schema/arithmetic only; not official behavior"
+      },
+      "accepted_api_sha": "NOT_FROZEN",
+      "coverage_slices": [
+        {
+          "parent_ref": "A34-01.01",
+          "covered_atom_scope": "only manifest/schema/synthetic arithmetic component; no actual execution, latency, effect,50inflight,crypto or global fullparent assertion"
+        },
+        {
+          "parent_ref": "A34-01.02",
+          "covered_atom_scope": "only manifest/schema/synthetic arithmetic component; no actual execution, latency, effect,50inflight,crypto or global fullparent assertion"
+        },
+        {
+          "parent_ref": "A34-01.04",
+          "covered_atom_scope": "only manifest/schema/synthetic arithmetic component; no actual execution, latency, effect,50inflight,crypto or global fullparent assertion"
+        }
+      ],
+      "planning_amendments": [
+        {
+          "id": "PLAN-R2-REPLAY-01",
+          "refs": [
+            "A34-01",
+            "A34-05"
+          ],
+          "required": "class2 c maps T0500+c request.read index4*(500+c), disjoint retry targets, byte-identical original token/proof/body, task-local resend and genuine consumed-proof oracle; negative cases fresh/unconsumed proof, changed key/body/jti, expiry masking, replaced failed target, invented prep invoke or fake bearer proof. All rows retained; missing consumption is incomplete replay coverage, not PASS; controlled original+replay probe separately10round source/wheel."
+        }
+      ]
+    },
+    {
+      "node_id": "tests/integration/test_a34_baselines.py::test_fair_capabilities_and_equal_workload_resources",
+      "file": "tests/integration/test_a34_baselines.py",
+      "function": "test_fair_capabilities_and_equal_workload_resources",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_baselines_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A34-02.01",
+        "A34-02.02",
+        "A34-02.03",
+        "A34-02.04",
+        "A34-02.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A34-02.01.atom",
+          "assertion": "same seed/body/可信quote/资源/同task预算/chain3/TLS连接复用/PG设置/maxworkers32/workerquota",
+          "parent_ref": "A34-02.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-02.02.atom",
+          "assertion": "staticACL真实distinct rolecredential+tenant/tool/resource/数量/配送scope，不allowall",
+          "parent_ref": "A34-02.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-02.03.atom",
+          "assertion": "research模式独占包/port/DB，不生产ENV skip",
+          "parent_ref": "A34-02.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-02.04.atom",
+          "assertion": "顺序预先固定轮转，preflight清库owner/迁移、版本与quota一致",
+          "parent_ref": "A34-02.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-02.05.atom",
+          "assertion": "faircapabilities.json独立验证每baseline实际许可集而非名称",
+          "parent_ref": "A34-02.05",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "four genuine mode capability positive controls same resources/version/PG/TLS reuse/server32",
+          "ACL distinct role credentials tenant/tools/resources/quantity/delivery checked"
+        ],
+        "negative": [
+          "invalid credentials",
+          "out-of-scope resources",
+          "production env skip/default endpoint exposed",
+          "fake capability claims"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a34_baselines.py::test_real_signed_no_atomic_isolated_budget_race",
+      "file": "tests/integration/test_a34_baselines.py",
+      "function": "test_real_signed_no_atomic_isolated_budget_race",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_baselines_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A34-03.01",
+        "A34-03.02",
+        "A34-03.03",
+        "A34-03.04",
+        "A34-03.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A34-03.01.atom",
+          "assertion": "AS真SM2三层链/PoP/动态撤销/资源逐维验证",
+          "parent_ref": "A34-03.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-03.02.atom",
+          "assertion": "research专属表DDL预算readchecklaterwrite不共root锁；不删生产guard/触发器",
+          "parent_ref": "A34-03.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-03.03.atom",
+          "assertion": "同下游幂等/quote固定；真实预算race独立10轮barrier展示缺原子风险",
+          "parent_ref": "A34-03.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-03.04.atom",
+          "assertion": "普通perf run不加人为sleep/racebarrier拖慢",
+          "parent_ref": "A34-03.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-03.05.atom",
+          "assertion": "研究schema/代码与生产入口隔离，expected full zerooverspend oracle可对消融报告违规",
+          "parent_ref": "A34-03.05",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "real AS signed chain and holder proof source validation",
+          "10 rounds: two authority FOR SHARE readers→unlocked counter read/check→real barrier→additive increments→commit→DS140000; mids separate80000 leaves70000 root100000"
+        ],
+        "negative": [
+          "complete same two intents ≤1 new effect root≤100000",
+          "key-disabled/revoked/expired/expanded resource reject",
+          "common task/root mutex, KEY SHARE, lost update, <=budget CHECK restoring atomicity must fail capability"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a34_baselines.py::test_real_sm2_bearer_stolen_token_effect_and_full_denial",
+      "file": "tests/integration/test_a34_baselines.py",
+      "function": "test_real_sm2_bearer_stolen_token_effect_and_full_denial",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_baselines_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A34-04.01",
+        "A34-04.02",
+        "A34-04.03",
+        "A34-04.04",
+        "A34-04.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A34-04.01.atom",
+          "assertion": "真SM2signature/issuer/aud/type/TTL/currentstate/scope/resource/quote共享原子预算保留",
+          "parent_ref": "A34-04.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-04.02.atom",
+          "assertion": "Bearer endpoint无需cnf私钥/proof，禁止fake signature/mockverify",
+          "parent_ref": "A34-04.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-04.03.atom",
+          "assertion": "有效被盗token在其原资源授权内attacker实际effect；full同token无key零effect",
+          "parent_ref": "A34-04.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-04.04.atom",
+          "assertion": "Bearer扩权/篡改token仍拒绝；专项效力negativecontrol",
+          "parent_ref": "A34-04.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-04.05.atom",
+          "assertion": "same measured seeds workload完整两次5000，PoP去除功能差额精确声明",
+          "parent_ref": "A34-04.05",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "actual signed Bearer valid stolen executor token no executor key produces original approved70000 effect; genuine holder control",
+          "ResearchBearerContext proof=None holder_possession=NOT_VERIFIED; AS exchange still real PoP"
+        ],
+        "negative": [
+          "complete stolen token/no key no effect",
+          "mutated signature/issuer/aud/type/expired/revoked/key-disabled/resource/quantity/delivery",
+          "fake VerifiedBundle/server nonce proof"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/unit/test_a34_workload.py::test_attack_retry_intents_and_policy_oracle",
+      "file": "tests/unit/test_a34_workload.py",
+      "function": "test_attack_retry_intents_and_policy_oracle",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_shared_front",
+      "sole_write_phase": "S0_SERIAL",
+      "sole_execution_phase": "S0_SERIAL_LOCAL",
+      "run_owner": "a34_shared_front",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "LOCAL_UNIT",
+      "parent_subassertion_refs": [
+        "A34-05.01",
+        "A34-05.03",
+        "A34-05.04",
+        "A34-05.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A34-05.local.1",
+          "assertion": "exact ten class labels with100 each, four retry count integers250/100/100/50",
+          "scope": "LOCAL_ONLY",
+          "parent_subassertion_refs": [
+            "A34-05.01",
+            "A34-05.03",
+            "A34-05.04",
+            "A34-05.05"
+          ],
+          "parent_ref_kind": "LOCAL_SCHEMA_ARITHMETIC_SLICE_ONLY"
+        },
+        {
+          "atom_id": "A34-05.local.2",
+          "assertion": "target pointers reference original3500 legal intent/key and dependency graph; no extra invocation descriptors",
+          "scope": "LOCAL_ONLY",
+          "parent_subassertion_refs": [
+            "A34-05.01",
+            "A34-05.03",
+            "A34-05.04",
+            "A34-05.05"
+          ],
+          "parent_ref_kind": "LOCAL_SCHEMA_ARITHMETIC_SLICE_ONLY"
+        },
+        {
+          "atom_id": "A34-05.local.3",
+          "assertion": "pure policy oracle input schema; no response-derived expected authorization",
+          "scope": "LOCAL_ONLY",
+          "parent_subassertion_refs": [
+            "A34-05.01",
+            "A34-05.03",
+            "A34-05.04",
+            "A34-05.05"
+          ],
+          "parent_ref_kind": "LOCAL_SCHEMA_ARITHMETIC_SLICE_ONLY"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "valid local synthetic/schema fixture"
+        ],
+        "negative": [
+          "invalid local fixture must rejected"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 1,
+      "oracle": {
+        "scope": "local synthetic/schema/arithmetic only; not official behavior"
+      },
+      "accepted_api_sha": "NOT_FROZEN",
+      "coverage_slices": [
+        {
+          "parent_ref": "A34-05.01",
+          "covered_atom_scope": "only manifest/schema/synthetic arithmetic component; no actual execution, latency, effect,50inflight,crypto or global fullparent assertion"
+        },
+        {
+          "parent_ref": "A34-05.03",
+          "covered_atom_scope": "only manifest/schema/synthetic arithmetic component; no actual execution, latency, effect,50inflight,crypto or global fullparent assertion"
+        },
+        {
+          "parent_ref": "A34-05.04",
+          "covered_atom_scope": "only manifest/schema/synthetic arithmetic component; no actual execution, latency, effect,50inflight,crypto or global fullparent assertion"
+        },
+        {
+          "parent_ref": "A34-05.05",
+          "covered_atom_scope": "only manifest/schema/synthetic arithmetic component; no actual execution, latency, effect,50inflight,crypto or global fullparent assertion"
+        }
+      ],
+      "planning_amendments": [
+        {
+          "id": "PLAN-R2-REPLAY-01",
+          "refs": [
+            "A34-01",
+            "A34-05"
+          ],
+          "required": "class2 c maps T0500+c request.read index4*(500+c), disjoint retry targets, byte-identical original token/proof/body, task-local resend and genuine consumed-proof oracle; negative cases fresh/unconsumed proof, changed key/body/jti, expiry masking, replaced failed target, invented prep invoke or fake bearer proof. All rows retained; missing consumption is incomplete replay coverage, not PASS; controlled original+replay probe separately10round source/wheel."
+        }
+      ]
+    },
+    {
+      "node_id": "tests/integration/test_a34_experiments.py::test_terminal_receipt_journal_checkpoint_drain_metrics",
+      "file": "tests/integration/test_a34_experiments.py",
+      "function": "test_terminal_receipt_journal_checkpoint_drain_metrics",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_measurements_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A34-06.01",
+        "A34-06.02",
+        "A34-06.03",
+        "A34-06.04",
+        "A34-06.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A34-06.01.atom",
+          "assertion": "1750task/mode两次×875完成4tools顺序terminal；poll不充invoke",
+          "parent_ref": "A34-06.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-06.02.atom",
+          "assertion": "每mode明示接受/terminal/READY/journal/anchored/export完结时刻与gap",
+          "parent_ref": "A34-06.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-06.03.atom",
+          "assertion": "固定drain deadline在试验manifest审前设定，timeout保未完成与后台继续事件",
+          "parent_ref": "A34-06.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-06.04.atom",
+          "assertion": "query freshproof授权窗口内完成；随后过期公开导出审计role操作",
+          "parent_ref": "A34-06.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-06.05.atom",
+          "assertion": "baseline缺审计如实N/A能力，不删full发布/审计成本换速度",
+          "parent_ref": "A34-06.05",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "875 four-tool tasks per repetition; accepted/terminal/READY/journal/anchor/export separately timed",
+          "audit-role export after token expiry; query only original valid window"
+        ],
+        "negative": [
+          "bounded drain incomplete retains late events",
+          "baseline missing audit N/A cannot claim equivalent complete cost"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/unit/test_a34_statistics.py::test_all_rows_percentiles_failure_retention_and_rate_denominators",
+      "file": "tests/unit/test_a34_statistics.py",
+      "function": "test_all_rows_percentiles_failure_retention_and_rate_denominators",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_measurements_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S1_FROZEN_S0_LOCAL",
+      "run_owner": "a34_measurements_after_shared_stop",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "LOCAL_UNIT",
+      "parent_subassertion_refs": [
+        "A34-07.01",
+        "A34-07.02",
+        "A34-07.03",
+        "A34-07.04",
+        "A34-07.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A34-07.local.1",
+          "assertion": "synthetic fixtures nearest rank sorted[ceil(p*n)-1] n=1,2,100, ties; p=.50/.95/.99",
+          "scope": "LOCAL_ONLY",
+          "parent_subassertion_refs": [
+            "A34-07.01",
+            "A34-07.02",
+            "A34-07.03",
+            "A34-07.04",
+            "A34-07.05"
+          ],
+          "parent_ref_kind": "LOCAL_SCHEMA_ARITHMETIC_SLICE_ONLY"
+        },
+        {
+          "atom_id": "A34-07.local.2",
+          "assertion": "all/failure/tool/class partitions retain duplicate/missing-row validation",
+          "scope": "LOCAL_ONLY",
+          "parent_subassertion_refs": [
+            "A34-07.01",
+            "A34-07.02",
+            "A34-07.03",
+            "A34-07.04",
+            "A34-07.05"
+          ],
+          "parent_ref_kind": "LOCAL_SCHEMA_ARITHMETIC_SLICE_ONLY"
+        },
+        {
+          "atom_id": "A34-07.local.3",
+          "assertion": "rate denominator schema and secret-field rejection only",
+          "scope": "LOCAL_ONLY",
+          "parent_subassertion_refs": [
+            "A34-07.01",
+            "A34-07.02",
+            "A34-07.03",
+            "A34-07.04",
+            "A34-07.05"
+          ],
+          "parent_ref_kind": "LOCAL_SCHEMA_ARITHMETIC_SLICE_ONLY"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "valid local synthetic/schema fixture"
+        ],
+        "negative": [
+          "invalid local fixture must rejected"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 1,
+      "oracle": {
+        "scope": "local synthetic/schema/arithmetic only; not official behavior"
+      },
+      "accepted_api_sha": "NOT_FROZEN",
+      "coverage_slices": [
+        {
+          "parent_ref": "A34-07.01",
+          "covered_atom_scope": "only manifest/schema/synthetic arithmetic component; no actual execution, latency, effect,50inflight,crypto or global fullparent assertion"
+        },
+        {
+          "parent_ref": "A34-07.02",
+          "covered_atom_scope": "only manifest/schema/synthetic arithmetic component; no actual execution, latency, effect,50inflight,crypto or global fullparent assertion"
+        },
+        {
+          "parent_ref": "A34-07.03",
+          "covered_atom_scope": "only manifest/schema/synthetic arithmetic component; no actual execution, latency, effect,50inflight,crypto or global fullparent assertion"
+        },
+        {
+          "parent_ref": "A34-07.04",
+          "covered_atom_scope": "only manifest/schema/synthetic arithmetic component; no actual execution, latency, effect,50inflight,crypto or global fullparent assertion"
+        },
+        {
+          "parent_ref": "A34-07.05",
+          "covered_atom_scope": "only manifest/schema/synthetic arithmetic component; no actual execution, latency, effect,50inflight,crypto or global fullparent assertion"
+        }
+      ]
+    },
+    {
+      "node_id": "tests/integration/test_a34_experiments.py::test_effect_budget_revocation_metrics_with_database_oracle",
+      "file": "tests/integration/test_a34_experiments.py",
+      "function": "test_effect_budget_revocation_metrics_with_database_oracle",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_measurements_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A34-08.01",
+        "A34-08.02",
+        "A34-08.03",
+        "A34-08.04",
+        "A34-08.05",
+        "A34-05.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A34-08.01.atom",
+          "assertion": "legalauthpass与capacityacceptedrate分开，budgetintent分类不藏拒绝",
+          "parent_ref": "A34-08.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-08.02.atom",
+          "assertion": "effect用dsrow+authorityoracle；重复按intent expected oneeffect",
+          "parent_ref": "A34-08.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-08.03.atom",
+          "assertion": "allancestor高水位/events delta回放，不只root最终snapshot",
+          "parent_ref": "A34-08.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-08.04.atom",
+          "assertion": "revokecommit→freshproof拒绝上下界与serverclock，已接受恢复不违规",
+          "parent_ref": "A34-08.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-08.05.atom",
+          "assertion": "full0越权仅声明测试集；baseline实际违规保报告",
+          "parent_ref": "A34-08.05",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-05.05.independent_effect_oracle",
+          "assertion": "genuine approved authoritypolicy + actual committed DS effects/fullancestor event replay evaluates attack/retry intent independently; success response or adapter selfreport is not truth; mutation of reported verdict cannot change oracle",
+          "parent_ref": "A34-05.05",
+          "scope": "INDEPENDENT_POLICY_EFFECT_CONTROL_WITH_NATIVE_OFFICIAL_ROWS"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "independent authority/effect oracle; event replay all-ancestor high-water; authallowed vs budget/capacity separate",
+          "true revoke commit bounded by before-commit barrier and post-transaction return/independent visibility monotonic witnesses"
+        ],
+        "negative": [
+          "effective_at mistaken for commit",
+          "response self-reported authorization",
+          "final-only counters hide historic overspend",
+          "accepted prior operation recovery misclassified as violation"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN",
+      "planning_amendments": [
+        {
+          "id": "PLAN-R2-REPLAY-01",
+          "refs": [
+            "A34-01",
+            "A34-05"
+          ],
+          "required": "class2 c maps T0500+c request.read index4*(500+c), disjoint retry targets, byte-identical original token/proof/body, task-local resend and genuine consumed-proof oracle; negative cases fresh/unconsumed proof, changed key/body/jti, expiry masking, replaced failed target, invented prep invoke or fake bearer proof. All rows retained; missing consumption is incomplete replay coverage, not PASS; controlled original+replay probe separately10round source/wheel."
+        }
+      ]
+    },
+    {
+      "node_id": "tests/unit/test_a34_microbench.py::test_real_crypto_microbench_count_and_measurement_contract",
+      "file": "tests/unit/test_a34_microbench.py",
+      "function": "test_real_crypto_microbench_count_and_measurement_contract",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_measurements_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S1_FROZEN_S0_LOCAL",
+      "run_owner": "a34_measurements_after_shared_stop",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "LOCAL_UNIT",
+      "parent_subassertion_refs": [
+        "A34-09.01"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A34-09.local.1",
+          "assertion": "microbench configuration real-crypto function interface and1000+50 shape validation",
+          "scope": "LOCAL_ONLY",
+          "parent_subassertion_refs": [
+            "A34-09.01"
+          ],
+          "parent_ref_kind": "LOCAL_SCHEMA_ARITHMETIC_SLICE_ONLY"
+        },
+        {
+          "atom_id": "A34-09.local.2",
+          "assertion": "synthetic timing parser/label schema only; no true sign/verify/hash execution evidence",
+          "scope": "LOCAL_ONLY",
+          "parent_subassertion_refs": [
+            "A34-09.01"
+          ],
+          "parent_ref_kind": "LOCAL_SCHEMA_ARITHMETIC_SLICE_ONLY"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "valid local synthetic/schema fixture"
+        ],
+        "negative": [
+          "invalid local fixture must rejected"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 1,
+      "oracle": {
+        "scope": "local synthetic/schema/arithmetic only; not official behavior"
+      },
+      "accepted_api_sha": "NOT_FROZEN",
+      "coverage_slices": [
+        {
+          "parent_ref": "A34-09.01",
+          "covered_atom_scope": "only manifest/schema/synthetic arithmetic component; no actual execution, latency, effect,50inflight,crypto or global fullparent assertion"
+        }
+      ]
+    },
+    {
+      "node_id": "tests/integration/test_a34_experiments.py::test_environment_capacity_storage_manifest_and_payload_preflight",
+      "file": "tests/integration/test_a34_experiments.py",
+      "function": "test_environment_capacity_storage_manifest_and_payload_preflight",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_measurements_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A34-10.01",
+        "A34-10.02",
+        "A34-10.03",
+        "A34-10.04",
+        "A34-10.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A34-10.01.atom",
+          "assertion": "host15logicalCPU/24GiB，Docker15CPU约7.75GiB aarch64/amd64conversion，磁盘可用394GiB仅root观察非本agent实测",
+          "parent_ref": "A34-10.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-10.02.atom",
+          "assertion": "三PG各512MiB建议起始、少量轻角色服务/50slots，不无证据要求Docker16GiB",
+          "parent_ref": "A34-10.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-10.03.atom",
+          "assertion": "每repeat记录实际quota/peakRSS/CPU/arch/translation/PGversionsettings/conn数",
+          "parent_ref": "A34-10.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-10.04.atom",
+          "assertion": "heap/index/toast/row/DB/WAL可用度/导出尺寸前后diff",
+          "parent_ref": "A34-10.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-10.05.atom",
+          "assertion": "固定workload evidence包256MiB预检及每HTTP/JWS/schema限制，不按perf表现削比例",
+          "parent_ref": "A34-10.05",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "actual quota/peakCPU/RSS/architecture/translation/PGsettings/connections and heap/index/toast/row/DB/WAL pre/post",
+          "fixed payload preflight cap256MiB component unchanged"
+        ],
+        "negative": [
+          "unmeasured host claims as current fact",
+          "16GiB invented hard gate",
+          "resource failure silently reduces50slots/count"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/integration/test_a34_experiments.py::test_pilot_not_counted_and_all_fixed_repetitions_retained",
+      "file": "tests/integration/test_a34_experiments.py",
+      "function": "test_pilot_not_counted_and_all_fixed_repetitions_retained",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_measurements_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A34-11.01",
+        "A34-11.02",
+        "A34-11.03",
+        "A34-11.04",
+        "A34-11.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A34-11.01.atom",
+          "assertion": "pilot仅功能/计数/资源可用，行label排除official",
+          "parent_ref": "A34-11.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-11.02.atom",
+          "assertion": "official比例/seed/params/order/quota预冻结，不根据pilot结果换seed",
+          "parent_ref": "A34-11.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-11.03.atom",
+          "assertion": "两次results与failures完整保留；重跑另run保旧data",
+          "parent_ref": "A34-11.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-11.04.atom",
+          "assertion": "source/wheel真实安装与关键E2E双方复现；正式性能安装variant提前固定并说明，其他variant验证测量接口不混统计",
+          "parent_ref": "A34-11.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-11.05.atom",
+          "assertion": "所有正式mode实跑由freshreview独立复现或完整审包指定独立run，不只worker logs冒重跑",
+          "parent_ref": "A34-11.05",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "pilot labelled nonofficial; same frozen seeds/body/targets/order/quota source+wheel functional evidence; official wheel distinct",
+          "all runs failures retained plus independent reviewer entire official run"
+        ],
+        "negative": [
+          "postpilot seed/body selection",
+          "rerun overwrites failure",
+          "worker log claimed reviewer execution"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "tests/test_a34_documents.py::test_final_thirty_goal_matrix_and_release_materials",
+      "file": "tests/test_a34_documents.py",
+      "function": "test_final_thirty_goal_matrix_and_release_materials",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "single_integrator",
+      "sole_write_phase": "S2_SERIAL",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "REAL_TLS_PG_PROCESS_INTEGRATION",
+      "parent_subassertion_refs": [
+        "A34-12.01",
+        "A34-12.02",
+        "A34-12.03",
+        "A34-12.04",
+        "A34-12.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "atom_id": "A34-12.01.atom",
+          "assertion": "30goal原行为逐项→actual test/commands/exit/XML/SHA，缺必run不得ACCEPTED",
+          "parent_ref": "A34-12.01",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-12.02.atom",
+          "assertion": "A1/A2/B/A23/A31/A32 accepted全部需求ID及原triggerprobe等价动态展开，不省新A22fix",
+          "parent_ref": "A34-12.02",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-12.03.atom",
+          "assertion": "安全/fairbaseline/实验oracle真negativecontrol非镜像测试",
+          "parent_ref": "A34-12.03",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-12.04.atom",
+          "assertion": "固定release commit/wheel/locks/schema/data/trust/checkpoint SHA与独立freshreview",
+          "parent_ref": "A34-12.04",
+          "scope": "only this function real cases; parent covered by union"
+        },
+        {
+          "atom_id": "A34-12.05.atom",
+          "assertion": "设计/威胁/technicalreport/deployment/rawdata/实际demo脚本与source/wheel真实运行证据为必需；实际录制video/terminal.cast可选，未录诚实报告、不单独作为阻断；knownlimits/统计条件",
+          "parent_ref": "A34-12.05",
+          "scope": "only this function real cases; parent covered by union"
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "all30goals+A2P01..21 + accepted A1/A2/B/A22/A23/A31/A32 every assertion/trigger actual sourcewheel evidence",
+          "release commit/wheel/lock/schema/data/trust/latestcheckpoint SHA + technical/design/threat/deployment/rawdata/demo scripts"
+        ],
+        "negative": [
+          "history PASS copied",
+          "missing inherited regression/probe equivalence",
+          "missing final fresh whole-stage acceptance"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 10,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "experiments/agent_guard_bench/runner.py::run_official_mode_repetition",
+      "file": "experiments/agent_guard_bench/runner.py",
+      "function": "run_official_mode_repetition",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_measurements_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "NATIVE_OFFICIAL_BENCH",
+      "parent_subassertion_refs": [
+        "A34-01.01",
+        "A34-01.02",
+        "A34-01.03",
+        "A34-01.04",
+        "A34-01.05",
+        "A34-02.01",
+        "A34-02.02",
+        "A34-02.03",
+        "A34-02.04",
+        "A34-02.05",
+        "A34-03.01",
+        "A34-03.02",
+        "A34-03.03",
+        "A34-03.04",
+        "A34-03.05",
+        "A34-04.01",
+        "A34-04.02",
+        "A34-04.03",
+        "A34-04.04",
+        "A34-04.05",
+        "A34-05.01",
+        "A34-05.02",
+        "A34-05.03",
+        "A34-05.04",
+        "A34-05.05",
+        "A34-06.01",
+        "A34-06.02",
+        "A34-06.03",
+        "A34-06.04",
+        "A34-06.05",
+        "A34-07.01",
+        "A34-07.02",
+        "A34-07.03",
+        "A34-07.04",
+        "A34-07.05",
+        "A34-08.01",
+        "A34-08.02",
+        "A34-08.03",
+        "A34-08.04",
+        "A34-08.05",
+        "A34-10.01",
+        "A34-10.02",
+        "A34-10.03",
+        "A34-10.04",
+        "A34-10.05",
+        "A34-11.01",
+        "A34-11.02",
+        "A34-11.03",
+        "A34-11.04",
+        "A34-11.05",
+        "A34-12.01",
+        "A34-12.02",
+        "A34-12.03",
+        "A34-12.04",
+        "A34-12.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "assertion": "actual4mode×2rep×5000 measured +2000 separate warmup;50actual in-flight; all rows/effects/drain/resource witnesses",
+          "scope": "native official only; independent reviewer separately whole40000"
+        },
+        {
+          "assertion": "A34-05 actual ten attack classes100 each, genuine AS rejection separately and real frozen gateway sends/layers; exact original key/body/grant targets250/100/100/50 from3500 legal, real loss original row retained; independent approved-policy and DS effect/event/counter oracle, never HTTP-derived expected verdict",
+          "scope": "ACTUAL_WIRE_EFFECT_UNION_WITH_LOCAL_MANIFEST_AND_INDEPENDENT_ORACLE_TEST",
+          "parent_subassertion_refs": [
+            "A34-05.01",
+            "A34-05.02",
+            "A34-05.03",
+            "A34-05.04",
+            "A34-05.05"
+          ]
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "genuine public complete mode and independent research mode services"
+        ],
+        "negative": [
+          "missing count/inflight/freshness/dependency/oracle evidence→INCOMPLETE; preserve all failures"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 1,
+      "oracle": {
+        "authority": "independently pre-approved tenant/task/holder/scope/resources/limits/window plus actually committed authority state, never response authorization",
+        "database": "same RR READ ONLY oracle snapshot: all applicable ancestors four counters, immutable operation/intent/first materials, RESERVE/SETTLE/RELEASE per-node events, proof/evidence links, lease owner/version/status/expiry, outbox/JWS/signed_at, downstream operation/order/notification/result, journal sequence/digest and independent audit checkpoint; actual accepted names must bind before formal review",
+        "denial": "no new accepted operation/reserve/effect/event/outbox; independently staged proof material separately accounted",
+        "retry_query": "current authority valid; original operation/intent/first bytes unchanged; no second reserve/effect; query purpose distinct",
+        "unknown": "retains reservation; late success at most one downstream effect and one terminal; every exception/SQLSTATE retained",
+        "evidence": [
+          "command/exit/JUnit where applicable",
+          "native PID/container owner",
+          "source or wheel SHA/import/child module SHA",
+          "beforeafter sanitized oracle JSON+SHA",
+          "all raw attempts+SHA",
+          "real lock backendIDs/blocking query/clock trace",
+          "owned resources manifest and zero leftovers"
+        ]
+      },
+      "accepted_api_sha": "NOT_FROZEN",
+      "coverage_slices": [
+        {
+          "parent_ref": "A34-01.01",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-01.02",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-01.03",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-01.04",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-01.05",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-02.01",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-02.02",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-02.03",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-02.04",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-02.05",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-03.01",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-03.02",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-03.03",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-03.04",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-03.05",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-04.01",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-04.02",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-04.03",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-04.04",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-04.05",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-05.01",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-05.02",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-05.03",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-05.04",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-05.05",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-06.01",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-06.02",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-06.03",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-06.04",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-06.05",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-07.01",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-07.02",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-07.03",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-07.04",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-07.05",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-08.01",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-08.02",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-08.03",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-08.04",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-08.05",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-10.01",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-10.02",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-10.03",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-10.04",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-10.05",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-11.01",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-11.02",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-11.03",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-11.04",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-11.05",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-12.01",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-12.02",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-12.03",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-12.04",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        },
+        {
+          "parent_ref": "A34-12.05",
+          "covered_atom_scope": "official measured gateway attempts/rows/mode capabilities/effects/drain/environment within this node; other unit/integration/native/doc obligations required for full parent"
+        }
+      ],
+      "planning_amendments": [
+        {
+          "id": "PLAN-R2-REPLAY-01",
+          "refs": [
+            "A34-01",
+            "A34-05"
+          ],
+          "required": "class2 c maps T0500+c request.read index4*(500+c), disjoint retry targets, byte-identical original token/proof/body, task-local resend and genuine consumed-proof oracle; negative cases fresh/unconsumed proof, changed key/body/jti, expiry masking, replaced failed target, invented prep invoke or fake bearer proof. All rows retained; missing consumption is incomplete replay coverage, not PASS; controlled original+replay probe separately10round source/wheel."
+        }
+      ]
+    },
+    {
+      "node_id": "experiments/agent_guard_bench/microbench.py::run_real_crypto_microbenchmark",
+      "file": "experiments/agent_guard_bench/microbench.py",
+      "function": "run_real_crypto_microbenchmark",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_measurements_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "NATIVE_REAL_CRYPTO",
+      "parent_subassertion_refs": [
+        "A34-09.01",
+        "A34-09.02",
+        "A34-09.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "assertion": "real mature SM2sign/verify/SM3 each1000 measured+50warmup, fixed key/profile/body/chain3 and real canonicalSM3/vector/OpenSSL consistency; no synthetic timings; modelN/A and smallsample limit",
+          "scope": "NATIVE_CRYPTO_ONLY_NO_DB_TRACE_OR_TLS_RTT",
+          "parent_subassertion_refs": [
+            "A34-09.01",
+            "A34-09.02",
+            "A34-09.05"
+          ]
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "actual mature crypto with positive signatures/vector consistency"
+        ],
+        "negative": [
+          "wrong signature/message/userID fails; no mock timing"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 1,
+      "oracle": {
+        "scope": "isolated real cryptographic execution; actual import/library/profile/key-public-fingerprint/body-count/monotonic timings/vector results, command/exit/raw hashes; no DB operations or PG effect oracle",
+        "negative": "wrong signature/message/userID fails; mock timing or missing measurements invalid",
+        "separation": "DB trace and TLS RTT independent nodes; no total-latency subtraction"
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "experiments/agent_guard_bench/microbench.py::run_independent_database_trace",
+      "file": "experiments/agent_guard_bench/microbench.py",
+      "function": "run_independent_database_trace",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_measurements_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "NATIVE_INDEPENDENT_DB_TRACE",
+      "parent_subassertion_refs": [
+        "A34-09.03",
+        "A34-09.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "assertion": "separate trace run on owned genuine AS/GW/DS research or production accepted APIs; query/connection counts and lock/backend clock bounds recorded; trace overhead explicit",
+          "scope": "independent DB trace only; no crypto/RTT/official throughput claims",
+          "parent_subassertion_refs": [
+            "A34-09.03",
+            "A34-09.05"
+          ]
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "separate trace run on owned genuine AS/GW/DS research or production accepted APIs; query/connection counts and lock/backend clock bounds recorded; trace overhead explicit"
+        ],
+        "negative": [
+          "trace in official rows without label, omitted backend/SQL waits, post-final-clock SQL introduced by instrumentation, inferred DB duration by subtraction"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 1,
+      "oracle": {
+        "scope": "independent DB trace only; no crypto/RTT/official throughput claims",
+        "evidence": [
+          "actual independent command/exit",
+          "owned resource/PID/import and source-wheel SHA",
+          "raw trace or RTT rows and hashes",
+          "config/sample count/overhead/limits",
+          "zero owned leftovers"
+        ],
+        "non_invoke": "These runs never inflate official5000 measured gateway attempts"
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "experiments/agent_guard_bench/microbench.py::run_independent_tls_roundtrip_reference",
+      "file": "experiments/agent_guard_bench/microbench.py",
+      "function": "run_independent_tls_roundtrip_reference",
+      "status": "PLANNED_NOT_RUN",
+      "sole_test_writer": "a34_measurements_after_shared_stop",
+      "sole_write_phase": "S1_CONSUME_FROZEN_S0",
+      "sole_execution_phase": "S2_AFTER_ALL_STOP_FINAL_FREEZE",
+      "run_owner": "single_integrator",
+      "reviewer": "fresh independent reviewer repeats complete required execution in distinct owned resources",
+      "kind": "NATIVE_INDEPENDENT_TLS_RTT",
+      "parent_subassertion_refs": [
+        "A34-09.04",
+        "A34-09.05"
+      ],
+      "local_assertion_atoms": [
+        {
+          "assertion": "real trusted-CA hostname TLS empty roundtrip on fixed owned endpoint with raw monotonic times/reuse policy; modelN/A and reference-only label",
+          "scope": "independent TLS RTT reference only; not measured business invoke or complete network decomposition",
+          "parent_subassertion_refs": [
+            "A34-09.04",
+            "A34-09.05"
+          ]
+        }
+      ],
+      "positive_negative_cases": {
+        "positive": [
+          "real trusted-CA hostname TLS empty roundtrip on fixed owned endpoint with raw monotonic times/reuse policy; modelN/A and reference-only label"
+        ],
+        "negative": [
+          "wrongCA/hostname verification disabled, synthetic RTT, total latency minusRTT presented as exact network cost"
+        ]
+      },
+      "install_variants": [
+        "source_noneditable_outside_cwd",
+        "wheel_noneditable_outside_cwd"
+      ],
+      "finite_rounds": 1,
+      "oracle": {
+        "scope": "independent TLS RTT reference only; not measured business invoke or complete network decomposition",
+        "evidence": [
+          "actual independent command/exit",
+          "owned resource/PID/import and source-wheel SHA",
+          "raw trace or RTT rows and hashes",
+          "config/sample count/overhead/limits",
+          "zero owned leftovers"
+        ],
+        "non_invoke": "These runs never inflate official5000 measured gateway attempts"
+      },
+      "accepted_api_sha": "NOT_FROZEN"
+    }
+  ],
+  "A34_native_obligations": [
+    {
+      "node_id": "experiments/agent_guard_bench/runner.py::run_official_mode_repetition",
+      "kind": "NATIVE_OFFICIAL_BENCH",
+      "parent_subassertion_refs": [
+        "A34-01.01",
+        "A34-01.02",
+        "A34-01.03",
+        "A34-01.04",
+        "A34-01.05",
+        "A34-02.01",
+        "A34-02.02",
+        "A34-02.03",
+        "A34-02.04",
+        "A34-02.05",
+        "A34-03.01",
+        "A34-03.02",
+        "A34-03.03",
+        "A34-03.04",
+        "A34-03.05",
+        "A34-04.01",
+        "A34-04.02",
+        "A34-04.03",
+        "A34-04.04",
+        "A34-04.05",
+        "A34-05.01",
+        "A34-05.02",
+        "A34-05.03",
+        "A34-05.04",
+        "A34-05.05",
+        "A34-06.01",
+        "A34-06.02",
+        "A34-06.03",
+        "A34-06.04",
+        "A34-06.05",
+        "A34-07.01",
+        "A34-07.02",
+        "A34-07.03",
+        "A34-07.04",
+        "A34-07.05",
+        "A34-08.01",
+        "A34-08.02",
+        "A34-08.03",
+        "A34-08.04",
+        "A34-08.05",
+        "A34-10.01",
+        "A34-10.02",
+        "A34-10.03",
+        "A34-10.04",
+        "A34-10.05",
+        "A34-11.01",
+        "A34-11.02",
+        "A34-11.03",
+        "A34-11.04",
+        "A34-11.05",
+        "A34-12.01",
+        "A34-12.02",
+        "A34-12.03",
+        "A34-12.04",
+        "A34-12.05"
+      ],
+      "status": "PLANNED_NOT_RUN",
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "experiments/agent_guard_bench/microbench.py::run_real_crypto_microbenchmark",
+      "kind": "NATIVE_REAL_CRYPTO",
+      "parent_subassertion_refs": [
+        "A34-09.01",
+        "A34-09.02",
+        "A34-09.05"
+      ],
+      "status": "PLANNED_NOT_RUN",
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "experiments/agent_guard_bench/microbench.py::run_independent_database_trace",
+      "kind": "NATIVE_INDEPENDENT_DB_TRACE",
+      "parent_subassertion_refs": [
+        "A34-09.03",
+        "A34-09.05"
+      ],
+      "status": "PLANNED_NOT_RUN",
+      "accepted_api_sha": "NOT_FROZEN"
+    },
+    {
+      "node_id": "experiments/agent_guard_bench/microbench.py::run_independent_tls_roundtrip_reference",
+      "kind": "NATIVE_INDEPENDENT_TLS_RTT",
+      "parent_subassertion_refs": [
+        "A34-09.04",
+        "A34-09.05"
+      ],
+      "status": "PLANNED_NOT_RUN",
+      "accepted_api_sha": "NOT_FROZEN"
+    }
+  ],
+  "A34_whole_parent_union_rule": "131 original subassertions retained; local unit/precheck slices, real integration independent effect controls, official wire/effect run, isolated crypto, independent DBtrace and TLSRTT, final document/release/full-inheritance obligations form coverage union. No native runner or unit alone claims whole-parent PASS.",
+  "mandatory": "Both installs full original20 inherited groups, every A33/A34 requirement/atom/55/6, history/equivalence, ten effective races and real kill; actual collection/assertions after all STOP before joint full selfcheck and fresh independent acceptance. No wrapper-only closure."
+}

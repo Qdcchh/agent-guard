@@ -1,0 +1,75 @@
+{
+  "scope": "root independently recomputed all native XML SHA and pass-node witnesses; segmented diagnostic only, not fresh 6092/6839 acceptance",
+  "recorded_utc": "2026-10-18T15:07:24.006286+00:00",
+  "expected": 6092,
+  "distinct_passed": 6092,
+  "missing": 0,
+  "unexpected": 0,
+  "source": {
+    "tests/fixtures/a31_delivery.py": "7a404a085de2b2068a9398ce4b809eb2fc213f9a5a4d38dacee1cd28948e28c7",
+    "tests/unit/test_pr9_a31_tls_context.py": "69b1815053a29552f240e3e9abdeca1acea73d82fd50b0a829817a16b93e1b29",
+    "tests/integration/test_audit_delivery.py": "773f17bcea45ce1ce064b82fe673d813fb4779943ded2ddb8f875fd1db72a7a6",
+    "tests/integration/test_a31_inherited_trusted_material.py": "aa5ad59e49cb9ec0cc35b9ab18688e5cbeb4be1ec8679918c9dfe22602174de6",
+    "tests/integration/test_gateway_query.py": "5ed123fd578a2830357967228db26b7196ac685c1f4811a95363e402878b9326",
+    "tests/integration/test_receipt_publication.py": "3e1503ba36964439e198a008fb20ecbe15dba7b6bef63c73ef7ac5dccbc3e30b"
+  },
+  "phases": [
+    {
+      "phase": "initial_prefix",
+      "junit_sha256": "3e402c9c0e17da1e2c0efcc3411fba4e8136ab55fb2c8f3fe01cec9230177e5a",
+      "matching_pass_nodeids": 1509,
+      "new_unique_pass": 1509,
+      "overlap_previously_passed": 0
+    },
+    {
+      "phase": "audit_delivery",
+      "junit_sha256": "99b084f648cfb327618010c430973c6d7479a9b8c249c24029f7ec422e0c0f72",
+      "matching_pass_nodeids": 462,
+      "new_unique_pass": 462,
+      "overlap_previously_passed": 0
+    },
+    {
+      "phase": "remainder_prefix",
+      "junit_sha256": "2e0c2ccc4c5106f00f0348c48d0d2082ddd6324a7f2a7a05da1b2b388265b41f",
+      "matching_pass_nodeids": 1561,
+      "new_unique_pass": 1561,
+      "overlap_previously_passed": 0
+    },
+    {
+      "phase": "export_prefix",
+      "junit_sha256": "28f4e12af92afaace6ee7d055dce0ffb962c37a88ebd881052cbba726ac831a6",
+      "matching_pass_nodeids": 1283,
+      "new_unique_pass": 1283,
+      "overlap_previously_passed": 0
+    },
+    {
+      "phase": "gateway_query_whole",
+      "junit_sha256": "e5bc2a6f29f34bfb5eaa1ea6fc878a9de857d178cb4ebe07b7e2fb8da22189b1",
+      "matching_pass_nodeids": 523,
+      "new_unique_pass": 19,
+      "overlap_previously_passed": 504
+    },
+    {
+      "phase": "postquery_tail",
+      "junit_sha256": "93813b1b0b667bccf16c81c32f17dd4e25afe7a62412e8d0f568f1bc0d919de1",
+      "matching_pass_nodeids": 862,
+      "new_unique_pass": 862,
+      "overlap_previously_passed": 0
+    },
+    {
+      "phase": "receipt_publication_whole_and_tail",
+      "junit_sha256": "f82fd0c4849cfc964378e94afebee9ea006acb5f2472f36c63891de7119aadee",
+      "matching_pass_nodeids": 1,
+      "new_unique_pass": 0,
+      "overlap_previously_passed": 1
+    },
+    {
+      "phase": "receipt_publication_whole_and_tail_v2",
+      "junit_sha256": "6b759ee2ada3e0c30a0e0d8624a15c1cdcdf00b3a2cc25092a3499be259145a5",
+      "matching_pass_nodeids": 397,
+      "new_unique_pass": 396,
+      "overlap_previously_passed": 1
+    }
+  ],
+  "historical_anonymous_volume_attribution": "UNKNOWN; no unknown volume read, mounted or deleted; current recorded owner resources zero"
+}

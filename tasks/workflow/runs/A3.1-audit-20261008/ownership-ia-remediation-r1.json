@@ -1,0 +1,16 @@
+{
+  "status": "FORMAL_EXACT_TWO_PATH_TRANSFER",
+  "writer": "/root/a31_s2_resume_low_r1",
+  "requested_model": "gpt-6.1-sol",
+  "requested_effort": "low",
+  "effective_metadata": "UNKNOWN",
+  "task": "task-ia-remediation-r1.md",
+  "paths": {
+    "src/agent_guard/ledger/service.py": "1dbf789bc69052564ce1464d7084eebd5dfb1113ac3b6f4b67087744615d93b7",
+    "tests/integration/test_evidence_binding.py": "4ce230d128b1ef1ee06b141faad2450ac1d1716d019ac6a670fb51d66689663b"
+  },
+  "old_S2_23_path_write_rights": "NOT_ACTIVE_THIS_ROUND",
+  "issue": "A31-IA-R1-001",
+  "scope_change": "NONE; restore approved A31-S01.04; no signature/interface/SQL/dependency change",
+  "reviewer_STOP_resource0_readback": "artifacts/workflow/A3.1-audit-20261008/controller/ia-r1-complete-report-root-readback.json"
+}

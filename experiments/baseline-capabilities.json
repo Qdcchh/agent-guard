@@ -1,0 +1,11 @@
+{
+  "status": "IMPLEMENTED_RESEARCH_CONTRACT_REQUIRES_ACTUAL_CONTROLS",
+  "mode_mapping": {"staticACL":"staticACL","realSM2delegation_noAtomic":"noAtomic","complete":"full","realSM2Bearer":"Bearer"},
+  "modes": {
+    "staticACL": {"authentication":"scrypt distinct approved role credential","scope":"tenant/task/tool/resource/quantity/delivery","proof":"NOT_APPLICABLE","budget":"NOT_ENFORCED_RESEARCH_ONLY","signature_receipt":"NOT_APPLICABLE","independent_audit":"NOT_APPLICABLE"},
+    "noAtomic": {"authentication":"real AS SM2 token and genuine AG-Proof","scope":"complete signed chain and current authority","proof":"VERIFIED","budget":"RC unlocked read/check then server increments; unsafe race intentionally measurable","signature_receipt":"NOT_APPLICABLE","independent_audit":"NOT_APPLICABLE"},
+    "Bearer": {"authentication":"real signed AS SM2 token and complete signed source","scope":"complete signed chain and current authority","proof":"NOT_VERIFIED; None; supplied proof IGNORED","budget":"atomic root-to-leaf research FOR UPDATE","signature_receipt":"NOT_APPLICABLE","independent_audit":"NOT_APPLICABLE"},
+    "full": {"authentication":"production verifier through genuine public gateway","scope":"production complete authorization","proof":"VERIFIED","budget":"production all ancestors atomic","signature_receipt":"production signed READY","independent_audit":"production independently anchored; gaps explicit"}
+  },
+  "limitations":"Different capabilities and costs are explicit. No industry superiority, causal single-variable isolation or independent audit claimed for research JSON. Real controls and official measurements remain mandatory."
+}

@@ -1,0 +1,63 @@
+"""Independent r8 schema-consensus and persisted maximum-version lifecycle."""
+import dataclasses,json
+import psycopg,pytest
+from agent_guard.contracts.execution import ExecutionError,ExecutionErrorCode,ToolId
+from agent_guard.contracts.ledger import TrustedCost
+from agent_guard.tools.params import parse_tool_params
+from agent_guard.tools.catalog import CatalogQuote,CatalogQuoteLine,snapshot_from_bytes
+from agent_guard.tools.results import parse_result
+from tests.fixtures.execution import order_params,constraints_for,build_env
+from tests.fixtures.dbstate import fetch_counts
+from test_review import counters,effects,observe
+BAD=['0','01','1'*19,'1\n','1\r\n','1\t','1\x00','1\x7f','1\u2028','1\u2029','1\u00a0','١','１','1\u200b','1\ufeff','1\u000b','1e0','+1','-1',' 1','1 ','1@2','1/2']
+GOOD=['1','2','10','100000000000000000','999999999999999999']
+def snapshot(v):return json.dumps(dict(quote_id='quote-001',quote_version=v,supplier_id='supplier-001',items=[dict(sku='sku-001',quantity=1,unit_price_fen=70000)],total_fen=70000,currency='CNY')).encode()
+def result(v):return json.dumps(dict(kind='order',operation_id='operation-001',order_id='order-001',supplier_id='supplier-001',quote_id='quote-001',quote_version=v,items=[dict(sku='sku-001',quantity=1,unit_price_fen=70000)],total_fen=70000)).encode()
+@pytest.mark.parametrize('v',BAD+GOOD)
+def test_three_schema_consensus(v):
+ readers=[lambda:parse_tool_params(ToolId.ORDER_CREATE,order_params(quote_version=v)),lambda:snapshot_from_bytes(snapshot(v)),lambda:parse_result(result(v))]
+ expected=['INVALID_PARAMS','LEGACY_SNAPSHOT_INVALID','DOWNSTREAM_INCONSISTENT']
+ for i,read in enumerate(readers):
+  if v in BAD:
+   with pytest.raises(ExecutionError) as exc:read()
+   assert exc.value.code.value==expected[i]
+  else:assert read().quote_version==v
+@pytest.mark.parametrize('v',BAD)
+def test_invalid_trusted_catalog_permission_cannot_reach_any_lookup(a2,monkeypatch,v):
+ a2.catalog.add_quote(CatalogQuote('quote-001',v,'supplier-001','req-001',(CatalogQuoteLine('sku-001',1,70000),)))
+ permission=a2.permission(chain=tuple(constraints_for(i,quote_versions=('quote-001@'+v,)) for i in range(3)))
+ before=fetch_counts(a2.gateway_dsn);beforec=counters(a2);called=[]
+ def forbidden(*args,**kw):called.append(True);raise AssertionError('invalid schema reached a DB/candidate lookup')
+ monkeypatch.setattr(a2.service,'_read_path_ids',forbidden);monkeypatch.setattr(a2.service,'_find_candidate',forbidden)
+ with pytest.raises(ExecutionError) as exc:a2.service.accept_invocation(a2.tree.invocation(idempotency_key='r8-invalid',tool_id=ToolId.ORDER_CREATE.value,params=order_params(quote_version=v)),permission)
+ assert exc.value.code is ExecutionErrorCode.INVALID_PARAMS and not called
+ assert fetch_counts(a2.gateway_dsn)==before and counters(a2)==beforec and effects(a2)=={'ds_operations':0,'ds_orders':0,'ds_notifications':0}
+ observe('r8-version-schema-refusal',{'version':repr(v),'code':exc.value.code.value,'lookup_called':False,'zero_state_delta':True})
+@pytest.mark.parametrize('v',GOOD)
+def test_maximum_and_other_legal_versions_execute_and_retry_deleted_quote(a2,v):
+ a2.catalog.add_quote(CatalogQuote('quote-001',v,'supplier-001','req-001',(CatalogQuoteLine('sku-001',1,70000),)))
+ permission=a2.permission(chain=tuple(constraints_for(i,quote_versions=('quote-001@'+v,)) for i in range(3)))
+ def invocation():return a2.tree.invocation(idempotency_key='r8-legal',tool_id=ToolId.ORDER_CREATE.value,params=order_params(quote_version=v))
+ accepted=a2.service.accept_invocation(invocation(),permission);op=accepted.operation_id;row=a2.service.load_operation(op)
+ assert snapshot_from_bytes(row.quote_snapshot).quote_version==v
+ a2.catalog.remove_quote('quote-001',v)
+ retry=a2.service.accept_invocation(invocation(),permission);assert retry.operation_id==op and retry.accepted_at==accepted.accepted_at and retry.cost==accepted.cost
+ assert a2.service.run_operation(op).status=='SUCCEEDED'
+ outcome=a2.downstream.query(service_secret=a2.secret,operation_id=op);assert outcome.quote.quote_version==v and parse_result(outcome.result_bytes).quote_version==v
+ outbox=a2.service.outbox_entry(op);assert outbox['receipt_status']=='PENDING' and outbox['receipt_jws'] is None
+ terminal=a2.service.accept_invocation(invocation(),permission);assert terminal.status=='SUCCEEDED' and terminal.cost==accepted.cost and a2.service.outbox_entry(op)==outbox
+ assert all(c=={'amount_reserved':0,'amount_settled':70000,'calls_reserved':0,'calls_settled':1} for c in counters(a2))
+ counts=fetch_counts(a2.gateway_dsn);assert counts['ag_proofs']==3 and counts['ag_operations']==1 and counts['ag_ledger_events']==2 and counts['ag_ledger_event_nodes']==6 and effects(a2)['ds_orders']==1
+ observe('r8-maximum-version-lifecycle',{'version':v,'accepted_at_stable':True,'outbox_stable':True,'counts':counts,'effects':effects(a2),'counters':counters(a2)})
+@pytest.mark.parametrize('entry',['execute','query'])
+def test_invalid_version_in_result_after_real_effect_keeps_unknown(a2,entry):
+ permission=a2.permission();op=a2.service.accept_invocation(a2.tree.invocation(tool_id=ToolId.ORDER_CREATE.value,params=order_params()),permission).operation_id;row=a2.service.load_operation(op)
+ outcome=a2.downstream.execute(service_secret=a2.secret,operation_id=op,tool_id=ToolId.ORDER_CREATE,canonical_params=row.canonical_params,quote=snapshot_from_bytes(row.quote_snapshot),expected_amount_fen=70000)
+ obj=json.loads(outcome.result_bytes);obj['quote_version']='1\u2028';bad=dataclasses.replace(outcome,result_bytes=json.dumps(obj).encode())
+ class Port:
+  def execute(self,**kw):return bad
+  def query(self,**kw):return bad
+ env=build_env(tree=a2.tree,gateway_dsn=a2.gateway_dsn,downstream_dsn=a2.downstream_dsn,downstream=Port())
+ got=env.service.run_operation(op) if entry=='execute' else env.service.reconcile(op)
+ assert got.status=='UNKNOWN' and env.service.outbox_entry(op) is None and effects(a2)['ds_orders']==1
+ assert all(c['amount_reserved']==70000 and c['calls_reserved']==1 for c in counters(a2))

@@ -1,0 +1,1003 @@
+{
+  "status": "ACTUAL_ACCEPTED_A32_SOURCE_CURRENT_SHA_BINDING_A33_APIS_PLANNED",
+  "members": [
+    {
+      "file": "src/agent_guard/authorization/proof.py",
+      "observed_sha256": "b1a68aff814b0806f2c50cd46cf7daaa1327adcc14e452c0508df336fc2f5086",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "ProofInputError",
+          "line": 28,
+          "declaration": "class ProofInputError(ValueError):"
+        },
+        {
+          "name": "ProofVerificationError",
+          "line": 32,
+          "declaration": "class ProofVerificationError(ValueError):"
+        },
+        {
+          "name": "sign_ag_proof",
+          "line": 54,
+          "declaration": "def sign_ag_proof("
+        },
+        {
+          "name": "verify_ag_proof",
+          "line": 116,
+          "declaration": "def verify_ag_proof("
+        }
+      ],
+      "accepted_current_sha256": "b1a68aff814b0806f2c50cd46cf7daaa1327adcc14e452c0508df336fc2f5086"
+    },
+    {
+      "file": "src/agent_guard/authorization/oidc.py",
+      "observed_sha256": "ac8dc5334fa750159c84592dd819d609b1cfd98ed284b88bc09deaf785309bcf",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "OidcValidationError",
+          "line": 22,
+          "declaration": "class OidcValidationError(ValueError):"
+        },
+        {
+          "name": "pkce_s256_challenge",
+          "line": 26,
+          "declaration": "def pkce_s256_challenge(verifier: str) -> str:"
+        },
+        {
+          "name": "verify_id_token",
+          "line": 33,
+          "declaration": "def verify_id_token("
+        }
+      ],
+      "accepted_current_sha256": "ac8dc5334fa750159c84592dd819d609b1cfd98ed284b88bc09deaf785309bcf"
+    },
+    {
+      "file": "src/agent_guard/server/private_files.py",
+      "observed_sha256": "9b4debcd50b4cb380a7eb15a4fe5b277b560303bf31b41101c4dad1a5d43f5df",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "PrivateDirectory",
+          "line": 81,
+          "declaration": "class PrivateDirectory:"
+        },
+        {
+          "name": "private_directory",
+          "line": 240,
+          "declaration": "def private_directory(path: str | Path, *, create: bool = False) -> Iterator[PrivateDirectory]:"
+        },
+        {
+          "name": "write_private_file",
+          "line": 294,
+          "declaration": "def write_private_file(path: Path, data: bytes) -> None:"
+        },
+        {
+          "name": "read_private_file",
+          "line": 302,
+          "declaration": "def read_private_file(path: str | Path) -> bytes:"
+        },
+        {
+          "name": "read_file",
+          "line": 148,
+          "declaration": "    def read_file(self, name: str) -> bytes:"
+        },
+        {
+          "name": "write_file",
+          "line": 184,
+          "declaration": "    def write_file(self, name: str, data: bytes) -> None:"
+        }
+      ],
+      "accepted_current_sha256": "9b4debcd50b4cb380a7eb15a4fe5b277b560303bf31b41101c4dad1a5d43f5df"
+    },
+    {
+      "file": "src/agent_guard/server/__main__.py",
+      "observed_sha256": "9572d0a1264bb80a58fa3f21eb81d0ee65568bacf827973ce24fc8aecc4e8e72",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "init_config",
+          "line": 67,
+          "declaration": "def init_config(out_dir: Path, issuer: str) -> None:"
+        },
+        {
+          "name": "run_server",
+          "line": 133,
+          "declaration": "def run_server(args: argparse.Namespace) -> None:"
+        },
+        {
+          "name": "check_config",
+          "line": 173,
+          "declaration": "def check_config(args: argparse.Namespace) -> None:"
+        },
+        {
+          "name": "main",
+          "line": 190,
+          "declaration": "def main(argv: list[str] | None = None) -> int:"
+        },
+        {
+          "name": "refuse_database",
+          "line": 180,
+          "declaration": "        def refuse_database(*args, **kwargs):"
+        }
+      ],
+      "accepted_current_sha256": "9572d0a1264bb80a58fa3f21eb81d0ee65568bacf827973ce24fc8aecc4e8e72"
+    },
+    {
+      "file": "src/agent_guard/server/factory.py",
+      "observed_sha256": "5c363cda42da8a248b19098e09252ab1ca09e0600e2fcc9fcc2089c46ad40e76",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "build_app",
+          "line": 62,
+          "declaration": "def build_app("
+        },
+        {
+          "name": "fetch_document",
+          "line": 101,
+          "declaration": "    def fetch_document(url: str) -> bytes:"
+        }
+      ],
+      "accepted_current_sha256": "5c363cda42da8a248b19098e09252ab1ca09e0600e2fcc9fcc2089c46ad40e76"
+    },
+    {
+      "file": "src/agent_guard/gateway/__main__.py",
+      "observed_sha256": "02497fb5530da63a465dd155819903061906bd0b6c8b0e25541012998e302f41",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "init_config",
+          "line": 18,
+          "declaration": "def init_config("
+        },
+        {
+          "name": "main",
+          "line": 118,
+          "declaration": "def main(argv=None):"
+        },
+        {
+          "name": "export_factory",
+          "line": 189,
+          "declaration": "            def export_factory():"
+        }
+      ],
+      "accepted_current_sha256": "02497fb5530da63a465dd155819903061906bd0b6c8b0e25541012998e302f41"
+    },
+    {
+      "file": "src/agent_guard/gateway/factory.py",
+      "observed_sha256": "b8ad5b3a6495dc038a8d7fa4fa668fd0e838bbea9f3c4865049ce638324f7bdb",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "build_app",
+          "line": 25,
+          "declaration": "def build_app("
+        }
+      ],
+      "accepted_current_sha256": "b8ad5b3a6495dc038a8d7fa4fa668fd0e838bbea9f3c4865049ce638324f7bdb"
+    },
+    {
+      "file": "src/agent_guard/gateway/receipt_config.py",
+      "observed_sha256": "46a859879db44008f9a5c372dcbff6260624c7a2baec2f7407a5ffcc7d7db129",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "ReceiptWorkerConfig",
+          "line": 38,
+          "declaration": "class ReceiptWorkerConfig:"
+        },
+        {
+          "name": "load_receipt_worker_config",
+          "line": 119,
+          "declaration": "def load_receipt_worker_config(path):"
+        },
+        {
+          "name": "init_receipt_worker",
+          "line": 146,
+          "declaration": "def init_receipt_worker(gateway_path, out, *, signing_kid=\"gw-receipt-1\"):"
+        },
+        {
+          "name": "publisher",
+          "line": 42,
+          "declaration": "    def publisher(self, dsn):"
+        }
+      ],
+      "accepted_current_sha256": "46a859879db44008f9a5c372dcbff6260624c7a2baec2f7407a5ffcc7d7db129"
+    },
+    {
+      "file": "src/agent_guard/gateway/receipt_worker.py",
+      "observed_sha256": "c3e20b0bd82a5c61216f87f7f04ae0341b3004e8f61c3d765a664598c583eb74",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "publication_json",
+          "line": 20,
+          "declaration": "def publication_json(publication):"
+        },
+        {
+          "name": "run",
+          "line": 30,
+          "declaration": "def run(config, dsn, *, once=False, operation_id=None):"
+        },
+        {
+          "name": "main",
+          "line": 55,
+          "declaration": "def main(argv=None):"
+        },
+        {
+          "name": "error",
+          "line": 16,
+          "declaration": "    def error(self, message):"
+        }
+      ],
+      "accepted_current_sha256": "c3e20b0bd82a5c61216f87f7f04ae0341b3004e8f61c3d765a664598c583eb74"
+    },
+    {
+      "file": "src/agent_guard/execution/service.py",
+      "observed_sha256": "a83a6292f3e7c291440aa1ee87e8915ea5ca701d25ed623aad989d19d7897ed9",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "safe_reason",
+          "line": 104,
+          "declaration": "def safe_reason(exc: BaseException) -> str:"
+        },
+        {
+          "name": "RunResult",
+          "line": 116,
+          "declaration": "class RunResult:"
+        },
+        {
+          "name": "ExecutionService",
+          "line": 133,
+          "declaration": "class ExecutionService:"
+        },
+        {
+          "name": "strict_snapshots_equal",
+          "line": 975,
+          "declaration": "def strict_snapshots_equal(left, right) -> bool:"
+        },
+        {
+          "name": "verify_accept_facts",
+          "line": 1031,
+          "declaration": "def verify_accept_facts(operation, events, *, db_path: tuple[str, ...]) -> None:"
+        },
+        {
+          "name": "is_terminal",
+          "line": 129,
+          "declaration": "    def is_terminal(self) -> bool:"
+        },
+        {
+          "name": "accept_invocation",
+          "line": 197,
+          "declaration": "    def accept_invocation("
+        },
+        {
+          "name": "run_operation",
+          "line": 479,
+          "declaration": "    def run_operation("
+        },
+        {
+          "name": "reconcile",
+          "line": 533,
+          "declaration": "    def reconcile("
+        },
+        {
+          "name": "quarantine_if_insufficient",
+          "line": 902,
+          "declaration": "    def quarantine_if_insufficient(self, operation_id: str) -> bool:"
+        },
+        {
+          "name": "operation_status",
+          "line": 916,
+          "declaration": "    def operation_status(self, operation_id: str) -> str:"
+        },
+        {
+          "name": "load_operation",
+          "line": 923,
+          "declaration": "    def load_operation(self, operation_id: str):"
+        },
+        {
+          "name": "outbox_entry",
+          "line": 927,
+          "declaration": "    def outbox_entry(self, operation_id: str) -> dict | None:"
+        },
+        {
+          "name": "review_flag",
+          "line": 931,
+          "declaration": "    def review_flag(self, operation_id: str) -> dict | None:"
+        },
+        {
+          "name": "validator",
+          "line": 373,
+          "declaration": "        def validator(conn, existing) -> None:"
+        }
+      ],
+      "accepted_current_sha256": "a83a6292f3e7c291440aa1ee87e8915ea5ca701d25ed623aad989d19d7897ed9"
+    },
+    {
+      "file": "src/agent_guard/execution/worker.py",
+      "observed_sha256": "c6ba7df9e9dc2fba568355de77a716e275c108a52cbd1f8f8d0eba34343ce277",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "main",
+          "line": 83,
+          "declaration": "def main() -> int:"
+        },
+        {
+          "name": "pause",
+          "line": 62,
+          "declaration": "    def pause(claim, outcome) -> None:"
+        }
+      ],
+      "accepted_current_sha256": "c6ba7df9e9dc2fba568355de77a716e275c108a52cbd1f8f8d0eba34343ce277"
+    },
+    {
+      "file": "src/agent_guard/tools/downstream.py",
+      "observed_sha256": "783b7ba5aa17023620666add0e41d597fee6169e5ea39b60c89e9ca2cb7ef2b3",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "MockDownstream",
+          "line": 109,
+          "declaration": "class MockDownstream:"
+        },
+        {
+          "name": "provision",
+          "line": 136,
+          "declaration": "    def provision(self) -> None:"
+        },
+        {
+          "name": "reset",
+          "line": 142,
+          "declaration": "    def reset(self) -> None:"
+        },
+        {
+          "name": "execute",
+          "line": 166,
+          "declaration": "    def execute("
+        },
+        {
+          "name": "query",
+          "line": 210,
+          "declaration": "    def query(self, *, service_secret: str, operation_id: str) -> DownstreamOutcome | None:"
+        }
+      ],
+      "accepted_current_sha256": "783b7ba5aa17023620666add0e41d597fee6169e5ea39b60c89e9ca2cb7ef2b3"
+    },
+    {
+      "file": "src/agent_guard/authorization/provisioning.py",
+      "observed_sha256": "452919a869ebdd1c3dab16a3accf6d2e4ff36f886ba9e4bb22064ffd0d795dfe",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "ProvisioningError",
+          "line": 27,
+          "declaration": "class ProvisioningError(ValueError):"
+        },
+        {
+          "name": "register_user",
+          "line": 49,
+          "declaration": "def register_user("
+        },
+        {
+          "name": "set_user_password",
+          "line": 72,
+          "declaration": "def set_user_password("
+        },
+        {
+          "name": "register_task_policy",
+          "line": 90,
+          "declaration": "def register_task_policy("
+        },
+        {
+          "name": "grant_tenant_admin",
+          "line": 139,
+          "declaration": "def grant_tenant_admin("
+        }
+      ],
+      "accepted_current_sha256": "452919a869ebdd1c3dab16a3accf6d2e4ff36f886ba9e4bb22064ffd0d795dfe"
+    },
+    {
+      "file": "src/agent_guard/audit/bootstrap_cli.py",
+      "observed_sha256": "1b878a19dec07935db4529f7f1fdeec0d3ea1c24d17c95bcbb60eca94dcea0fd",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "main",
+          "line": 21,
+          "declaration": "def main(argv=None) -> int:"
+        }
+      ],
+      "accepted_current_sha256": "1b878a19dec07935db4529f7f1fdeec0d3ea1c24d17c95bcbb60eca94dcea0fd"
+    },
+    {
+      "file": "src/agent_guard/audit/operator_cli.py",
+      "observed_sha256": "b6ad0b2f6ee4613cdc3cb14bdfaae96e0c0d1454806633d96b874052132b812e",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "main",
+          "line": 23,
+          "declaration": "def main(argv=None):"
+        }
+      ],
+      "accepted_current_sha256": "b6ad0b2f6ee4613cdc3cb14bdfaae96e0c0d1454806633d96b874052132b812e"
+    },
+    {
+      "file": "src/agent_guard/audit/client.py",
+      "observed_sha256": "f3c4e2c082c38644ff3a75e7e16ff09b01d9e277d4f4af857867b90bf572535e",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "AuditUnavailable",
+          "line": 21,
+          "declaration": "class AuditUnavailable(Exception):"
+        },
+        {
+          "name": "ReconcileRequired",
+          "line": 25,
+          "declaration": "class ReconcileRequired(AuditUnavailable):"
+        },
+        {
+          "name": "AuditClient",
+          "line": 34,
+          "declaration": "class AuditClient:"
+        },
+        {
+          "name": "redirect_request",
+          "line": 30,
+          "declaration": "    def redirect_request(self, req, fp, code, msg, headers, newurl):"
+        },
+        {
+          "name": "append",
+          "line": 119,
+          "declaration": "    def append(self, batch: AppendBatch) -> str:"
+        },
+        {
+          "name": "latest",
+          "line": 124,
+          "declaration": "    def latest(self, stream_id: str) -> str | None:"
+        },
+        {
+          "name": "history",
+          "line": 144,
+          "declaration": "    def history(self, stream_id, *, observed_checkpoint_id, after_sequence):"
+        },
+        {
+          "name": "records",
+          "line": 149,
+          "declaration": "    def records(self, stream_id, *, observed_checkpoint_id, after_sequence):"
+        }
+      ],
+      "accepted_current_sha256": "f3c4e2c082c38644ff3a75e7e16ff09b01d9e277d4f4af857867b90bf572535e"
+    },
+    {
+      "file": "src/agent_guard/audit/delivery.py",
+      "observed_sha256": "62402eb24a989168550a5df8e5bf5e5350e3e14d385080495da4e144ac28f232",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "DeliveryError",
+          "line": 39,
+          "declaration": "class DeliveryError(Exception):"
+        },
+        {
+          "name": "verify_checkpoint",
+          "line": 43,
+          "declaration": "def verify_checkpoint("
+        },
+        {
+          "name": "prepare_pending_tx",
+          "line": 116,
+          "declaration": "def prepare_pending_tx(conn, stream_id: str) -> PendingBatch | None:"
+        },
+        {
+          "name": "ack_pending_tx",
+          "line": 207,
+          "declaration": "def ack_pending_tx(conn, pending: PendingBatch, checkpoint: ObservedCheckpoint) -> bool:"
+        },
+        {
+          "name": "reconcile_remote_ahead",
+          "line": 267,
+          "declaration": "def reconcile_remote_ahead("
+        },
+        {
+          "name": "AuthenticatedReconciliation",
+          "line": 369,
+          "declaration": "class AuthenticatedReconciliation:"
+        },
+        {
+          "name": "authenticate_reconciliation",
+          "line": 383,
+          "declaration": "def authenticate_reconciliation("
+        },
+        {
+          "name": "prepare_reconciliation_child_tx",
+          "line": 495,
+          "declaration": "def prepare_reconciliation_child_tx(conn, parent, proof) -> PendingBatch | None:"
+        },
+        {
+          "name": "ack_reconciled_pending_tx",
+          "line": 547,
+          "declaration": "def ack_reconciled_pending_tx(conn, parent, proof) -> bool:"
+        },
+        {
+          "name": "DeliveryOutcome",
+          "line": 574,
+          "declaration": "class DeliveryOutcome:"
+        },
+        {
+          "name": "DeliveryWorker",
+          "line": 579,
+          "declaration": "class DeliveryWorker:"
+        },
+        {
+          "name": "deliver_once",
+          "line": 659,
+          "declaration": "    def deliver_once(self, stream_id: str) -> DeliveryOutcome:"
+        },
+        {
+          "name": "deliver_round",
+          "line": 687,
+          "declaration": "    def deliver_round(self, stream_ids: tuple[str, ...]) -> tuple[DeliveryOutcome, ...]:"
+        }
+      ],
+      "accepted_current_sha256": "62402eb24a989168550a5df8e5bf5e5350e3e14d385080495da4e144ac28f232"
+    },
+    {
+      "file": "src/agent_guard/gateway/evidence_endpoint.py",
+      "observed_sha256": "2fca2ce7233dd9970448d8b73090eb955bed843a997f1ee6416835806e06ef6b",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "ExportTaskInputs",
+          "line": 14,
+          "declaration": "class ExportTaskInputs:"
+        },
+        {
+          "name": "EvidenceExportEndpoint",
+          "line": 33,
+          "declaration": "class EvidenceExportEndpoint:"
+        },
+        {
+          "name": "external_pin",
+          "line": 22,
+          "declaration": "    def external_pin(self):"
+        },
+        {
+          "name": "schema",
+          "line": 50,
+          "declaration": "    def schema(raw):"
+        },
+        {
+          "name": "handle",
+          "line": 60,
+          "declaration": "    def handle(self, authorization, raw):"
+        }
+      ],
+      "accepted_current_sha256": "2fca2ce7233dd9970448d8b73090eb955bed843a997f1ee6416835806e06ef6b"
+    },
+    {
+      "file": "src/agent_guard/evidence/export.py",
+      "observed_sha256": "4ae21250296b33146cf312b915b78db5890b89001c0cec21836f936a6c5d3db5",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "TaskExportSpool",
+          "line": 41,
+          "declaration": "class TaskExportSpool:"
+        },
+        {
+          "name": "materialize_task_export",
+          "line": 598,
+          "declaration": "def materialize_task_export("
+        },
+        {
+          "name": "cleanup",
+          "line": 54,
+          "declaration": "    def cleanup(self):"
+        },
+        {
+          "name": "close",
+          "line": 66,
+          "declaration": "    def close(self):"
+        },
+        {
+          "name": "add",
+          "line": 82,
+          "declaration": "    def add(self, kind, owner, ident, component, raw, ordinal=0):"
+        },
+        {
+          "name": "emit",
+          "line": 716,
+          "declaration": "        def emit(raw, *, footer=False):"
+        }
+      ],
+      "accepted_current_sha256": "4ae21250296b33146cf312b915b78db5890b89001c0cec21836f936a6c5d3db5"
+    },
+    {
+      "file": "src/agent_guard/evidence/task_bundle.py",
+      "observed_sha256": "70596321645269e3ec4326975bdf43f1094102b96f3ccf1bfa2f06926f30bc83",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "TaskBundleError",
+          "line": 80,
+          "declaration": "class TaskBundleError(EncodingError):"
+        },
+        {
+          "name": "object_id",
+          "line": 109,
+          "declaration": "def object_id(object_kind, owner_type, owner_id, component, ordinal=0):"
+        },
+        {
+          "name": "index_seed",
+          "line": 137,
+          "declaration": "def index_seed(scope):"
+        },
+        {
+          "name": "index_fold",
+          "line": 143,
+          "declaration": "def index_fold(previous, frame):"
+        },
+        {
+          "name": "wire_seed",
+          "line": 159,
+          "declaration": "def wire_seed(scope):"
+        },
+        {
+          "name": "wire_fold",
+          "line": 165,
+          "declaration": "def wire_fold(previous, index, raw):"
+        },
+        {
+          "name": "encode_object_chunks",
+          "line": 179,
+          "declaration": "def encode_object_chunks(kind, id, raw):"
+        },
+        {
+          "name": "iter_frames",
+          "line": 227,
+          "declaration": "def iter_frames(binary_stream):"
+        },
+        {
+          "name": "CheckpointHistoryDescriptor",
+          "line": 369,
+          "declaration": "class CheckpointHistoryDescriptor:"
+        },
+        {
+          "name": "load_checkpoint_history",
+          "line": 545,
+          "declaration": "def load_checkpoint_history(binary_stream, *, external_trust, external_pin):"
+        },
+        {
+          "name": "open_readonly",
+          "line": 404,
+          "declaration": "    def open_readonly(self):"
+        }
+      ],
+      "accepted_current_sha256": "70596321645269e3ec4326975bdf43f1094102b96f3ccf1bfa2f06926f30bc83"
+    },
+    {
+      "file": "src/agent_guard/evidence/task_verify.py",
+      "observed_sha256": "67abf286089ed75c00304b78e2c37c73076569f92c7f267ecb0d5433ee295376",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "exact",
+          "line": 78,
+          "declaration": "def exact(value, names, label):"
+        },
+        {
+          "name": "array",
+          "line": 84,
+          "declaration": "def array(value, maximum=200000):"
+        },
+        {
+          "name": "json_object",
+          "line": 90,
+          "declaration": "def json_object(raw):"
+        },
+        {
+          "name": "TaskTrust",
+          "line": 98,
+          "declaration": "class TaskTrust:"
+        },
+        {
+          "name": "load_public_trust",
+          "line": 106,
+          "declaration": "def load_public_trust(value):"
+        },
+        {
+          "name": "TaskVerificationReport",
+          "line": 234,
+          "declaration": "class TaskVerificationReport:"
+        },
+        {
+          "name": "verify_task_bundle",
+          "line": 1488,
+          "declaration": "def verify_task_bundle(binary_stream, external_trust, external_pin):"
+        },
+        {
+          "name": "get",
+          "line": 275,
+          "declaration": "    def get(self, kind, ident):"
+        },
+        {
+          "name": "owned",
+          "line": 284,
+          "declaration": "    def owned(self, kind, owner, ident, component, ordinal=0):"
+        },
+        {
+          "name": "record",
+          "line": 287,
+          "declaration": "    def record(self, seq):"
+        },
+        {
+          "name": "references",
+          "line": 290,
+          "declaration": "    def references(self, seq):"
+        }
+      ],
+      "accepted_current_sha256": "b4630a1a4fa70ee1db26b7bc4bb586185d83e307cfd86f920b9806cfca736244"
+    },
+    {
+      "file": "src/agent_guard/evidence/verify_cli.py",
+      "observed_sha256": "0bd54b678a1c162510b9d47feb4e59b4e82731261d246d7256af9cb649c90c66",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "main",
+          "line": 127,
+          "declaration": "def main(argv=None):"
+        },
+        {
+          "name": "peek",
+          "line": 46,
+          "declaration": "    def peek():"
+        },
+        {
+          "name": "take",
+          "line": 56,
+          "declaration": "    def take():"
+        },
+        {
+          "name": "space",
+          "line": 62,
+          "declaration": "    def space():"
+        },
+        {
+          "name": "parse",
+          "line": 66,
+          "declaration": "    def parse(depth=0):"
+        }
+      ],
+      "accepted_current_sha256": "0bd54b678a1c162510b9d47feb4e59b4e82731261d246d7256af9cb649c90c66"
+    },
+    {
+      "file": "tests/fixtures/a32_joint.py",
+      "observed_sha256": "80308ae8d1332f8b6b55a55f3a11df416b66b0303dd99ec76ab5dbd1e53f411f",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "native_public_inputs",
+          "line": 25,
+          "declaration": "def native_public_inputs(env, dsn, directory, gateway_key):"
+        },
+        {
+          "name": "capture_reader_history",
+          "line": 98,
+          "declaration": "def capture_reader_history(*, scope, audit_keys, reader_credential, ca_file, directory):"
+        },
+        {
+          "name": "public_task_trust",
+          "line": 208,
+          "declaration": "def public_task_trust("
+        },
+        {
+          "name": "exact_host_certificates",
+          "line": 235,
+          "declaration": "def exact_host_certificates(directory, hostname):"
+        },
+        {
+          "name": "count_original_capacity",
+          "line": 305,
+          "declaration": "def count_original_capacity(archive_path, archive_sha256, evidence_dir):"
+        },
+        {
+          "name": "request",
+          "line": 114,
+          "declaration": "    def request(endpoint, value):"
+        },
+        {
+          "name": "Rows",
+          "line": 455,
+          "declaration": "    class Rows:"
+        },
+        {
+          "name": "ArchiveReader",
+          "line": 462,
+          "declaration": "    class ArchiveReader:"
+        },
+        {
+          "name": "ExactCounter",
+          "line": 508,
+          "declaration": "    class ExactCounter:"
+        },
+        {
+          "name": "fetchone",
+          "line": 459,
+          "declaration": "        def fetchone(self):"
+        },
+        {
+          "name": "execute",
+          "line": 463,
+          "declaration": "        def execute(self, sql, args):"
+        },
+        {
+          "name": "add",
+          "line": 519,
+          "declaration": "        def add(self, kind, owner, ident, component, raw, ordinal=0):"
+        }
+      ],
+      "accepted_current_sha256": "80308ae8d1332f8b6b55a55f3a11df416b66b0303dd99ec76ab5dbd1e53f411f"
+    },
+    {
+      "file": "tests/demo_b_flow.py",
+      "observed_sha256": "7dfac3e91d06862daa2bd19db7345c6fc5ebe39321d59214a88184136bb43dc9",
+      "status": "ACTUAL_ACCEPTED_SOURCE_BINDING_NOT_A33_IMPLEMENTATION",
+      "symbols": [
+        {
+          "name": "main",
+          "line": 28,
+          "declaration": "def main() -> int:"
+        }
+      ],
+      "accepted_current_sha256": "7dfac3e91d06862daa2bd19db7345c6fc5ebe39321d59214a88184136bb43dc9"
+    },
+    {
+      "file": "src/agent_guard/audit/config.py",
+      "observed_sha256": "defe35ff08d198b2779a0b9e24a9d36b57de4017bd2e37b9a20af2eeb6b96c60",
+      "accepted_current_sha256": "defe35ff08d198b2779a0b9e24a9d36b57de4017bd2e37b9a20af2eeb6b96c60",
+      "status": "ACTUAL_UNCHANGED_ACCEPTED_UPSTREAM_READBACK_A33_LISTENER_ADAPTATION_PLANNED",
+      "symbols": [
+        {
+          "name": "private_bytes",
+          "line": 17,
+          "declaration": "def private_bytes(path: Path) -> bytes:"
+        },
+        {
+          "name": "AuditConfig",
+          "line": 36,
+          "declaration": "class AuditConfig:"
+        }
+      ]
+    },
+    {
+      "file": "src/agent_guard/audit/server.py",
+      "observed_sha256": "edd7b4d4174ff5825873bdcfadae64c95ac5f677a039126bd92054981498e660",
+      "accepted_current_sha256": "edd7b4d4174ff5825873bdcfadae64c95ac5f677a039126bd92054981498e660",
+      "status": "ACTUAL_UNCHANGED_ACCEPTED_UPSTREAM_READBACK_A33_LISTENER_ADAPTATION_PLANNED",
+      "symbols": [
+        {
+          "name": "create_server",
+          "line": 14,
+          "declaration": "def create_server(config, *, store=None):"
+        },
+        {
+          "name": "serve",
+          "line": 117,
+          "declaration": "def serve(config):"
+        }
+      ]
+    },
+    {
+      "file": "src/agent_guard/audit/http_app.py",
+      "observed_sha256": "fd72cf4da4e3a8b3cb90f7ec4e40aa9d5911db5cae439710b53135ce9f07ffcf",
+      "accepted_current_sha256": "fd72cf4da4e3a8b3cb90f7ec4e40aa9d5911db5cae439710b53135ce9f07ffcf",
+      "status": "ACTUAL_UNCHANGED_ACCEPTED_UPSTREAM_READBACK_A33_LISTENER_ADAPTATION_PLANNED",
+      "symbols": [
+        {
+          "name": "AuditHTTPApp",
+          "line": 10,
+          "declaration": "class AuditHTTPApp:"
+        }
+      ]
+    },
+    {
+      "file": "tests/integration/test_audit_tls.py",
+      "observed_sha256": "e4322846d1209344ad761c19c3eaf6a2c6ac8b1dbcae3090740ecf6a08e6cba1",
+      "accepted_current_sha256": "e4322846d1209344ad761c19c3eaf6a2c6ac8b1dbcae3090740ecf6a08e6cba1",
+      "status": "ACTUAL_UNCHANGED_ACCEPTED_UPSTREAM_READBACK_A33_LISTENER_ADAPTATION_PLANNED",
+      "symbols": [
+        {
+          "name": "audit_service",
+          "line": 24,
+          "declaration": "def audit_service():"
+        },
+        {
+          "name": "service_tls",
+          "line": 30,
+          "declaration": "def service_tls(tmp_path_factory):"
+        },
+        {
+          "name": "tls_config",
+          "line": 98,
+          "declaration": "def tls_config(f, directory, port=0):"
+        },
+        {
+          "name": "request",
+          "line": 113,
+          "declaration": "def request("
+        },
+        {
+          "name": "test_real_audit_tls_registered_roles_and_scope",
+          "line": 145,
+          "declaration": "def test_real_audit_tls_registered_roles_and_scope(audit_service, service_tls, case, round):"
+        },
+        {
+          "name": "test_operator_cli_private_init_registration_and_config",
+          "line": 297,
+          "declaration": "def test_operator_cli_private_init_registration_and_config(audit_service, service_tls, tmp_path):"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    "No packaged agent_guard.demo or deploy directory exists at observation. tests.demo_b_flow imports test helpers, direct service flow, not deployable HTTP full chain.",
+    "Reusable SDK is authorization.proof sign_ag_proof + crypto.sm compact JWS + authorization.oidc RP verification + strict canonical codec; do not duplicate crypto.",
+    "server init creates all holder keys in one operator tree; gateway init creates unrelated synthetic trust. Neither independently produces shared approved multi-role deployment trust.",
+    "gateway.factory build_app still requires gateway_dsn and downstream_dsn, service secret, and constructs adapter; GW trusted DS access remains.",
+    "execution.worker requires one operation ID; ongoing bounded fair scheduler must adapt ExecutionService run/reconcile API in demo.worker, without production bypass.",
+    "Gateway export factory captures one TaskTrust scope and startup pin/history. After current task drain, obtain reader history independently, stop/reconfigure export gateway with frozen public inputs, restart verified TLS export. Not per-request client supplied pin. Multiple task A34 adapter needs explicit future binding, no change here.",
+    "Audit bootstrap CLI requires writers stopped/drained; create true AS chain first, then maintenance bootstrap/register descriptor, resume invocation. Exact accepted journal constraints must be rebound before S0.",
+    "TLS helper exact_host_certificates already uses RSA CA and exact SAN. Adapt minimal deployment helper into demo init; do not import tests from source/wheel normal run.",
+    "A32 capacity observed 256MiB/400000 frames/200000 objects/100000 journal/20000 operations, 64KiB LF lines; NOT accepted until root pins final interfaces."
+  ],
+  "capacity_followup": {
+    "formal_plan": "tasks/workflow/runs/A3.2-evidence-20261011/capacity-pagination-plan.md",
+    "sha256": "7a13452e7a4eec3b5b54cae5251684d87647d453c6bbaa7741e0948e6853e15d",
+    "decision": "A32 single-scope10000 log/preflight exceeds old caps; future pagination plan only conditional. A34 mode10000 is distributed across875 legal tasks per repetition. E4 permits full per-task/frozen-partition exports with allattempt/effect raw manifest/oracle. No mandatory global container/new function/review when original semantics complete.",
+    "old_profile_unchanged": true
+  },
+  "accepted_pins": {
+    "A32_acceptance_path": "tasks/workflow/runs/A3.2-evidence-20261011/acceptance.json",
+    "A32_acceptance_SHA256": "8cdc3a48a4932b2b156bb89af8b1418d910b07fea213ffa0eefbca8445119329",
+    "A32_frozen_candidate_SHA256": "e680193204ef1c25eb656169a0470eb1672422d7549016454f50f7118633629c",
+    "A32_report_SHA256": "bbfdff45783277c8fb6bcd390c0e10752e309c6b6052101a8487a29590cd6d2b",
+    "A32_manifest_SHA256": "f75df2be2e6c66357ce8eeffda422399390f65549ecf1bf638d014d7fb3c9abf",
+    "A32_STOP_SHA256": "36b5a38d163253a0abb2ac41e92068dfb3b34364027c05e7e75edfbbf6db8f69",
+    "branch": "handoff/a23-local-20261005",
+    "HEAD_baseline_only": "2a8cc7da4867ad1876350855c0ed5569c5ce6472",
+    "dirty_accepted_source": "full candidate SHA plus current source/SQL/lock bindings; HEAD alone is not implementation",
+    "effective_metadata": "UNKNOWN"
+  },
+  "proposed_audit_listener_API": {
+    "issue": "A33-PR-R1-001",
+    "status": "PROPOSED_NOT_IMPLEMENTED_NOT_RUN",
+    "APIs": [
+      "AuditConfig.load(path: Path, *, approved_listener_host: str | None = None)",
+      "create_server(config, *, store=None, approved_listener_host: str | None = None)"
+    ],
+    "default": "UNCHANGED: load loopback only; server127.0.0.1 only; existing audit CLI uses default",
+    "opt_in": "exact canonical RFC1918 IPv4 assigned to own audit role in immutable operator-approved resource manifest; config.host exact equals supplied address, checked independently by both APIs",
+    "reject": [
+      "0.0.0.0",
+      "unspecified",
+      "public/global",
+      "multicast",
+      "link-local",
+      "unapproved address",
+      "wrong role/run address",
+      "hostnames",
+      "noncanonical",
+      "bool/non-string"
+    ],
+    "caller": "demo.__main__ trusted validated run/role mapping supplies same address to load/create_server; not HTTP/DID/env/holder input",
+    "security": "bind permission only, all TLS/authorization/schema/private/PG checks unchanged",
+    "tests": "all old test_audit_tls assertions retained plus S0 explicit opt-in negatives and S1 true separate-container DNS/TLS/role/scope/framing zero-write probes"
+  }
+}

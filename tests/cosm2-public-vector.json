@@ -1,0 +1,5 @@
+{
+  "public_key_spki_b64url": "MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEKR4lDi7Vk6BClCMVuIjAfNbyumIfATpkwxgABmHPTRGIAuZkSR0B0cpLhyO3Wi-_gsZj0L-G2uM1WHz9Ky7n-w",
+  "message_b64url": "QUdFTlQtR1VBUkQtQ09TTTItQUNUSU9OLVYxCnsicHVibGljX3ZlY3RvciI6MX0",
+  "signature_rs_hex": "7ca74957cef60c9cb4d047d8adb7c3ca945c6af8b5bb8b773756f30afbc90704084e3ced76c65784279ddd9704b822e5818402791edeb6d787049144e05053ab"
+}

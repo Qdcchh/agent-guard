@@ -1,0 +1,565 @@
+{
+  "version": 1,
+  "run_id": "b944d1ab-4525-46a9-8bb1-1a9dbdbdca00",
+  "observations": [
+    {
+      "case_id": "missing-approval",
+      "location": "gateway",
+      "observed_code": "APPROVAL_REQUIRED",
+      "before": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 0
+      },
+      "after": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "exec-domain-alone",
+      "location": "gateway",
+      "observed_code": "INVALID_SIGNATURE",
+      "before": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 0
+      },
+      "after": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "fake64-signature",
+      "location": "gateway",
+      "observed_code": "INVALID_SIGNATURE",
+      "before": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 0
+      },
+      "after": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 0
+      },
+      "passed": true
+    },
+    {
+      "case_id": "stolen-token-wrong-holder",
+      "location": "gateway",
+      "observed_code": "INVALID_SIGNATURE",
+      "before": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 1
+      },
+      "after": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 1
+      },
+      "passed": true
+    },
+    {
+      "case_id": "expanded-scope",
+      "location": "authorization_domain",
+      "observed_code": "AUTHZ_SCOPE",
+      "before": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 1
+      },
+      "after": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 1
+      },
+      "passed": true
+    },
+    {
+      "case_id": "tampered-amount",
+      "location": "gateway",
+      "observed_code": "APPROVAL_MISMATCH",
+      "before": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 2
+      },
+      "after": {
+        "orders": 0,
+        "operations": 0,
+        "counters": [
+          [
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "authz_sign_count": 2
+      },
+      "passed": true
+    },
+    {
+      "case_id": "over-remaining-budget",
+      "location": "authorization_domain",
+      "observed_code": "AUTHZ_OVER_BUDGET",
+      "before": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "after": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "passed": true
+    },
+    {
+      "case_id": "revoked-before-cosign",
+      "location": "authorization_domain",
+      "observed_code": "AUTHZ_REVOKED",
+      "before": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "after": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "passed": true
+    },
+    {
+      "case_id": "revoked-after-cosign",
+      "location": "gateway_acceptance",
+      "observed_code": "REVOKED",
+      "before": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "after": {
+        "orders": 1,
+        "operations": 1,
+        "counters": [
+          [
+            0,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            1,
+            0,
+            70000,
+            0,
+            1
+          ],
+          [
+            2,
+            0,
+            70000,
+            0,
+            1
+          ]
+        ],
+        "authz_sign_count": 4
+      },
+      "passed": true
+    }
+  ],
+  "unobserved_locations": "not triggered; no refusal claim"
+}

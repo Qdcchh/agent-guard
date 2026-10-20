@@ -1,0 +1,49 @@
+{
+  "kind": "EXACT_EIGHT_PATH_QUALITY_CONTINUATION_OWNERSHIP",
+  "version": "quality-v1",
+  "status": "PENDING_NEW_PACKAGE_REVIEW",
+  "worker_owner": "a23-core-quality-r1-20261005",
+  "exact_writable_paths": [
+    "src/agent_guard/evidence/receipt.py",
+    "tests/fixtures/receipts.py",
+    "tests/unit/test_receipt_publication.py",
+    "tests/integration/test_receipt_publication.py",
+    "tests/integration/test_gateway_receipt_query.py",
+    "src/agent_guard/execution/receipt_publication.py",
+    "src/agent_guard/execution/verified.py",
+    "src/agent_guard/gateway/factory.py"
+  ],
+  "format_only_paths": [
+    "src/agent_guard/execution/receipt_publication.py",
+    "src/agent_guard/execution/verified.py",
+    "src/agent_guard/gateway/factory.py"
+  ],
+  "scope_mode": {
+    "src/agent_guard/evidence/receipt.py": "ORIGINAL_REVIEWED_CAPACITY_CORRECTION_AND_REGRESSIONS",
+    "tests/fixtures/receipts.py": "ORIGINAL_REVIEWED_CAPACITY_CORRECTION_AND_REGRESSIONS",
+    "tests/unit/test_receipt_publication.py": "ORIGINAL_REVIEWED_CAPACITY_CORRECTION_AND_REGRESSIONS",
+    "tests/integration/test_receipt_publication.py": "ORIGINAL_REVIEWED_CAPACITY_CORRECTION_AND_REGRESSIONS",
+    "tests/integration/test_gateway_receipt_query.py": "ORIGINAL_REVIEWED_CAPACITY_CORRECTION_AND_REGRESSIONS",
+    "src/agent_guard/execution/receipt_publication.py": "FORMAT_ONLY_NO_API_OR_SQL_VALUE_CHANGE",
+    "src/agent_guard/execution/verified.py": "FORMAT_ONLY_NO_API_OR_SQL_VALUE_CHANGE",
+    "src/agent_guard/gateway/factory.py": "FORMAT_ONLY_NO_API_OR_SQL_VALUE_CHANGE"
+  },
+  "evidence_directory": "artifacts/workflow/A2.3-receipts-20261004/core-quality-r1/",
+  "no_children": true,
+  "all_other_candidate_and_git": "READ_ONLY",
+  "ownership_history": [
+    {
+      "paths": 14,
+      "owner": "a23-core-r1-20261005",
+      "native": "STOP_NEEDS_REPLAN"
+    },
+    {
+      "paths": 5,
+      "owner": "a23-core-capacity-r1-20261005",
+      "native": "STOP_NEEDS_REPLAN_FULLCORE_NOT_RUN"
+    }
+  ],
+  "activation": "Actual NEW independent PACKAGE_READY and existing human A23 authorized remediation; no write right from draft",
+  "resources": "New own fullIDs/owner PG16 and LinuxPy3.11, fresh locks source and noneditablewheel/independent GW DS DB, private cache/HOME, actual wrappers and PID drain/cleanup0; no old or foreign resource reuse",
+  "later": "Actual complete coreSTOP/API15 then new consumers package reviews CLI4 HTTPS3 and sole29 integration/full119/112 fresh acceptance"
+}

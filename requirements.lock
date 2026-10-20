@@ -2,6 +2,7 @@
 # Re-run the cryptographic vectors and ledger integration tests after changes.
 cffi==2.1.1
 click==8.5.0
+cryptography==50.0.2
 h11==0.16.0
 pycparser==3.0
 psycopg==3.2.13

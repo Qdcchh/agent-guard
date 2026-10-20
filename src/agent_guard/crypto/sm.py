@@ -26,7 +26,9 @@ from agent_guard.contracts.encoding import (
 SM2_CURVE = "sm2p256v1"
 SM2_USER_ID = b"1234567812345678"
 JWS_ALG = "https://github.com/Qdcchh/agent-guard#sm2-sm3-v1"
-JWS_TYPES = frozenset({"ag-id+jwt", "ag-at+jwt", "ag-pop+jwt", "ag-receipt+jwt"})
+JWS_TYPES = frozenset(
+    {"ag-id+jwt", "ag-at+jwt", "ag-pop+jwt", "ag-receipt+jwt", "ag-checkpoint+jwt"}
+)
 SIGNATURE_ENCODING = "64-byte big-endian r||s in JWS; DER only at the backend boundary"
 PUBLIC_KEY_ENCODING = "X.509 SubjectPublicKeyInfo DER"
 _SM2_ORDER = int("FFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123", 16)

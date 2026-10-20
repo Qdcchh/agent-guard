@@ -1,0 +1,43 @@
+{
+  "UTC": "2026-10-11T23:49:30.914166+00:00",
+  "status": "SERIAL_CAPACITY_WORKLOAD_IMPLEMENTATION_DECISION_EXPECTED_S1_API_NOT_YET_STOP_FROZEN",
+  "original_obligation": "A33-13.01, no new scope/shared security API",
+  "trusted_input": "operator before provision/browser authorization; existing task_policy/catalog arguments",
+  "expected_owned_S1_api": "holder.capacity_workload(task_policy=dict,catalog=dict)->(policy_copy,catalog_copy); Holder(config,role,capacity_items=1|256)",
+  "normal_final_S2_workload_option": "--capacity-items 256; strict allowed1/256, bool invalid; three holders same selection",
+  "synthetic_catalog": {
+    "SKU_ids": "s000..s255",
+    "quantity_each": 1,
+    "prices_fen": "112 items at274 +144 at273",
+    "order_total_fen": 70000
+  },
+  "unchanged": {
+    "ancestor_amount_limits_fen": [
+      100000,
+      80000,
+      70000
+    ],
+    "ancestor_calls": [
+      12,
+      10,
+      8
+    ],
+    "root_TTL_seconds": 300,
+    "proof_seconds": 60,
+    "lease_seconds": 30,
+    "HTTP_JWS_max": 65536,
+    "max_items": 256,
+    "child_TTL_upper_seconds": {
+      "selector": 240,
+      "executor": 180
+    },
+    "driver_child_total_wall_cap_seconds": 180
+  },
+  "required_execution": "real browser root -> real two AS children -> two reciprocal SO_PEERCRED handoffs -> real 256-item GW/DS acceptance/result -> terminal READY/current query -> audit/export/offline and original layered negative controls",
+  "evidence": "actual input/body/result/DB ancestor/evidence material independently verified; no bool JSON substitute",
+  "shared_sources": "no change, S1 actual API must be frozen only after STOP",
+  "effective_metadata": "UNKNOWN",
+  "not_stage_acceptance": true,
+  "caller_expiry_rule": "strict positive min(stage TTL upper, validated parent.exp-current_clock with bounded caller propagation margin); expired parent refused, no reissue or AS-policy change",
+  "TTL_authority": "actual frozen tests/fixtures/a33_demo.py delegation_request lines109/111 and demo.config.DelegationRequest default240; runtime-plan child_total_s180 is wall cap, not both child TTL"
+}

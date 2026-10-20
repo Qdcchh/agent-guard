@@ -1,0 +1,3 @@
+# SOURCE STOP — runtime remainder pending
+
+v3 receipt11fields/current-owner/DNS+CA/real Docker inspect+TLS context and narrow postcommit response EOF treatment complete. Exact clean-source full tests/integration/test_audit_delivery.py (462 cases) plus new32 unit negatives: 494 passed in1272.76s, exit0. Original86 assertAST, oldtls_dir branch and frozen query SHA retained. Candidate three-file SHA256 manifest: candidate-sha256.json. Root may share frozen fixture with deployment worker. No more source writes by this worker. Own PG/network/TLS resources remain active solely for authorized remainder diagnostic; this is not overall task/resource STOP. Full fresh independent matrix still required.
