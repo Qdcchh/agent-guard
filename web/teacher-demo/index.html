@@ -3,27 +3,27 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Agent Guard 多智能体授权的可信执行：协议过程、拒绝位置与真实运行证据。">
-  <title>Agent Guard 演示</title>
+  <meta name="description" content="CoSeal：AI 代理下单前的国密授权检查与协同签名。">
+  <title>CoSeal 演示</title>
   <link rel="stylesheet" href="/style.css">
   <script src="/app.js" defer></script>
 </head>
 <body>
 <header class="top">
-  <div class="brand"><i aria-hidden="true"></i><span>Agent Guard</span><small>多智能体可信授权执行</small></div>
+  <div class="brand"><i aria-hidden="true"></i><span>CoSeal</span><small>AI 代理下单前的国密授权检查</small></div>
   <nav class="chapters" id="chapters" aria-label="汇报章节">
     <button type="button" data-chapter="overview">总览</button>
-    <button type="button" data-chapter="defense">基础防线</button>
-    <button type="button" data-chapter="core">核心机制 · 双域共签</button>
-    <button type="button" data-chapter="pay">扩展 · x402 支付</button>
-    <button type="button" data-chapter="evidence">运行证据</button>
+    <button type="button" data-chapter="defense">权限检查</button>
+    <button type="button" data-chapter="core">协同签名</button>
+    <button type="button" data-chapter="pay">支付扩展</button>
+    <button type="button" data-chapter="evidence">测试记录</button>
   </nav>
   <div class="source" id="source" aria-live="polite">
-    <span class="src-note" id="source-text">示意推演</span>
+    <span class="src-note" id="source-text">动画示意</span>
     <span class="src-pills" aria-label="数据来源">
       <span class="src-pill" data-src="live"><i class="sw live" aria-hidden="true"></i>现场运行</span>
       <span class="src-pill" data-src="replay"><i class="sw replay" aria-hidden="true"></i>记录回放</span>
-      <span class="src-pill" data-src="illus"><i class="sw illus" aria-hidden="true"></i>示意推演</span>
+      <span class="src-pill" data-src="illus"><i class="sw illus" aria-hidden="true"></i>动画示意</span>
     </span>
   </div>
 </header>

@@ -4,7 +4,7 @@
 
 10 月 18 日汇报时，老师指出三个问题：
 1. 名词太"AI 腔"，懂行的人看名字不知道每部分是干什么的；
-2. 项目名 Agent Guard 和已有项目撞名（GitHub 上已有至少 9 个不相关的 AgentGuard）；
+2. 项目名 Agent Guard 和已有项目撞名（GitHub 上已有至少 9 个不相关的 AgentGuard），新名定为 **CoSeal**；
 3. 没讲清和市面方案比好在哪。
 
 本轮**只改对外显示的文字和表述**，不改任何功能、协议、签名语义和测试预期。名称一律以 [术语表](glossary.md) 为准；遇到表里没有的新词，按表头的定名原则自己取，并**把它补进术语表**，不要在各文件里各取各的名字。
@@ -67,7 +67,7 @@ grep -n -E "双域|授权域|执行域|执行代理|执行网关|基础防线|�
 
 文件：`README.md`。
 
-- 标题改为 `# 会签`，下面一行写副标题，然后写术语表第 2 节的一句话和三个卖点。
+- 标题改为 `# CoSeal（共印）`，下面一行写副标题，然后写术语表第 2 节的一句话和三个卖点。
 - 接着放"如何打开演示"（原来那段本机演示说明，保留命令）。
 - 现在开头那几段阶段状态（x402 X1–X8、A3.1–A3.4、PARTIAL、PR #6 等）整体移到 README 末尾新建的"开发状态（内部）"一节。**原文和链接一个字都不删**，只移动位置。
 - 第 3 节架构图里的"统一执行网关"改为"工具调用网关"，其他技术内容不动。
@@ -75,7 +75,7 @@ grep -n -E "双域|授权域|执行域|执行代理|执行网关|基础防线|�
 
 ### 步骤 5：桌面启动器与现行文档
 
-- `tools/install_desktop_server.py`：文件夹名和说明文字改为"会签演示服务器"。旧的"Agent Guard 服务器"文件夹**不要自动删除**，在 `docs/desktop-server.md` 里说明可以手动删除。
+- `tools/install_desktop_server.py`：文件夹名和说明文字改为"CoSeal 演示服务器"。旧的"Agent Guard 服务器"文件夹**不要自动删除**，在 `docs/desktop-server.md` 里说明可以手动删除。
 - `tools/desktop_server.py`：页面标题和"关闭"提示同步。
 - `tools/x402_desktop.py:566`、`tools/cosm2_desktop.py` 中面向用户的中文提示：把"双域共签"改为"协同签名"。
 - 现行文档同步改名：`web/teacher-demo/README.md`、`docs/desktop-server.md`、`docs/teacher-demo-20261015.md`、`docs/project-status-and-demo-coverage-20261015.md`。

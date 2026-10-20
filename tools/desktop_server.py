@@ -233,8 +233,8 @@ def dashboard(state):
         '<!doctype html><html lang="zh-CN"><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         '<link rel="stylesheet" href="/server-style.css">'
-        '<meta http-equiv="refresh" content="8"><title>Agent Guard 服务器</title>'
-        "<body><main><h1>Agent Guard 服务器</h1><p>"
+        '<meta http-equiv="refresh" content="8"><title>CoSeal 演示服务器</title>'
+        "<body><main><h1>CoSeal 演示服务器</h1><p>"
         + html.escape(state["message"])
         + '</p><h2>本机控制页面</h2><p><a href="'
         + local
@@ -242,7 +242,7 @@ def dashboard(state):
         + public
         + "<p>公网访客只浏览；真实运行由你在本机启动。"
         "刷新此页可查看连接状态，临时公网地址每次启动可能变化。</p>"
-        "<p>关闭：双击桌面“Agent Guard 服务器”中的“关闭服务器.command”。"
+        "<p>关闭：双击桌面“CoSeal 演示服务器”中的“关闭服务器.command”。"
         "关闭后先断开访问，已开始的演示等待完成和清理。</p>"
         "<p>请保持电脑联网、接通电源且不要合盖。服务运行时会阻止自动空闲休眠。</p>"
         "<p>现场任务需要 Docker Desktop 就绪；公网动画仍依当前页面标注区分示意与真实记录。</p>"

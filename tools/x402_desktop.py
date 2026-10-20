@@ -563,7 +563,7 @@ def main(argv: list[str] | None = None) -> int:
         "--approval-scheme",
         choices=sorted(APPROVAL_SCHEMES),
         default="frost-ed25519",
-        help="网关批准方案：frost-ed25519（默认）或 sm2-2p（双域共签）",
+        help="网关批准方案：frost-ed25519（默认）或 sm2-2p（协同签名）",
     )
     args = parser.parse_args(argv)
     os.umask(0o077)

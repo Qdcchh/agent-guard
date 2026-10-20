@@ -198,9 +198,9 @@ def cosm2_saved_state():
                 "保存结果回放；可在本机重新运行"
                 + (f"；{rejected} 份未通过格式校验的历史结果未采用" if rejected else "")
             )
-        return None, "未就绪：尚无 B7 保存结果；继续示意推演"
+        return None, "未就绪：尚无协同签名保存结果；继续动画示意"
     except (OSError, ValueError, KeyError, TypeError, OverflowError):
-        return None, "未就绪：B7 保存结果缺失或校验失败；继续示意推演"
+        return None, "未就绪：协同签名保存结果缺失或校验失败；继续动画示意"
 
 
 def threshold_result(folder):
@@ -368,7 +368,7 @@ class DemoApp:
         cosign, cosign_status = cosm2_saved_state()
         if self.cosign is not None:
             cosign = self.cosign
-            cosign_status = "本次现场运行；右侧仍为示意推演"
+            cosign_status = "本次现场运行；右侧仍为动画示意"
         cosign_ready = (REPO / "tools/cosm2_desktop.py").is_file() and (
             REPO / "tools/cosm2_gateway_demo.py"
         ).is_file()
@@ -433,7 +433,7 @@ class DemoApp:
                 "stage": {
                     "run": "正在启动独占环境",
                     "verify": "正在离线验证原件与篡改副本",
-                    "cosm2-run": "正在准备双域共签固定采购演示",
+                    "cosm2-run": "正在准备协同签名固定采购演示",
                     "threshold-run": "正在准备本机固定门限采购演示",
                     "x402-run": "正在准备本机固定 x402 采购演示（首次运行需构建隔离镜像）",
                     "scenario-run": "准备固定场景独占环境",
@@ -546,7 +546,7 @@ class DemoApp:
                     with self.lock:
                         self.job["stage"] = {
                             "scenario-run": "固定安全场景运行中：准备环境、执行检查与清理",
-                            "cosm2-run": "双域共签运行中：真实授权链、独立授权域与接受事务",
+                            "cosm2-run": "协同签名运行中：真实授权链、独立授权侧签名方与受理事务",
                             "threshold-run": "门限固定演示运行中：真实签发、门限批准与拒绝用例",
                             "x402-run": "x402 固定演示运行中：真实 402、链上结算与拒绝用例",
                         }.get(action, "真实流程运行中：构建、授权、四工具执行与证据导出")
@@ -603,7 +603,7 @@ class DemoApp:
                     status="success",
                     stage={
                         "scenario-run": "真实场景断言通过且资源已清理",
-                        "cosm2-run": "双域共签完成：六用例与真实三轮耗时已记录",
+                        "cosm2-run": "协同签名完成：六用例与真实三轮耗时已记录",
                         "threshold-run": "门限固定演示完成：用例结果与资源清理已记录",
                         "x402-run": "x402 固定演示完成：真实链上结算、用例结果与资源清理已记录",
                         "run": "真实运行已完成",

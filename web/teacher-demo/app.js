@@ -1,12 +1,12 @@
 'use strict';
 /*
- * Agent Guard 演示页
+ * CoSeal 演示页
  *
  * 第一部分是纯逻辑（事件仓库、场景数据、格式化），不依赖浏览器，可在 node 中测试。
  * 第二部分是界面：系统总览、场景时序图、门限面板、真实记录，以及与本机服务的交互。
  *
  * 诚实性约定：
- * - 场景时序图默认使用"示意推演"事件，形状与 DemoEvent v1 一致，页面醒目标注来源；
+ * - 场景时序图默认使用"动画示意"事件，形状与 DemoEvent v1 一致，页面醒目标注来源；
  *   本机服务提供某次运行的事件流后，同一渲染器直接改用真实事件，并标为现场或回放。
  * - 真实运行结果只来自本机服务；不根据计时器生成任何成功或拒绝。
  * - 浏览器不持有令牌、私钥或任何可用凭据。
@@ -111,7 +111,7 @@ function readbackDelta(p) {
   };
 }
 
-/* ---------------- 场景数据（示意推演，形状与 DemoEvent v1 一致） ---------------- */
+/* ---------------- 场景数据（动画示意，形状与 DemoEvent v1 一致） ---------------- */
 
 const TOOLS = ['procurement.order.create', 'notification.template.send'];
 const levels = (reserved, settled) => [0, 0, 0].map(() => ({reserved_fen: reserved, settled_fen: settled, calls: 0}));
@@ -141,31 +141,31 @@ const INVOKE = 'POST /v1/invocations';
 
 const SCENES = {
   s1: {
-    catalogId: 'stolen-token', short: '持有者绑定',
+    catalogId: 'stolen-token', short: '防令牌盗用',
     title: '盗取令牌，却没有私钥',
-    lede: '冒用方复制了执行代理的访问令牌，但签名私钥仍在执行代理手里。它能用这张令牌下单吗？',
+    lede: '冒用方复制了下单代理的访问令牌，但签名私钥仍在下单代理手里。它能用这张令牌下单吗？',
     stack: [
       ['授权框架', 'OAuth 2.0；逐级委托用 Token Exchange ', 'RFC 8693'],
-      ['持有证明', 'AGPoP，参照 DPoP ', 'RFC 9449', ' 的发送者约束思路'],
-      ['密码算法', 'SM2 签名，SM3 摘要，配置名 ', 'GM-MVP-1'],
+      ['持有证明', '请求证明，参照 DPoP ', 'RFC 9449', ' 的发送者约束思路'],
+      ['密码算法', 'SM2 签名，SM3 摘要，配置名 ', '国密配置 v1'],
     ],
     delta: [
       ['Bearer', '谁拿到令牌谁就能用。令牌一旦被复制，冒用请求会被接受。'],
       ['DPoP', '令牌绑定客户端密钥，但默认不签请求体，摘要固定为 SHA-256。'],
-      ['AGPoP', '令牌用 ag_cnf 绑定持有者公钥；每次请求另附 AG-Proof，用持有者私钥签名，并以 SM3 绑定令牌与完整请求体。', true],
+      ['请求证明', '令牌用 ag_cnf 绑定持有者公钥；每次请求另附 AG-Proof，用持有者私钥签名，并以 SM3 绑定令牌与完整请求体。', true],
     ],
-    honest: '发送者约束是已有标准方向，本项目不声称首创，也不与标准 DPoP 互通；增量在于把它和委托收窄、接受时动态检查放进同一条执行路径。',
+    honest: '持有者证明是已有标准方向，本项目将请求体绑定、委托降权和受理时动态检查放进同一条执行路径；私有请求证明不与标准 DPoP 互通。',
     band: [300, 770], focus: 'gateway',
     lanes: [
-      {k: 'executor', x: 76, name: '执行代理', id: 'executor#key-1', tone: 'teal'},
+      {k: 'executor', x: 76, name: '下单代理', id: 'executor#key-1', tone: 'teal'},
       {k: 'attacker', x: 218, name: '冒用方', id: '持 planner#key-1', tone: 'violet'},
       {k: 'as', x: 370, name: '授权服务器', id: 'AS'},
-      {k: 'gateway', x: 540, name: '执行网关', id: '/v1/invocations'},
+      {k: 'gateway', x: 540, name: '工具调用网关', id: '/v1/invocations'},
       {k: 'ledger', x: 700, name: '授权与预算库', id: '接受事务'},
       {k: 'downstream', x: 840, name: '模拟订单', id: '下游服务'},
     ],
     checkNote: {token_signature: '只验 Bearer 令牌时，请求到这里已被接受'},
-    readbackSkip: ['gateway', 'downstream', '未进入接受事务，未转发下游'],
+    readbackSkip: ['gateway', 'downstream', '未进入受理事务，未转发下游'],
     events: illustrative('s1', [
       {event_type: 'token.issued', actor: 'as', target: 'executor',
         safe_payload: {grant_alias: 'leaf', parent_alias: 'mid', holder: 'executor', holder_kid: 'executor#key-1', limits: {amount_fen: 70000, calls: 8}, scope: TOOLS}},
@@ -180,43 +180,43 @@ const SCENES = {
     ]),
     narrate(ev) {
       switch (ev.event_type) {
-        case 'token.issued': return ['AS 签发令牌', '令牌写明持有者是执行代理，并用 ag_cnf 绑定它的公钥。'];
-        case 'fixture.setup': return ['令牌副本被窃取', '令牌是一串数据，可以被复制；私钥没有随它离开执行代理。'];
+        case 'token.issued': return ['AS 签发令牌', '令牌写明持有者是下单代理，并用 ag_cnf 绑定它的公钥。'];
+        case 'fixture.setup': return ['令牌副本被窃取', '令牌是一串数据，可以被复制；私钥没有随它离开下单代理。'];
         case 'request.sent': return ['冒用方发起工具调用', '令牌是真的，证明却只能用冒用方手里的 planner 私钥来签。'];
         case 'check.passed': return ['令牌本身验签通过', 'AS 的 SM2 签名有效。只验 Bearer 令牌的系统，到这里已经放行。'];
         case 'accept.rejected': return ['网关拒绝冒用请求', `真实请求返回 ${ev.safe_payload.http_status ?? '未采集'}；原因：${ev.reason_code || '未采集'}。`];
         case 'check.rejected': return ['持有者对不上，网关驳回', 'ag_cnf 指向 executor#key-1，AG-Proof 却由 planner#key-1 签出。拿到令牌，不等于拿到权限。'];
-        case 'readback.state': return ['业务没有任何变化', '请求没有进入接受事务，预算没有新预留，下游没有新订单。'];
+        case 'readback.state': return ['业务没有任何变化', '请求没有进入受理事务，预算没有新预留，下游没有新订单。'];
       }
       return null;
     },
   },
 
   s2: {
-    catalogId: 'signed-parameters', short: '参数篡改',
+    catalogId: 'signed-parameters', short: '防参数篡改',
     title: '签名之后，参数被改了',
-    lede: '执行代理签好了请求，途中有人把收货地址改掉。签名者是真的，令牌也是真的，网关会接受吗？',
+    lede: '下单代理签好了请求，途中有人把收货地址改掉。签名者是真的，令牌也是真的，网关会接受吗？',
     stack: [
       ['持有证明', 'AG-Proof 绑定 htm、htu、token_sm3 与 body_sm3'],
       ['规范编码', '请求体按 ', 'RFC 8785', ' 规范化后取 SM3 摘要'],
-      ['密码算法', 'SM2 签名，SM3 摘要，配置名 ', 'GM-MVP-1'],
+      ['密码算法', 'SM2 签名，SM3 摘要，配置名 ', '国密配置 v1'],
     ],
     delta: [
       ['DPoP', '证明绑定 HTTP 方法、URL 与令牌哈希，默认不覆盖请求体。'],
       ['只签路径', '同一路径下改数量、改地址、改幂等键，签名依然成立。'],
-      ['AGPoP', '工具、版本、全部参数、任务 ID 与幂等键都在被签名的请求体里，改动任何一处，摘要就对不上。', true],
+      ['请求证明', '工具、版本、全部参数、任务 ID 与幂等键都在被签名的请求体里，改动任何一处，摘要就对不上。', true],
     ],
     honest: '签名只证明请求没有被改过，不证明参数本身合理；参数是否在授权范围内由后续检查负责。同一组测试还覆盖了篡改幂等键。',
     band: [300, 770], focus: 'gateway',
     lanes: [
-      {k: 'executor', x: 76, name: '执行代理', id: 'executor#key-1', tone: 'teal'},
+      {k: 'executor', x: 76, name: '下单代理', id: 'executor#key-1', tone: 'teal'},
       {k: 'attacker', x: 218, name: '中途篡改', id: '测试注入', tone: 'violet'},
-      {k: 'gateway', x: 450, name: '执行网关', id: '/v1/invocations'},
+      {k: 'gateway', x: 450, name: '工具调用网关', id: '/v1/invocations'},
       {k: 'ledger', x: 650, name: '授权与预算库', id: '接受事务'},
       {k: 'downstream', x: 830, name: '模拟订单', id: '下游服务'},
     ],
     checkNote: {holder_binding: '签名者是真的，但请求已经不是签名时那一份'},
-    readbackSkip: ['gateway', 'downstream', '未进入接受事务，未转发下游'],
+    readbackSkip: ['gateway', 'downstream', '未进入受理事务，未转发下游'],
     events: illustrative('s2', [
       {event_type: 'fixture.setup', actor: 'executor', target: 'attacker',
         safe_payload: {kind: 'signed-request', field: 'params.delivery_id', value: 'office-001'}},
@@ -230,18 +230,18 @@ const SCENES = {
     ]),
     narrate(ev) {
       switch (ev.event_type) {
-        case 'fixture.setup': return ['执行代理签好请求', 'AG-Proof 里的 body_sm3 是对整份请求体的摘要，收货地址是 office-001。'];
+        case 'fixture.setup': return ['下单代理签好请求', 'AG-Proof 里的 body_sm3 是对整份请求体的摘要，收货地址是 office-001。'];
         case 'request.sent': return ['请求在途中被改', '收货地址被改成 changed，令牌和证明原样转发。'];
-        case 'check.passed': return ['签名者和持有者都对得上', '令牌与证明确实来自执行代理，单看身份挑不出问题。'];
+        case 'check.passed': return ['签名者和持有者都对得上', '令牌与证明确实来自下单代理，单看身份挑不出问题。'];
         case 'check.rejected': return ['摘要对不上，网关驳回', '网关按收到的请求体重新计算 body_sm3，与证明里签过的值不一致。'];
-        case 'readback.state': return ['业务没有任何变化', '被改过的请求没有进入接受事务，也没有到达下游。'];
+        case 'readback.state': return ['业务没有任何变化', '被改过的请求没有进入受理事务，也没有到达下游。'];
       }
       return null;
     },
   },
 
   s3: {
-    catalogId: 'delegation-scope', short: '委托收窄',
+    catalogId: 'delegation-scope', short: '委托降权',
     title: '委托不得扩权',
     lede: '统筹代理给选品代理申请子授权时，多要了一点：金额多 0.01 元，或者多一个工具。授权服务器会签吗？',
     stack: [
@@ -260,7 +260,7 @@ const SCENES = {
       {k: 'planner', x: 90, name: '统筹代理', id: 'planner#key-1', tone: 'violet'},
       {k: 'selector', x: 250, name: '选品代理', id: 'selector#key-1', tone: 'teal'},
       {k: 'as', x: 500, name: '授权服务器', id: 'POST /oauth/token'},
-      {k: 'gateway', x: 680, name: '执行网关', id: '/v1/invocations'},
+      {k: 'gateway', x: 680, name: '工具调用网关', id: '/v1/invocations'},
       {k: 'ledger', x: 830, name: '授权注册表', id: '授权树'},
     ],
     checkNote: {},
@@ -306,8 +306,8 @@ const SCENES = {
     lede: '根授权 1,000 元下有两条委托链，各自的子额度都是 700 元。两边同时下单 700 元，会不会一共花掉 1,400 元？',
     stack: [
       ['预算模型', '根与全部祖先共享额度，子额度不是独立钱包'],
-      ['接受方式', 'PostgreSQL 接受事务内按固定锁序检查并原子预留'],
-      ['证明', '两支请求各自带合法的 AGPoP 令牌与 AG-Proof'],
+      ['接受方式', 'PostgreSQL 受理事务内按固定锁序检查并原子预留'],
+      ['证明', '两支请求各自带合法的 访问令牌与 AG-Proof'],
     ],
     delta: [
       ['只看本级', '每支只检查自己的 700 元子额度，两支都会通过，合计超出根预算。'],
@@ -319,7 +319,7 @@ const SCENES = {
     lanes: [
       {k: 'executor', x: 76, name: '分支 A', id: 'executor 令牌', tone: 'teal'},
       {k: 'executor-2', x: 210, name: '分支 B', id: '另一条委托链', tone: 'teal'},
-      {k: 'gateway', x: 430, name: '执行网关', id: '/v1/invocations'},
+      {k: 'gateway', x: 430, name: '工具调用网关', id: '/v1/invocations'},
       {k: 'ledger', x: 640, name: '授权与预算库', id: '根预算 1,000.00 元'},
       {k: 'downstream', x: 830, name: '模拟订单', id: '下游服务'},
     ],
@@ -341,7 +341,7 @@ const SCENES = {
       switch (ev.event_type) {
         case 'fixture.setup': return ['两条委托链共享根预算', '根授权上限 1,000.00 元；两条子链各自的子额度都是 700.00 元。'];
         case 'request.sent': return [p.branch === 'B' ? '分支 B 同时下单' : '分支 A 下单 700 元', p.branch === 'B' ? '两支请求同时到达，各自的子额度都够用。' : '分支 A 的令牌和证明都合法，子额度够用。'];
-        case 'accept.committed': return ['分支 A 被接受', '接受事务锁住根授权，预留 700.00 元。'];
+        case 'accept.committed': return ['分支 A 被接受', '受理事务锁住根授权，预留 700.00 元。'];
         case 'accept.rejected': return ['分支 B 预算不足，被拒绝', '根预算已预留 700.00 元，再加 700.00 元就超出 1,000.00 元上限。'];
         case 'readback.state': return ['只接受了一笔', '根授权预留 700.00 元，调用 1 次；两支合计没有超出根预算。'];
       }
@@ -350,7 +350,7 @@ const SCENES = {
   },
 
   s5: {
-    catalogId: 'replay-idempotency', short: '重放幂等',
+    catalogId: 'replay-idempotency', short: '防重放',
     title: '重放被拒，重试不重复',
     lede: '把同一个请求证明原样再发一次，会不会下两单？换一个新证明重试同一笔业务，又会怎样？',
     stack: [
@@ -366,8 +366,8 @@ const SCENES = {
     honest: '重放的拒绝码以实际返回为准（测试断言 401 或 409）。同键但改了意图的请求会被拒绝；重试不能复活已撤销的授权。',
     band: [300, 740], focus: 'gateway',
     lanes: [
-      {k: 'executor', x: 90, name: '执行代理', id: 'executor#key-1', tone: 'teal'},
-      {k: 'gateway', x: 420, name: '执行网关', id: '/v1/invocations'},
+      {k: 'executor', x: 90, name: '下单代理', id: 'executor#key-1', tone: 'teal'},
+      {k: 'gateway', x: 420, name: '工具调用网关', id: '/v1/invocations'},
       {k: 'ledger', x: 630, name: '授权与预算库', id: '防重放记录'},
       {k: 'downstream', x: 830, name: '模拟订单', id: '下游服务'},
     ],
@@ -403,12 +403,12 @@ const SCENES = {
   },
 
   s6: {
-    catalogId: 'revocation', short: '动态撤销',
+    catalogId: 'revocation', short: '撤销生效',
     title: '撤销之后，拒绝新请求',
-    lede: '根授权被撤销，执行代理手里的旧令牌签名依然有效。它还能下单吗？',
+    lede: '根授权被撤销，下单代理手里的旧令牌签名依然有效。它还能下单吗？',
     stack: [
       ['授权状态', '接受业务的数据库事务内，复核根与全部祖先'],
-      ['请求证明', 'AGPoP，每次请求使用新的 jti'],
+      ['请求证明', '请求证明，每次请求使用新的 jti'],
       ['撤销接口', '项目管理接口，撤销整棵子树；不是 ', 'RFC 7009'],
     ],
     delta: [
@@ -420,8 +420,8 @@ const SCENES = {
     band: [372, 740], focus: 'gateway',
     lanes: [
       {k: 'user', x: 82, name: '撤销方', id: '测试直接提交'},
-      {k: 'executor', x: 232, name: '执行代理', id: 'executor#key-1', tone: 'teal'},
-      {k: 'gateway', x: 452, name: '执行网关', id: '/v1/invocations'},
+      {k: 'executor', x: 232, name: '下单代理', id: 'executor#key-1', tone: 'teal'},
+      {k: 'gateway', x: 452, name: '工具调用网关', id: '/v1/invocations'},
       {k: 'ledger', x: 650, name: '授权与预算库', id: '接受事务'},
       {k: 'downstream', x: 830, name: '模拟订单', id: '下游服务'},
     ],
@@ -442,11 +442,11 @@ const SCENES = {
     narrate(ev) {
       switch (ev.event_type) {
         case 'fixture.setup': return ['开始撤销根授权', '撤销事务已经开始，但还没有提交。'];
-        case 'request.sent': return ['执行代理用旧令牌下单', '令牌是撤销前签发的，请求证明是新签的。'];
+        case 'request.sent': return ['下单代理用旧令牌下单', '令牌是撤销前签发的，请求证明是新签的。'];
         case 'check.passed': return ['签名与持有者都没问题', '密码学检查全部通过；但"签名有效"不等于"现在仍有权限"。'];
-        case 'lock.waiting': return ['接受事务在排队', '撤销事务持有锁，接受只能等它结束，先后顺序由数据库决定。'];
+        case 'lock.waiting': return ['受理事务在排队', '撤销事务持有锁，接受只能等它结束，先后顺序由数据库决定。'];
         case 'revocation.committed': return ['撤销提交', '根授权及其整棵子树被标记为已撤销。'];
-        case 'accept.rejected': return ['新接受被拒绝', '接受事务复核祖先状态，发现根授权已撤销。签名有效也越不过撤销。'];
+        case 'accept.rejected': return ['新接受被拒绝', '受理事务复核祖先状态，发现根授权已撤销。签名有效也越不过撤销。'];
         case 'readback.state': return ['业务没有任何变化', '三级预算都没有新预留，下游没有新订单。'];
       }
       return null;
@@ -454,9 +454,9 @@ const SCENES = {
   },
 
   s7: {
-    catalogId: 'recovery-evidence', short: '故障恢复',
+    catalogId: 'recovery-evidence', short: '崩溃恢复',
     title: '下单成功后进程崩溃',
-    lede: '下游已经下单成功，执行进程却在回报结果前被强制终止。会不会少记一笔账，或者重新下一单？',
+    lede: '下游已经下单成功，工作进程却在回报结果前被强制终止。会不会少记一笔账，或者重新下一单？',
     stack: [
       ['执行意图', '接受时固定不可变意图与预留，恢复只能沿用原意图'],
       ['恢复', '租约过期后由新进程按 operation_id 对账'],
@@ -470,8 +470,8 @@ const SCENES = {
     honest: '恢复依赖持久状态和下游幂等契约；本地证据一致性不等于独立审计，也不证明现实收货。',
     band: [16, 560], focus: 'ledger',
     lanes: [
-      {k: 'gateway', x: 76, name: '执行网关', id: '接受'},
-      {k: 'worker', x: 206, name: '执行进程', id: '原进程'},
+      {k: 'gateway', x: 76, name: '工具调用网关', id: '接受'},
+      {k: 'worker', x: 206, name: '工作进程', id: '原进程'},
       {k: 'recovery', x: 336, name: '恢复进程', id: '新进程'},
       {k: 'ledger', x: 480, name: '授权与预算库', id: '操作记录'},
       {k: 'downstream', x: 650, name: '模拟订单', id: '下游服务'},
@@ -493,7 +493,7 @@ const SCENES = {
       const p = ev.safe_payload || {};
       switch (ev.event_type) {
         case 'accept.committed': return ['接受并预留', '三级授权各预留 700.00 元，操作 op-1 的意图从此固定。'];
-        case 'request.sent': return p.endpoint === '按 operation_id 对账' ? ['向下游对账', '恢复进程不重新下单，而是按同一个操作查询下游结果。'] : ['执行进程下单', '按接受时固定的意图向下游下单，下游提交成功。'];
+        case 'request.sent': return p.endpoint === '按 operation_id 对账' ? ['向下游对账', '恢复进程不重新下单，而是按同一个操作查询下游结果。'] : ['工作进程下单', '按接受时固定的意图向下游下单，下游提交成功。'];
         case 'process.crashed': return ['进程被强制终止', '下游已经成功，但结果还没写回；此时结果未知，预算保持预留。'];
         case 'lock.waiting': return ['等待原进程的租约过期', '确认原执行者不会再写入后，恢复进程才接手。'];
         case 'operation.reconciled': return ['确认成功，结算一次', '对账确认下游已成功，结算 700.00 元，释放预留。'];
@@ -505,82 +505,82 @@ const SCENES = {
   },
 
   cosign: {
-    catalogId: null, short: '双域共签 SM2',
-    title: '授权域点头，才能签出这一笔',
-    lede: '基础防线都依赖网关把关；如果网关本身被攻破呢？执行凭据的私钥被拆成两份，分别在授权域和执行域。授权域自己查一遍委托链、撤销和预算，确认无误才交出它那一半；两半合成一个普通 SM2 签名。',
+    catalogId: null, short: 'SM2 协同签名',
+    title: '授权侧点头，才能签出这一笔',
+    lede: '权限检查都依赖网关把关；如果网关本身被攻破呢？执行凭据的私钥被拆成两份，分别在授权侧和网关侧。授权侧自己查一遍委托链、撤销和预算，确认无误才交出它那一半；两半合成一个普通 SM2 签名。',
     stack: [
       ['批准 profile', 'AG-COSM2-APPROVAL-1 · sm2-2p'],
-      ['签名对象', '双方由结构化行动独立重算消息与 SM3 摘要；授权域不信任执行域提供的摘要'],
+      ['签名对象', '双方由结构化行动独立重算消息与 SM3 摘要；授权侧不信任网关侧提供的摘要'],
       ['三轮协议', 'Q1 → 部分签名 → 合成并标准 SM2 验签；请求携带 ag-approval'],
     ],
     delta: [
       ['普通单钥', '网关被攻破就能任意签（凭据单钥在网关侧的部署）。'],
       ['旧版 FROST', '2-of-3 门限签名，但签名者不检查授权状态，且非国密。'],
-      ['本项目', '授权域独立核验后才出份额，产出标准 SM2 签名；网关单方签不出，下单服务也独立验签并拒绝重复使用。', true],
+      ['本项目', '授权侧独立核验后才出份额，产出标准 SM2 签名；网关单方签不出，下单服务也独立验签并拒绝重复使用。', true],
     ],
-    honest: '当前为两域协同（n=2），半诚实模型；两域部署在同一主机；向 t-of-n 的推广已有设计，尚未实现。网关被攻破时，至多能把授权域已核准的那一笔执行一次；签名之后才发生的撤销仍靠网关接受事务拦截。右侧为示意推演；左侧可运行固定六用例并显示原始结果来源、日期与单次耗时。不证明恶意安全或跨主机隔离。',
+    honest: '授权侧检查通过才参与签名，网关单方不能签出批准。当前为两方协同（n=2），半诚实模型；两方部署在同一主机，Python 原型非常数时间；向 t-of-n 的推广已有设计，尚未实现。网关被攻破时，至多能把授权侧已核准的那一笔执行一次；签名之后才发生的撤销仍靠网关受理事务拦截。右侧为动画示意；左侧可运行固定六用例并显示原始结果来源、日期与单次耗时。不证明恶意安全或跨主机隔离。',
     band: [30, 900], focus: 'authz-domain',
     lanes: [
-      {k: 'exec-domain', x: 115, name: '执行域', id: 'P1 · 网关侧'},
-      {k: 'authz-domain', x: 310, name: '授权域', id: 'P2 · AS 侧'},
-      {k: 'gateway', x: 510, name: '执行网关', id: '标准 SM2 验签'},
+      {k: 'exec-domain', x: 115, name: '网关侧签名方', id: 'P1 · 网关侧'},
+      {k: 'authz-domain', x: 310, name: '授权侧签名方', id: 'P2 · AS 侧'},
+      {k: 'gateway', x: 510, name: '工具调用网关', id: '标准 SM2 验签'},
       {k: 'ledger', x: 700, name: '授权与预算库', id: '当前状态'},
       {k: 'downstream', x: 840, name: '模拟订单', id: '合成业务'},
     ],
     events: illustrative('cosign', [
       {event_type: 'fixture.setup', actor: 'exec-domain', safe_payload: {}, display: {top: '正常一笔：形成结构化行动', sub: '双方独立重算消息与摘要'}},
-      {event_type: 'cosign.round1', actor: 'exec-domain', target: 'authz-domain', safe_payload: {}, display: {top: '第一轮：发出 Q1', sub: '附结构化行动，授权域自己重算'}},
+      {event_type: 'cosign.round1', actor: 'exec-domain', target: 'authz-domain', safe_payload: {}, display: {top: '第一轮：发出 Q1', sub: '附结构化行动，授权侧自己重算'}},
       {event_type: 'cosign.checked', actor: 'authz-domain', target: 'ledger', safe_payload: {check: '委托链与权限'}, display: {top: '第二轮：独立核验委托链与权限'}},
       {event_type: 'cosign.checked', actor: 'authz-domain', target: 'ledger', safe_payload: {check: '撤销状态'}, display: {top: '独立核验当前撤销状态'}},
       {event_type: 'cosign.checked', actor: 'authz-domain', target: 'ledger', safe_payload: {check: '预算'}, display: {top: '独立核验预算'}},
       {event_type: 'cosign.partial', actor: 'authz-domain', target: 'exec-domain', safe_payload: {}, display: {top: '返回部分签名', sub: '仅示意协议消息，不展示秘密材料'}},
       {event_type: 'cosign.combined', actor: 'exec-domain', safe_payload: {}, display: {top: '第三轮：合成签名', sub: '标准 SM2 验签通过才输出'}},
       {event_type: 'request.sent', actor: 'exec-domain', target: 'gateway', safe_payload: {}, display: {top: '携 ag-approval 请求网关', sub: '标准 SM2 验签及行动匹配'}},
-      {event_type: 'accept.committed', actor: 'gateway', target: 'ledger', safe_payload: {}, display: {top: '接受事务：再查撤销与预算', sub: '批准不替代接受时的当前验权'}},
+      {event_type: 'accept.committed', actor: 'gateway', target: 'ledger', safe_payload: {}, display: {top: '受理事务：再查撤销与预算', sub: '批准不替代接受时的当前验权'}},
       {event_type: 'request.sent', actor: 'gateway', target: 'downstream', safe_payload: {}, display: {top: '正常一笔：一单', sub: '示意效果，非真实运行结果'}},
       {event_type: 'revocation.committed', actor: 'ledger', target: 'ledger', safe_payload: {grant_alias: '另一笔根授权'}, display: {top: '另一笔：授权已撤销'}},
       {event_type: 'cosign.round1', actor: 'exec-domain', target: 'authz-domain', safe_payload: {}, display: {top: '撤销后，另一笔请求共签'}},
-      {event_type: 'cosign.refused', actor: 'authz-domain', status: 'rejected', reason_code: 'AUTHZ_REVOKED', safe_payload: {}, display: {top: 'AUTHZ_REVOKED', sub: '授权域拒绝出份额'}},
+      {event_type: 'cosign.refused', actor: 'authz-domain', status: 'rejected', reason_code: 'AUTHZ_REVOKED', safe_payload: {}, display: {top: 'AUTHZ_REVOKED', sub: '授权侧拒绝出份额'}},
     ]),
     narrate(ev) {
       const notes = {
         'fixture.setup': ['正常一笔：形成行动', '双方拿到结构化行动，各自重算消息和摘要。'],
-        'cosign.round1': ['第一轮：执行域请求共签', '发送 Q1 与结构化行动，授权域不接收对方算好的摘要作为签名依据。'],
-        'cosign.checked': ['第二轮：授权域独立核验' + (ev.safe_payload.check || ''), '授权域自己读取授权与预算库；还须核对有效期、路径、范围与策略版本，任一不满足即拒绝。'],
-        'cosign.partial': ['授权域返回部分签名', '检查全部通过才返回 (r, s2, s3)；本图不展示数值或秘密材料。'],
-        'cosign.combined': ['第三轮：合成并标准验签', '执行域合成普通 SM2 签名，用标准验签确认，通过才输出。'],
-        'request.sent': ev.target === 'downstream' ? ['正常一笔：只下一单', '这是示意效果；尚未运行双域共签采购。'] : ['批准随请求送到网关', 'ag-approval 不替代令牌、请求证明与接受事务的当前验权。'],
-        'accept.committed': ['接受事务再次检查', '撤销、预算与新鲜度仍在接受事务内复核。'],
+        'cosign.round1': ['第一轮：网关侧请求共签', '发送 Q1 与结构化行动，授权侧不接收对方算好的摘要作为签名依据。'],
+        'cosign.checked': ['第二轮：授权侧独立核验' + (ev.safe_payload.check || ''), '授权侧自己读取授权与预算库；还须核对有效期、路径、范围与策略版本，任一不满足即拒绝。'],
+        'cosign.partial': ['授权侧返回部分签名', '检查全部通过才返回 (r, s2, s3)；本图不展示数值或秘密材料。'],
+        'cosign.combined': ['第三轮：合成并标准验签', '网关侧合成普通 SM2 签名，用标准验签确认，通过才输出。'],
+        'request.sent': ev.target === 'downstream' ? ['正常一笔：只下一单', '这是示意效果；尚未运行协同签名采购。'] : ['批准随请求送到网关', 'ag-approval 不替代令牌、请求证明与受理事务的当前验权。'],
+        'accept.committed': ['受理事务再次检查', '撤销、预算与新鲜度仍在受理事务内复核。'],
         'revocation.committed': ['另一笔：授权已撤销', '下面是另一笔请求，前面的正常示意订单不受这次拒绝影响。'],
-        'cosign.refused': ['授权域拒绝：AUTHZ_REVOKED', '拒绝发生在授权域，未返回部分签名；这一笔的网关请求与下游订单均未发生。'],
+        'cosign.refused': ['授权侧拒绝：AUTHZ_REVOKED', '拒绝发生在授权侧，未返回部分签名；这一笔的网关请求与下游订单均未发生。'],
       };
       return notes[ev.event_type] || null;
     },
   },
 
   threshold: {
-    catalogId: null, fixed: 'threshold', short: '对照：旧版 FROST', design: true,
+    catalogId: null, fixed: 'threshold', short: '对照：FROST 门限', design: true,
     title: '为什么换掉旧版 FROST',
-    lede: '这是上一版方案：三个签名域中任意两个，用 FROST 共同签出一份行动批准，网关在接受事务里核对。它已正确接入采购流程；本次保留它，用来说明为什么换成双域共签。',
+    lede: '这是上一版方案：三个签名方中任意两个，用 FROST 共同签出一份行动批准，网关在受理事务里核对。它已正确接入采购流程；本次保留它，用来说明为什么换成协同签名。',
     stack: [
       ['签名方案', '2-of-3 FROST-Ed25519 组签名，网关只持组公钥'],
       ['批准对象', 'V2 行动：授权路径、holder、工具、参数摘要、金额、策略版本、key epoch、有效期'],
       ['传递方式', '采购请求附 ag-approval 头，令牌与 AG-Proof 照常验证'],
     ],
     delta: [
-      ['不查授权', '签名域只对行动摘要签名，不独立核验委托链、撤销与预算；授权状态仍完全依赖网关。'],
+      ['不查授权', '签名方只对行动摘要签名，不独立核验委托链、撤销与预算；授权状态仍完全依赖网关。'],
       ['非国密', '组签名是 Ed25519，网关需另外维护一套非 SM2 的验签。'],
       ['可信初始化', '组密钥由可信 dealer 一次性生成并分发份额。'],
-      ['双域共签', '授权域独立核验后才出份额；产出标准 SM2 签名；完整私钥不重建。', true],
+      ['协同签名', '授权侧独立核验后才出份额；产出标准 SM2 签名；完整私钥不重建。', true],
     ],
     honest: '不是说 FROST 方案有错：它是正确实现的门限签名，只是与授权主线结合得不够紧。右侧是流程示意，不是逐帧回放；真实结果以左栏的本机固定演示为准。演示中份额由同一宿主、同一 OS 用户管理，采用可信分发，不是生产部署。',
     band: [516, 900], focus: 'gateway',
     lanes: [
-      {k: 'signer-1', x: 62, name: '签名域 S1', id: '份额 1'},
-      {k: 'signer-2', x: 186, name: '签名域 S2', id: '份额 2'},
-      {k: 'signer-3', x: 310, name: '签名域 S3', id: '份额 3'},
+      {k: 'signer-1', x: 62, name: '签名方 S1', id: '份额 1'},
+      {k: 'signer-2', x: 186, name: '签名方 S2', id: '份额 2'},
+      {k: 'signer-3', x: 310, name: '签名方 S3', id: '份额 3'},
       {k: 'coordinator', x: 440, name: '协调器', id: '只持组公钥'},
-      {k: 'gateway', x: 620, name: '执行网关', id: '验 ag-approval'},
+      {k: 'gateway', x: 620, name: '工具调用网关', id: '验 ag-approval'},
       {k: 'ledger', x: 805, name: '授权与预算库', id: '接受事务'},
     ],
     checkNote: {threshold_signature: '路径、金额、参数摘要与实际订单一致'},
@@ -603,14 +603,14 @@ const SCENES = {
     narrate(ev) {
       const p = ev.safe_payload || {};
       switch (ev.event_type) {
-        case 'fixture.setup': return ['形成行动摘要', '把这次下单的全部关键字段规范化，三个签名域只对这一份内容签名。'];
-        case 'threshold.share_signed': return ['签名域 S' + p.share + ' 签出份额', '每个签名域只持有自己的一份私钥份额，只对本次行动签名。'];
+        case 'fixture.setup': return ['形成行动摘要', '把这次下单的全部关键字段规范化，三个签名方只对这一份内容签名。'];
+        case 'threshold.share_signed': return ['签名方 S' + p.share + ' 签出份额', '每个签名方只持有自己的一份私钥份额，只对本次行动签名。'];
         case 'threshold.aggregated': return (p.shares || []).length >= p.threshold
           ? ['两份到齐，聚合成组签名', '2 / 3 达到门限，聚合出一个可以用组公钥验证的 Ed25519 签名。']
-          : ['只有一份，不足以批准', '1 / 3 未达到门限 2；单个签名域不能独自批准，重复同一份额也不算两票。'];
-        case 'request.sent': return ['批准随请求送到网关', '采购请求同时带着 AGPoP 令牌、AG-Proof 和 ag-approval 批准头。'];
+          : ['只有一份，不足以批准', '1 / 3 未达到门限 2；单个签名方不能独自批准，重复同一份额也不算两票。'];
+        case 'request.sent': return ['批准随请求送到网关', '采购请求同时带着 访问令牌、AG-Proof 和 ag-approval 批准头。'];
         case 'check.passed': return ['组签名有效，内容对得上', '网关用组公钥验签，并把批准里的行动和实际订单逐项比对。'];
-        case 'accept.committed': return ['接受并绑定，只下一单', '接受事务内写入 action_id 与操作的绑定，失败会整体回滚，不消耗批准。'];
+        case 'accept.committed': return ['接受并绑定，只下一单', '受理事务内写入 action_id 与操作的绑定，失败会整体回滚，不消耗批准。'];
         case 'revocation.committed': return ['另一笔：授权已被撤销', '根授权及其子树被撤销，但手里的门限批准本身仍然有效。'];
         case 'accept.rejected': return ['批准有效，仍被拒绝', '执行时复核当前授权：集体批准也不能覆盖用户的撤销。'];
       }
@@ -621,21 +621,21 @@ const SCENES = {
   x402: {
     catalogId: null, fixed: 'x402', short: 'x402 支付', design: true,
     title: '先报价，再按报价付款',
-    lede: '付款不能代替授权：付款意图先经双域共签批准，批准里写死这笔付款的摘要。网关接受后才去付款——资源先返回 402 报价，适配器核对报价、签 EIP-3009 转账授权，资源服务器验证后在链上结算。',
+    lede: '付款不能代替授权：付款意图先经协同签名批准，批准里写死这笔付款的摘要。网关接受后才去付款——资源先返回 402 报价，适配器核对报价、签 EIP-3009 转账授权，资源服务器验证后在链上结算。',
     stack: [
       ['支付协议', 'HTTP 402 + x402 v2 exact/EVM，顺序 verify → resource → settle'],
       ['付款证明', 'EIP-3009 转账授权（EIP-712 签名），nonce 只能用一次'],
-      ['与授权', '页面按钮使用双域共签（sm2-2p）批准，V3 批准内含支付意图摘要；独立资产预算，随祖先撤销一起受约束'],
+      ['与授权', '页面按钮使用协同签名（sm2-2p）批准，V3 批准内含支付意图摘要；独立资产预算，随祖先撤销一起受约束'],
     ],
     delta: [
       ['只看付款', '付款成功就放行，等于用付款代替了授权。'],
       ['超时重付', '响应丢失就重新签一笔，可能付两次钱。'],
       ['本项目', '支付意图在网关接受时绑定；签名与 nonce 先落盘再发送，结果未知时按同一 nonce 对账，不重签不重付。', true],
     ],
-    honest: '右侧是流程示意，不是逐帧回放；真实结果以左栏的本机固定演示为准。付款意图的批准是双域 SM2 共签，但链上结算签名仍是 EIP-3009（secp256k1），不是 SM2；只用本机测试链与自建测试代币，没有真实资产或生产网络。',
+    honest: '右侧是流程示意，不是逐帧回放；真实结果以左栏的本机固定演示为准。付款意图的批准是SM2 两方协同签名，但链上结算签名仍是 EIP-3009（secp256k1），不是 SM2；只用本机测试链与自建测试代币，没有真实资产或生产网络。',
     band: [10, 500], focus: 'x402',
     lanes: [
-      {k: 'gateway', x: 80, name: '执行网关', id: '接受采购'},
+      {k: 'gateway', x: 80, name: '工具调用网关', id: '接受采购'},
       {k: 'ledger', x: 240, name: '授权与预算库', id: '独立资产预算'},
       {k: 'x402', x: 410, name: '支付适配器', id: '受控签名组件'},
       {k: 'resource', x: 620, name: '付费资源服务器', id: '返回 402'},
@@ -683,51 +683,51 @@ const SCENES = {
 const MORE_SCENES = ['s2', 's4', 's5', 's7'];
 
 /*
- * 汇报结构：五章递进。先讲系统，再讲基础防线，然后抛出"网关本身被攻破怎么办"引出双域共签，
+ * 汇报结构：五章递进。先讲系统，再讲权限检查，然后抛出"网关本身被攻破怎么办"引出协同签名，
  * 再讲付款扩展，最后用真实运行核对。章内分组决定左栏顶部的子导航。
  */
 const CHAPTERS = [
   {k: 'overview', name: '总览', groups: [['', ['overview']]]},
-  {k: 'defense', name: '基础防线', groups: [['三道防线', ['s1', 's3', 's6']], ['更多保障', MORE_SCENES]]},
-  {k: 'core', name: '核心机制 · 双域共签', groups: [['', ['cosign', 'threshold']]]},
-  {k: 'pay', name: '扩展 · x402 支付', groups: [['', ['x402']]]},
-  {k: 'evidence', name: '运行证据', groups: [['', ['evidence']]]},
+  {k: 'defense', name: '权限检查', groups: [['主要检查', ['s1', 's3', 's6']], ['其他检查', MORE_SCENES]]},
+  {k: 'core', name: '协同签名', groups: [['', ['cosign', 'threshold']]]},
+  {k: 'pay', name: '支付扩展', groups: [['', ['x402']]]},
+  {k: 'evidence', name: '测试记录', groups: [['', ['evidence']]]},
 ];
 const chapterOf = view => CHAPTERS.find(c => c.groups.some(([, vs]) => vs.includes(view))) || null;
 
 /* 模块说明：六项固定格式 */
 const MODULES = {
-  cosign: ['双域协同 SM2 签名', 'sm2-2p · AG-COSM2-APPROVAL-1', '网关被攻破时，单方也签不出可执行的批准。', '执行网关在接受采购前发起；授权域与 AS 同侧。', '结构化行动；执行域与授权域各持一份私钥份额。', '授权域独立核验委托链、撤销、有效期与预算，通过才返回部分签名；执行域合成后标准 SM2 验签。', '普通 SM2 签名的 ag-approval，网关与下单服务都用标准国密库验证。', '半诚实两方（n=2），两域在同一主机；签名之后发生的撤销仍靠网关接受事务拦截。'],
-  'exec-domain': ['执行域 P1', '网关侧 · 示意模块', '与授权域共同产生这一笔行动的 SM2 签名。', '执行请求触发第一轮；智能体不持有份额。', '结构化行动和授权域返回的部分签名。', '自行重算消息，合成后用标准 SM2 验签，通过才输出。', '普通 SM2 签名与行动批准信封。', '只有自身一份秘密不能独自完成共签；当前 n=2、半诚实、同主机，核心尚未接入本页。'],
-  'authz-domain': ['授权域 P2', 'AS 侧 · 示意模块', '独立决定当前授权是否允许签出这一笔。', '执行域发送结构化行动与第一轮公开消息。', '结构化行动及当前授权、撤销与预算状态。', '自己重算消息，核对委托链、有效期、撤销、范围、预算与策略版本。', '仅在检查通过后返回部分签名，否则返回拒绝码。', '不接受执行域算好的摘要作为依据；当前为半诚实模型，不提供恶意安全证明或跨主机隔离。'],
+  cosign: ['SM2 两方协同签名', 'sm2-2p · AG-COSM2-APPROVAL-1', '网关被攻破时，单方也签不出可执行的批准。', '工具调用网关在接受采购前发起；授权侧与 AS 同侧。', '结构化行动；网关侧与授权侧各持一份私钥份额。', '授权侧独立核验委托链、撤销、有效期与预算，通过才返回部分签名；网关侧合成后标准 SM2 验签。', '普通 SM2 签名的 ag-approval，网关与下单服务都用标准国密库验证。', '半诚实两方（n=2），同主机 Python 非常数时间原型；签名之后发生的撤销仍靠网关受理事务拦截。'],
+  'exec-domain': ['网关侧 P1', '网关侧 · 示意模块', '与授权侧共同产生这一笔行动的 SM2 签名。', '执行请求触发第一轮；AI 代理不持有份额。', '结构化行动和授权侧返回的部分签名。', '自行重算消息，合成后用标准 SM2 验签，通过才输出。', '普通 SM2 签名与行动批准信封。', '只有自身一份秘密不能独自完成共签；当前 n=2、半诚实、同主机，核心尚未接入本页。'],
+  'authz-domain': ['授权侧 P2', 'AS 侧 · 示意模块', '独立决定当前授权是否允许签出这一笔。', '网关侧发送结构化行动与第一轮公开消息。', '结构化行动及当前授权、撤销与预算状态。', '自己重算消息，核对委托链、有效期、撤销、范围、预算与策略版本。', '仅在检查通过后返回部分签名，否则返回拒绝码。', '不接受网关侧算好的摘要作为依据；当前为半诚实模型，不提供恶意安全证明或跨主机隔离。'],
   user: ['用户 / 撤销方', 'OIDC 登录 / 用户同意', '任务必须源于用户明确批准的范围；用户也可以撤销自己批准的授权。', '用户通过登录客户端发起；场景 6 中由测试直接提交撤销事务。', '登录结果、任务与预算确认。', '身份、租户、任务对象与预算范围。', '用户授权，作为根授权的依据。', 'ID Token 只证明身份，不能用于下单；当前登录同意为自动流程，手动页面尚未提供。'],
   planner: ['统筹代理', 'planner#key-1', '把任务拆分并交给下级代理。', '用户批准任务后启动。', '根授权与任务说明。', '只能在自身授权内申请委托。', '向 AS 提交委托申请；不能自己签发可信令牌。', '当前是确定性代理，未接入真实大模型。'],
-  selector: ['选品代理', 'selector#key-1', '读取报价并选择商品。', '统筹代理交接任务。', 'AS 签发的子令牌、报价文档。', '商品与报价是否在任务范围内。', '选品结果，以及给执行代理的委托申请。', '恶意报价可能影响判断，授权边界仍由系统执行。'],
-  executor: ['执行代理', 'executor#key-1', '发出精确、可核对的工具调用。', '选品代理交接任务。', 'AS 签发的令牌、固定请求参数。', '用自己的 SM2 私钥签署 AG-Proof。', 'Authorization: AGPoP 令牌，加 AG-Proof。', '只持自身密钥，不持下游管理凭据。'],
+  selector: ['选品代理', 'selector#key-1', '读取报价并选择商品。', '统筹代理交接任务。', 'AS 签发的子令牌、报价文档。', '商品与报价是否在任务范围内。', '选品结果，以及给下单代理的委托申请。', '恶意报价可能影响判断，授权边界仍由系统执行。'],
+  executor: ['下单代理', 'executor#key-1', '发出精确、可核对的工具调用。', '选品代理交接任务。', 'AS 签发的令牌、固定请求参数。', '用自己的 SM2 私钥签署 AG-Proof。', '访问令牌与请求证明（协议头：Authorization: AGPoP、AG-Proof）。', '只持自身密钥，不持下游管理凭据。'],
   'executor-2': ['分支 B', '同一任务下的另一条委托链', '演示两条分支并发争用同一笔根预算。', '共享预算测试。', '另一条链上合法签发的令牌。', '用对应持有者私钥签署 AG-Proof。', '与分支 A 同时到达的下单请求。', '两条链各自合法，问题只在合计是否超出祖先预算。'],
-  attacker: ['冒用方 / 中途篡改', '测试注入', '演示令牌被复制或请求被篡改后的情况。', '安全场景测试。', '窃取的令牌副本，或转发中的请求。', '无。', '冒用或被改过的请求。', '前提是执行代理私钥未泄露；私钥泄露不在这些场景的防护范围内。'],
-  as: ['授权服务器 AS', 'authorization/exchange_service.py', '统一签发各级令牌，委托只能收窄。', '代理发起授权码交换与 Token Exchange。', '父令牌、父持有者签名的委托申请。', '身份、当前授权，金额、工具、期限、次数、深度等逐维包含。', 'SM2 签名的令牌，ag_cnf 写明持有者公钥；或带原因的拒绝。', '私有 GM-MVP-1 配置，不宣称与标准 OIDC、DPoP 互通。'],
-  gateway: ['执行网关', 'POST /v1/invocations', '决定一次工具请求能否被接受。', '执行代理提交工具请求。', 'AGPoP 令牌、AG-Proof、完整请求体。', 'SM2 验签、ag_cnf 与证明签名者一致、token_sm3 与 body_sm3 绑定、jti 防重放，再查当前授权与预算。', '接受后固定的业务意图；或 401 HOLDER_MISMATCH 等拒绝码。', '接受不等于业务完成；不判断模型的选择是否合理。'],
-  ledger: ['授权与预算库', 'PostgreSQL 接受事务', '并发与撤销下仍不超权。', '网关的接受事务、恢复流程。', '请求意图，根及全部祖先授权。', '撤销状态、期限、共享额度与次数、防重放。', '原子预留、结算与操作记录。', '子额度不是独立钱包；结果未知时不释放预算。'],
+  attacker: ['冒用方 / 中途篡改', '测试注入', '演示令牌被复制或请求被篡改后的情况。', '安全场景测试。', '窃取的令牌副本，或转发中的请求。', '无。', '冒用或被改过的请求。', '前提是下单代理私钥未泄露；私钥泄露不在这些场景的防护范围内。'],
+  as: ['授权服务器 AS', 'authorization/exchange_service.py', '统一签发各级令牌，委托只能收窄。', '代理发起授权码交换与 Token Exchange。', '父令牌、父持有者签名的委托申请。', '身份、当前授权，金额、工具、期限、次数、深度等逐维包含。', 'SM2 签名的令牌，ag_cnf 写明持有者公钥；或带原因的拒绝。', '私有国密配置 v1，不宣称与标准 OIDC、DPoP 互通。'],
+  gateway: ['工具调用网关', 'POST /v1/invocations', '决定一次工具请求能否被接受。', '下单代理提交工具请求。', '访问令牌、AG-Proof、完整请求体。', 'SM2 验签、ag_cnf 与证明签名者一致、token_sm3 与 body_sm3 绑定、jti 防重放，再查当前授权与预算。', '接受后固定的业务意图；或 401 HOLDER_MISMATCH 等拒绝码。', '接受不等于业务完成；不判断模型的选择是否合理。'],
+  ledger: ['授权与预算库', 'PostgreSQL 受理事务', '并发与撤销下仍不超权。', '网关的受理事务、恢复流程。', '请求意图，根及全部祖先授权。', '撤销状态、期限、共享额度与次数、防重放。', '原子预留、结算与操作记录。', '子额度不是独立钱包；结果未知时不释放预算。'],
   downstream: ['模拟订单与通知', '下游服务，独立事务', '已接受的意图只产生一次效果。', '网关与恢复流程通过服务认证调用。', '不可变业务意图与幂等键。', '服务身份、同键意图一致。', '模拟订单或固定模板通知。', '合成业务，无真实付款。'],
   audit: ['回执与独立审计', 'SM2 回执 / SM3 检查点', '事后能独立核对发生了什么。', '网关与恢复流程。', '签名回执、执行记录、检查点。', '签名、摘要与关联关系。', '可离线验证的证据包。', '一致性通过不代表当前授权仍有效；未锚定尾部仍有局限。'],
-  worker: ['执行进程', '执行与恢复服务', '按接受时固定的意图调用下游。', '网关接受后启动。', '操作 ID 与不可变意图。', '持有租约，独占执行。', '下游调用与结果写回。', '进程随时可能中断，结果可能未知。'],
+  worker: ['工作进程', '执行与恢复服务', '按接受时固定的意图调用下游。', '网关接受后启动。', '操作 ID 与不可变意图。', '持有租约，独占执行。', '下游调用与结果写回。', '进程随时可能中断，结果可能未知。'],
   recovery: ['恢复进程', 'reconcile', '在原进程中断后完成未决操作。', '租约过期后由恢复流程启动。', '操作 ID。', '按同一操作向下游对账，不重新生成意图。', '结算与回执。', '依赖持久状态与下游幂等契约。'],
-  coordinator: ['门限协调器', '独立原型', '收集签名份额并聚合。', '执行前的行动批准流程。', '行动摘要与签名份额。', '份额是否针对同一摘要、签名域是否重复。', '聚合后的组签名。', '只持组公钥与公开协议材料，不持任何完整私钥。已接入固定采购演示；份额暂由同一 OS 用户管理。'],
-  'signer-1': ['签名域 S1', '独立原型', '独立批准高风险行动。', '协调器。', '规范化的行动摘要。', '认证后只对本次行动签名。', '一份签名份额。', '与采购代理是不同角色；已接入固定采购演示；份额暂由同一 OS 用户管理。'],
-  'signer-2': ['签名域 S2', '独立原型', '独立批准高风险行动。', '协调器。', '规范化的行动摘要。', '认证后只对本次行动签名。', '一份签名份额。', '与采购代理是不同角色；已接入固定采购演示；份额暂由同一 OS 用户管理。'],
-  'signer-3': ['签名域 S3', '独立原型', '独立批准高风险行动。', '协调器。', '规范化的行动摘要。', '认证后只对本次行动签名。', '一份签名份额。', '与采购代理是不同角色；已接入固定采购演示；份额暂由同一 OS 用户管理。'],
-  threshold: ['门限签名', '2-of-3，本机固定演示', '高风险行动需要多个独立签名域共同批准。', '网关在接受事务内验证批准。', '规范化的行动摘要。', '门限签名验签，并与授权路径、策略版本绑定。', '行动批准凭据。', '本机固定演示已接入采购：有效批准只产生一单；不足/篡改/撤销会被拒绝。公网仍只读，份额暂由同一 OS 用户管理，非 SM2。'],
-  x402: ['支付适配 x402', '本机固定演示', 'HTTP 资源的付费交互：先 402 报价，再带 EIP-3009 签名授权支付。', '网关在接受事务内绑定支付意图；资源服务器验证并结算。', '402 报价与支付要求。', '收款方、金额、网络与报价有效期。', '支付证明与结算结果。', '本机固定演示已接入，批准方案为双域 SM2 共签：有效支付恰好一单且链上仅一笔；伪造签名、不含支付摘要的批准、超预算、重放会被拒绝。链上结算签名仍是 EIP-3009；使用本机测试链与自建代币，无真实资产；公网页面仍只读；不替代 OAuth 授权。'],
+  coordinator: ['门限协调器', '独立原型', '收集签名份额并聚合。', '执行前的行动批准流程。', '行动摘要与签名份额。', '份额是否针对同一摘要、签名方是否重复。', '聚合后的组签名。', '只持组公钥与公开协议材料，不持任何完整私钥。已接入固定采购演示；份额暂由同一 OS 用户管理。'],
+  'signer-1': ['签名方 S1', '独立原型', '独立批准高风险行动。', '协调器。', '规范化的行动摘要。', '认证后只对本次行动签名。', '一份签名份额。', '与采购代理是不同角色；已接入固定采购演示；份额暂由同一 OS 用户管理。'],
+  'signer-2': ['签名方 S2', '独立原型', '独立批准高风险行动。', '协调器。', '规范化的行动摘要。', '认证后只对本次行动签名。', '一份签名份额。', '与采购代理是不同角色；已接入固定采购演示；份额暂由同一 OS 用户管理。'],
+  'signer-3': ['签名方 S3', '独立原型', '独立批准高风险行动。', '协调器。', '规范化的行动摘要。', '认证后只对本次行动签名。', '一份签名份额。', '与采购代理是不同角色；已接入固定采购演示；份额暂由同一 OS 用户管理。'],
+  threshold: ['门限签名', '2-of-3，本机固定演示', '高风险行动需要多个独立签名方共同批准。', '网关在受理事务内验证批准。', '规范化的行动摘要。', '门限签名验签，并与授权路径、策略版本绑定。', '行动批准凭据。', '本机固定演示已接入采购：有效批准只产生一单；不足/篡改/撤销会被拒绝。公网仍只读，份额暂由同一 OS 用户管理，非 SM2。'],
+  x402: ['x402 支付适配', '本机固定演示', 'HTTP 资源的付费交互：先 402 报价，再带 EIP-3009 签名授权支付。', '网关在受理事务内绑定支付意图；资源服务器验证并结算。', '402 报价与支付要求。', '收款方、金额、网络与报价有效期。', '支付证明与结算结果。', '本机固定演示已接入，批准方案为SM2 两方协同签名：有效支付恰好一单且链上仅一笔；伪造签名、不含支付摘要的批准、超预算、重放会被拒绝。链上结算签名仍是 EIP-3009；使用本机测试链与自建代币，无真实资产；公网页面仍只读；不替代 OAuth 授权。'],
   resource: ['资源服务器', '本机模拟服务', '演示用的付费资源服务：返回 402 报价，验证付款并结算。', '由本机演示脚本启动，只绑定回环端口。', '402 报价与支付要求。', '报价金额、网络、资产与收款方地址。', '支付证明验证与结算结果。', '本机模拟，不对外提供服务；资产是测试链上的自建代币。'],
   chain: ['本地 EVM 测试链', 'Anvil · chain 31337', '本机测试链，承载自建 USDC 合约（EIP-3009）。', '仅本机演示进程访问，不连公网。', 'EIP-3009 授权转账交易。', 'nonce、签名、金额与收款方。', '交易哈希与链上事件。', '测试链与自建代币，没有任何真实资产。'],
 };
 
 const CATALOG_FALLBACK = [
-  ['stolen-token', '盗取令牌但没有私钥'], ['signed-parameters', '篡改签名后的参数'],
-  ['delegation-scope', '委托不得扩权'], ['shared-budget', '并发分支共享预算'],
-  ['replay-idempotency', '重放与业务幂等'], ['revocation', '撤销后拒绝新接受'],
-  ['recovery-evidence', '故障恢复与证据'],
+  ['stolen-token', '盗取令牌，却没有私钥'], ['signed-parameters', '签名之后，参数被改了'],
+  ['delegation-scope', '委托不得扩权'], ['shared-budget', '两条分支，同一笔预算'],
+  ['replay-idempotency', '重放被拒，重试不重复'], ['revocation', '撤销之后，拒绝新请求'],
+  ['recovery-evidence', '下单成功后进程崩溃'],
 ].map(([id, title]) => ({id, title, run_available: false, history_available: false}));
 
 /* 供 node 测试读取 */
@@ -880,7 +880,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
         const mark = svgEl('g', {class: 'cosign-refusal'}, g);
         cross(mark, ax, y);
         label(g, ax + 20, y + 4, 'AUTHZ_REVOKED', 'lab mono left', ax + 20);
-        label(g, ax + 20, y + 28, '授权域拒绝出份额', 'lab left', ax + 20);
+        label(g, ax + 20, y + 28, '授权侧拒绝出份额', 'lab left', ax + 20);
         label(g, laneX(sc, 'gateway'), y + 54, '本笔：未发生', 'lab mute', laneX(sc, 'gateway'));
         label(g, laneX(sc, 'downstream'), y + 54, '本笔：未发生', 'lab mute', laneX(sc, 'downstream'));
         return;
@@ -1049,7 +1049,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
         const hg = svgEl('g', {class: 'hourglass', transform: `translate(${mid} ${y})`}, g);
         svgEl('path', {d: 'M-6,-8 H6 L-6,8 H6 Z'}, hg);
         const lease = p.reason === 'lease';
-        label(g, mid, y - 14, lease ? '等待原进程租约过期' : '接受事务等待锁', 'lab', mid);
+        label(g, mid, y - 14, lease ? '等待原进程租约过期' : '受理事务等待锁', 'lab', mid);
         label(g, mid, y + 24, lease ? '确认原执行者不会再写入' : '撤销事务未提交，接受只能排队', 'lab mute', mid);
         return;
       }
@@ -1255,7 +1255,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       svgEl('rect', {class: 'band', x: sc.band[0], y: -20, width: sc.band[1] - sc.band[0], height: 110}, heads);
       svgEl('line', {class: 'heads-rule', x1: 0, x2: 900, y1: 90, y2: 90}, heads);
     }
-    svgText(heads, {class: 'band-label', x: sc.band[0] + 16, y: 20}, '可信授权执行边界');
+    svgText(heads, {class: 'band-label', x: sc.band[0] + 16, y: 20}, '网关检查范围');
     if (sc.band[0] > 150) svgText(heads, {class: 'tap-hint', x: 8, y: 20}, '点击参与方查看职责');
     for (const l of sc.lanes) svgEl('line', {class: 'life', 'data-k': l.k, x1: l.x, x2: l.x, y1: 84, y2: H - 10}, back);
     const f = laneX(sc, sc.focus);
@@ -1387,12 +1387,12 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     ui.band = [0, 900]; ui.bandY = [176, 444];
     ui.tall = false; heads.removeAttribute('transform');
     $('diagram').setAttribute('viewBox', '0 0 900 640');
-    $('diagram-title').textContent = '系统模型：代理层、可信授权执行边界、业务与证据';
+    $('diagram-title').textContent = '系统模型：代理层、网关检查范围、业务与证据';
     svgEl('rect', {class: 'band', x: 0, y: 176, width: 900, height: 268, rx: 14}, back);
     svgText(back, {class: 'layer-name', x: 0, y: 22}, '代理层');
     svgText(back, {class: 'layer-note', x: 58, y: 22}, '只提出意图，横向箭头是任务交接');
     svgText(back, {class: 'tap-hint', x: 900, y: 22, 'text-anchor': 'end'}, '点击参与方查看职责');
-    svgText(back, {class: 'layer-name', x: 16, y: 430}, '可信授权执行边界');
+    svgText(back, {class: 'layer-name', x: 16, y: 430}, '网关检查范围');
     svgText(back, {class: 'layer-note', x: 146, y: 430}, '在模型之外决定能否执行');
     svgText(back, {class: 'layer-name', x: 0, y: 610}, '业务与证据');
     svgText(back, {class: 'layer-note', x: 88, y: 610}, '合成业务，无真实付款');
@@ -1401,12 +1401,12 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     C.user = chip(heads, 'user', 100, 44, '用户', 'OIDC 登录');
     C.planner = chip(heads, 'planner', 330, 44, '统筹代理', 'planner#key-1', 'violet');
     C.selector = chip(heads, 'selector', 570, 44, '选品代理', 'selector#key-1', 'teal');
-    C.executor = chip(heads, 'executor', 810, 44, '执行代理', 'executor#key-1', 'teal');
+    C.executor = chip(heads, 'executor', 810, 44, '下单代理', 'executor#key-1', 'teal');
     C.as = chip(heads, 'as', 120, 272, '授权服务器', 'AS / OIDC OP');
-    C.gateway = chip(heads, 'gateway', 470, 272, '执行网关', 'GM-MVP-1 验权');
+    C.gateway = chip(heads, 'gateway', 470, 272, '工具调用网关', '国密配置 v1 验权');
     C.ledger = chip(heads, 'ledger', 810, 272, '授权与预算库', 'PostgreSQL');
-    C.cosign = chip(heads, 'cosign', 470, 368, '双域共签', '授权域 × 执行域 · SM2');
-    C.x402 = chip(heads, 'x402', 110, 520, '支付适配 x402', '本机固定演示', null, false);
+    C.cosign = chip(heads, 'cosign', 470, 368, '协同签名', '授权侧 × 网关侧 · SM2');
+    C.x402 = chip(heads, 'x402', 110, 520, 'x402 支付适配', '本机固定演示', null, false);
     C.downstream = chip(heads, 'downstream', 360, 520, '模拟订单与通知', '幂等执行');
     C.audit = chip(heads, 'audit', 810, 520, '回执与审计', 'SM2 回执 / 检查点');
 
@@ -1426,20 +1426,20 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     for (const x of [330, 570, 790]) path(`M${x},${busY} V100`, 'gold', 'a-gold');
     label(rowsL, 450, busY - 8, 'AS 统一签发各级令牌', 'lab gold', 450);
     label(rowsL, 450, busY + 18, '授权码交换 + Token Exchange（RFC 8693）', 'lab mono', 450);
-    // 执行代理 → 网关：L 形
+    // 下单代理 → 网关：L 形
     path(`M836,96 V226 H490 V266`, 'main', 'a-accent');
-    label(rowsL, 660, 218, 'AGPoP 令牌 + AG-Proof', 'lab mono', 660);
+    label(rowsL, 660, 218, '访问令牌 + AG-Proof', 'lab mono', 660);
     label(rowsL, 660, 244, 'SM2 签名，SM3 绑定请求体', 'lab mute', 660);
     // 网关 → 库
     path(`M${C.gateway.x2 + 4},298 H${C.ledger.x1 - 6}`, 'main', 'a-accent');
     for (const k of ['as', 'gateway', 'ledger', 'cosign']) C[k].g.classList.add('core');
     const gl = (C.gateway.x2 + C.ledger.x1) / 2;
-    label(rowsL, gl, 290, '接受事务', 'lab', gl);
+    label(rowsL, gl, 290, '受理事务', 'lab', gl);
     label(rowsL, gl, 318, '撤销、预算、防重放', 'lab mute', gl);
-    // 双域共签：授权域在 AS 侧独立核验后才出份额，合成的 SM2 批准随请求进入网关
+    // 协同签名：授权侧在 AS 侧独立核验后才出份额，合成的 SM2 批准随请求进入网关
     path('M470,368 V328', 'main', 'a-accent');
     path(`M120,${C.as.bottom} V${C.cosign.cy} H${C.cosign.x1 - 6}`, '', 'a-mute');
-    label(rowsL, 132, C.cosign.cy - 8, '授权域核验后出份额', 'lab mute left', 132);
+    label(rowsL, 132, C.cosign.cy - 8, '授权侧核验后出份额', 'lab mute left', 132);
     // 网关 → 下游：先向左，再竖直下行
     path(`M${C.gateway.x1 - 4},298 H360 V514`, '', 'a-mute');
     label(rowsL, 372, 476, '不可变意图，幂等执行', 'lab mute left', 372);
@@ -1477,10 +1477,10 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
 
   /* 总览：四种风险各对应一页，构成整场汇报的主线 */
   const RISKS = [
-    ['令牌被复制', '持有者绑定：没有私钥，令牌用不了', 's1'],
-    ['代理多要权限', '委托收窄：子授权只能更小', 's3'],
-    ['用户中途撤销', '动态撤销：接受时复核当前状态', 's6'],
-    ['网关本身被攻破', '双域共签：授权域核验后才出份额', 'cosign'],
+    ['令牌被复制', '令牌防盗用（持有者证明）：没有私钥，令牌用不了', 's1'],
+    ['代理多要权限', '委托降权：子授权只能更小', 's3'],
+    ['用户中途撤销', '撤销实时生效：接受时复核当前状态', 's6'],
+    ['网关本身被攻破', '协同签名：授权侧核验后才出份额', 'cosign'],
   ];
 
   function briefFor(view) {
@@ -1498,7 +1498,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       ui.lastProofKey = ''; renderProof();
     } else if (view === 'overview') {
       box.append(kicker, h('h1', null, '一笔采购，经过谁的手'),
-        h('p', 'lede', '三个代理接力完成采购。它们只提出请求；能不能执行，由可信边界里的服务决定。'));
+        h('p', 'lede', '三个代理接力完成采购。它们只提出请求；能不能执行，由网关检查范围里的服务决定。'));
       const list = h('div', 'risks');
       for (const [risk, fix, v] of RISKS) {
         const b = h('button', 'risk-row'); b.type = 'button';
@@ -1511,15 +1511,15 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       box.append(section('每条连线用的协议', pairsList([
         ['用户↔AS', 'OIDC 登录与用户同意；授权码 + PKCE ', 'RFC 7636'],
         ['代理↔AS', 'Token Exchange ', 'RFC 8693', '，两级委托，AS 统一签发'],
-        ['代理→网关', 'AGPoP 令牌 + AG-Proof；SM2 签名，SM3 摘要'],
-        ['网关↔库', '接受事务内复核撤销、共享预算与防重放'],
-        ['授权域↔网关', '双域协同 SM2 签名，授权域核验后才出份额'],
+        ['代理→网关', '访问令牌 + AG-Proof；SM2 签名，SM3 摘要'],
+        ['网关↔库', '受理事务内复核撤销、共享预算与防重放'],
+        ['授权侧↔网关', 'SM2 两方协同签名，授权侧核验后才出份额'],
         ['网关→下游', '不可变意图、幂等执行、签名回执'],
       ])));
-      box.append(limits('合成采购业务，无真实付款；代理为确定性实现，未接入真实大模型。双域共签为半诚实两方、同一主机；x402 只用本机测试链。各页逐项写明边界。'));
+      box.append(limits('合成采购业务，无真实付款；代理为确定性实现，未接入真实大模型。协同签名为半诚实两方、同一主机；x402 只用本机测试链。各页逐项写明边界。'));
     } else {
       box.append(kicker, h('h1', null, '用真实运行核对'),
-        h('p', 'lede', '前面各页的过程图是示意推演。这里只显示本机真实运行留下的结果，或者现场再跑一次。'));
+        h('p', 'lede', '前面各页的过程图是动画示意。这里只显示本机真实运行留下的结果，或者现场再跑一次。'));
       const toc = h('div', 'toc'); toc.id = 'evidence-toc';
       box.append(section('本页内容', toc));
       box.append(section('怎么读这些记录', pairsList([
@@ -1579,10 +1579,10 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     if (isScene) { buildScene(view); showStep(ui.steps[view], false); }
     else if (view === 'overview') {
       buildOverview(); setSource('model');
-      $('cap').replaceChildren(h('strong', null, '系统模型'), h('span', null, '代理只提出意图；令牌由 AS 统一签发，授权域与网关在接受前做确定性检查。'));
+      $('cap').replaceChildren(h('strong', null, '系统模型'), h('span', null, '代理只提出意图；令牌由 AS 统一签发，授权侧与网关在接受前做确定性检查。'));
     } else {
       ui.lastRecordsKey = ''; renderRecords(); setSource('real');
-      $('cap').replaceChildren(h('strong', null, '运行证据'), h('span', null, '这里的结果全部来自本机服务；没有读到的内容显示为未读取。'));
+      $('cap').replaceChildren(h('strong', null, '测试记录'), h('span', null, '这里的结果全部来自本机服务；没有读到的内容显示为未读取。'));
     }
     if (push !== false && location.hash !== '#' + view) { try { history.replaceState(null, '', '#' + view); } catch (e) { /* 预览环境可能不允许 */ } }
   }
@@ -1717,7 +1717,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
 
   function jobText(j) {
     if (!j) return '';
-    const what = {run: '完整采购演示', verify: '离线验证', 'scenario-run': '场景现场运行', 'scenario-replay': '场景记录回放', 'threshold-run': '门限采购固定演示', 'x402-run': 'x402 采购固定演示', 'cosm2-run': '双域共签采购固定演示'}[j.action] || '任务';
+    const what = {run: '完整采购演示', verify: '离线验证', 'scenario-run': '场景现场运行', 'scenario-replay': '场景记录回放', 'threshold-run': '门限采购固定演示', 'x402-run': 'x402 采购固定演示', 'cosm2-run': '协同签名采购固定演示'}[j.action] || '任务';
     const st = {running: '进行中', success: '已完成', failed: '未成功'}[j.status] || '状态未确认';
     const el = Number.isFinite(j.elapsed) ? `，已用 ${Math.floor(j.elapsed / 60)} 分 ${j.elapsed % 60} 秒` : '';
     const sc = j.scenario_id ? '（' + ((catalog().find(c => c.id === j.scenario_id) || {}).title || j.scenario_id) + '）' : '';
@@ -1753,13 +1753,13 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
   /* 门限与 x402 的本机固定演示：场景页左栏和"真实记录"页共用同一套呈现 */
   const FIXED_DEMOS = {
     cosign: {
-      title: '双域共签', action: 'cosm2-run',
-      idle: '现场运行使用真实 AS 授权链和双域共签，固定六用例；需要 Docker Desktop 与固定运行镜像。右侧为示意推演。',
+      title: '协同签名', action: 'cosm2-run',
+      idle: '现场运行使用真实 AS 授权链和协同签名，固定六用例；需要 Docker Desktop 与固定运行镜像。右侧为动画示意。',
       summary: d => `订单 ${d.orders}，批准 ${d.approvals}，操作 ${d.operations}；残留资源 ${d.resources_remaining}`,
       names: {
         'cosign-valid-one-order': '有效共签，只下一单', 'missing-approval': '缺少共签批准',
-        'exec-domain-alone': '只有执行域，签不出有效签名', 'tampered-amount': '共签后篡改金额',
-        'revoked-before-cosign': '已撤销，授权域拒绝出份额', 'revoked-after-cosign': '共签后撤销，接受事务拒绝',
+        'exec-domain-alone': '只有网关侧，签不出有效签名', 'tampered-amount': '共签后篡改金额',
+        'revoked-before-cosign': '已撤销，授权侧拒绝出份额', 'revoked-after-cosign': '共签后撤销，受理事务拒绝',
       },
     },
     threshold: {
@@ -1809,7 +1809,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       out.push(h('p', 'honest', (ui.state && ui.state.cosign_status) || F.idle));
       if (demo) {
         out.push(h('p', 'code', `run_id: ${demo.run_id}`),
-          h('p', 'honest', `来源：${demo.source_label}；原 completed_at: ${demo.completed_at}。右侧始终为示意推演。`),
+          h('p', 'honest', `来源：${demo.source_label}；原 completed_at: ${demo.completed_at}。右侧始终为动画示意。`),
           h('p', 'honest', `本次三轮耗时（单次运行，非统计结果）：第一轮 ${ms(demo.timing_ms.round1)}；含检查第二轮 ${ms(demo.timing_ms.round2_with_checks)}；含验签第三轮 ${ms(demo.timing_ms.round3_with_verify)}`));
       }
     }
@@ -1833,7 +1833,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     const box = $('proof'); if (!box || !SCENES[ui.view]) return;
     const sc = SCENES[ui.view];
     if (ui.view === 'cosign') {
-      box.replaceChildren(h('h2', 'sub', '运行证据'), ...fixedBlock('cosign'));
+      box.replaceChildren(h('h2', 'sub', '测试记录'), ...fixedBlock('cosign'));
       return;
     }
     if (!sc.catalogId) {
@@ -1841,7 +1841,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       const key = JSON.stringify([ui.view, ui.connected, !!ui.token, ui.posting, st[sc.fixed], tj && [tj.status, tj.stage, tj.elapsed, tj.action]]);
       if (key === ui.lastProofKey) return;
       ui.lastProofKey = key;
-      box.replaceChildren(h('h2', 'sub', '运行证据'), ...fixedBlock(sc.fixed));
+      box.replaceChildren(h('h2', 'sub', '测试记录'), ...fixedBlock(sc.fixed));
       return;
     }
     const id = sc.catalogId;
@@ -1851,7 +1851,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     const key = JSON.stringify([ui.connected, !!ui.token, ui.posting, item, res, j && [j.status, j.stage, j.elapsed, j.scenario_id]]);
     if (key === ui.lastProofKey) return;
     ui.lastProofKey = key;
-    box.replaceChildren(h('h2', 'sub', '运行证据'));
+    box.replaceChildren(h('h2', 'sub', '测试记录'));
     const line = h('p', 'proof-line');
     if (!ui.connected) {
       line.append(h('span', 'none', '本机服务未连接'), h('small', null, '过程图仍可讲解；真实记录需要启动本机服务。'));
@@ -1873,12 +1873,12 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     c.textContent = ui.connected ? '本机服务：已连接。' : '本机服务：未连接。请在仓库根目录运行 python3 tools/teacher_demo_server.py，然后打开 http://127.0.0.1:8765/';
   }
 
-  /* "运行证据"视图：分节顺序与顶栏章节一致 */
+  /* "测试记录"视图：分节顺序与顶栏章节一致 */
   const REC_SECTIONS = [
     ['rec-flow', '总览', '完整采购流程'],
-    ['rec-scenes', '基础防线', '安全场景'],
-    ['rec-cosign', '核心机制', '双域共签'],
-    ['rec-threshold', '核心机制', '对照：旧版 FROST'],
+    ['rec-scenes', '权限检查', '安全场景'],
+    ['rec-cosign', '协同签名', '协同签名'],
+    ['rec-threshold', '协同签名', '对照：旧版 FROST'],
     ['rec-x402', '扩展', 'x402 支付'],
   ];
   const recHead = (sec, id) => {
@@ -1926,7 +1926,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       table.append(head);
       (result.counters || []).forEach((r, i) => {
         const tr = h('tr');
-        tr.append(h('td', null, ['统筹代理（根授权）', '选品代理（第一层委托）', '执行代理（第二层委托）'][i] || '第 ' + (i + 1) + ' 层'),
+        tr.append(h('td', null, ['统筹代理（根授权）', '选品代理（第一层委托）', '下单代理（第二层委托）'][i] || '第 ' + (i + 1) + ' 层'),
           h('td', 'num', fen(r[1])), h('td', 'num', fen(r[4])), h('td', 'num', fen(r[3])), h('td', 'num', `${r[6]} / ${r[2]}`));
         table.append(tr);
       });
@@ -1954,7 +1954,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       s2.append(dl, h('p', 'hint', '一致性通过只说明证据与信任材料相符；当前授权仍未知，下游效果依赖见证，历史可能存在缺口。'));
     }
 
-    /* 2. 安全场景，按"三道防线 / 更多保障"分组 */
+    /* 2. 安全场景，按"主要检查 / 其他检查"分组 */
     const s1 = h('section');
     s1.append(recHead(s1, 'rec-scenes'), h('p', 'hint', '每一项对应一组真实的集成测试。"读取记录"回放之前保存的结果，"现场运行"重新执行一次；"看过程"打开对应讲解页。'));
     if (j && ['scenario-run', 'scenario-replay'].includes(j.action)) s1.append(h('p', 'job' + (j.status === 'failed' ? ' failed' : ''), jobText(j)));
@@ -1989,8 +1989,8 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
       s1.append(ul);
     }
 
-    /* 3–5. 固定演示：双域共签、FROST 对照、x402 */
-    const fixed = [['rec-cosign', 'cosign', '固定六用例，真实 AS 授权链与双域共签。'], ['rec-threshold', 'threshold', '上一版 2-of-3 FROST 方案的固定用例，保留作对照。'], ['rec-x402', 'x402', '本机测试链与自建测试代币，付款意图须经双域共签批准。']];
+    /* 3–5. 固定演示：协同签名、FROST 对照、x402 */
+    const fixed = [['rec-cosign', 'cosign', '固定六用例，真实 AS 授权链与协同签名。'], ['rec-threshold', 'threshold', '上一版 2-of-3 FROST 方案的固定用例，保留作对照。'], ['rec-x402', 'x402', '本机测试链与自建测试代币，付款意图须经协同签名批准。']];
     const secs = fixed.map(([id, kind, hint]) => {
       const sec = h('section');
       sec.append(recHead(sec, id), h('p', 'hint', hint));
@@ -2028,7 +2028,7 @@ if (typeof document !== 'undefined' && document.getElementById('app')) (function
     const dl = h('dl', 'rec-detail');
     const add = (k, v, cls) => dl.append(h('dt', null, k), h('dd', cls || null, v == null || v === '' ? '未采集' : String(v)));
     add('攻击条件', item.request);
-    add('可信防线', item.defense);
+    add('权限检查', item.defense);
     add('实际观测', res.observed);
     add('预算与效果', typeof res.budget === 'string' ? res.budget : res.budget == null ? '预算数值未采集' : JSON.stringify(res.budget));
     add('断言', (res.checks || []).map(c => ({passed: '通过', failed: '失败', skipped: '跳过'}[c.status] || '未确认') + '  ' + c.name).join('\n'), 'code');

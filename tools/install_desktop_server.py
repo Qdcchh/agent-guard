@@ -41,7 +41,7 @@ def main():
         binary.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         binary.write_bytes(executable)
         binary.chmod(0o700)
-    folder = Path.home() / "Desktop/Agent Guard 服务器"
+    folder = Path.home() / "Desktop/CoSeal 演示服务器"
     folder.mkdir(exist_ok=True)
     python = shutil.which("python3") or sys.executable
     for name, action in (
@@ -65,7 +65,7 @@ def main():
         path.write_text(script)
         path.chmod(0o700)
     (folder / "使用说明.txt").write_text(
-        "Agent Guard 本机服务器\n\n"
+        "CoSeal 演示服务器\n\n"
         "1. 双击“启动服务器.command”。浏览器会打开状态页，公网地址建立后自动显示。\n"
         "2. 点击“打开网站并控制演示”用于本机操作；复制公网地址发给评委。\n"
         "3. 公网只能浏览、查看历史记录与本机新运行的结果，不能启动任务。\n"

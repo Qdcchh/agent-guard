@@ -51,11 +51,11 @@ DEFAULT_TIMEOUT = 900.0
 MAX_RESULT_BYTES = 1_000_000
 
 PUBLIC_MESSAGES = {
-    "runner_missing": "缺少固定 COSM2 运行镜像，请先按部署说明安装",
+    "runner_missing": "缺少固定协同签名运行镜像，请先按部署说明安装",
     "docker_unavailable": "Docker Desktop 未就绪或不可访问",
     "docker_command_failed": "Docker 命令未成功",
     "dockerfile_missing": "缺少 deploy/cosm2-runner/Dockerfile",
-    "runner_platform_mismatch": "双域共签运行镜像不是 linux/amd64",
+    "runner_platform_mismatch": "协同签名运行镜像不是 linux/amd64",
     "postgres_not_ready": "临时 PostgreSQL 未在限时内就绪",
     "demo_timeout": "演示限时内未完成，已停止运行容器",
     "demo_result_missing": "演示未返回可验证的结果目录",
@@ -649,7 +649,7 @@ class Launcher:
         if data is not None and result_dir is not None:
             passed = data.get("passed") is True and exit_code == 0
             print(
-                "双域共签采购固定演示（Docker 隔离运行）："
+                "协同签名采购固定演示（Docker 隔离运行）："
                 + ("全部用例符合预期" if passed else "存在未符合预期的用例或资源"),
                 flush=True,
             )
@@ -667,7 +667,7 @@ class Launcher:
             print(RESULT_LINE, result_dir, flush=True)
             return
         message = PUBLIC_MESSAGES.get(failure or "", "本次运行未成功")
-        print(f"双域共签采购演示未完成：{message}", file=sys.stderr, flush=True)
+        print(f"协同签名采购演示未完成：{message}", file=sys.stderr, flush=True)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -677,7 +677,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     os.umask(0o077)
     if not 1.0 <= args.timeout <= 7200.0:
-        print("双域共签采购演示未完成：限时参数无效", file=sys.stderr)
+        print("协同签名采购演示未完成：限时参数无效", file=sys.stderr)
         return 2
     launcher = Launcher(timeout=args.timeout, pg_image=args.pg_image)
     return launcher.run()

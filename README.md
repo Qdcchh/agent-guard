@@ -1,23 +1,22 @@
-# Agent Guard
+# CoSeal（共印）
 
-2026-10-17 最新：x402 X1–X8 本地测试链闭环已独立验收通过，139 个不同测试通过，页面固定演示 6/6。见[阶段接受记录](tasks/workflow/runs/x402-gateway-20261017/acceptance.md)。全项目仍 PARTIAL，生产支付未实现。
+AI 代理下单前的国密授权检查与协同签名
 
-最新本地整合与完成边界：[2026-10-16 合并验证记录](docs/integration-status-20261016.md)。
+代理被提示注入骗了，也花不出授权以外的一分钱；就算网关被攻破，也伪造不出下单签名。产出的是标准 SM2 签名，下游用任何国密库都能验。
 
+1. **不靠识别攻击**：在明确的授权范围内，越权请求由网关和签名环节确定性拒绝。
+2. **网关不再是单点**：授权侧检查委托链、撤销和预算后才参与下单签名。
+3. **接入成本低**：不改模型，下游做标准 SM2 验签。
 
-Mac 一键公网演示：桌面 `Agent Guard 服务器` 文件夹提供启动、关闭和查看地址入口。本机控制任务，公网只读；临时 HTTPS 地址每次启动可能变化。安装、权限及停止行为见 [Mac 演示服务器](docs/desktop-server.md)。
+以上是本项目限定威胁模型下的目标与原型能力：半诚实、n=2、同主机、Python 非常数时间原型；不提供恶意安全或跨主机隔离保证，签名后的撤销仍有窗口；代理目前为确定性脚本。
 
-A3.1与A3.2已正式独立接受；A3.3/A3.4联合v1已通过独立PACKAGE_REVIEW，S2正常装配必要自查已完成。完整联合自查及新独立IMPLEMENTATION_ACCEPTANCE尚未完成，项目仍PARTIAL。保留当前授权UNKNOWN、下游ATTESTED_NOT_INDEPENDENTLY_PROVEN、未锚尾部与bootstrap外部信任限制。
+## 如何打开演示
 
-**面向企业多智能体协同的可验证授权与可信执行系统。**
+老师服务器上的完整版试部署：见 [Linux 完整版部署说明](deploy/full/README.md)，包含镜像构建、双端服务和 SSH 操作入口；源码包用 `python3 tools/build_full_release.py` 从已提交版本生成，运行密钥和数据在服务器重新生成。
+
+只读服务器展示包：运行 `python3 tools/build_showcase.py`，生成包含网页、经过既有读取器校验的历史摘要和中文部署说明的 ZIP；支持 Nginx 静态托管或独立 Python 服务，无需 Docker 和数据库。详见[展示版部署说明](deploy/showcase/README.md)。
 
 本机演示页面：启动 Docker Desktop 后，在仓库根目录运行 `python3 tools/teacher_demo_server.py`，打开 `http://127.0.0.1:8765/`。支持真实演示启动、七类安全场景、带来源的验证记录回放和离线证据篡改对照；仅用于本地展示，不代表完整联合验收。见[演示操作稿](docs/teacher-demo-20261015.md)、[DemoEvent v1 接口](docs/teacher-demo-events-v1.md)和[当前状态与覆盖范围](docs/project-status-and-demo-coverage-20261015.md)。[2-of-3 门限签名原型](tools/threshold_demo/README.md)已通过版本化 `ag-approval` 接入现有采购网关与接受事务（固定本机演示、真实 FROST 组签名 + SM2/AGPoP，见[门限接入说明](docs/threshold-gateway-20261017.md)）；公网仍只读。x402 本机固定演示已接入（真实 HTTP 402 + EIP-3009 签名 + 本地测试链结算，无真实资产，见[x402 适配设计的实现状态](docs/x402-adapter-design-20261016.md)）；生产支付链路仍未实现。
-
-目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
-
-本轮 B 补正已独立验收并通过 CI，经 [PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 合并 main。67 项验收、60 项独立运行完成；见 [正式接受记录](tasks/workflow/runs/local-remediation-20261004/acceptance.md)及 [当前交接](tasks/workflow/context.md)。整体项目仍 **PARTIAL**：A2.2 已完成95项/88运行义务的独立验收，A2.3内部持续签名发布与真实HTTPS联合流程已完成完整119项/112运行义务独立复验并[正式接受](tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，原r1否决保留为历史；A3.1独立锚定与A3.2导出已接受；A3.3交付演示与A3.4实验未完成；旧无回执公钥配置保持PENDING兼容。阶段通过不代表绝对无缺陷。
-
-`product-manifest.json` 保留 2026-10-03 原始交付的 186 项文件哈希；本轮文档已更新，该清单仅用于核对历史传输快照，不是当前工作树清单。旧云端内部报告与原始证据没有随此分支完整交付，不能把旧工作流 `state.json` 的 A2.1 `ACCEPTED` 当作 B 整合放行。
 
 ## 1. 项目目标
 
@@ -56,7 +55,7 @@ A3.1与A3.2已正式独立接受；A3.3/A3.4联合v1已通过独立PACKAGE_REVIE
                               ↓
 统筹代理 → AS交换子令牌 → 选品代理 → AS交换 → 执行代理
                               ↓ Access Token + AGPoP（DID/登记密钥绑定）
-                         统一执行网关
+                         工具调用网关
                     验权 / 抗重放 / 动态状态检查
                               ↓
                  PostgreSQL 预算预留与操作记录
@@ -98,6 +97,8 @@ constraints.txt              运行依赖可复现约束
 ```
 
 已增加 `crypto/`、`authorization/`、`identity/`、`evidence/`、`server/`、`gateway/`及`execution/query.py`。其余网关、代理、审计与实验能力按后续范围实施，不以空目录充当实现。`VerifiedInvocation` / `TrustedPermissionSnapshot` 是**可信进程内输入**，由真实 B 验证适配器或可信初始化构造；不存在“已验权 JSON”直接入库的入口，也没有生产假验权开关。
+
+对外名称与显示文字统一见[术语表](docs/glossary.md)。
 
 文档按上述顺序阅读。旧通用凭证协议与重复架构文档已移除，可通过Git历史查看；威胁模型和执行状态机已合并。Markdown是唯一文档源，PDF仅作本地导出，不入库且需自行重新生成。
 
@@ -545,3 +546,21 @@ fi
 ## 2026-10-17 COSM2全量实施
 
 双域协同SM2原规划A1–A7/B1–B9及完整C候选包已真实自查闭合（含独立效果端验签、x402共签付款意图、九项正式基准和185.4秒现场媒体）；已通过全新gpt-6.1-sol/high完整r2独立验收并[正式接受](tasks/workflow/runs/cosm2-full-20261017/acceptance.md)，r1失败及最小补正历史保留。见[实现和启动说明](docs/cosm2-gateway-20261020.md)、[可写清单](docs/cosm2-paper-claims-20261017.md)。旧A3长实验不在本范围。
+
+
+## 开发状态（内部）
+
+目标：即使智能体输出受恶意内容影响，工具执行仍受明确的任务授权、委托边界和共享预算约束，并提供可独立验证的执行证据。
+
+2026-10-17 最新：x402 X1–X8 本地测试链闭环已独立验收通过，139 个不同测试通过，页面固定演示 6/6。见[阶段接受记录](tasks/workflow/runs/x402-gateway-20261017/acceptance.md)。全项目仍 PARTIAL，生产支付未实现。
+
+最新本地整合与完成边界：[2026-10-16 合并验证记录](docs/integration-status-20261016.md)。
+
+
+Mac 一键公网演示：桌面 `Agent Guard 服务器` 文件夹提供启动、关闭和查看地址入口。本机控制任务，公网只读；临时 HTTPS 地址每次启动可能变化。安装、权限及停止行为见 [Mac 演示服务器](docs/desktop-server.md)。
+
+A3.1与A3.2已正式独立接受；A3.3/A3.4联合v1已通过独立PACKAGE_REVIEW，S2正常装配必要自查已完成。完整联合自查及新独立IMPLEMENTATION_ACCEPTANCE尚未完成，项目仍PARTIAL。保留当前授权UNKNOWN、下游ATTESTED_NOT_INDEPENDENTLY_PROVEN、未锚尾部与bootstrap外部信任限制。
+
+本轮 B 补正已独立验收并通过 CI，经 [PR #6](https://github.com/Qdcchh/agent-guard/pull/6) 合并 main。67 项验收、60 项独立运行完成；见 [正式接受记录](tasks/workflow/runs/local-remediation-20261004/acceptance.md)及 [当前交接](tasks/workflow/context.md)。整体项目仍 **PARTIAL**：A2.2 已完成95项/88运行义务的独立验收，A2.3内部持续签名发布与真实HTTPS联合流程已完成完整119项/112运行义务独立复验并[正式接受](tasks/workflow/runs/A2.3-receipts-20261004/acceptance.md)，原r1否决保留为历史；A3.1独立锚定与A3.2导出已接受；A3.3交付演示与A3.4实验未完成；旧无回执公钥配置保持PENDING兼容。阶段通过不代表绝对无缺陷。
+
+`product-manifest.json` 保留 2026-10-03 原始交付的 186 项文件哈希；本轮文档已更新，该清单仅用于核对历史传输快照，不是当前工作树清单。旧云端内部报告与原始证据没有随此分支完整交付，不能把旧工作流 `state.json` 的 A2.1 `ACCEPTED` 当作 B 整合放行。
